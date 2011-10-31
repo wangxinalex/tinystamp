@@ -1,0 +1,14 @@
+**/*.o
+**/core
+**/vacation/vacation
+**/intruder/intruder
+**/labyrinth/labyrinth
+**/ssca2/ssca2
+**/yada/yada
+**/kmeans/kmeans
+**/bayes/bayes
+**/genome/genome
+*.o
+*/*.o
+*/*/*.o
+*/*/*/*.o

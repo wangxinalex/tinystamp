@@ -1,0 +1,112 @@
+Index: vacation/customer.c
+===================================================================
+--- vacation/customer.c	(revision 27978)
++++ vacation/customer.c	(working copy)
+@@ -153,7 +153,7 @@
+ customer_free (TM_ARGDECL  customer_t* customerPtr)
+ {
+     list_t* reservationInfoListPtr =
+-        (list_t*)TM_SHARED_READ(customerPtr->reservationInfoListPtr);
++        (list_t*)TM_SHARED_READ_P(customerPtr->reservationInfoListPtr);
+     TMLIST_FREE(reservationInfoListPtr);
+     TM_FREE(customerPtr);
+ }
+@@ -175,7 +175,7 @@
+     assert(reservationInfoPtr != NULL);
+ 
+     list_t* reservationInfoListPtr =
+-        (list_t*)TM_SHARED_READ(customerPtr->reservationInfoListPtr);
++        (list_t*)TM_SHARED_READ_P(customerPtr->reservationInfoListPtr);
+ 
+     return TMLIST_INSERT(reservationInfoListPtr, (void*)reservationInfoPtr);
+ }
+@@ -198,7 +198,7 @@
+     /* price not used to compare reservation infos */
+ 
+     list_t* reservationInfoListPtr =
+-        (list_t*)TM_SHARED_READ(customerPtr->reservationInfoListPtr);
++        (list_t*)TM_SHARED_READ_P(customerPtr->reservationInfoListPtr);
+ 
+     reservation_info_t* reservationInfoPtr =
+         (reservation_info_t*)TMLIST_FIND(reservationInfoListPtr,
+@@ -231,7 +231,7 @@
+     long bill = 0;
+     list_iter_t it;
+     list_t* reservationInfoListPtr =
+-        (list_t*)TM_SHARED_READ(customerPtr->reservationInfoListPtr);
++        (list_t*)TM_SHARED_READ_P(customerPtr->reservationInfoListPtr);
+ 
+     TMLIST_ITER_RESET(&it, reservationInfoListPtr);
+     while (TMLIST_ITER_HASNEXT(&it, reservationInfoListPtr)) {
+Index: lib/rbtree.c
+===================================================================
+--- lib/rbtree.c	(revision 27978)
++++ lib/rbtree.c	(working copy)
+@@ -695,8 +695,8 @@
+         TX_STF_P(n, l, (node_t*)NULL);
+         TX_STF_P(n, r, (node_t*)NULL);
+         TX_STF_P(n, p, (node_t*)NULL);
+-        TX_STF(n, k, k);
+-        TX_STF(n, v, v);
++        TX_STF_P(n, k, k);
++        TX_STF_P(n, v, v);
+         TX_STF(n, c, BLACK);
+         TX_STF_P(s, root, n);
+         return NULL;
+@@ -713,8 +713,8 @@
+             } else {
+                 TX_STF_P(n, l, (node_t*)NULL);
+                 TX_STF_P(n, r, (node_t*)NULL);
+-                TX_STF(n, k, k);
+-                TX_STF(n, v, v);
++                TX_STF_P(n, k, k);
++                TX_STF_P(n, v, v);
+                 TX_STF_P(n, p, t);
+                 TX_STF_P(t, l, n);
+                 TX_FIX_AFTER_INSERTION(s, n);
+@@ -727,8 +727,8 @@
+             } else {
+                 TX_STF_P(n, l, (node_t*)NULL);
+                 TX_STF_P(n, r, (node_t*)NULL);
+-                TX_STF(n, k, k);
+-                TX_STF(n, v, v);
++                TX_STF_P(n, k, k);
++                TX_STF_P(n, v, v);
+                 TX_STF_P(n, p, t);
+                 TX_STF_P(t, r, n);
+                 TX_FIX_AFTER_INSERTION(s, n);
+@@ -1023,8 +1023,8 @@
+      */
+     if (TX_LDNODE(p, l) != NULL && TX_LDNODE(p, r) != NULL) {
+         node_t* s = TX_SUCCESSOR(p);
+-        TX_STF(p,k, TX_LDF_P(s, k));
+-        TX_STF(p,v, TX_LDF_P(s, v));
++        TX_STF_P(p,k, TX_LDF_P(s, k));
++        TX_STF_P(p,v, TX_LDF_P(s, v));
+         p = s;
+     } /* p has 2 children */
+ 
+@@ -1503,7 +1503,7 @@
+     node_t* nn = TMgetNode(TM_ARG_ALONE);
+     node_t* ex = TX_INSERT(r, key, val, nn);
+     if (ex != NULL) {
+-        TX_STF(ex, v, val);
++        TX_STF_P(ex, v, val);
+         TMreleaseNode(TM_ARG  nn);
+         return TRUE;
+     }
+Index: kmeans/README
+===================================================================
+--- kmeans/README	(revision 27978)
++++ kmeans/README	(working copy)
+@@ -41,8 +41,8 @@
+ 
+ To produce the data in [1], the following values were used:
+ 
+-    low contention:  -m40 -n40 -t0.05 -i inputs/random2048-d16-c16.txt
+-    high contention: -m15 -n15 -t0.05 -i inputs/random2048-d16-c16.txt
++    low contention:  -m40 -n40 -t0.05 -i inputs/random-n2048-d16-c16.txt
++    high contention: -m15 -n15 -t0.05 -i inputs/random-n2048-d16-c16.txt
+ 
+ For runs without a simulator, a larger input file, (more info below) can be used
+ instead:

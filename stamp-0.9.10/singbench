@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+use warnings 'all';
+
+sub infinitLoop {
+while(1) {
+		my @work=`cat stilltodolist`;
+		my $task=$work[0];
+	
+		if(scalar(@work)==0) {
+			`rm stilltodolist`;
+			print "the end";
+			return;
+		}
+		else {
+			shift(@work);
+			open(LIST, '>stilltodolist');
+			print LIST @work;
+			close(LIST);
+			print "started Task $task";
+			`./stamp-testj.sh $task`;
+		}
+	}
+}
+
+infinitLoop();
+

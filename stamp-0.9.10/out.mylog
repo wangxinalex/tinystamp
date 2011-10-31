@@ -1,0 +1,168 @@
+jbs@2mach ~/src/ma/stamp-0.9.10 $ time ./stamp-testp.sh tinystm
+logs/bayes/tinystm.01.log already exists.
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 01
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 01
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 01
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 01
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 01
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 01
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 01
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 01
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 01
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 01
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 01
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 01
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 01
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 01
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 01
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 01
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 01
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 01
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 01
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 01
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 01
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 01
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 01
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 01
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 01
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 01
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 01
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 01
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 01
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 01
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 01
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 01
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 01
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 01
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 01
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 01
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 02
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 02
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 02
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 02
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 02
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 02
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 02
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 02
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 02
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 02
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 02
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 02
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 02
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 02
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 02
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 02
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 02
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 02
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 02
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 02
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 02
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 02
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 02
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 02
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 02
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 02
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 02
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 02
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 02
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 02
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 02
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 02
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 02
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 02
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 02
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 02
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 02
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 02
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 02
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 02
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 04
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 04
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 04
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 04
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 04
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 04
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 04
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 04
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 04
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 04
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 04
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 04
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 04
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 04
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 04
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 04
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 04
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 04
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 04
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 04
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 04
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 04
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 04
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 04
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 04
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 04
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 04
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 04
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 04
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 04
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 04
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 04
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 04
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 04
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 04
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 04
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 04
+./stamp-testp.sh: line 61:  6881 Segmentation fault      $cmd $threads >> $logdir/$logfile 2>&1
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 04
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 04
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 04
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 08
+^[[A^[[BExecuting: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 08
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 08
+Executing: ./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t 08
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 08
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 08
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 08
+Executing: ./genome/genome -g16384 -s64 -n16777216 -t 08
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 08
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 08
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 08
+Executing: ./intruder/intruder -a10 -l128 -n262144 -s1 -t 08
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 08
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 08
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 08
+Executing: ./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 08
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 08
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 08
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 08
+Executing: ./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p 08
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 08
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 08
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 08
+Executing: ./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t 08
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 08
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 08
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 08
+Executing: ./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t 08
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 08
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 08
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 08
+Executing: ./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c 08
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 08
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 08
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 08
+Executing: ./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c 08
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 08
+./stamp-testp.sh: line 61:  8011 Segmentation fault      $cmd $threads >> $logdir/$logfile 2>&1
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 08
+./stamp-testp.sh: line 61:  8044 Segmentation fault      $cmd $threads >> $logdir/$logfile 2>&1
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 08
+./stamp-testp.sh: line 61:  8054 Segmentation fault      $cmd $threads >> $logdir/$logfile 2>&1
+Executing: ./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t 08
+./stamp-testp.sh: line 61:  8067 Segmentation fault      $cmd $threads >> $logdir/$logfile 2>&1
+
+real	169m5.324s
+user	490m58.967s
+sys	2m6.392s
+

@@ -1,0 +1,4 @@
+rsync -r * jbs@velox.unine.ch:/home/jbs/src2/
+#rsync -r stamp-0.9.10/ jbs@velox.unine.ch:/home/jbs/src/stamp-0.9.10
+#rsync -r stamp-0.9.10-tinySTM-1.0.0/ jbs@velox.unine.ch:/home/jbs/src/stamp-0.9.10-tinySTM-1.0.0
+#rsync compile jbs@velox.unine.ch:/home/jbs/src/compile

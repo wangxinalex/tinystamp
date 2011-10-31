@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+`rm memusagelog`;
+while(1) {
+	my $freeMEM=0;
+	open( LOG, '>>memusagelog');
+	print LOG $freeMEM=(`cat /proc/meminfo | grep MemFree | cut -d':' -f2 | cut -d'k' -f1`+0.00), "\n";
+	if($freeMEM < 5000000 ) {
+		`killall stamp-testj.sh`;
+		`killall bayes`;
+		`killall genome`;
+		`killall intruder`;
+		`killall kmeanslow`;
+		`killall kmeanshigh`;
+		`killall labyrinth`;
+		`killall ssca2`;
+		`killall vacationlow`;
+		`killall vacationhigh`;
+		`killall yada`;
+		print LOG "killed stamp-testj.sh, used too much memory!\n";
+		sleep 30;
+		`./singbench`;
+	}
+	close(LOG);
+	sleep 2;
+}
+
