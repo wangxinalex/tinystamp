@@ -274,8 +274,10 @@ MAIN(argc, argv) {
         initNumThreads=1;
 #else
     long initNumThreads = maxAmountOfClients-1;
-    if(initNumThreads<1)
+    if(initNumThreads<1) {
+        prinft("ERROR: 3942\nI need at least one worker thread.");
         exit(3942);
+    }
 #endif
 //    SIM_GET_NUM_CPU(numThread); // does nothing here
     TM_STARTUP(maxAmountOfClients);

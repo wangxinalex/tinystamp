@@ -559,8 +559,10 @@ MAIN(argc, argv)
         initNumThreads=1;
 #else
     long initNumThreads = maxNumClient-1;
-    if(initNumThreads<1)
+    if(initNumThreads<1) {
+        prinft("ERROR: 3942\nI need at least one worker thread.");
         exit(3942);
+    }
 #endif
     clients = (client_t**)malloc(maxNumClient * sizeof(client_t*));
     assert(clients != NULL);
