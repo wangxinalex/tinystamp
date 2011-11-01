@@ -23,7 +23,7 @@
 		<Cursor position="3195" topLine="64" />
 	</File>
 	<File name="stamp-0.9.10/common/Defines.common.mk" open="0" top="0" tabpos="0">
-		<Cursor position="287" topLine="0" />
+		<Cursor position="289" topLine="0" />
 	</File>
 	<File name="stamp-0.9.10/genome/gene.c" open="0" top="0" tabpos="0">
 		<Cursor position="6292" topLine="202" />
@@ -40,8 +40,8 @@
 	<File name="stamp-0.9.10/genome/sequencer.h" open="0" top="0" tabpos="0">
 		<Cursor position="4378" topLine="123" />
 	</File>
-	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="4">
-		<Cursor position="11543" topLine="366" />
+	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="2">
+		<Cursor position="11583" topLine="369" />
 	</File>
 	<File name="stamp-0.9.10/kmeans/cluster.c" open="0" top="0" tabpos="0">
 		<Cursor position="6600" topLine="207" />
@@ -62,13 +62,13 @@
 		<Cursor position="6686" topLine="186" />
 	</File>
 	<File name="stamp-0.9.10/labyrinth/labyrinth.c" open="0" top="0" tabpos="1">
-		<Cursor position="9229" topLine="264" />
+		<Cursor position="9295" topLine="256" />
 	</File>
 	<File name="stamp-0.9.10/labyrinth/maze.c" open="0" top="0" tabpos="4">
 		<Cursor position="9375" topLine="250" />
 	</File>
 	<File name="stamp-0.9.10/labyrinth/router.c" open="0" top="0" tabpos="5">
-		<Cursor position="3133" topLine="145" />
+		<Cursor position="12038" topLine="343" />
 	</File>
 	<File name="stamp-0.9.10/lib/avltree.c" open="0" top="0" tabpos="4">
 		<Cursor position="11490" topLine="629" />
@@ -86,15 +86,15 @@
 		<Cursor position="39095" topLine="1289" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="1">
-		<Cursor position="24576" topLine="626" />
+		<Cursor position="15736" topLine="452" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="1">
-		<Cursor position="9929" topLine="255" />
+		<Cursor position="9904" topLine="257" />
 	</File>
 	<File name="stamp-0.9.10/lib/timer.h" open="0" top="0" tabpos="0">
 		<Cursor position="3018" topLine="65" />
 	</File>
-	<File name="stamp-0.9.10/lib/tm.h" open="1" top="0" tabpos="2">
+	<File name="stamp-0.9.10/lib/tm.h" open="0" top="0" tabpos="2">
 		<Cursor position="3738" topLine="72" />
 	</File>
 	<File name="stamp-0.9.10/lib/utility.h" open="0" top="0" tabpos="0">
@@ -113,7 +113,7 @@
 		<Cursor position="0" topLine="63" />
 	</File>
 	<File name="stamp-0.9.10/vacation/client.c" open="0" top="0" tabpos="4">
-		<Cursor position="5228" topLine="143" />
+		<Cursor position="5187" topLine="144" />
 	</File>
 	<File name="stamp-0.9.10/vacation/client.h" open="0" top="0" tabpos="0">
 		<Cursor position="3922" topLine="102" />
@@ -133,8 +133,8 @@
 	<File name="stamp-0.9.10/vacation/reservation.c" open="0" top="0" tabpos="0">
 		<Cursor position="14852" topLine="486" />
 	</File>
-	<File name="stamp-0.9.10/vacation/vacation.c" open="0" top="0" tabpos="4">
-		<Cursor position="18119" topLine="546" />
+	<File name="stamp-0.9.10/vacation/vacation.c" open="1" top="0" tabpos="2">
+		<Cursor position="18814" topLine="570" />
 	</File>
 	<File name="stamp-0.9.10/yada/region.c" open="0" top="0" tabpos="5">
 		<Cursor position="10795" topLine="284" />

@@ -80,6 +80,8 @@
 #define ATOMIC_OPS_joerg
 #include "../../tinySTM/src/atomic.h"
 
+#define CACHE_LINE_SIZE (64)
+
 static THREAD_LOCAL_T    global_threadId;       // some strange pthread stuff
 __thread long            global_myThreadID;
 static long              global_numThread       = 1;  // only mainThread=1, working threads are additionally added here
@@ -96,13 +98,6 @@ static long              global_maxNumClient;   // amount of clients that where 
 static volatile long     global_workLeftToDo=0;  // name says everything
 static long* global_amountOfCommitsDone;
 
-#define CACHE_LINE_SIZE (64)
-
-/* =============================================================================
- * threadWait
- * -- Synchronizes all threads to start/stop parallel section
- * =============================================================================
- */
 static void threadWait (void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
@@ -120,11 +115,6 @@ static void threadWait (void* argPtr) {
     }
 }
 
-/* =============================================================================
- * threadWaitNoBarrier edited by jeorg
- * -- not for all threads to start/stop parallel section, just for main thread to run a small little job
- * =============================================================================
- */
 static void threadWaitNoBarrier (void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
@@ -132,14 +122,8 @@ static void threadWaitNoBarrier (void* argPtr) {
     global_myThreadID=threadId;
     global_funcPtr(global_argPtr);
     TM_THREAD_EXIT();
-//    global_iFinished[threadId/8]=global_iFinished[threadId/8]^(1<<(threadId%8));
 }
 
-/* =============================================================================
- * threadWaitNoBarrier edited by jeorg
- * -- Synchronizes all threads to start/stop parallel section
- * =============================================================================
- */
 static void threadWaitNoBarrierWorkPices(void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
@@ -155,12 +139,6 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
 }
 
-
-/* =============================================================================
- * threadWaitNoBarrierInsideBench edited by jeorg
- * -- Synchronizes all threads to start/stop parallel section
- * =============================================================================
- */
 static void threadWaitNoBarrierInsideBench(void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
@@ -168,7 +146,6 @@ static void threadWaitNoBarrierInsideBench(void* argPtr) {
     global_funcPtr(global_argPtr);
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64)));
 }
-
 
 void binary_print_long_value(long l) {
     printf("\n");
@@ -178,11 +155,7 @@ void binary_print_long_value(long l) {
     fflush(stdout);
 }
 
-/* =============================================================================
- * killThreadNr() created by jeorg
- * -- kills thread with the number threadNr
- * =============================================================================
- */
+ // kills thread with the number threadNr
 void killThreadNr(long threadNr) {
     assert(threadNr<global_maxNumClient);
     global_kill[threadNr/64]=global_kill[threadNr/64]|(((long)1)<<(threadNr%64));
@@ -192,11 +165,7 @@ void killThreadNr(long threadNr) {
     --global_numThread;
 }
 
-/* =============================================================================
- * every_thread_finished created by jeorg
- * -- checks all threads if they are still running
- * =============================================================================
- */
+// checks all threads if they are still running
 int every_thread_finished() {
     long i;
     for(i=(global_numThread)/64; i-->0;) {
@@ -217,12 +186,6 @@ int i_got_killed() {
     return 0;
 }
 
-/* =============================================================================
- * thread_startup
- * -- Create pool of secondary threads
- * -- numThread is total number of threads (primary + secondaries)
- * =============================================================================
- */
 void thread_startup (long numThread) {
     long i;
     global_numThread = numThread;
@@ -261,12 +224,6 @@ void thread_startup (long numThread) {
      */
 }
 
-/* =============================================================================
- * initial_thread_startup_noBarriers
- * -- Create pool of secondary threads
- * -- numThread is total number of threads (primary + secondaries)
- * =============================================================================
- */
 void initial_thread_startup_noBarriers (long initialThreads, char useWorkPieces) { // true = yes, use work pieces, false: use other things. false=0, true!=0
     long i;
     global_numThread = initialThreads+1;
@@ -289,12 +246,6 @@ void initial_thread_startup_noBarriers (long initialThreads, char useWorkPieces)
     }
 }
 
-/* =============================================================================
- * thread_startup_noBarriers edited by joerg
- * -- Create pool of secondary threads
- * -- numThread is total number of threads (primary + secondaries)
- * =============================================================================
- */
 void thread_startup_noBarriers(long numThread, char useWorkPieces) {
     global_numThread += numThread;
     long tooMuch=global_numThread-global_maxNumClient;
@@ -320,19 +271,6 @@ void thread_startup_noBarriers(long numThread, char useWorkPieces) {
     }
 }
 
-/* =============================================================================
- * thread_start
- * -- Make primary and secondary threads execute work
- * -- Should only be called by primary thread
- * -- funcPtr takes one arguments: argPtr
- * =============================================================================
- */
-/*void
-thread_start() {
-    long threadId = 0; // primary
-    threadWait((void*)&threadId);
-}*/
-
 void thread_start (void (*funcPtr)(void*), void* argPtr) {
     global_funcPtr = funcPtr;
     global_argPtr = argPtr;
@@ -340,25 +278,10 @@ void thread_start (void (*funcPtr)(void*), void* argPtr) {
     threadWait((void*)&threadId);
 }
 
-/* =============================================================================
- * thread_start_noBarriers edited by joerg
- * -- Make primary thread execute work
- * -- Should only be called by primary thread
- * -- funcPtr takes one arguments: argPtr
- * =============================================================================
- */
 void thread_start_noBarriers() {
     long threadId = 0; /* primary */
     threadWaitNoBarrier((void*)&threadId);
 }
-
-
-/* =============================================================================
-* thread_prepare_start created by joerg
-* prepare method so threads can start
-* prepare function pointers
-* prepare still running flags
-*/
 
 void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long maxNumClient, long amountOfWorkPieces) {
     global_funcPtr = funcPtr;
@@ -403,11 +326,6 @@ void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long maxNumClie
     assert(global_threads);
 }
 
-/* =============================================================================
- * thread_shutdown
- * -- Primary thread kills pool of secondary threads
- * =============================================================================
- */
 void thread_shutdown () {
     /* Make secondary threads exit wait() */
     global_doShutdown = TRUE;
@@ -431,11 +349,6 @@ void thread_shutdown () {
     free((void*) global_amountOfCommitsDone);
 }
 
-/* =============================================================================
- * thread_shutdown_noBarriers
- * -- Primary thread kills pool of secondary threads
- * =============================================================================
- */
 void thread_shutdown_noBarriers() {
     long numThread = global_numThread;
     long i;
@@ -449,10 +362,6 @@ void thread_shutdown_noBarriers() {
     global_numThread = 1;
 }
 
-/* =============================================================================
- * thread_barrier_alloc
- * =============================================================================
- */
 thread_barrier_t* thread_barrier_alloc (long numThread) {
     thread_barrier_t* barrierPtr;
     assert(numThread > 0);
@@ -528,11 +437,11 @@ void thread_barrier (thread_barrier_t* barrierPtr, long threadId){
     }
 }
 
-long thread_getId() {  // i am used too much, please have a look, how can this be done faster?
+long thread_getId() {
     return (long)THREAD_LOCAL_GET(global_threadId);
 }
 
-void add_one_commit() { // please, have a look at me concerning performance... // depreciated, should not be used anymore
+void add_one_commit() { // depreciated, should not be used anymore
     assert(0); // because depreciated
     assert(global_amountOfCommitsDone);
     assert(CACHE_LINE_SIZE);
@@ -541,11 +450,11 @@ void add_one_commit() { // please, have a look at me concerning performance... /
 
 long* getMyCommitCounter() {
 //    return &(global_amountOfCommitsDone[CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID)]);  // does exactly the same
-    return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID); // does exactly the same
+    return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID);
 }
 
+#define USE_ALGO_01 1
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
-
     long doneCounter=0;
     long milisecondsOfSleep=250;
     int lastDone=0;
@@ -556,16 +465,15 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     long commitsDuringLastSleep;
     long sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
     long sumOfAllCommitsEver;
-    //long killhalfflag=0;
     while (!every_thread_finished()) {
+#ifdef USE_ALGO_01
+        sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
         mySleep(milisecondsOfSleep);
         sumOfAllCommitsEver=getTotalAmountOfCommits();
         commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
-
         double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
-
         if(commitsDuringLastSleep>cdlsOld && lastDone==1) { // if you increased last time and it got better, increase again
-            if(doneCounter>6) {  // if you increased 6 times and it got better 6 times, increase again
+            if(doneCounter>6) {  // if you increased 6 times and it got better 6 times, increase 11 at the time. if not yet 6, just increase again
                 int j;
                 for(j=11; --j;)
                     increaseAmountOfThreadsByOne(ptr2runMoreThreads);
@@ -604,82 +512,100 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             lastAction=1;
             doneCounter=0;
         }
-/*        else if(bestcdlsEver*0.70>commitsDuringLastSleep) {
-            ++killhalfflag;
-            if(killhalfflag==8) {
-                killhalfflag=0;
-                if(bestcdlsEver > 33) { // if workpieces are too small, this might happen without reason
-                    unsigned int i;
-                    printf("kill half of the threads");
-                    for(i=global_numThread/2; --i;) {
-                        decreaseAmountOfThreadsByOne();
-                    }
-                    lastDone=-1;
-                    lastAction=-1;
-                }
-            }
-            if(global_numThread<bestcdlsEverReachedAt) {
-                increaseAmountOfThreadsByOne(ptr2runMoreThreads);
-                lastDone=1;
-                lastAction=1;
-            }
-            else {// global_numThread>bestcdlsEverReachedAt
-                decreaseAmountOfThreadsByOne();
-                lastDone=-1;
-                lastAction=-1;
-            }
-        } */
         else if(lastDone==0) {
             increaseAmountOfThreadsByOne(ptr2runMoreThreads);
             lastDone=1;
             lastAction=1;
             ++doneCounter;
-/*            if(lastAction>0) {
-                ++lastAction;
-            }
-            else if(lastAction<0){
-                --lastAction;
-            }
-
-            if(lastAction==0){
-                increaseAmountOfThreadsByOne(ptr2runMoreThreads);
-                lastDone=1;
-                lastAction=1;
-            }
-            else if(lastAction==8) {
-                increaseAmountOfThreadsByOne(ptr2runMoreThreads);
-                lastDone=1;
-                lastAction=-1; // made on purpose
-            }
-            else if(lastAction==-8){
-                decreaseAmountOfThreadsByOne();
-                lastDone=-1;
-                lastAction=1; // made on purpose
-            } */
         }
         else {
             lastDone=0;
         }
         printf("Was running with %ld threads and running @ %f /100 of best ever.\n",global_numThread-lastDone, percentOfBestEver);
-//        int i;
-//        for(i=global_numThread+1; --i!=0;)
-//            printf("#");
         fflush(stdout);
-//        binary_print_long_value(global_iFinished[0]);
-//         fflush(stdout);
-
-//        if(percentOfBestEver>=100)
-//            killhalfflag=0;
-
 
         if(commitsDuringLastSleep>bestcdlsEver) {
             bestcdlsEver=commitsDuringLastSleep;
             bestcdlsEverReachedAt=global_numThread;
-//            killhalfflag=0;
             printf("new bestcdlsEver record of %ld\n",commitsDuringLastSleep);
         }
         cdlsOld=commitsDuringLastSleep;
-        sumOfAllCommitsEverLastTime=sumOfAllCommitsEver;
+
+        if(commitsDuringLastSleep>14000) {
+            milisecondsOfSleep/=2;
+            bestcdlsEver/=2;
+            cdlsOld/=2;
+        }
+        else if(commitsDuringLastSleep<11) {
+            milisecondsOfSleep*=2;
+            bestcdlsEver*=2;
+            cdlsOld*=2;
+        }
+#endif // USE_ALGO_01
+#ifdef USE_ALGO_02
+        sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
+        mySleep(milisecondsOfSleep);
+        sumOfAllCommitsEver=getTotalAmountOfCommits();
+        commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
+        double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
+        if(commitsDuringLastSleep>cdlsOld && lastDone==1) { // if you increased last time and it got better, increase again
+            if(doneCounter>6) {  // if you increased 6 times and it got better 6 times, increase 11 at the time. if not yet 6, just increase again
+                int j;
+                for(j=11; --j;)
+                    increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+                doneCounter=0;
+            }
+            else {
+                increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+                ++doneCounter;
+            }
+            lastDone=1;
+            lastAction=1;
+        }
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone==1) { // if you increased last time and it got worse, decrease
+            decreaseAmountOfThreadsByOne();
+            lastDone=-1;
+            lastAction=-1;
+            doneCounter=0;
+        }
+        else if((commitsDuringLastSleep>cdlsOld) && lastDone==-1) { // if you decreased and got better, decrease one more time
+            if(doneCounter<-6) {  // if you decreased 6 times and it got better 6 times, decrease by 10 threads
+                int j;
+                for(j=11; --j;)
+                    decreaseAmountOfThreadsByOne();
+                doneCounter=0;
+            }
+            else {
+                decreaseAmountOfThreadsByOne();
+                --doneCounter;
+            }
+            lastDone=-1;
+            lastAction=-1;
+        }
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone==-1) { // if you decreased and it got worse, increase again
+            increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+            lastDone=1;
+            lastAction=1;
+            doneCounter=0;
+        }
+        else if(lastDone==0) {
+            increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+            lastDone=1;
+            lastAction=1;
+            ++doneCounter;
+        }
+        else {
+            lastDone=0;
+        }
+        printf("Was running with %ld threads and running @ %f /100 of best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        fflush(stdout);
+
+        if(commitsDuringLastSleep>bestcdlsEver) {
+            bestcdlsEver=commitsDuringLastSleep;
+            bestcdlsEverReachedAt=global_numThread;
+            printf("new bestcdlsEver record of %ld\n",commitsDuringLastSleep);
+        }
+        cdlsOld=commitsDuringLastSleep;
 
         if(commitsDuringLastSleep>14000) {
             milisecondsOfSleep/=2;
@@ -691,26 +617,25 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             bestcdlsEver*=2;
             cdlsOld*=2;
         }
+#endif // USE_ALGO_02
     }
 }
 
 void increaseAmountOfThreadsByOne(void (*ptr2runMoreThreads)(long)) {
-//    printf("going to increase");
     fflush(stdout);
     if(global_numThread+2 < global_maxNumClient) {
         (*ptr2runMoreThreads)(1);
     }
-//    printf("done\n");
     fflush(stdout);
 }
 
 void decreaseAmountOfThreadsByOne() {
-    printf("going to decrease");
+//    printf("going to decrease");
     fflush(stdout);
     if(global_numThread > 2) {
         killThreadNr(global_numThread-1);
     }
-    printf("done\n");
+//    printf("done\n");
     fflush(stdout);
 }
 

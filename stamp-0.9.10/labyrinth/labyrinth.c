@@ -270,11 +270,13 @@ MAIN(argc, argv) {
     long maxAmountOfClients = global_params[PARAM_THREAD]+1; // maxNumWorkingThreads is the maximal amount of working threads, or the maximum amount of threads. This number is used to initialize the variables. The main thread usually doesn't work, but sometimes does some spare work.
 #ifdef DYNAMC_THREAD_MANAGEMENT
     long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * (maxAmountOfClients-1);
+    if(initNumThreads<1)
+        initNumThreads=1;
 #else
     long initNumThreads = maxAmountOfClients-1;
-#endif
     if(initNumThreads<1)
         exit(3942);
+#endif
 //    SIM_GET_NUM_CPU(numThread); // does nothing here
     TM_STARTUP(maxAmountOfClients);
 //    P_MEMORY_STARTUP(numThread);  // does nothing here

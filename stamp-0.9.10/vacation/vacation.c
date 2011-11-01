@@ -555,11 +555,13 @@ MAIN(argc, argv)
     long maxNumClient = ((long)global_params[PARAM_CLIENTS])+1;
 #ifdef DYNAMC_THREAD_MANAGEMENT
     long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * (maxNumClient-1);
+    if(initNumThreads<1)
+        initNumThreads=1;
 #else
     long initNumThreads = maxNumClient-1;
-#endif
     if(initNumThreads<1)
         exit(3942);
+#endif
     clients = (client_t**)malloc(maxNumClient * sizeof(client_t*));
     assert(clients != NULL);
     long i;

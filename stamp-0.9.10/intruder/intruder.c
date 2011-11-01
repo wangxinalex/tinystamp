@@ -377,11 +377,13 @@ MAIN(argc, argv) {
     long maxAmountOfClients = global_params[PARAM_THREAD]+1;
 #ifdef DYNAMC_THREAD_MANAGEMENT
     long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * (maxAmountOfClients-1);
+    if(initNumThreads<1)
+        initNumThreads=1;
 #else
     long initNumThreads = maxAmountOfClients-1;
-#endif
     if(initNumThreads<1)
         exit(3942);
+#endif
     SIM_GET_NUM_CPU(maxAmountOfClients);
     long percentAttack = global_params[PARAM_ATTACK];
     long maxDataLength = global_params[PARAM_LENGTH];
