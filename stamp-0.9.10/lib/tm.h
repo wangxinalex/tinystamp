@@ -84,7 +84,7 @@
 //#define INCREASE_COMMIT_COUNTER       ++(global_amountOfCommitsDone[myPositionInTheCounter])
 //#define INCREASE_COMMIT_COUNTER       global_amountOfCommitsDone[myPositionInTheCounter]=1  // debug only
 //#define INCREASE_COMMIT_COUNTER       printf("\ngaocd=%ld  mypinthec=%ld",global_amountOfCommitsDone,myPositionInTheCounter)  // debug only
-#define PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING 0.1
+#define PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING 0.2
 
 
 /* =============================================================================

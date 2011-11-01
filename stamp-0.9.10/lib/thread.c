@@ -614,46 +614,69 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         mySleep(200);
     }*/
 
-    long bestDiffEver=1;
+    long doneCounter=0;
+    long milisecondsOfSleep=250;
     int lastDone=0;
     int lastAction=0;
-    long oldDiff=0;
-    long bestDiffEverReachedAt=2;
-    long newDiff;
-    long amountOfCommitsLastTime=getTotalAmountOfCommits();
-    long amountOfCommitsThisTime;
-    long killhalfflag=0;
+    long cdlsOld=0;
+    long bestcdlsEver=1;
+    long bestcdlsEverReachedAt=2;
+    long commitsDuringLastSleep;
+    long sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
+    long sumOfAllCommitsEver;
+    //long killhalfflag=0;
     while (!every_thread_finished()) {
-        mySleep(250);
-        amountOfCommitsThisTime=getTotalAmountOfCommits();
-        newDiff=amountOfCommitsThisTime-amountOfCommitsLastTime;
-        double percentOfBestEver=((double)newDiff)/((double)bestDiffEver)*((double)100);
+        mySleep(milisecondsOfSleep);
+        sumOfAllCommitsEver=getTotalAmountOfCommits();
+        commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
 
-        if(newDiff>(bestDiffEver*1.2) && lastDone==1) { // if you increased last time and it got 20% better, increase again
-            increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+        double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
+
+        if(commitsDuringLastSleep>cdlsOld && lastDone==1) { // if you increased last time and it got better, increase again
+            if(doneCounter>6) {
+                int j;
+                for(j=11; --j;)
+                    increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+                doneCounter=0;
+            }
+            else {
+                increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+                ++doneCounter;
+            }
             lastDone=1;
             lastAction=1;
         }
-        else if((newDiff<oldDiff) && lastDone==1) { // if you increased last time and it got worse, decrease
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone==1) { // if you increased last time and it got worse, decrease
             decreaseAmountOfThreadsByOne();
             lastDone=-1;
             lastAction=-1;
+            doneCounter=0;
         }
-        else if(((newDiff>bestDiffEver) || (newDiff>oldDiff)) && lastDone==-1) { // if you decreased and got the best diff ever, decrease one more time
-            decreaseAmountOfThreadsByOne();
+        else if((commitsDuringLastSleep>cdlsOld) && lastDone==-1) { // if you decreased and got better, decrease one more time
+            if(doneCounter<-6) {
+                int j;
+                for(j=11; --j;)
+                    decreaseAmountOfThreadsByOne();
+                doneCounter=0;
+            }
+            else {
+                decreaseAmountOfThreadsByOne();
+                --doneCounter;
+            }
             lastDone=-1;
             lastAction=-1;
         }
-        else if((newDiff*1.05<oldDiff) && lastDone==-1) { // if you decreased and it got worse, increase again
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone==-1) { // if you decreased and it got worse, increase again
             increaseAmountOfThreadsByOne(ptr2runMoreThreads);
             lastDone=1;
             lastAction=1;
+            doneCounter=0;
         }
-        else if(bestDiffEver*0.70>newDiff) {
+/*        else if(bestcdlsEver*0.70>commitsDuringLastSleep) {
             ++killhalfflag;
             if(killhalfflag==8) {
                 killhalfflag=0;
-                if(bestDiffEver > 33) { // if workpieces are too small, this might happen without reason
+                if(bestcdlsEver > 33) { // if workpieces are too small, this might happen without reason
                     unsigned int i;
                     printf("kill half of the threads");
                     for(i=global_numThread/2; --i;) {
@@ -663,19 +686,23 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
                     lastAction=-1;
                 }
             }
-/*            if(global_numThread<bestDiffEverReachedAt) {
+            if(global_numThread<bestcdlsEverReachedAt) {
                 increaseAmountOfThreadsByOne(ptr2runMoreThreads);
                 lastDone=1;
                 lastAction=1;
             }
-            else {// global_numThread>bestDiffEverReachedAt
+            else {// global_numThread>bestcdlsEverReachedAt
                 decreaseAmountOfThreadsByOne();
                 lastDone=-1;
                 lastAction=-1;
-            }*/
-        }
+            }
+        } */
         else if(lastDone==0) {
-            if(lastAction>0) {
+            increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+            lastDone=1;
+            lastAction=1;
+            ++doneCounter;
+/*            if(lastAction>0) {
                 ++lastAction;
             }
             else if(lastAction<0){
@@ -696,13 +723,12 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
                 decreaseAmountOfThreadsByOne();
                 lastDone=-1;
                 lastAction=1; // made on purpose
-            }
+            } */
         }
         else {
             lastDone=0;
         }
-        fflush(stdout);
-        printf("\nNow running with %ld threads and running @ %f /100 of best ever.",global_numThread, percentOfBestEver);
+        printf("Was running with %ld threads and running @ %f /100 of best ever.\n",global_numThread-lastDone, percentOfBestEver);
 //        int i;
 //        for(i=global_numThread+1; --i!=0;)
 //            printf("#");
@@ -710,17 +736,29 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 //        binary_print_long_value(global_iFinished[0]);
 //         fflush(stdout);
 
-        if(percentOfBestEver>=100)
-            killhalfflag=0;
+//        if(percentOfBestEver>=100)
+//            killhalfflag=0;
 
-        if(newDiff>bestDiffEver) {
-            bestDiffEver=newDiff;
-            bestDiffEverReachedAt=global_numThread;
-            killhalfflag=0;
-            printf("\nCongratulations, new bestDiffEver record of %ld",newDiff);
+
+        if(commitsDuringLastSleep>bestcdlsEver) {
+            bestcdlsEver=commitsDuringLastSleep;
+            bestcdlsEverReachedAt=global_numThread;
+//            killhalfflag=0;
+            printf("new bestcdlsEver record of %ld\n",commitsDuringLastSleep);
         }
-        oldDiff=newDiff;
-        amountOfCommitsLastTime=amountOfCommitsThisTime;
+        cdlsOld=commitsDuringLastSleep;
+        sumOfAllCommitsEverLastTime=sumOfAllCommitsEver;
+
+        if(commitsDuringLastSleep>14000) {
+            milisecondsOfSleep/=2;
+            bestcdlsEver/=2;
+            cdlsOld/=2;
+        }
+        else if(commitsDuringLastSleep<7) {
+            milisecondsOfSleep*=2;
+            bestcdlsEver*=2;
+            cdlsOld*=2;
+        }
     }
 }
 
