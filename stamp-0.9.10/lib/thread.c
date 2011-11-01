@@ -76,13 +76,12 @@
 
 #include "tm.h"
 
-#include <unistd.h> // to use sleep in the main rutine
-//#include <time.h>
 #include "../../tinySTM/src/atomic_ops/atomic_ops.h"
 #define ATOMIC_OPS_joerg
 #include "../../tinySTM/src/atomic.h"
 
 static THREAD_LOCAL_T    global_threadId;       // some strange pthread stuff
+__thread long            global_myThreadID;
 static long              global_numThread       = 1;  // only mainThread=1, working threads are additionally added here
 static THREAD_BARRIER_T* global_barrierPtr      = NULL;
 static long*             global_threadIds       = NULL;
@@ -95,10 +94,7 @@ static volatile long*    global_iFinished;      // array of flagbits where threa
 static volatile long*    global_kill;           // array of flabbits to kill threads
 static long              global_maxNumClient;   // amount of clients that where initialized & amount of ram that was allocated = maximal number of threads to start
 static volatile long     global_workLeftToDo=0;  // name says everything
-//static long* global_amountOfCommitsDone=0;
 static long* global_amountOfCommitsDone;
-
-//long* global_amountOfCommitsDone;
 
 #define CACHE_LINE_SIZE (64)
 
@@ -110,7 +106,7 @@ static long* global_amountOfCommitsDone;
 static void threadWait (void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
-
+    global_myThreadID=threadId;
     while (1) {
         THREAD_BARRIER(global_barrierPtr, threadId); /* wait for start parallel */
         if (global_doShutdown) {
@@ -133,6 +129,7 @@ static void threadWaitNoBarrier (void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
     TM_THREAD_ENTER();
+    global_myThreadID=threadId;
     global_funcPtr(global_argPtr);
     TM_THREAD_EXIT();
 //    global_iFinished[threadId/8]=global_iFinished[threadId/8]^(1<<(threadId%8));
@@ -147,6 +144,7 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
     TM_THREAD_ENTER();
+    global_myThreadID=threadId;
     while(((long)ATOMIC_FETCH_DEC_FULL(&global_workLeftToDo))>0) {
         global_funcPtr(global_argPtr);
         if(global_kill[threadId/64]&(((long)1)<<(threadId%64)))
@@ -154,15 +152,7 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
     }
 
     TM_THREAD_EXIT();
-
-//    char temp=AO_load_full((volatile AO_t *)(&(global_iFinished[threadId/8])));
-//    temp=temp^(1<<(threadId%8));
-//    AO_store_full((volatile AO_t *)(&(global_iFinished[threadId/8])), (AO_t)(temp));
-//    global_iFinished[threadId/8]=global_iFinished[threadId/8]^(1<<(threadId%8)); // this line worked well, but might get you into a concurrency problem
-//    smp_mb__after_clear_bit(threadId%8,global_iFinished+threadId/64); // from http://www.mjmwired.net/kernel/Documentation/atomic_ops.txt and http://www.gnugeneration.com/books/linux/2.6.20/kernel-api/re204.html
-//    long l=__sync_and_and_fetch(&global_iFinished[threadId/64],~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
-//    binary_print_long_value(l);
 }
 
 
@@ -174,18 +164,8 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
 static void threadWaitNoBarrierInsideBench(void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
-//    printf("%d",threadId);
-//    while(((long)ATOMIC_FETCH_DEC_FULL(&global_workLeftToDo))>0) {
+    global_myThreadID=threadId;
     global_funcPtr(global_argPtr);
-//        if(global_kill[threadId/8]&(((char)1)<<(threadId%8)))
-//            break;
-//    }
-
-//    char temp=AO_load_full((volatile AO_t *)(&(global_iFinished[threadId/8])));
-//    temp=temp^(1<<(threadId%8));
-//    AO_store_full((volatile AO_t *)(&(global_iFinished[threadId/8])), (AO_t)(temp));
-//    global_iFinished[threadId/8]=global_iFinished[threadId/8]^(1<<(threadId%8)); // this line worked well, but might get you into a concurrency problem
-//    __sync_and_and_fetch(global_iFinished+(threadId/64),~(((long)1)<<(threadId%64)));
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64)));
 }
 
@@ -231,7 +211,7 @@ int every_thread_finished() {
 }
 
 int i_got_killed() {
-    long myThreadId=thread_getId();
+    long myThreadId=global_myThreadID;
     if(global_kill[myThreadId/64]&(((long)1)<<(myThreadId%64)))
         return 1;
     return 0;
@@ -369,7 +349,6 @@ void thread_start (void (*funcPtr)(void*), void* argPtr) {
  */
 void thread_start_noBarriers() {
     long threadId = 0; /* primary */
-//    threadWaitNoBarrier((void*)&threadId);
     threadWaitNoBarrier((void*)&threadId);
 }
 
@@ -453,16 +432,6 @@ void thread_shutdown () {
 }
 
 /* =============================================================================
- * kill_thread_nr
- * -- Primary thread kills secondary thread
- * =============================================================================
- */
-
-//void kill_thread_nr(long threadNumber) {
-//    THREAD_JOIN(global_threads[threadNumber]);
-//}
-
-/* =============================================================================
  * thread_shutdown_noBarriers
  * -- Primary thread kills pool of secondary threads
  * =============================================================================
@@ -480,7 +449,6 @@ void thread_shutdown_noBarriers() {
     global_numThread = 1;
 }
 
-
 /* =============================================================================
  * thread_barrier_alloc
  * =============================================================================
@@ -496,20 +464,10 @@ thread_barrier_t* thread_barrier_alloc (long numThread) {
     return barrierPtr;
 }
 
-
-/* =============================================================================
- * thread_barrier_free
- * =============================================================================
- */
 void thread_barrier_free (thread_barrier_t* barrierPtr) {
     free(barrierPtr);
 }
 
-
-/* =============================================================================
- * thread_barrier_init
- * =============================================================================
- */
 void thread_barrier_init (thread_barrier_t* barrierPtr){
     long i;
     long numThread = barrierPtr->numThread;
@@ -522,12 +480,6 @@ void thread_barrier_init (thread_barrier_t* barrierPtr){
     }
 }
 
-
-/* =============================================================================
- * thread_barrier
- * -- Simple logarithmic barrier
- * =============================================================================
- */
 void thread_barrier (thread_barrier_t* barrierPtr, long threadId){
     long i = 2;
     long base = 0;
@@ -576,12 +528,6 @@ void thread_barrier (thread_barrier_t* barrierPtr, long threadId){
     }
 }
 
-
-/* =============================================================================
- * thread_getId
- * -- Call after thread_start() to get thread ID inside parallel region
- * =============================================================================
- */
 long thread_getId() {  // i am used too much, please have a look, how can this be done faster?
     return (long)THREAD_LOCAL_GET(global_threadId);
 }
@@ -590,23 +536,15 @@ void add_one_commit() { // please, have a look at me concerning performance... /
     assert(0); // because depreciated
     assert(global_amountOfCommitsDone);
     assert(CACHE_LINE_SIZE);
-//    if(global_amountOfCommitsDone)
-//    ++((long) (*(global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(myThreadId)))); // this line does the same
-    ++global_amountOfCommitsDone[CACHE_LINE_SIZE/sizeof(long)*(thread_getId())];
+    ++global_amountOfCommitsDone[CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID)];
 }
 
 long* getMyCommitCounter() {
-//    return &(global_amountOfCommitsDone[CACHE_LINE_SIZE/sizeof(long)*(thread_getId())]);  // does exactly the same
-    return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(thread_getId()); // does exactly the same
+//    return &(global_amountOfCommitsDone[CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID)]);  // does exactly the same
+    return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID); // does exactly the same
 }
 
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
-/*    int i;
-    for(i=2; i-->0;){
-        printf("\n%ld",getTotalAmountOfCommits());
-        fflush(stdout);
-        mySleep(200);
-    }*/
 
     long doneCounter=0;
     long milisecondsOfSleep=250;
@@ -829,7 +767,7 @@ void thread_barrier_wait() {
 #define NUM_ITERATIONS (3)
 
 void printId (void* argPtr) {
-    long threadId = thread_getId();
+    long threadId = global_myThreadID;
     long numThread = thread_getNumThread();
     long i;
 
