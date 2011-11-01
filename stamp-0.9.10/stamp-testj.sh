@@ -32,19 +32,19 @@ else
 ######   STAMP REAL BENCHMARKS   ######
 bayes="./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t"
 genome="./genome/genome -g16384 -s64 -n16777216 -t"
-intruder="./intruder/intruder -a10 -l128 -n262144 -s1 -t" 
+intruder="./intruder/intruder -a10 -l512 -n1048576 -s1 -t" 
 kmeanslow="./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p"
 kmeanshigh="./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p"
-labyrinth="./labyrinth/labyrinth -i labyrinth/inputs/random-x512-y512-z7-n512.txt -t"
+labyrinth="./labyrinth/labyrinth -i labyrinth/inputs/random-x1024-y1024-z11-n1024.txt -t"
 ssca2="./ssca2/ssca2 -s20 -i1.0 -u1.0 -l3 -p3 -t"
-vacationlow="./vacation/vacation -n2 -q90 -u98 -r1048576 -t4194304 -c"
-vacationhigh="./vacation/vacation -n4 -q60 -u90 -r1048576 -t4194304 -c"
+vacationlow="./vacation/vacation -n2 -q90 -u98 -r10485760 -t41943040 -w30000 -c"
+vacationhigh="./vacation/vacation -n4 -q60 -u90 -r10485760 -t41943040 -c"
+vacationveryhigh="./vacation/vacation -n8 -q60 -u90 -r10485760 -t41943040 -c"
 yada="./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t"
 fi
 
 for threads in {1..52}
 do
-
 
 	logdir="logs/$task"
 	logfile="$prefix.$threads.log"

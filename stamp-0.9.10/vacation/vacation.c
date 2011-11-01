@@ -595,7 +595,7 @@ MAIN(argc, argv)
 #ifdef DYNAMC_THREAD_MANAGEMENT
     ajust_amount_of_threads(&runMoreThreads);
 #else
-    while (!every_thread_finished()) {}//{sleep(0.001);}
+    while (!every_thread_finished()) {mySleep(1);}//{sleep(0.001);}
 #endif
 
     TIMER_READ(stop);
