@@ -363,7 +363,7 @@ void processPackets (void* argPtr) {
 }*/
 
 static void runMoreThreads(long numThreads) {
-    thread_startup_noBarriers(2, 0);
+    thread_startup_noBarriers(numThreads, 0);
 }
 
 /* =============================================================================

@@ -186,7 +186,8 @@ static void threadWaitNoBarrierInsideBench(void* argPtr) {
 //    temp=temp^(1<<(threadId%8));
 //    AO_store_full((volatile AO_t *)(&(global_iFinished[threadId/8])), (AO_t)(temp));
 //    global_iFinished[threadId/8]=global_iFinished[threadId/8]^(1<<(threadId%8)); // this line worked well, but might get you into a concurrency problem
-    __sync_and_and_fetch(global_iFinished+(threadId/64),~(((long)1)<<(threadId%64)));
+//    __sync_and_and_fetch(global_iFinished+(threadId/64),~(((long)1)<<(threadId%64)));
+    __sync_and_and_fetch(&global_iFinished[threadId/64],~(((long)1)<<(threadId%64)));
 }
 
 
@@ -206,7 +207,7 @@ void binary_print_long_value(long l) {
 void killThreadNr(long threadNr) {
     assert(threadNr<global_maxNumClient);
     global_kill[threadNr/64]=global_kill[threadNr/64]|(((long)1)<<(threadNr%64));
-    while(global_iFinished[threadNr/64]&(1<<(threadNr%64))) {}
+    while(global_iFinished[threadNr/64]&(((long)1)<<(threadNr%64))) {}//{printf("\ni am looping inside killThreadNr_whileLoop");}
     global_kill[threadNr/64]=global_kill[threadNr/64]^(((long)1)<<(threadNr%64));
 //    THREAD_JOIN(global_threads[threadNr]); // it's strange, but with join it won't work
     --global_numThread;
@@ -430,8 +431,7 @@ void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long initNumThr
  * -- Primary thread kills pool of secondary threads
  * =============================================================================
  */
-void thread_shutdown ()
-{
+void thread_shutdown () {
     /* Make secondary threads exit wait() */
     global_doShutdown = TRUE;
     THREAD_BARRIER(global_barrierPtr, 0);
@@ -469,8 +469,7 @@ void thread_shutdown ()
  * -- Primary thread kills pool of secondary threads
  * =============================================================================
  */
-void thread_shutdown_noBarriers()
-{
+void thread_shutdown_noBarriers() {
     long numThread = global_numThread;
     long i;
     for (i = 1; i < numThread; i++)
@@ -513,9 +512,7 @@ void thread_barrier_free (thread_barrier_t* barrierPtr) {
  * thread_barrier_init
  * =============================================================================
  */
-void
-thread_barrier_init (thread_barrier_t* barrierPtr)
-{
+void thread_barrier_init (thread_barrier_t* barrierPtr){
     long i;
     long numThread = barrierPtr->numThread;
 
@@ -533,9 +530,7 @@ thread_barrier_init (thread_barrier_t* barrierPtr)
  * -- Simple logarithmic barrier
  * =============================================================================
  */
-void
-thread_barrier (thread_barrier_t* barrierPtr, long threadId)
-{
+void thread_barrier (thread_barrier_t* barrierPtr, long threadId){
     long i = 2;
     long base = 0;
     long index;
@@ -594,6 +589,7 @@ long thread_getId() {  // i am used too much, please have a look, how can this b
 }
 
 void add_one_commit() { // please, have a look at me concerning performance... // depreciated, should not be used anymore
+    assert(0); // because depreciated
     assert(global_amountOfCommitsDone);
     assert(CACHE_LINE_SIZE);
 //    if(global_amountOfCommitsDone)
@@ -633,7 +629,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
 
         if(commitsDuringLastSleep>cdlsOld && lastDone==1) { // if you increased last time and it got better, increase again
-            if(doneCounter>6) {
+            if(doneCounter>6) {  // if you increased 6 times and it got better 6 times, increase again
                 int j;
                 for(j=11; --j;)
                     increaseAmountOfThreadsByOne(ptr2runMoreThreads);
@@ -653,7 +649,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             doneCounter=0;
         }
         else if((commitsDuringLastSleep>cdlsOld) && lastDone==-1) { // if you decreased and got better, decrease one more time
-            if(doneCounter<-6) {
+            if(doneCounter<-6) {  // if you decreased 6 times and it got better 6 times, decrease by 10 threads
                 int j;
                 for(j=11; --j;)
                     decreaseAmountOfThreadsByOne();
@@ -767,20 +763,18 @@ void increaseAmountOfThreadsByOne(void (*ptr2runMoreThreads)(long)) {
     fflush(stdout);
     if(global_numThread+2 < global_maxNumClient) {
         (*ptr2runMoreThreads)(1);
-//        ++global_numThread;
     }
 //    printf("done\n");
     fflush(stdout);
 }
 
 void decreaseAmountOfThreadsByOne() {
-//    printf("going to decrease");
+    printf("going to decrease");
     fflush(stdout);
     if(global_numThread > 2) {
         killThreadNr(global_numThread-1);
-//        --global_numThread;
     }
-//    printf("done\n");
+    printf("done\n");
     fflush(stdout);
 }
 
