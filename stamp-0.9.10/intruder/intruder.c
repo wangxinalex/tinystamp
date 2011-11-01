@@ -374,17 +374,15 @@ MAIN(argc, argv) {
     GOTO_REAL();  // does nothing here
     // Initialization
     parseArgs(argc, (char** const)argv);
-    long numThread = global_params[PARAM_THREAD]+1;
+    long maxAmountOfClients = global_params[PARAM_THREAD]+1;
 #ifdef DYNAMC_THREAD_MANAGEMENT
-    long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * numThread;
+    long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * (maxAmountOfClients-1);
 #else
-    long initNumThreads = numThread;
+    long initNumThreads = maxAmountOfClients-1;
 #endif
-    if(initNumThreads<2)
-        initNumThreads = 2; // start at least one working thread right at the begining
-
-    SIM_GET_NUM_CPU(numThread);
-
+    if(initNumThreads<1)
+        exit(3942);
+    SIM_GET_NUM_CPU(maxAmountOfClients);
     long percentAttack = global_params[PARAM_ATTACK];
     long maxDataLength = global_params[PARAM_LENGTH];
     long numFlow       = global_params[PARAM_NUM];
@@ -406,11 +404,11 @@ MAIN(argc, argv) {
     printf("Num attack      = %li\n", numAttack);
     decoder_t* decoderPtr = decoder_alloc();
     assert(decoderPtr);
-    vector_t** errorVectors = (vector_t**)malloc(numThread * sizeof(vector_t*));
+    vector_t** errorVectors = (vector_t**)malloc(maxAmountOfClients * sizeof(vector_t*));
     assert(errorVectors);
 
     long i;
-    for (i = 0; i < numThread; i++) {
+    for (i = 0; i < maxAmountOfClients; i++) {
         vector_t* errorVectorPtr = vector_alloc(numFlow);
         assert(errorVectorPtr);
         errorVectors[i] = errorVectorPtr;
@@ -426,10 +424,10 @@ MAIN(argc, argv) {
     TIMER_T startTime;
     TIMER_READ(startTime);
 
-    thread_prepare_start(processPackets,(void*)&arg,initNumThreads, numThread, 0);
+    thread_prepare_start(processPackets,(void*)&arg, maxAmountOfClients, 0);
 
-    TM_STARTUP(numThread);
-    P_MEMORY_STARTUP(numThread);
+    TM_STARTUP(maxAmountOfClients);
+    P_MEMORY_STARTUP(maxAmountOfClients);
 //    thread_startup(numThread);
     initial_thread_startup_noBarriers(initNumThreads, 0);
 
@@ -455,7 +453,7 @@ MAIN(argc, argv) {
     // Check solution
 
     long numFound = 0;
-    for (i = 0; i < numThread; i++) {
+    for (i = 0; i < maxAmountOfClients; i++) {
         vector_t* errorVectorPtr = errorVectors[i];
         long e;
         long numError = vector_getSize(errorVectorPtr);
@@ -471,7 +469,7 @@ MAIN(argc, argv) {
 
     // Clean up
 
-    for (i = 0; i < numThread; i++) {
+    for (i = 0; i < maxAmountOfClients; i++) {
         vector_free(errorVectors[i]);
     }
     free(errorVectors);

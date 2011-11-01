@@ -172,7 +172,7 @@ void thread_start_noBarriers();
 * ==============================================================================
 */
 
-void thread_prepare_start(void (*funcPtr)(void*), void* argPtr, long maxNumThreads, long maxNumClient, long workLeftToDo);
+void thread_prepare_start(void (*funcPtr)(void*), void* argPtr, long maxNumClient, long workLeftToDo);
 
 /* =============================================================================
  * thread_shutdown

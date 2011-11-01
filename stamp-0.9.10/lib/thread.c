@@ -94,7 +94,6 @@ static volatile bool_t   global_doShutdown      = FALSE;
 static volatile long*    global_iFinished;      // array of flagbits where threads can say: IFinished
 static volatile long*    global_kill;           // array of flabbits to kill threads
 static long              global_maxNumClient;   // amount of clients that where initialized & amount of ram that was allocated = maximal number of threads to start
-static long              global_initNumThreads; // amount of threads initially started
 static volatile long     global_workLeftToDo=0;  // name says everything
 //static long* global_amountOfCommitsDone=0;
 static long* global_amountOfCommitsDone;
@@ -162,7 +161,7 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
 //    global_iFinished[threadId/8]=global_iFinished[threadId/8]^(1<<(threadId%8)); // this line worked well, but might get you into a concurrency problem
 //    smp_mb__after_clear_bit(threadId%8,global_iFinished+threadId/64); // from http://www.mjmwired.net/kernel/Documentation/atomic_ops.txt and http://www.gnugeneration.com/books/linux/2.6.20/kernel-api/re204.html
 //    long l=__sync_and_and_fetch(&global_iFinished[threadId/64],~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
-    __sync_and_and_fetch(&global_iFinished[threadId/64],~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
+    __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
 //    binary_print_long_value(l);
 }
 
@@ -187,7 +186,7 @@ static void threadWaitNoBarrierInsideBench(void* argPtr) {
 //    AO_store_full((volatile AO_t *)(&(global_iFinished[threadId/8])), (AO_t)(temp));
 //    global_iFinished[threadId/8]=global_iFinished[threadId/8]^(1<<(threadId%8)); // this line worked well, but might get you into a concurrency problem
 //    __sync_and_and_fetch(global_iFinished+(threadId/64),~(((long)1)<<(threadId%64)));
-    __sync_and_and_fetch(&global_iFinished[threadId/64],~(((long)1)<<(threadId%64)));
+    __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64)));
 }
 
 
@@ -288,24 +287,10 @@ void thread_startup (long numThread) {
  * -- numThread is total number of threads (primary + secondaries)
  * =============================================================================
  */
-void initial_thread_startup_noBarriers (long numThread, char useWorkPieces) { // true = yes, use work pieces, false: use other things. false=0, true!=0
+void initial_thread_startup_noBarriers (long initialThreads, char useWorkPieces) { // true = yes, use work pieces, false: use other things. false=0, true!=0
     long i;
-    global_numThread = numThread;
+    global_numThread = initialThreads+1;
         assert(global_kill);
-
-    /* Set up ids */
-    THREAD_LOCAL_INIT(global_threadId);
-    assert(global_threadIds == NULL);
-    global_threadIds = (long*)malloc(global_maxNumClient * sizeof(long));
-    assert(global_threadIds);
-    for (i = 0; i < global_maxNumClient; i++) {
-        global_threadIds[i] = i;
-    }
-
-    /* Set up thread list */
-    assert(global_threads == NULL);
-    global_threads = (THREAD_T*)malloc(global_maxNumClient * sizeof(THREAD_T));
-    assert(global_threads);
 
     void (*threadWaitMethodPtr)(void*) = NULL;
     if(useWorkPieces)
@@ -315,11 +300,10 @@ void initial_thread_startup_noBarriers (long numThread, char useWorkPieces) { //
 
     /* Set up pool */
     THREAD_ATTR_INIT(global_threadAttr);
-    for (i = 1; i < numThread; i++) {
+    for(i=global_numThread; --i;) {
         assert(global_threadIds[i]);
         THREAD_CREATE(global_threads[i],
                       global_threadAttr,
-//                      &threadWaitNoBarrierWorkPices,
                       threadWaitMethodPtr,
                       &global_threadIds[i]);
     }
@@ -333,6 +317,11 @@ void initial_thread_startup_noBarriers (long numThread, char useWorkPieces) { //
  */
 void thread_startup_noBarriers(long numThread, char useWorkPieces) {
     global_numThread += numThread;
+    long tooMuch=global_numThread-global_maxNumClient;
+    if(tooMuch>0) {
+        global_numThread-=tooMuch;
+        numThread-=tooMuch;
+    }
     assert(global_numThread<=global_maxNumClient);
 
     void (*threadWaitMethodPtr)(void*) = NULL;
@@ -343,8 +332,7 @@ void thread_startup_noBarriers(long numThread, char useWorkPieces) {
 
     long i;
     for (i = global_numThread-numThread; i < global_numThread; ++i) {
-//        global_iFinished[i/8]=global_iFinished[i/8]|(1<<(i%8));
-        __sync_or_and_fetch(global_iFinished+i/64,(((long)1)<<(i%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
+        __sync_or_and_fetch(&(global_iFinished[i/64]),(((long)1)<<(i%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
         THREAD_CREATE(global_threads[i],
                       global_threadAttr,
                       threadWaitMethodPtr,
@@ -393,37 +381,47 @@ void thread_start_noBarriers() {
 * prepare still running flags
 */
 
-void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long initNumThreads, long maxNumClient, long amountOfWorkPieces) {
+void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long maxNumClient, long amountOfWorkPieces) {
     global_funcPtr = funcPtr;
     global_argPtr = argPtr;
     global_maxNumClient = maxNumClient;
-    global_initNumThreads = initNumThreads;
     global_workLeftToDo=amountOfWorkPieces;
 
     int memAllocErrorPosix;
-//    global_iFinished = malloc(maxNumClient/8+1);
     assert(sizeof(long)==8);
     memAllocErrorPosix=posix_memalign((void**)&global_iFinished, 64, 8*(maxNumClient/64+1));  // from http://pubs.opengroup.org/onlinepubs/000095399/functions/posix_memalign.html
     assert(global_iFinished);
     assert(!memAllocErrorPosix);
-//    global_kill = malloc(maxNumClient/8+1);
     memAllocErrorPosix=posix_memalign((void**)&global_kill, 64, 8*(maxNumClient/64+1));  // from http://pubs.opengroup.org/onlinepubs/000095399/functions/posix_memalign.html
     assert(global_kill);
     assert(!memAllocErrorPosix);
     long i;
     for (i=maxNumClient/64+1;--i;) {
-//        global_iFinished[i]=255;
         global_iFinished[i]=0xffffffffffffffff;
         global_kill[i]=0;
     }
     global_kill[0]=0;
     global_iFinished[0]=0xfffffffffffffffe;
 
-// global_amountOfCommitsDone  CACHE_LINE_SIZE
-    posix_memalign((void**)&global_amountOfCommitsDone, 64, CACHE_LINE_SIZE*global_maxNumClient);
+    int posixMemalignError=posix_memalign((void**)&global_amountOfCommitsDone, 64, CACHE_LINE_SIZE*global_maxNumClient);
+    assert(!posixMemalignError);
     assert(global_amountOfCommitsDone);
-    for (i=global_maxNumClient; i-->0;)
+    for (i=global_maxNumClient; i--;)
         global_amountOfCommitsDone[CACHE_LINE_SIZE/sizeof(long)*i]=0;
+
+    // Set up ids
+    THREAD_LOCAL_INIT(global_threadId);
+    assert(global_threadIds == NULL);
+    global_threadIds = (long*)malloc(global_maxNumClient * sizeof(long));
+    assert(global_threadIds);
+    for (i = 0; i < global_maxNumClient; i++) {
+        global_threadIds[i] = i;
+    }
+
+    // Set up thread list
+    assert(global_threads == NULL);
+    global_threads = (THREAD_T*)malloc(global_maxNumClient * sizeof(THREAD_T));
+    assert(global_threads);
 }
 
 /* =============================================================================

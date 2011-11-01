@@ -335,7 +335,7 @@ initializeClients (manager_t* managerPtr)
  * initializeClients - by joerg
  * =============================================================================
  */
-static client_t* initializeOneClient (manager_t* managerPtr, long clientID, long initNumThreads) {
+static client_t* initializeOneClient (manager_t* managerPtr, long clientID) {
     random_t* randomPtr;
     client_t* client;
 
@@ -357,8 +357,6 @@ static client_t* initializeOneClient (manager_t* managerPtr, long clientID, long
     numTransactionPerClient=numTransaction/ ((long) global_params[AMOUNT_OF_WORKPIECES]); // improved version
     if(clientID==0)
         numTransactionPerClient=numTransaction % ((long)global_params[AMOUNT_OF_WORKPIECES]);
-//    numTransactionPerClient = (long)((double)numTransaction / (double)global_params[AMOUNT_OF_WORKPIECES] + 0.5); // adapted version
-//    numTransactionPerClient = (long)((double)numTransaction / (double)initNumThreads + 0.5); // old version
     queryRange = (long)((double)percentQuery / 100.0 * (double)numRelation + 0.5);
 
     client = client_alloc(  clientID,
@@ -462,7 +460,7 @@ static void runMoreThreads(long numThreads) {
     long i;
     for (i=thread_getNumThread()+numThreads; i--!=thread_getNumThread();) {
         if(!clients[i])
-            clients[i] = initializeOneClient(managerPtr, i, numThreads);
+            clients[i] = initializeOneClient(managerPtr, i);
     }
     thread_startup_noBarriers(numThreads, 1);
 }
@@ -556,18 +554,18 @@ MAIN(argc, argv)
 
     long maxNumClient = ((long)global_params[PARAM_CLIENTS])+1;
 #ifdef DYNAMC_THREAD_MANAGEMENT
-    long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * maxNumClient;
+    long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * (maxNumClient-1);
 #else
-    long initNumThreads = maxNumClient;
+    long initNumThreads = maxNumClient-1;
 #endif
-    if(initNumThreads<2)
-        initNumThreads = 2; // start at least one working thread right at the begining
+    if(initNumThreads<1)
+        exit(3942);
     clients = (client_t**)malloc(maxNumClient * sizeof(client_t*));
     assert(clients != NULL);
     long i;
-    for (i=initNumThreads; i--;)
-        clients[i] = initializeOneClient(managerPtr, i, initNumThreads);
-    for (i=maxNumClient-1; i>=initNumThreads; --i)
+    for (i=maxNumClient; i--;)
+        clients[i] = initializeOneClient(managerPtr, i);
+    for (i=maxNumClient; --i>initNumThreads;)
         clients[i]=0;
 
     /* Run transactions */
@@ -577,7 +575,7 @@ MAIN(argc, argv)
 
     TM_STARTUP_NO_ARGS();
     P_MEMORY_STARTUP(maxNumClient);  // = nothing ifndef SIMULATOR
-    thread_prepare_start(client_run, (void*)clients, initNumThreads, maxNumClient, global_params[AMOUNT_OF_WORKPIECES]);
+    thread_prepare_start(client_run, (void*)clients, maxNumClient, global_params[AMOUNT_OF_WORKPIECES]);
     initial_thread_startup_noBarriers(initNumThreads, 1);
 
     GOTO_SIM();  // = nothing ifndef SIMULATOR

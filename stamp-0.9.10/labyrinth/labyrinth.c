@@ -267,20 +267,17 @@ MAIN(argc, argv)
 MAIN(argc, argv) {
 //    GOTO_REAL(); // does not do anything here
     parseArgs(argc, (char** const)argv);
-    long maxNumWorkingThreads = global_params[PARAM_THREAD]+1; // maxNumWorkingThreads is the maximal amount of working threads, or the maximum amount of threads. This number is used to initialize the variables. The main thread usually doesn't work, but sometimes does some spare work.
-//    long initNumThreads = maxNumWorkingThreads; // amount of threads to start right at the begining
+    long maxAmountOfClients = global_params[PARAM_THREAD]+1; // maxNumWorkingThreads is the maximal amount of working threads, or the maximum amount of threads. This number is used to initialize the variables. The main thread usually doesn't work, but sometimes does some spare work.
 #ifdef DYNAMC_THREAD_MANAGEMENT
-    long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * maxNumWorkingThreads;
+    long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * (maxAmountOfClients-1);
 #else
-    long initNumThreads = maxNumWorkingThreads;
+    long initNumThreads = maxAmountOfClients-1;
 #endif
-    if(initNumThreads<2)
-        initNumThreads = 2; // start at least one working thread right at the begining
-
+    if(initNumThreads<1)
+        exit(3942);
 //    SIM_GET_NUM_CPU(numThread); // does nothing here
-    TM_STARTUP(maxNumWorkingThreads);
+    TM_STARTUP(maxAmountOfClients);
 //    P_MEMORY_STARTUP(numThread);  // does nothing here
-
     maze_t* mazePtr = maze_alloc();
     assert(mazePtr);
     long numPathToRoute = maze_read(mazePtr, global_inputFile);
@@ -288,15 +285,12 @@ MAIN(argc, argv) {
                                        global_params[PARAM_YCOST],
                                        global_params[PARAM_ZCOST],
                                        global_params[PARAM_BENDCOST]);
-
     assert(routerPtr);
     list_t* pathVectorListPtr = list_alloc(NULL);
     assert(pathVectorListPtr);
-
-    // Run transactions
     router_solve_arg_t routerArg = {routerPtr, mazePtr, pathVectorListPtr};
-    thread_prepare_start(router_solve,(void *)&routerArg, initNumThreads, maxNumWorkingThreads, amountOfWorkPieces);
-
+    thread_prepare_start(router_solve,(void *)&routerArg, maxAmountOfClients, amountOfWorkPieces);
+    // Run transactions
     TIMER_T startTime;
     TIMER_T stopTime;
     TIMER_READ(startTime);
