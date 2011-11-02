@@ -41,7 +41,7 @@
 		<Cursor position="4378" topLine="123" />
 	</File>
 	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="2">
-		<Cursor position="11756" topLine="369" />
+		<Cursor position="11678" topLine="369" />
 	</File>
 	<File name="stamp-0.9.10/kmeans/cluster.c" open="0" top="0" tabpos="0">
 		<Cursor position="6600" topLine="207" />
@@ -62,7 +62,7 @@
 		<Cursor position="6686" topLine="186" />
 	</File>
 	<File name="stamp-0.9.10/labyrinth/labyrinth.c" open="0" top="0" tabpos="1">
-		<Cursor position="9462" topLine="265" />
+		<Cursor position="9384" topLine="265" />
 	</File>
 	<File name="stamp-0.9.10/labyrinth/maze.c" open="0" top="0" tabpos="4">
 		<Cursor position="9375" topLine="250" />
@@ -133,8 +133,8 @@
 	<File name="stamp-0.9.10/vacation/reservation.c" open="0" top="0" tabpos="0">
 		<Cursor position="14852" topLine="486" />
 	</File>
-	<File name="stamp-0.9.10/vacation/vacation.c" open="0" top="0" tabpos="2">
-		<Cursor position="18253" topLine="546" />
+	<File name="stamp-0.9.10/vacation/vacation.c" open="1" top="1" tabpos="0">
+		<Cursor position="18160" topLine="546" />
 	</File>
 	<File name="stamp-0.9.10/yada/region.c" open="0" top="0" tabpos="5">
 		<Cursor position="10795" topLine="284" />

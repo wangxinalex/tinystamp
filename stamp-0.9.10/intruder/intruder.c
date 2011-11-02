@@ -382,7 +382,7 @@ MAIN(argc, argv) {
 #else
     long initNumThreads = maxAmountOfClients-1;
     if(initNumThreads<1) {
-        prinft("ERROR: 3942\nI need at least one worker thread.");
+        printf("ERROR: 3942\nI need at least one worker thread.");
         exit(3942);
     }
 #endif
