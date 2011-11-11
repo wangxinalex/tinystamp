@@ -85,8 +85,8 @@
 	<File name="stamp-0.9.10/lib/rbtree.c" open="0" top="0" tabpos="5">
 		<Cursor position="39095" topLine="1289" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.c" open="0" top="0" tabpos="1">
-		<Cursor position="5040" topLine="111" />
+	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="0">
+		<Cursor position="19340" topLine="520" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="1">
 		<Cursor position="9904" topLine="257" />
@@ -133,8 +133,8 @@
 	<File name="stamp-0.9.10/vacation/reservation.c" open="0" top="0" tabpos="0">
 		<Cursor position="14852" topLine="486" />
 	</File>
-	<File name="stamp-0.9.10/vacation/vacation.c" open="1" top="1" tabpos="0">
-		<Cursor position="18160" topLine="546" />
+	<File name="stamp-0.9.10/vacation/vacation.c" open="0" top="0" tabpos="0">
+		<Cursor position="18248" topLine="546" />
 	</File>
 	<File name="stamp-0.9.10/yada/region.c" open="0" top="0" tabpos="5">
 		<Cursor position="10795" topLine="284" />

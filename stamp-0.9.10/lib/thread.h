@@ -268,7 +268,11 @@ void mySleep(long miliseconds);
 
 void increaseAmountOfThreadsByOne(void (*ptr2runMoreThreads)(long));
 
+void increaseAmountOfThreads(long amountOfNewThreads, void (*ptr2runMoreThreads)(long));
+
 void decreaseAmountOfThreadsByOne();
+
+void decreaseAmountOfThreads(long amountOfNewThreads);
 
 long* getMyCommitCounter();
 
