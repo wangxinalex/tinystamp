@@ -689,12 +689,12 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         }
         cdlsOld=commitsDuringLastSleep;
 
-        if(commitsDuringLastSleep>14000) {
+        if(commitsDuringLastSleep>220000) {
             milisecondsOfSleep/=2;
             bestcdlsEver/=2;
             cdlsOld/=2;
         }
-        else if(commitsDuringLastSleep<11) {
+        else if(commitsDuringLastSleep<22000 && milisecondsOfSleep<2000) {
             milisecondsOfSleep*=2;
             bestcdlsEver*=2;
             cdlsOld*=2;
