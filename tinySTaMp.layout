@@ -85,11 +85,11 @@
 	<File name="stamp-0.9.10/lib/rbtree.c" open="0" top="0" tabpos="5">
 		<Cursor position="39095" topLine="1289" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="0">
-		<Cursor position="19340" topLine="520" />
+	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="1">
+		<Cursor position="25680" topLine="684" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="1">
-		<Cursor position="9904" topLine="257" />
+	<File name="stamp-0.9.10/lib/thread.h" open="1" top="0" tabpos="2">
+		<Cursor position="10049" topLine="256" />
 	</File>
 	<File name="stamp-0.9.10/lib/timer.h" open="0" top="0" tabpos="0">
 		<Cursor position="3018" topLine="65" />

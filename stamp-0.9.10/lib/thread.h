@@ -272,7 +272,9 @@ void increaseAmountOfThreads(long amountOfNewThreads, void (*ptr2runMoreThreads)
 
 void decreaseAmountOfThreadsByOne();
 
-void decreaseAmountOfThreads(long amountOfNewThreads);
+void decreaseAmountOfThreads(long amountOfDeletingThreads);
+
+void flagThreadToBeKilled(long threadNr);
 
 long* getMyCommitCounter();
 

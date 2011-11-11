@@ -458,12 +458,14 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 
 #ifdef USE_ALGO_01
     long doneCounter=0;
+    long sumOfAllCommitsEver;
 #endif // USE_ALG0_01
 #ifdef USE_ALGO_02
     long doneCounter=0;
 #endif // USE_ALGO_02
 #ifdef USE_ALGO_03
     long level=16;
+    long sumOfAllCommitsEver;
 #endif // USE_ALGO_03
     long milisecondsOfSleep=250;
     int lastDone=0;
@@ -473,7 +475,6 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     long bestcdlsEverReachedAt=2;
     long commitsDuringLastSleep;
     long sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
-    long sumOfAllCommitsEver;
     while (!every_thread_finished()) {
 #ifdef USE_ALGO_01
         sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
@@ -679,7 +680,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             lastDone=0;
             lastAction=0;
         }
-        printf("Was running with %ld threads and running @ %f /100 of best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        printf("Was running with %ld threads and running @ %f / 100 of best ever.\n",global_numThread-lastDone, percentOfBestEver);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -725,10 +726,23 @@ void decreaseAmountOfThreadsByOne() {
 //    fflush(stdout);
 }
 
-void decreaseAmountOfThreads(long amountOfNewThreads) {
-    int j=0;
-    for (j=amountOfNewThreads+1; --j;)
-        decreaseAmountOfThreadsByOne();
+void decreaseAmountOfThreads(long amountOfDeletingThreads) {
+    assert(global_numThread<global_maxNumClient);
+    long k;
+    for (k=amountOfDeletingThreads+1; (global_numThread>2) && (--k);) {
+        flagThreadToBeKilled(global_numThread-k);
+        --global_numThread;
+    }
+    long threadNr;
+    for (k=amountOfDeletingThreads+1; --k;) {
+        threadNr=global_numThread-k;
+        while(global_iFinished[threadNr/64]&(((long)1)<<(threadNr%64))) {}
+        global_kill[threadNr/64]=global_kill[threadNr/64]^(((long)1)<<(threadNr%64));
+    }
+}
+
+void flagThreadToBeKilled(long threadNr) {
+        global_kill[threadNr/64]=global_kill[threadNr/64]|(((long)1)<<(threadNr%64));
 }
 
 void mySleep(long miliseconds) {
