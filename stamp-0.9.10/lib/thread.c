@@ -729,15 +729,17 @@ void decreaseAmountOfThreadsByOne() {
 void decreaseAmountOfThreads(long amountOfDeletingThreads) {
     assert(global_numThread<global_maxNumClient);
     long k;
+    long copyOfGlobalNumThread=global_numThread;
     for (k=amountOfDeletingThreads+1; (global_numThread>2) && (--k);) {
         flagThreadToBeKilled(global_numThread-k);
         --global_numThread;
     }
     long threadNr;
-    for (k=amountOfDeletingThreads+1; --k;) {
-        threadNr=global_numThread-k;
+    for (k=amountOfDeletingThreads+1; (copyOfGlobalNumThread>2) && (--k);) {
+        threadNr=copyOfGlobalNumThread-k;
         while(global_iFinished[threadNr/64]&(((long)1)<<(threadNr%64))) {}
         global_kill[threadNr/64]=global_kill[threadNr/64]^(((long)1)<<(threadNr%64));
+        --copyOfGlobalNumThread;
     }
 }
 
