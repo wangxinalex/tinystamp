@@ -57,41 +57,41 @@ sub parseLog
 
     return ($average, $stddev);
 
-    # Remove extreme values for 20%
-    for( $i = 0 ; $i < int(scalar @durations / 5) ; $i++ ) {
-      my $extreme = 0;
-      my $to_remove;
-      # Find max deviation
-      foreach $duration (@durations) {
-	  	# Add it to extreme
-		  my $diff = $duration - $average;
-		  if( $diff < 0 ) {
-		      $diff = 0 - $diff;
-		  }
-		  if( $extreme < $diff ) {
-		      $extreme = $diff;
-		      $to_remove = $duration;
-		  }
-      }
-      # Create new array without max value
-      my @new_durations;
-      foreach $duration (@durations) {
-		  if( $duration != $extreme ) {
-		      push( @new_durations, $duration );
-		  }
-      }
+#    # Remove extreme values for 20%
+#    for( $i = 0 ; $i < int(scalar @durations / 5) ; $i++ ) {
+#      my $extreme = 0;
+#      my $to_remove;
+#      # Find max deviation
+#      foreach $duration (@durations) {
+#	  	# Add it to extreme
+#		  my $diff = $duration - $average;
+#		  if( $diff < 0 ) {
+#		      $diff = 0 - $diff;
+#		  }
+#		  if( $extreme < $diff ) {
+#		      $extreme = $diff;
+#		      $to_remove = $duration;
+#		  }
+#      }
+#      # Create new array without max value
+#      my @new_durations;
+#      foreach $duration (@durations) {
+#		  if( $duration != $extreme ) {
+#		      push( @new_durations, $duration );
+#		  }
+#      }
       # Set new into durations
-      @durations = @new_duration;
-    }
+#      @durations = @new_duration;
+#    }
 
-    # Recalculate average after removing extreme values
-    $sum = 0;
-    foreach $duration (@durations) {
-	$sum += $duration;
-    }
-    $average = $sum / scalar @durations;
-
-    return $average;
+#    # Recalculate average after removing extreme values
+#    $sum = 0;
+#    foreach $duration (@durations) {
+#	$sum += $duration;
+#    }
+#    $average = $sum / scalar @durations;
+#
+#    return $average;
 }
 
 sub parseLogStats
@@ -184,7 +184,7 @@ sub createPlot
 		set x2range [0:60]
 		set xrange [0:60]
 		set grid xtics lt 1 lw 2 lc rgb \"#444444\"
-		set xlabel \"Number of threads\"
+		set xlabel \"amount of threads\"
 		set ylabel \"Scalability\"
 		set x2tics
 		plot ";
@@ -277,7 +277,7 @@ sub createPlotStats
 	set xrange [0:60]
     set xtics 10
 	set grid xtics lt 1 lw 2 lc rgb \"#444444\"
-    set xlabel \"Number of threads\"
+    set xlabel \"amount of threads\"
 	set ylabel \"$stats\"
 	set x2tics
     plot ";
@@ -468,8 +468,7 @@ foreach $logdir (@logdirs) {
 	}
 
 	# Create plots
-	createPlotStats( $logdir, "txs" );
-	createPlotStats( $logdir, "aborts" );
-
+	createPlotStats( $logdir, "commits_per_sec" );
+	createPlotStats( $logdir, "aborts_per_sec" );
 }
 
