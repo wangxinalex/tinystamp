@@ -181,8 +181,8 @@ sub createPlot
 		set key outside bottom
 		set key right
 		set multiplot
-		set x2range [0:53]
-		set xrange [0:53]
+		set x2range [0:60]
+		set xrange [0:60]
 		set grid xtics lt 1 lw 2 lc rgb \"#444444\"
 		set xlabel \"Number of threads\"
 		set ylabel \"Scalability\"
@@ -273,8 +273,8 @@ sub createPlotStats
     set key outside bottom
     set key right
 	set multiplot
-	set x2range [0:53]
-	set xrange [0:53]
+	set x2range [0:60]
+	set xrange [0:60]
     set xtics 10
 	set grid xtics lt 1 lw 2 lc rgb \"#444444\"
     set xlabel \"Number of threads\"
@@ -372,18 +372,18 @@ foreach $logdir (@logdirs) {
 #	    grep {s/(\d+)/sprintf"%06.6d",$1/ge,1} keys %{%{%results->{ $stm }->{ $bench }}};
 
 	    for my $thread ( sort keys %{ %results->{$stm} } ) {
-		# Seq and stm ratio
-		my $ratio_stm = 0;
-		my $ratio_seq = 0;
-		# Get sequential time and stm time for 1 thread
-		my $seq1 = $results{ 'seq' }{ "001" };
-		my $stm1 = $results{ $stm }{ '001' };
-		# Get time for current thread
-		my $time = $results{ $stm }{ $thread };
+			# Seq and stm ratio
+			my $ratio_stm = 0;
+			my $ratio_seq = 0;
+			# Get sequential time and stm time for 1 thread
+			my $seq1 = $results{ 'seq' }{ "001" };
+			my $stm1 = $results{ $stm }{ '001' };
+			# Get time for current thread
+			my $time = $results{ $stm }{ $thread };
 
-		# Calculate ratio if we can
-		if( $seq1 && $time != 0 ) {
-		    $ratio_seq = $seq1 / $results{ $stm }{ $thread };
+			# Calculate ratio if we can
+			if( $seq1 && $time != 0 ) {
+			    $ratio_seq = $seq1 / $results{ $stm }{ $thread };
 		}
 		if( $stm1 && $time != 0 ) {
 		    $ratio_stm = $stm1 / $results{ $stm }{ $thread };
