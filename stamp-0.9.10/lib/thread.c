@@ -477,6 +477,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     long sumOfAllCommitsEver;
     srand ( time(NULL) );
     int randomNumber=0;
+    long lastNumThread=0;
 #endif // USE_ALGO_05
     long milisecondsOfSleep=250;
     int lastDone=0;
@@ -781,6 +782,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         mySleep(milisecondsOfSleep);
         sumOfAllCommitsEver=getTotalAmountOfCommits();
         commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
+        lastNumThread=global_numThread;
         double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
         if(commitsDuringLastSleep>cdlsOld && lastDone>0) { // if you increased last time and it got better, increase again
             increaseAmountOfThreads(level, ptr2runMoreThreads);
@@ -823,7 +825,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             lastDone=0;
             lastAction=0;
         }
-        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever. #commits: %ld \n",global_numThread-lastDone, percentOfBestEver, commitsDuringLastSleep);
+        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever. #commits: %ld \n",lastNumThread-1, percentOfBestEver, commitsDuringLastSleep);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -848,7 +850,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 }
 
 void increaseAmountOfThreadsByOne(void (*ptr2runMoreThreads)(long)) {
-    if(global_numThread+2 < global_maxNumClient) {
+    if(global_numThread < global_maxNumClient) {
         (*ptr2runMoreThreads)(1);
     }
 }
@@ -866,7 +868,7 @@ void decreaseAmountOfThreadsByOne() {
 }
 
 void decreaseAmountOfThreads(long amountOfDeletingThreads) {
-    assert(global_numThread<global_maxNumClient+1);
+    assert(global_numThread<global_maxNumClient+2);
     long k;
     long copyOfGlobalNumThread=global_numThread;
     for (k=amountOfDeletingThreads+1; (global_numThread>2) && (--k);) {
