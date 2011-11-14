@@ -453,9 +453,12 @@ long* getMyCommitCounter() {
     return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID);
 }
 
-#define USE_ALGO_05 5
+#define USE_ALGO_00 5
 
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
+#ifdef USE_ALGO_00
+    long sumOfAllCommitsEver;
+#endif
 #ifdef USE_ALGO_01
     long doneCounter=0;
     long sumOfAllCommitsEver;
@@ -488,6 +491,14 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     long commitsDuringLastSleep;
     long sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
     while (!every_thread_finished()) {
+#ifdef USE_ALGO_00 // just for plotting graph purposes
+        increaseAmountOfThreads(global_maxNumClient, ptr2runMoreThreads);
+        sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
+        mySleep(milisecondsOfSleep);
+        sumOfAllCommitsEver=getTotalAmountOfCommits();
+        commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
+        printf("%ld running with %ld threads\n",commitsDuringLastSleep, global_numThread-1);
+#endif // USE_ALGO_00
 #ifdef USE_ALGO_01
         sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
         mySleep(milisecondsOfSleep);
