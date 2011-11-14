@@ -16,6 +16,9 @@
 	<File name="stamp-0.9.10/bayes/bayes.c" open="0" top="0" tabpos="0">
 		<Cursor position="4225" topLine="102" />
 	</File>
+	<File name="stamp-0.9.10/bayes/data.c" open="0" top="0" tabpos="0">
+		<Cursor position="13681" topLine="446" />
+	</File>
 	<File name="stamp-0.9.10/bayes/data.h" open="0" top="0" tabpos="0">
 		<Cursor position="2991" topLine="62" />
 	</File>
@@ -41,7 +44,7 @@
 		<Cursor position="4378" topLine="123" />
 	</File>
 	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="2">
-		<Cursor position="11678" topLine="369" />
+		<Cursor position="11678" topLine="390" />
 	</File>
 	<File name="stamp-0.9.10/kmeans/cluster.c" open="0" top="0" tabpos="0">
 		<Cursor position="6600" topLine="207" />
@@ -86,10 +89,10 @@
 		<Cursor position="39095" topLine="1289" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="1">
-		<Cursor position="15849" topLine="760" />
+		<Cursor position="31463" topLine="825" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.h" open="1" top="0" tabpos="2">
-		<Cursor position="10096" topLine="256" />
+		<Cursor position="9696" topLine="256" />
 	</File>
 	<File name="stamp-0.9.10/lib/timer.h" open="0" top="0" tabpos="0">
 		<Cursor position="3018" topLine="65" />
@@ -133,11 +136,14 @@
 	<File name="stamp-0.9.10/vacation/reservation.c" open="0" top="0" tabpos="0">
 		<Cursor position="14852" topLine="486" />
 	</File>
-	<File name="stamp-0.9.10/vacation/vacation.c" open="0" top="0" tabpos="0">
-		<Cursor position="18248" topLine="546" />
+	<File name="stamp-0.9.10/vacation/vacation.c" open="1" top="0" tabpos="3">
+		<Cursor position="18155" topLine="557" />
+	</File>
+	<File name="stamp-0.9.10/yada/element.c" open="0" top="0" tabpos="0">
+		<Cursor position="3622" topLine="80" />
 	</File>
 	<File name="stamp-0.9.10/yada/region.c" open="0" top="0" tabpos="5">
-		<Cursor position="10795" topLine="284" />
+		<Cursor position="6156" topLine="169" />
 	</File>
 	<File name="tinySTM/Doxyfile" open="0" top="0" tabpos="0">
 		<Cursor position="13304" topLine="275" />

@@ -1,0 +1,1 @@
+rsync -r stamp-0.9.10/lib/* jbs@velox.unine.ch:/home/jbs/src2/stamp-0.9.10/lib/

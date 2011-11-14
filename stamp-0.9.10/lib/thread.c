@@ -94,7 +94,7 @@ static void*             global_argPtr          = NULL;
 static volatile bool_t   global_doShutdown      = FALSE;
 static volatile long*    global_iFinished;      // array of flagbits where threads can say: IFinished
 static volatile long*    global_kill;           // array of flabbits to kill threads
-static long              global_maxNumClient;   // amount of clients that where initialized & amount of ram that was allocated = maximal number of threads to start
+static long              global_maxNumClient;   // amount of clients that where initialized & amount of ram that was allocated = maximal number of threads to start. @ maximum there is therefore global_numThread==global_maxNumClients
 static volatile long     global_workLeftToDo=0;  // name says everything
 static long* global_amountOfCommitsDone;
 
@@ -453,7 +453,7 @@ long* getMyCommitCounter() {
     return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID);
 }
 
-#define USE_ALGO_00 5
+#define USE_ALGO_05 5
 
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_00
@@ -879,7 +879,7 @@ void decreaseAmountOfThreadsByOne() {
 }
 
 void decreaseAmountOfThreads(long amountOfDeletingThreads) {
-    assert(global_numThread<global_maxNumClient+2);
+    assert(global_numThread<global_maxNumClient+1);
     long k;
     long copyOfGlobalNumThread=global_numThread;
     for (k=amountOfDeletingThreads+1; (global_numThread>2) && (--k);) {
