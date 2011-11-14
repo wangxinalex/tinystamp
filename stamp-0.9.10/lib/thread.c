@@ -453,9 +453,9 @@ long* getMyCommitCounter() {
     return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID);
 }
 
-#define USE_ALGO_04 1
-void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
+#define USE_ALGO_03 1
 
+void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_01
     long doneCounter=0;
     long sumOfAllCommitsEver;
@@ -472,6 +472,10 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     long sumOfAllCommitsEver;
     long amountOfCommitsChangePrediction=0;
 #endif // USE_ALGO_04
+#ifdef USE_ALGO_05
+    long level=16;
+    long sumOfAllCommitsEver;
+#endif // USE_ALGO_05
     long milisecondsOfSleep=250;
     int lastDone=0;
     int lastAction=0;
@@ -537,7 +541,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             lastDone=0;
             doneCounter=0;
         }
-        printf("Was running with %ld threads and running @ %f /100 of best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        printf("Was running with %ld threads and got @ %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -558,7 +562,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             cdlsOld*=2;
         }
 #endif // USE_ALGO_01
-#ifdef USE_ALGO_02
+#ifdef USE_ALGO_02          // tried, what ever happens first, x-amount of commits or time running out, seems not to work well
         const long amountOfSleepPieces=100; // divide sleep time in .. amount of sleep pieces and check each time if condition two allready holds
         int i;
         long sum;
@@ -625,7 +629,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         else {
             lastDone=0;
         }
-        printf("Was running with %ld threads and running @ %f /100 of best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        printf("Was running with %ld threads and got @ %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -646,7 +650,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             cdlsOld*=2;
         }
 #endif // USE_ALGO_02
-#ifdef USE_ALGO_03
+#ifdef USE_ALGO_03              // features nice sleep-increase-decrease features and an upper limit of max length of sleep
         sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
         mySleep(milisecondsOfSleep);
         sumOfAllCommitsEver=getTotalAmountOfCommits();
@@ -685,7 +689,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             lastDone=0;
             lastAction=0;
         }
-        printf("Was running with %ld threads and running @ %f / 100 of best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        printf("Was running with %ld threads and got @ %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -706,7 +710,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             cdlsOld*=2;
         }
 #endif // USE_ALGO_03
-#ifdef USE_ALGO_04
+#ifdef USE_ALGO_04              // features amountOfCommitsChangePrediction
         sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
         mySleep(milisecondsOfSleep);
         sumOfAllCommitsEver=getTotalAmountOfCommits();
@@ -770,6 +774,66 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             amountOfCommitsChangePrediction*=2;
         }
 #endif // USE_ALGO_04
+#ifdef USE_ALGO_05              // yet another copy of algo 3
+        sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
+        mySleep(milisecondsOfSleep);
+        sumOfAllCommitsEver=getTotalAmountOfCommits();
+        commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
+        double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
+        if(commitsDuringLastSleep>cdlsOld && lastDone==1) { // if you increased last time and it got better, increase again
+            increaseAmountOfThreads(level, ptr2runMoreThreads);
+            lastDone=1;
+            lastAction=1;
+        }
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone==1) { // if you increased last time and it got worse, decrease
+            decreaseAmountOfThreads(level);
+            lastDone=-1;
+            lastAction=-1;
+            if((level-1))
+                level/=2;
+        }
+        else if((commitsDuringLastSleep>cdlsOld) && lastDone==-1) { // if you decreased and got better, decrease one more time
+            decreaseAmountOfThreads(level);
+            lastDone=-1;
+            lastAction=-1;
+        }
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone==-1) { // if you decreased and it got worse, increase again
+            increaseAmountOfThreads(level, ptr2runMoreThreads);
+            lastDone=1;
+            lastAction=1;
+            if((level-1))
+                level/=2;
+        }
+        else if(lastDone==0) {
+            increaseAmountOfThreads(level, ptr2runMoreThreads);
+            lastDone=1;
+            lastAction=1;
+        }
+        else {
+            lastDone=0;
+            lastAction=0;
+        }
+        printf("Was running with %ld threads and got @ %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        fflush(stdout);
+
+        if(commitsDuringLastSleep>bestcdlsEver) {
+            bestcdlsEver=commitsDuringLastSleep;
+            bestcdlsEverReachedAt=global_numThread;
+            printf("new bestcdlsEver record of %ld\n",commitsDuringLastSleep);
+        }
+        cdlsOld=commitsDuringLastSleep;
+
+        if(commitsDuringLastSleep>220000) {
+            milisecondsOfSleep/=2;
+            bestcdlsEver/=2;
+            cdlsOld/=2;
+        }
+        else if(commitsDuringLastSleep<22000 && milisecondsOfSleep<2000) {
+            milisecondsOfSleep*=2;
+            bestcdlsEver*=2;
+            cdlsOld*=2;
+        }
+#endif // USE_ALGO_05
     }
 }
 

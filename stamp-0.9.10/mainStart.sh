@@ -4,6 +4,6 @@ cd ..
 ./compile
 cd stamp-0.9.10
 cp benchmarks stilltodolist
-#  ./mem &
+./mem &
 uname -a > unameInfo
 ./singbench
