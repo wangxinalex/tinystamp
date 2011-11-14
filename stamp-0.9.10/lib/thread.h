@@ -276,6 +276,8 @@ void decreaseAmountOfThreads(long amountOfDeletingThreads);
 
 void flagThreadToBeKilled(long threadNr);
 
+void waitForThreadAndRestore(long threadNr);
+
 long* getMyCommitCounter();
 
 #ifdef __cplusplus

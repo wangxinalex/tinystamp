@@ -468,7 +468,7 @@ foreach $logdir (@logdirs) {
 	}
 
 	# Create plots
-	createPlotStats( $logdir, "commits_per_sec" );
-	createPlotStats( $logdir, "aborts_per_sec" );
+	createPlotStats( $logdir, "commits.per. sec" );
+	createPlotStats( $logdir, "aborts.per.sec" );
 }
 

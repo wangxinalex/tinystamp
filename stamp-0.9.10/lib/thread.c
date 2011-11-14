@@ -453,7 +453,7 @@ long* getMyCommitCounter() {
     return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID);
 }
 
-#define USE_ALGO_03 1
+#define USE_ALGO_05 1
 
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_01
@@ -475,6 +475,8 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_05
     long level=16;
     long sumOfAllCommitsEver;
+    srand ( time(NULL) );
+    int randomNumber=0;
 #endif // USE_ALGO_05
     long milisecondsOfSleep=250;
     int lastDone=0;
@@ -805,9 +807,17 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
                 level/=2;
         }
         else if(lastDone==0) {
-            increaseAmountOfThreads(level, ptr2runMoreThreads);
-            lastDone=1;
-            lastAction=1;
+            randomNumber=rand()%2;
+            if(randomNumber) {
+                increaseAmountOfThreads(level, ptr2runMoreThreads);
+                lastDone=1;
+                lastAction=1;
+            }
+            else {
+                decreaseAmountOfThreads(level);
+                lastDone=-1;
+                lastAction=-1;
+            }
         }
         else {
             lastDone=0;
@@ -850,34 +860,32 @@ void increaseAmountOfThreads(long amountOfNewThreads,void (*ptr2runMoreThreads)(
 }
 
 void decreaseAmountOfThreadsByOne() {
-//    printf("going to decrease");
-//    fflush(stdout);
     if(global_numThread > 2) {
         killThreadNr(global_numThread-1);
     }
-//    printf("done\n");
-//    fflush(stdout);
 }
 
 void decreaseAmountOfThreads(long amountOfDeletingThreads) {
-    assert(global_numThread<global_maxNumClient);
+    assert(global_numThread<global_maxNumClient+1);
     long k;
     long copyOfGlobalNumThread=global_numThread;
     for (k=amountOfDeletingThreads+1; (global_numThread>2) && (--k);) {
-        flagThreadToBeKilled(global_numThread-k);
+        flagThreadToBeKilled(global_numThread-1);
         --global_numThread;
     }
-    long threadNr;
     for (k=amountOfDeletingThreads+1; (copyOfGlobalNumThread>2) && (--k);) {
-        threadNr=copyOfGlobalNumThread-k;
-        while(global_iFinished[threadNr/64]&(((long)1)<<(threadNr%64))) {}
-        global_kill[threadNr/64]=global_kill[threadNr/64]^(((long)1)<<(threadNr%64));
+        waitForThreadAndRestore(copyOfGlobalNumThread-1);
         --copyOfGlobalNumThread;
     }
 }
 
 void flagThreadToBeKilled(long threadNr) {
         global_kill[threadNr/64]=global_kill[threadNr/64]|(((long)1)<<(threadNr%64));
+}
+
+void waitForThreadAndRestore(long threadNr) {
+    while(global_iFinished[threadNr/64]&(((long)1)<<(threadNr%64))) {}
+    global_kill[threadNr/64]=global_kill[threadNr/64]^(((long)1)<<(threadNr%64));
 }
 
 void mySleep(long miliseconds) {
