@@ -453,7 +453,7 @@ long* getMyCommitCounter() {
     return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID);
 }
 
-#define USE_ALGO_05 1
+#define USE_ALGO_05 5
 
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_01
@@ -543,7 +543,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             lastDone=0;
             doneCounter=0;
         }
-        printf("Was running with %ld threads and got @ %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -631,7 +631,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         else {
             lastDone=0;
         }
-        printf("Was running with %ld threads and got @ %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -658,40 +658,40 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         sumOfAllCommitsEver=getTotalAmountOfCommits();
         commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
         double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
-        if(commitsDuringLastSleep>cdlsOld && lastDone==1) { // if you increased last time and it got better, increase again
+        if(commitsDuringLastSleep>cdlsOld && lastDone>0) { // if you increased last time and it got better, increase again
             increaseAmountOfThreads(level, ptr2runMoreThreads);
-            lastDone=1;
+            lastDone=level;
             lastAction=1;
         }
-        else if((commitsDuringLastSleep<cdlsOld) && lastDone==1) { // if you increased last time and it got worse, decrease
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone>0) { // if you increased last time and it got worse, decrease
             decreaseAmountOfThreads(level);
-            lastDone=-1;
+            lastDone=-level;
             lastAction=-1;
             if((level-1))
                 level/=2;
         }
-        else if((commitsDuringLastSleep>cdlsOld) && lastDone==-1) { // if you decreased and got better, decrease one more time
+        else if((commitsDuringLastSleep>cdlsOld) && lastDone<0) { // if you decreased and got better, decrease one more time
             decreaseAmountOfThreads(level);
-            lastDone=-1;
+            lastDone=-level;
             lastAction=-1;
         }
-        else if((commitsDuringLastSleep<cdlsOld) && lastDone==-1) { // if you decreased and it got worse, increase again
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone<0) { // if you decreased and it got worse, increase again
             increaseAmountOfThreads(level, ptr2runMoreThreads);
-            lastDone=1;
+            lastDone=level;
             lastAction=1;
             if((level-1))
                 level/=2;
         }
         else if(lastDone==0) {
             increaseAmountOfThreads(level, ptr2runMoreThreads);
-            lastDone=1;
+            lastDone=level;
             lastAction=1;
         }
         else {
             lastDone=0;
             lastAction=0;
         }
-        printf("Was running with %ld threads and got @ %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -752,7 +752,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         else {
             lastDone=0;
         }
-        printf("Was running with %ld threads and got @ %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -782,26 +782,26 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         sumOfAllCommitsEver=getTotalAmountOfCommits();
         commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
         double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
-        if(commitsDuringLastSleep>cdlsOld && lastDone==1) { // if you increased last time and it got better, increase again
+        if(commitsDuringLastSleep>cdlsOld && lastDone>0) { // if you increased last time and it got better, increase again
             increaseAmountOfThreads(level, ptr2runMoreThreads);
-            lastDone=1;
+            lastDone=level;
             lastAction=1;
         }
-        else if((commitsDuringLastSleep<cdlsOld) && lastDone==1) { // if you increased last time and it got worse, decrease
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone>0) { // if you increased last time and it got worse, decrease
             decreaseAmountOfThreads(level);
-            lastDone=-1;
+            lastDone=-level;
             lastAction=-1;
             if((level-1))
                 level/=2;
         }
-        else if((commitsDuringLastSleep>cdlsOld) && lastDone==-1) { // if you decreased and got better, decrease one more time
+        else if((commitsDuringLastSleep>cdlsOld) && lastDone<0) { // if you decreased and got better, decrease one more time
             decreaseAmountOfThreads(level);
-            lastDone=-1;
+            lastDone=-level;
             lastAction=-1;
         }
-        else if((commitsDuringLastSleep<cdlsOld) && lastDone==-1) { // if you decreased and it got worse, increase again
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone<0) { // if you decreased and it got worse, increase again
             increaseAmountOfThreads(level, ptr2runMoreThreads);
-            lastDone=1;
+            lastDone=level;
             lastAction=1;
             if((level-1))
                 level/=2;
@@ -810,12 +810,12 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             randomNumber=rand()%2;
             if(randomNumber) {
                 increaseAmountOfThreads(level, ptr2runMoreThreads);
-                lastDone=1;
+                lastDone=level;
                 lastAction=1;
             }
             else {
                 decreaseAmountOfThreads(level);
-                lastDone=-1;
+                lastDone=-level;
                 lastAction=-1;
             }
         }
@@ -823,7 +823,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             lastDone=0;
             lastAction=0;
         }
-        printf("Was running with %ld threads and got @ %f / 100 commits, compared to best ever.\n",global_numThread-lastDone, percentOfBestEver);
+        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever. #commits: %ld \n",global_numThread-lastDone, percentOfBestEver, commitsDuringLastSleep);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
