@@ -352,7 +352,9 @@ static vector_t* PdoTraceback (grid_t* gridPtr, grid_t* myGridPtr,
  */
 void router_solve (void* argPtr) {
     TM_THREAD_ENTER();
-
+    long threadId = thread_getId();
+    unsigned long ** globalAbortsCounter = getGlobal_abortsCounters();
+    globalAbortsCounter[threadId]=stm_get_stats_position("nb_aborts");
     myCommitCounter=getMyCommitCounter();
 
     router_solve_arg_t* routerArgPtr = (router_solve_arg_t*)argPtr;

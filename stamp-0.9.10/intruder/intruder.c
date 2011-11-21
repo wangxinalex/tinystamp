@@ -182,10 +182,10 @@ parseArgs (long argc, char* const argv[])
  */
 void processPackets (void* argPtr) {
     TM_THREAD_ENTER();
-
-    myCommitCounter=getMyCommitCounter();
-
     long threadId = thread_getId();
+    myCommitCounter=getMyCommitCounter();
+    unsigned long ** globalAbortsCounter = getGlobal_abortsCounters();
+    globalAbortsCounter[threadId]=stm_get_stats_position("nb_aborts");
 
     stream_t*   streamPtr    = ((arg_t*)argPtr)->streamPtr;
     decoder_t*  decoderPtr   = ((arg_t*)argPtr)->decoderPtr;

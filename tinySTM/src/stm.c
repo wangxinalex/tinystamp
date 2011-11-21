@@ -2806,6 +2806,59 @@ int stm_get_stats(TXPARAMS const char *name, void *val)
   return 0;
 }
 
+
+/*
+ * Return pointer to statistics about a thread/transaction.
+ */
+void* stm_get_stats_position(TXPARAMS const char *name) {
+  TX_GET;
+  if (strcmp("read_set_size", name) == 0)
+    return &(tx->r_set.size);
+  if (strcmp("write_set_size", name) == 0)
+    return &(tx->w_set.size);
+  if (strcmp("read_set_nb_entries", name) == 0)
+    return &(tx->r_set.nb_entries);
+  if (strcmp("write_set_nb_entries", name) == 0)
+    return &(tx->w_set.nb_entries);
+//  if (strcmp("read_only", name) == 0)
+//    return &(tx->ro);
+#ifdef INTERNAL_STATS
+  if (strcmp("nb_aborts", name) == 0)
+    return &(tx->aborts);
+  if (strcmp("nb_aborts_1", name) == 0)
+    return &(tx->aborts_1);
+  if (strcmp("nb_aborts_2", name) == 0)
+    return &(tx->aborts_2);
+  if (strcmp("nb_aborts_ro", name) == 0)
+    return &(tx->aborts_ro);
+  if (strcmp("nb_aborts_locked_read", name) == 0)
+    return &(tx->aborts_locked_read);
+  if (strcmp("nb_aborts_locked_write", name) == 0)
+    return &(tx->aborts_locked_write);
+  if (strcmp("nb_aborts_validate_read", name) == 0)
+    return &(tx->aborts_validate_read);
+  if (strcmp("nb_aborts_validate_write", name) == 0)
+    return &(tx->aborts_validate_write);
+  if (strcmp("nb_aborts_validate_commit", name) == 0)
+    return &(tx->aborts_validate_commit);
+  if (strcmp("nb_aborts_invalid_memory", name) == 0)
+    return &(tx->aborts_invalid_memory);
+# if CM == CM_MODULAR
+  if (strcmp("nb_aborts_killed", name) == 0)
+    return &(tx->aborts_killed);
+# endif /* CM == CM_MODULAR */
+# ifdef READ_LOCKED_DATA
+  if (strcmp("locked_reads_ok", name) == 0)
+    return &(tx->locked_reads_ok);
+  if (strcmp("locked_reads_failed", name) == 0)
+    return &(tx->locked_reads_failed);
+# endif /* READ_LOCKED_DATA */
+  if (strcmp("max_retries", name) == 0)
+    return &(tx->max_retries);
+#endif /* INTERNAL_STATS */
+  return 0;
+}
+
 /*
  * Return STM parameters.
  */

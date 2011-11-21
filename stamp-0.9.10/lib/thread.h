@@ -280,6 +280,8 @@ void waitForThreadAndRestore(long threadNr);
 
 long* getMyCommitCounter();
 
+unsigned long** getGlobal_abortsCounters();
+
 #ifdef __cplusplus
 }
 #endif

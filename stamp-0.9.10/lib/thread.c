@@ -98,6 +98,8 @@ static long              global_maxNumClient;   // amount of clients that where 
 static volatile long     global_workLeftToDo=0;  // name says everything
 static long* global_amountOfCommitsDone;
 
+static unsigned long ** global_abortsCounters=0;
+
 static void threadWait (void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
@@ -119,24 +121,33 @@ static void threadWaitNoBarrier (void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
     TM_THREAD_ENTER();
+    global_abortsCounters[threadId]=stm_get_stats_position("nb_aborts");
     global_myThreadID=threadId;
     global_funcPtr(global_argPtr);
     TM_THREAD_EXIT();
 }
+
 
 static void threadWaitNoBarrierWorkPices(void* argPtr) {
     long threadId = *(long*)argPtr;
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
     TM_THREAD_ENTER();
     global_myThreadID=threadId;
+    global_abortsCounters[threadId]=stm_get_stats_position("nb_aborts");
     while(((long)ATOMIC_FETCH_DEC_FULL(&global_workLeftToDo))>0) {
         global_funcPtr(global_argPtr);
         if(global_kill[threadId/64]&(((long)1)<<(threadId%64)))
             break;
     }
 
+                unsigned long a;
+        stm_get_stats("nb_aborts",&a);
+        printf("threadID=%ld  nb_aborts=%ld\n",threadId,a);
+
     TM_THREAD_EXIT();
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
+
+
 }
 
 static void threadWaitNoBarrierInsideBench(void* argPtr) {
@@ -324,6 +335,10 @@ void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long maxNumClie
     assert(global_threads == NULL);
     global_threads = (THREAD_T*)malloc(global_maxNumClient * sizeof(THREAD_T));
     assert(global_threads);
+
+    global_abortsCounters = (unsigned long **) malloc(global_maxNumClient * sizeof(unsigned long *));
+    for(i=global_maxNumClient; i--;)
+        global_abortsCounters[i]=0;
 }
 
 void thread_shutdown () {
@@ -347,6 +362,7 @@ void thread_shutdown () {
     free((void*) global_iFinished);
     free((void*) global_kill);
     free((void*) global_amountOfCommitsDone);
+    free(global_abortsCounters);
 }
 
 void thread_shutdown_noBarriers() {
@@ -451,6 +467,10 @@ void add_one_commit() { // depreciated, should not be used anymore
 long* getMyCommitCounter() {
 //    return &(global_amountOfCommitsDone[CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID)]);  // does exactly the same
     return global_amountOfCommitsDone+CACHE_LINE_SIZE/sizeof(long)*(global_myThreadID);
+}
+
+unsigned long** getGlobal_abortsCounters() {
+    return global_abortsCounters;
 }
 
 #define USE_ALGO_05 5

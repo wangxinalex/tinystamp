@@ -344,7 +344,7 @@ int stm_aborted(TXPARAM);
  * Check if the current transaction is still active and in irrevocable
  * state.
  *
- * @return 
+ * @return
  *   True (non-zero) if the transaction is active and irrevocable, false
  *   (zero) otherwise.
  */
@@ -387,6 +387,8 @@ stm_tx_attr_t *stm_get_attributes(TXPARAM);
  *   1 upon success, 0 otherwise.
  */
 int stm_get_stats(TXPARAMS const char *name, void *val);
+
+void* stm_get_stats_position(TXPARAMS const char *name);
 
 /**
  * Get various parameters of the STM library.  See the source code
