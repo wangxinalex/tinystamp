@@ -248,7 +248,7 @@ void processPackets (void* argPtr) {
     }
 
     PDETECTOR_FREE(detectorPtr);
-
+    globalAbortsCounter[threadId]=0;
     TM_THREAD_EXIT();
 }
 

@@ -124,6 +124,7 @@ static void threadWaitNoBarrier (void* argPtr) {
     global_abortsCounters[threadId]=stm_get_stats_position("nb_aborts");
     global_myThreadID=threadId;
     global_funcPtr(global_argPtr);
+    global_abortsCounters[threadId]=0;
     TM_THREAD_EXIT();
 }
 
@@ -143,7 +144,7 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
                 unsigned long a;
         stm_get_stats("nb_aborts",&a);
         printf("threadID=%ld  nb_aborts=%ld\n",threadId,a);
-
+    global_abortsCounters[threadId]=0;
     TM_THREAD_EXIT();
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
 
@@ -935,6 +936,16 @@ long getTotalAmountOfCommits() {
     int i;
     for (i=global_maxNumClient; i-->0;)
         total+=global_amountOfCommitsDone[CACHE_LINE_SIZE/sizeof(long)*i];
+    return total;
+}
+
+unsigned long getTotalAmountOfAborts() {
+    unsigned long total=0;
+    int i;
+    for (i=global_maxNumClient; i-->0;) {
+        if(global_abortsCounters[i])
+            total+=*(global_abortsCounters[i]);
+    }
     return total;
 }
 

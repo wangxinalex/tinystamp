@@ -264,6 +264,8 @@ void ajust_amount_of_threads();
 
 long getTotalAmountOfCommits();
 
+unsigned long getTotalAmountOfAborts();
+
 void mySleep(long miliseconds);
 
 void increaseAmountOfThreadsByOne(void (*ptr2runMoreThreads)(long));

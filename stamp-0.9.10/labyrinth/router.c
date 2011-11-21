@@ -444,7 +444,7 @@ void router_solve (void* argPtr) {
     puts("\nFinal Grid:");
     grid_print(gridPtr);
 #endif /* DEBUG */
-
+    globalAbortsCounter[threadId]=0;
     TM_THREAD_EXIT();
 }
 
