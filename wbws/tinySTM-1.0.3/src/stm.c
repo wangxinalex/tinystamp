@@ -250,7 +250,7 @@ typedef struct w_set {                  /* Write set */
   w_entry_t *entries;                   /* Array of entries */
   int nb_entries;                       /* Number of entries */
   int size;                             /* Size of array */
-#if DESIGN == WRITE_BACK_ETL
+#if DESIGN == WRITE_BACK_ETL || WRITE_BACK_AND_THROUGH
   int has_writes;                       /* Has the write set any real write (vs. visible reads) */
 #elif DESIGN == WRITE_BACK_CTL
   int nb_acquired;                      /* Number of locks acquired */
