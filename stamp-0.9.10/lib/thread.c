@@ -140,15 +140,9 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
         if(global_kill[threadId/64]&(((long)1)<<(threadId%64)))
             break;
     }
-
-//                unsigned long a;
-//        stm_get_stats("nb_aborts",&a);
-//        printf("threadID=%ld  nb_aborts=%ld\n",threadId,a);
     global_abortsCounters[threadId]=0;
     TM_THREAD_EXIT();
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
-
-
 }
 
 static void threadWaitNoBarrierInsideBench(void* argPtr) {
@@ -474,11 +468,14 @@ unsigned long** getGlobal_abortsCounters() {
     return global_abortsCounters;
 }
 
-#define USE_ALGO_06 6
+#define USE_ALGO_00 6
 
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_00
     long sumOfAllCommitsEver;
+    long abortsBeforeSleep;
+    long abortsAfterSleep;
+    long abortsDiff;
 #endif
 #ifdef USE_ALGO_01
     long doneCounter=0;
@@ -524,11 +521,14 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     while (!every_thread_finished()) {
 #ifdef USE_ALGO_00 // just for plotting graph purposes
         increaseAmountOfThreads(global_maxNumClient, ptr2runMoreThreads);
+        abortsBeforeSleep=getTotalAmountOfAborts();
         sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
         mySleep(milisecondsOfSleep);
+        abortsAfterSleep=getTotalAmountOfAborts();
         sumOfAllCommitsEver=getTotalAmountOfCommits();
         commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
-        printf("%ld running with %ld threads\n",commitsDuringLastSleep, global_numThread-1);
+        abortsDiff=abortsAfterSleep-abortsBeforeSleep;
+        printf("running with %ld threads and got %ld commits and %ld aborts\n", global_numThread-1, commitsDuringLastSleep, abortsDiff);
 #endif // USE_ALGO_00
 #ifdef USE_ALGO_01
         sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
