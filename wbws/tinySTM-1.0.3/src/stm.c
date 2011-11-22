@@ -66,12 +66,13 @@
 #define WRITE_BACK_ETL                  0
 #define WRITE_BACK_CTL                  1
 #define WRITE_THROUGH                   2
-#define WRITE_BACK_AND_THROUGH            3
+#define WRITE_BACK_AND_THROUGH          3
 
 static const char *design_names[] = {
   /* 0 */ "WRITE-BACK (ETL)",
   /* 1 */ "WRITE-BACK (CTL)",
-  /* 2 */ "WRITE-THROUGH"
+  /* 2 */ "WRITE-THROUGH",
+  /* 3 */ "WRITE-BACK-AND-THROUGH"
 };
 
 #ifndef DESIGN
@@ -231,10 +232,10 @@ typedef struct w_entry {                /* Write set entry */
       stm_word_t mask;                  /* Write mask */
       stm_word_t version;               /* Version overwritten */
       volatile stm_word_t *lock;        /* Pointer to lock (for fast access) */
-#if CM == CM_MODULAR || (defined(CONFLICT_TRACKING) && DESIGN != WRITE_THROUGH)
+#if CM == CM_MODULAR || (defined(CONFLICT_TRACKING) && DESIGN != WRITE_THROUGH && DESIGN != WRITE_BACK_AND_THROUGH)
       struct stm_tx *tx;                /* Transaction owning the write set */
-#endif /* CM == CM_MODULAR || (defined(CONFLICT_TRACKING) && DESIGN != WRITE_THROUGH) */
-#if DESIGN == WRITE_BACK_ETL
+#endif /* CM == CM_MODULAR || (defined(CONFLICT_TRACKING) && DESIGN != WRITE_THROUGH && DESIGN != WRITE_BACK_AND_THROUGH) */
+#if DESIGN == WRITE_BACK_ETL || DESIGN == WRITE_BACK_AND_THROUGH
       struct w_entry *next;             /* Next address covered by same lock (if any) */
 #else /* DESIGN != WRITE_BACK_ETL */
       int no_drop;                      /* Should we drop lock upon abort? */
