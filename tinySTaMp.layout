@@ -55,8 +55,8 @@
 	<File name="stamp-0.9.10/intruder/detector.h" open="0" top="0" tabpos="0">
 		<Cursor position="4681" topLine="119" />
 	</File>
-	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="2">
-		<Cursor position="8007" topLine="237" />
+	<File name="stamp-0.9.10/intruder/intruder.c" open="1" top="1" tabpos="0">
+		<Cursor position="7413" topLine="168" />
 	</File>
 	<File name="stamp-0.9.10/kmeans/cluster.c" open="0" top="0" tabpos="0">
 		<Cursor position="6600" topLine="207" />
@@ -109,8 +109,8 @@
 	<File name="stamp-0.9.10/lib/rbtree.c" open="0" top="0" tabpos="5">
 		<Cursor position="39095" topLine="1289" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="1">
-		<Cursor position="16480" topLine="467" />
+	<File name="stamp-0.9.10/lib/thread.c" open="0" top="0" tabpos="1">
+		<Cursor position="38699" topLine="1009" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="2">
 		<Cursor position="9802" topLine="253" />
@@ -241,7 +241,7 @@
 	<File name="tinySTM/src/mod_stats.c" open="0" top="0" tabpos="3">
 		<Cursor position="3811" topLine="125" />
 	</File>
-	<File name="tinySTM/src/stm.c" open="1" top="0" tabpos="2">
+	<File name="tinySTM/src/stm.c" open="0" top="0" tabpos="2">
 		<Cursor position="89070" topLine="2824" />
 	</File>
 	<File name="tinySTM/test/bank/bank.c" open="0" top="0" tabpos="0">

@@ -3,11 +3,14 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="wbws" />
+		<Option makefile_is_custom="1" />
+		<Option execution_dir="../tinySTM-1.0.3" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/wbws" prefix_auto="1" extension_auto="1" />
+				<Option output="../tinySTM-1.0.3/wbws" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="../tinySTM-1.0.3" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -31,6 +34,207 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../tinySTM-1.0.3/ChangeLog" />
+		<Unit filename="../tinySTM-1.0.3/Doxyfile" />
+		<Unit filename="../tinySTM-1.0.3/LICENSE.VELOX" />
+		<Unit filename="../tinySTM-1.0.3/LICENSE.txt" />
+		<Unit filename="../tinySTM-1.0.3/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/Makefile.common" />
+		<Unit filename="../tinySTM-1.0.3/README" />
+		<Unit filename="../tinySTM-1.0.3/README.VELOX" />
+		<Unit filename="../tinySTM-1.0.3/abi/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/abi/Makefile.common" />
+		<Unit filename="../tinySTM-1.0.3/abi/abi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/abi/abi.h" />
+		<Unit filename="../tinySTM-1.0.3/abi/arch.S" />
+		<Unit filename="../tinySTM-1.0.3/abi/arch.h" />
+		<Unit filename="../tinySTM-1.0.3/abi/arch_x86.S" />
+		<Unit filename="../tinySTM-1.0.3/abi/dtmc/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/abi/dtmc/libtanger-stm.public-symbols" />
+		<Unit filename="../tinySTM-1.0.3/abi/dtmc/libtanger-stm.support" />
+		<Unit filename="../tinySTM-1.0.3/abi/dtmc/tanger-stm-internal.h" />
+		<Unit filename="../tinySTM-1.0.3/abi/dtmc/tanger.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/abi/dtmc/tanger.h" />
+		<Unit filename="../tinySTM-1.0.3/abi/dtmc/tm_macros.h" />
+		<Unit filename="../tinySTM-1.0.3/abi/gcc/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/abi/gcc/alloc_cpp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/abi/gcc/clone.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/abi/gcc/eh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/abi/gcc/tm_macros.h" />
+		<Unit filename="../tinySTM-1.0.3/abi/intel/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/abi/intel/intel_dyn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/abi/intel/tm_macros.h" />
+		<Unit filename="../tinySTM-1.0.3/abi/itmuser.h" />
+		<Unit filename="../tinySTM-1.0.3/abi/lib.map" />
+		<Unit filename="../tinySTM-1.0.3/abi/pthread_wrapper.h" />
+		<Unit filename="../tinySTM-1.0.3/abi/test/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/abi/tm_macros.h" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/annotated.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/bc_s.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/classes.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/closed.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/doxygen.css" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/doxygen.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/files.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2blank.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2doc.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2folderclosed.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2folderopen.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2lastnode.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2link.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2mlastnode.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2mnode.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2node.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2plastnode.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2pnode.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/ftv2vertline.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/functions.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/functions_vars.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/globals.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/globals_eval.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/globals_func.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/globals_type.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/index.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/jquery.js" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/main.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__ab_8h.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__ab_8h_source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__cb_8h.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__cb_8h_source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__log_8h.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__log_8h_source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__mem_8h-source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__mem_8h.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__mem_8h_source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__print_8h-source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__print_8h.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__print_8h_source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__stats_8h-source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__stats_8h.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/mod__stats_8h_source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/nav_f.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/nav_h.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/open.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/stm_8h-source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/stm_8h.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/stm_8h_source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/structstm__ab__stats.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/structstm__tx__attr.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/tab_a.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/tab_b.gif" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/tab_b.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/tab_h.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/tab_l.gif" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/tab_r.gif" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/tab_s.png" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/tabs.css" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/tree.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/wrappers_8h-source.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/wrappers_8h.html" />
+		<Unit filename="../tinySTM-1.0.3/doc/html/wrappers_8h_source.html" />
+		<Unit filename="../tinySTM-1.0.3/include/mod_ab.h" />
+		<Unit filename="../tinySTM-1.0.3/include/mod_cb.h" />
+		<Unit filename="../tinySTM-1.0.3/include/mod_log.h" />
+		<Unit filename="../tinySTM-1.0.3/include/mod_mem.h" />
+		<Unit filename="../tinySTM-1.0.3/include/mod_print.h" />
+		<Unit filename="../tinySTM-1.0.3/include/mod_stats.h" />
+		<Unit filename="../tinySTM-1.0.3/include/stm.h" />
+		<Unit filename="../tinySTM-1.0.3/include/wrappers.h" />
+		<Unit filename="../tinySTM-1.0.3/src/asf/asf-highlevel.h" />
+		<Unit filename="../tinySTM-1.0.3/src/asf/asf-opcodes.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/AUTHORS" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/COPYING" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/README" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/aligned_atomic_load_store.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/all_acquire_release_volatile.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/ao_t_is_int.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/atomic_ops.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/generalize-small.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/generalize.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/ia64.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/ordered_except_wr.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/powerpc.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/read_ordered.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/sparc.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/standard_ao_double_t.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/test_and_set_t_is_ao_t.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/test_and_set_t_is_char.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/x86.h" />
+		<Unit filename="../tinySTM-1.0.3/src/atomic_ops/x86_64.h" />
+		<Unit filename="../tinySTM-1.0.3/src/gc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/src/gc.h" />
+		<Unit filename="../tinySTM-1.0.3/src/mod_ab.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/src/mod_cb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/src/mod_log.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/src/mod_mem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/src/mod_print.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/src/mod_stats.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/src/stm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/src/wrappers.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/test-asf/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/test-asf/intset/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/test-asf/intset/intset.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/test-asf/intset/ptlcalls.h" />
+		<Unit filename="../tinySTM-1.0.3/test-asf/intset/rbtree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/test-asf/intset/rbtree.h" />
+		<Unit filename="../tinySTM-1.0.3/test/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/test/bank/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/test/bank/bank.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/test/intset/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/test/intset/README.rbtree" />
+		<Unit filename="../tinySTM-1.0.3/test/intset/intset.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/test/intset/rbtree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/test/intset/rbtree.h" />
+		<Unit filename="../tinySTM-1.0.3/test/intset/tm.h" />
+		<Unit filename="../tinySTM-1.0.3/test/intset/types.h" />
+		<Unit filename="../tinySTM-1.0.3/test/regression/Makefile" />
+		<Unit filename="../tinySTM-1.0.3/test/regression/irrevocability.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tinySTM-1.0.3/test/regression/types.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />

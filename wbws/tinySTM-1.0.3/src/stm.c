@@ -454,14 +454,14 @@ static pthread_key_t thread_tx;
 # define WRITE_MASK                     0x01                /* 1 bit */
 # define OWNED_MASK                     (WRITE_MASK)
 #endif /* CM != CM_MODULAR */
-#if DESIGN == WRITE_THROUGH
+#if DESIGN == WRITE_THROUGH || DESIGN == WRITE_BACK_AND_THROUGH
 # define INCARNATION_BITS               3                   /* 3 bits */
 # define INCARNATION_MAX                ((1 << INCARNATION_BITS) - 1)
 # define INCARNATION_MASK               (INCARNATION_MAX << 1)
 # define LOCK_BITS                      (OWNED_BITS + INCARNATION_BITS)
-#else /* DESIGN != WRITE_THROUGH */
+#else /* DESIGN != WRITE_THROUGH || DESIGN == WRITE_BACK_AND_THROUGH */
 # define LOCK_BITS                      (OWNED_BITS)
-#endif /* DESIGN != WRITE_THROUGH */
+#endif /* DESIGN != WRITE_THROUGH || DESIGN == WRITE_BACK_AND_THROUGH */
 #define MAX_THREADS                     8192                /* Upper bound (large enough) */
 #define VERSION_MAX                     ((~(stm_word_t)0 >> LOCK_BITS) - MAX_THREADS)
 
@@ -474,13 +474,13 @@ static pthread_key_t thread_tx;
 # define LOCK_SET_ADDR_READ(a)          (a | READ_MASK)     /* READ bit set */
 # define LOCK_UPGRADE(l)                (l | WRITE_MASK)
 #endif /* CM == CM_MODULAR */
-#if DESIGN == WRITE_THROUGH
+#if DESIGN == WRITE_THROUGH || DESIGN == WRITE_BACK_AND_THROUGH
 # define LOCK_GET_TIMESTAMP(l)          (l >> (1 + INCARNATION_BITS))
 # define LOCK_SET_TIMESTAMP(t)          (t << (1 + INCARNATION_BITS))
 # define LOCK_GET_INCARNATION(l)        ((l & INCARNATION_MASK) >> 1)
 # define LOCK_SET_INCARNATION(i)        (i << 1)            /* OWNED bit not set */
 # define LOCK_UPD_INCARNATION(l, i)     ((l & ~(stm_word_t)(INCARNATION_MASK | OWNED_MASK)) | LOCK_SET_INCARNATION(i))
-#else /* DESIGN != WRITE_THROUGH */
+#else /* DESIGN != WRITE_THROUGH || DESIGN == WRITE_BACK_AND_THROUGH */
 # define LOCK_GET_TIMESTAMP(l)          (l >> OWNED_BITS)   /* Logical shift (unsigned) */
 # define LOCK_SET_TIMESTAMP(t)          (t << OWNED_BITS)   /* OWNED bits not set */
 #endif /* DESIGN != WRITE_THROUGH */
@@ -927,7 +927,7 @@ static inline void stm_allocate_rs_entries(stm_tx_t *tx, int extend)
  */
 static inline void stm_allocate_ws_entries(stm_tx_t *tx, int extend)
 {
-#if CM == CM_MODULAR || (defined(CONFLICT_TRACKING) && DESIGN != WRITE_THROUGH)
+#if CM == CM_MODULAR || (defined(CONFLICT_TRACKING) && DESIGN != WRITE_THROUGH && DESIGN != WRITE_BACK_AND_THROUGH)
   int i, first = (extend ? tx->w_set.size : 0);
 #endif /* CM == CM_MODULAR || (defined(CONFLICT_TRACKING) && DESIGN != WRITE_THROUGH) */
 
@@ -935,7 +935,7 @@ static inline void stm_allocate_ws_entries(stm_tx_t *tx, int extend)
 
   if (extend) {
     /* Extend write set */
-#if DESIGN == WRITE_BACK_ETL
+#if DESIGN == WRITE_BACK_ETL || DESIGN == WRITE_BACK_AND_THROUGH
     int j;
     w_entry_t *ows, *nws;
     /* Allocate new write set */
@@ -977,7 +977,7 @@ static inline void stm_allocate_ws_entries(stm_tx_t *tx, int extend)
     }
   }
 
-#if CM == CM_MODULAR || (defined(CONFLICT_TRACKING) && DESIGN != WRITE_THROUGH)
+#if CM == CM_MODULAR || (defined(CONFLICT_TRACKING) && DESIGN != WRITE_THROUGH && DESIGN != WRITHE_BACK_AND_THROUGH)
   /* Initialize fields */
   for (i = first; i < tx->w_set.size; i++)
     tx->w_set.entries[i].tx = tx;
