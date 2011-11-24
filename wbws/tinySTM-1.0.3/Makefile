@@ -36,16 +36,12 @@ include Makefile.common
 # WRITE_THROUGH: write-through (encounter-time locking) directly updates
 #   memory and keeps an undo log for possible rollback.
 #
-# WRITE_BACK_AND_THROUGH: combine both, writing back and through
-#   applications can use both mixed.
-#
 # Refer to [PPoPP-08] for more details.
 ########################################################################
 
 DEFINES += -DDESIGN=WRITE_BACK_ETL
 # DEFINES += -DDESIGN=WRITE_BACK_CTL
 # DEFINES += -DDESIGN=WRITE_THROUGH
-# DEFINES += -DDESIGN=WRITE_BACK_AND_THROUGH
 
 ########################################################################
 # Several contention management strategies are available:
@@ -210,7 +206,7 @@ else
   DEFINES += -UHYBRID_ASF
 endif
 
-# TODO Enable the construction of 32bit lib on 64bit environment
+# TODO Enable the construction of 32bit lib on 64bit environment 
 
 
 ########################################################################
@@ -259,8 +255,7 @@ D := $(DEFINES)
 D := $(D:WRITE_BACK_ETL=0)
 D := $(D:WRITE_BACK_CTL=1)
 D := $(D:WRITE_THROUGH=2)
-D := $(D:WRITE_BACK_AND_THROUGH=3)
-D += -DWRITE_BACK_ETL=0 -DWRITE_BACK_CTL=1 -DWRITE_THROUGH=2 -DWRITE_BACK_AND_THROUGH=3
+D += -DWRITE_BACK_ETL=0 -DWRITE_BACK_CTL=1 -DWRITE_THROUGH=2
 D := $(D:CM_SUICIDE=0)
 D := $(D:CM_DELAY=1)
 D := $(D:CM_BACKOFF=2)
@@ -303,7 +298,7 @@ test-asf:	$(TMLIB)
 abi:
 	$(MAKE) -C abi
 
-abi-%:
+abi-%: 	
 	$(MAKE) -C abi $(subst abi-,,$@)
 
 doc:
