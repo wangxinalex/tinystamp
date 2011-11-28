@@ -43,11 +43,11 @@
 	<File name="stamp-0.9.10/genome/sequencer.h" open="0" top="0" tabpos="0">
 		<Cursor position="4378" topLine="123" />
 	</File>
-	<File name="stamp-0.9.10/intruder/decoder.c" open="0" top="0" tabpos="4">
-		<Cursor position="15356" topLine="478" />
+	<File name="stamp-0.9.10/intruder/decoder.c" open="1" top="0" tabpos="3">
+		<Cursor position="9578" topLine="356" />
 	</File>
-	<File name="stamp-0.9.10/intruder/decoder.h" open="0" top="0" tabpos="3">
-		<Cursor position="4657" topLine="16" />
+	<File name="stamp-0.9.10/intruder/decoder.h" open="1" top="0" tabpos="2">
+		<Cursor position="4715" topLine="115" />
 	</File>
 	<File name="stamp-0.9.10/intruder/detector.c" open="0" top="0" tabpos="0">
 		<Cursor position="5770" topLine="177" />
@@ -55,8 +55,8 @@
 	<File name="stamp-0.9.10/intruder/detector.h" open="0" top="0" tabpos="0">
 		<Cursor position="4681" topLine="119" />
 	</File>
-	<File name="stamp-0.9.10/intruder/intruder.c" open="1" top="1" tabpos="0">
-		<Cursor position="7413" topLine="168" />
+	<File name="stamp-0.9.10/intruder/intruder.c" open="1" top="1" tabpos="1">
+		<Cursor position="8006" topLine="406" />
 	</File>
 	<File name="stamp-0.9.10/kmeans/cluster.c" open="0" top="0" tabpos="0">
 		<Cursor position="6600" topLine="207" />
