@@ -1,0 +1,58 @@
+MainSeed=1
+ListOfThreadSeeds={16838,5758}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 0  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 0  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+Initial WriteValue is set to  14666 for Thread 0...
+Starting thread 0...
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] R(x,1)
+[Th1:T1] Try C
+[Th1:T1] C
+
+Thread[1]: CandidateListContainer[0].Seed = 27224 
+Initial WriteValue is set to  6441 for Thread 1...
+Starting thread 1...
+
+		[Th2:T3] S
+		[Th2:T3] R(y)
+		[Th2:T3] R(y,2)
+		[Th2:T3] Try C
+		[Th2:T3] C
+
+Shutting STM engine down...
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make STM=<name of desired STM>                       *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************

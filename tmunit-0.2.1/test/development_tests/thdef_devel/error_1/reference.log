@@ -1,0 +1,58 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     PROPERTIES Section
+-----------------------------------------------------------------------------
+'0' is assigned to 'PrintStatistics'
+PrintStatistics is set to 0
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+	Encountered FIXED VALUE '1'
+Name       : x
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &x
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'1' is assigned to 'x'
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T1 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:READ from address of 'x'
+
+
+
+-----------------------------------------------------------------------------
+     THREADS Section
+-----------------------------------------------------------------------------
+'Th1' is/are comprised of the following transactional pattern:
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+TxBlock[0]: 1
+	Encountered FIXED VALUE '2'
+	Encountered VARIABLE EXPRESSION '2'
+
+ERROR: Consecutive delay operations encountered. Terminating...
+      @ line 11: Th1:= D(1),D(2), T1;
+                               ^

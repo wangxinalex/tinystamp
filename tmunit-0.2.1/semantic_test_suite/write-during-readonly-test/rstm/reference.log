@@ -1,0 +1,32 @@
+
+Input Configuration File: semantic_test_suite/write-during-readonly-test/input.cfg
+Initializing STM...
+Starting thread 0...
+Starting thread 1...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] R(x,0)
+[Th1:T1]:L 
+
+		[Th2:T2] S
+		[Th2:T2] W(y)
+		[Th2:T2] W(y,1)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+[Th1:T1] R(y)
+[Th1:T1] A 
+[Th1:T1] Invariant NO_ABORT fails. 
+
+
+-----------------------------------------------------
+                    TEST FAILS                       
+-----------------------------------------------------
+

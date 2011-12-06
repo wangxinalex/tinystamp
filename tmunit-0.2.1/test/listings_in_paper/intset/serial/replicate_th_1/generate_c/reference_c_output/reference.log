@@ -1,0 +1,355 @@
+MainSeed=1
+ListOfThreadSeeds={16838,5758}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 1  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 0  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+Generating Random variable seeds for Thread 0...
+Seed of _NB: 14666
+Thread[0]: CandidateListContainer[0].Seed = 9940 
+Initial WriteValue is set to  29998 for Thread 0...
+Starting thread 0...
+
+[P_1:T_update] S
+[P_1:T_update] R(m[0])
+[P_1:T_update] R(m[0],0)
+[P_1:T_update] R(m[1])
+[P_1:T_update] R(m[1],0)
+[P_1:T_update] R(m[2])
+[P_1:T_update] R(m[2],0)
+[P_1:T_update] R(m[3])
+[P_1:T_update] R(m[3],0)
+[P_1:T_update] R(m[4])
+[P_1:T_update] R(m[4],0)
+[P_1:T_update] W(m[3])
+[P_1:T_update] W(m[3],29998)
+[P_1:T_update] Try C
+[P_1:T_update] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],0)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29998)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],0)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29998)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_update] S
+[P_1:T_update] R(m[0])
+[P_1:T_update] R(m[0],0)
+[P_1:T_update] R(m[1])
+[P_1:T_update] R(m[1],0)
+[P_1:T_update] R(m[2])
+[P_1:T_update] R(m[2],0)
+[P_1:T_update] R(m[3])
+[P_1:T_update] R(m[3],29998)
+[P_1:T_update] R(m[4])
+[P_1:T_update] R(m[4],0)
+[P_1:T_update] R(m[5])
+[P_1:T_update] R(m[5],0)
+[P_1:T_update] W(m[3])
+[P_1:T_update] W(m[3],29999)
+[P_1:T_update] W(m[4])
+[P_1:T_update] W(m[4],30000)
+[P_1:T_update] W(m[5])
+[P_1:T_update] W(m[5],30001)
+[P_1:T_update] Try C
+[P_1:T_update] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],0)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_update] S
+[P_1:T_update] R(m[0])
+[P_1:T_update] R(m[0],0)
+[P_1:T_update] R(m[1])
+[P_1:T_update] R(m[1],0)
+[P_1:T_update] R(m[2])
+[P_1:T_update] R(m[2],0)
+[P_1:T_update] W(m[1])
+[P_1:T_update] W(m[1],30002)
+[P_1:T_update] Try C
+[P_1:T_update] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],30002)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29999)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],30000)
+[P_1:T_search] R(m[5])
+[P_1:T_search] R(m[5],30001)
+[P_1:T_search] R(m[6])
+[P_1:T_search] R(m[6],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],30002)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29999)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],30000)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],30002)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29999)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],30000)
+[P_1:T_search] R(m[5])
+[P_1:T_search] R(m[5],30001)
+[P_1:T_search] R(m[6])
+[P_1:T_search] R(m[6],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],30002)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+Generating Random variable seeds for Thread 1...
+Seed of _NB: 27224
+Thread[1]: CandidateListContainer[0].Seed = 6441 
+Initial WriteValue is set to  13086 for Thread 1...
+Starting thread 1...
+
+		[P_2:T_update] S
+		[P_2:T_update] R(m[0])
+		[P_2:T_update] R(m[0],0)
+		[P_2:T_update] R(m[1])
+		[P_2:T_update] R(m[1],30002)
+		[P_2:T_update] R(m[2])
+		[P_2:T_update] R(m[2],0)
+		[P_2:T_update] R(m[3])
+		[P_2:T_update] R(m[3],29999)
+		[P_2:T_update] R(m[4])
+		[P_2:T_update] R(m[4],30000)
+		[P_2:T_update] W(m[3])
+		[P_2:T_update] W(m[3],13086)
+		[P_2:T_update] Try C
+		[P_2:T_update] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] R(m[5])
+		[P_2:T_search] R(m[5],30001)
+		[P_2:T_search] R(m[6])
+		[P_2:T_search] R(m[6],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] R(m[5])
+		[P_2:T_search] R(m[5],30001)
+		[P_2:T_search] R(m[6])
+		[P_2:T_search] R(m[6],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+Shutting STM engine down...
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make STM=<name of desired STM>                       *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************

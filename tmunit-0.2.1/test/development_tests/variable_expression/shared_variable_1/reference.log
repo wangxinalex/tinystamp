@@ -1,0 +1,46 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+Name       : a
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &a
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+	Encountered SHARED variable 'a'
+	Encountered VARIABLE EXPRESSION 'a'
+Value evaluated for 'a'= 20
+	Encountered SHARED variable 'a'
+	Encountered VARIABLE EXPRESSION 'a'
+	Encountered VARIABLE EXPRESSION 'R(a)'
+Managed Read from 'a' returns 20
+Value evaluated for 'R(a)'= 20
+Name       : a
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+	Encountered SHARED variable 'a'
+	Encountered VARIABLE EXPRESSION 'a'
+Value evaluated for 'a'= 30
+	Encountered SHARED variable 'a'
+	Encountered VARIABLE EXPRESSION 'a'
+	Encountered VARIABLE EXPRESSION 'R(a)'
+Managed Read from 'a' returns 30
+Value evaluated for 'R(a)'= 30
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+

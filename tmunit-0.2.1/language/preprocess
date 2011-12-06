@@ -1,0 +1,9 @@
+#!/bin/bash
+
+RawInputFileName=$1;
+
+
+# Command to remove comments in the  C++ style, i.e.:
+# Any string written after a // string until the end of the line 
+# is assumed as a comment and it is removed from the file
+sed 's@//.*$@@g' $RawInputFileName;

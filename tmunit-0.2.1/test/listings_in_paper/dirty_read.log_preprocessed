@@ -1,0 +1,57 @@
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+	Encountered LOCAL variable '_y'
+	Encountered FIXED VALUE '0'
+'0' is assigned to '_y'
+	Encountered SHARED variable 'x'
+	Encountered FIXED VALUE '0'
+'0' is assigned to 'x'
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T1 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+Ele[0]: OpNo[0]:WRITE  '1' to address of 'x'.
+Ele[1]: Label @L1
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+	Encountered FIXED VALUE '2'
+	Encountered VARIABLE EXPRESSION '2'
+Ele[2]: OpNo[1]:WRITE  '2' to address of 'x'.
+
+T2 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+	Encountered LOCAL variable '_y'
+	Encountered VARIABLE EXPRESSION '_y'
+Ele[0]: OpNo[0]:READ from address of 'x' into '_y'.
+
+
+
+-----------------------------------------------------------------------------
+     SCHEDULES Section
+-----------------------------------------------------------------------------
+Sched[0]: (S)
+	T1@L1,T2,T1
+
+
+-----------------------------------------------------------------------------
+     INVARIANTS Section
+-----------------------------------------------------------------------------
+	Encountered CONSTANT 'T2'
+	Encountered LOCAL variable '_y' in the scope 'T2'
+	Encountered VARIABLE EXPRESSION 'T2:_y'
+	Encountered '!=' operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered SIMPLE CONDITIONAL EXPRESSION 'T2:_y!=1'
+Invariant[0]: [T2:_y!=1]
+benchgen: thread.c:140: InitializeThreadSeeds: Assertion `ThreadNum != 0' failed.

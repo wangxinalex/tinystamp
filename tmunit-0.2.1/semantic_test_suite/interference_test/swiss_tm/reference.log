@@ -1,0 +1,73 @@
+
+Input Configuration File: semantic_test_suite/interference_test/input.cfg
+Initializing STM...
+Starting thread 0...
+Starting thread 1...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] R(x,0)
+[Th1:T1]:L 
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] W(x,1)
+		[Th2:T2] W(y)
+		[Th2:T2] W(y,1)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+[Th1:T1] R(y)
+[Th1:T1] A 
+[Th1:T1] Terminates
+
+
+-----------------------------------------------------
+             TEST COMPLETES SUCCESFULLY              
+-----------------------------------------------------
+
+Shutting STM engine down...
+
+STM internal statistics: 
+========================
+Thread 1: 
+	Commit: 0
+	CommitReadOnly: 0
+	Abort: 1
+	AbortWriteLocked: 0
+	AbortWriteValidate: 0
+	AbortReadValidate: 1
+	AbortReadLocked: 0
+	AbortCommitValidate: 0
+	ClockOverflows: 0
+
+Thread 2: 
+	Commit: 1
+	CommitReadOnly: 0
+	Abort: 0
+	AbortWriteLocked: 0
+	AbortWriteValidate: 0
+	AbortReadValidate: 0
+	AbortReadLocked: 0
+	AbortCommitValidate: 0
+	ClockOverflows: 0
+
+Total stats: 
+	Commit: 1
+	CommitReadOnly: 0
+	Abort: 1
+	AbortWriteLocked: 0
+	AbortWriteValidate: 0
+	AbortReadValidate: 1
+	AbortReadLocked: 0
+	AbortCommitValidate: 0
+	ClockOverflows: 0
+
+Configuration:
+	LockExtent: 4

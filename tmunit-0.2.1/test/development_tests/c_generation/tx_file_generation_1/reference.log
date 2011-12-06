@@ -1,0 +1,134 @@
+SrcDirPath:.
+TEMPLATE_FILE_DIR:	./../c_output_templates 	Exists ... OK
+GENERATED_CODE_DIR:	./../../c_output_intermediate 	Exists ... OK
+OUTPUT_DIR:		./../../c_output 		Exists ... OK
+cp ./../c_output_templates/barrier.* ./../../c_output
+cp ./../c_output_templates/cli.* ./../../c_output
+cp ./../c_output_templates/simulation_parameters.* ./../../c_output
+cp ./../c_output_templates/random.c  ./../../c_output
+cp ./../c_output_templates/threads.h  ./../../c_output
+cp ./../c_output_templates/transactions.h  ./../../c_output
+cp ./../c_output_templates/Makefile ./../../c_output
+cp ./../c_output_templates/post_process.template ./../../c_output
+cp ./../c_output_templates/prepare_post_process  ./../../c_output
+cp ./../c_output_templates/t_benchrun  ./../../c_output
+cp ./../../c_output_intermediate/thread_local_variables.h ./../../c_output
+cp ./../../c_output_intermediate/shared_var_definitions.* ./../../c_output
+sed '/#SIMULATION_PARAMETER_INITIALIZATIONS#/r ./../../c_output_intermediate/simulation_parameter_initialization.c'  ./../c_output_templates/main.template  > ./../../c_output/main.c
+sed -i '/#SIMULATION_PARAMETER_INITIALIZATIONS#/d' ./../../c_output/main.c
+sed -i '/#SHARED_VARIABLE_ALLOCATIONS#/r ./../../c_output_intermediate/shared_var_alloc.c' ./../../c_output/main.c
+sed -i '/#SHARED_VARIABLE_ALLOCATIONS#/d' ./../../c_output/main.c
+sed -i '/#SHARED_VARIABLE_INITIALIZATIONS#/r ./../../c_output_intermediate/shared_var_init.c' ./../../c_output/main.c
+sed -i '/#SHARED_VARIABLE_INITIALIZATIONS#/d' ./../../c_output/main.c
+cp ./../../c_output/main.c ./../../c_output/main.c_temp
+indent -bli0 -l180 -npsl ./../../c_output/main.c_temp
+diff -w ./../../c_output/main.c_temp ./../../c_output/main.c
+mv ./../../c_output/main.c_temp ./../../c_output/main.c
+sed '/#TRANSACTION_DEFINITIONS_AS_CASE_STATEMENTS#/r ./../../c_output_intermediate/transactions.content'  ./../c_output_templates/transactions.template  > ./../../c_output/transactions.c
+sed -i '/#TRANSACTION_DEFINITIONS_AS_CASE_STATEMENTS#/d' ./../../c_output/transactions.c
+sed -i '/#VARIABLE_DEFINITIONS_BEFORE_SWITCH_STATEMENT#/r ./../../c_output_intermediate/execute_transaction_variable_defs.c' ./../../c_output/transactions.c
+sed -i '/#VARIABLE_DEFINITIONS_BEFORE_SWITCH_STATEMENT#/d' ./../../c_output/transactions.c
+cp ./../../c_output/transactions.c ./../../c_output/transactions.c_temp
+indent -bli0 -l180 -npsl ./../../c_output/transactions.c_temp
+diff -w ./../../c_output/transactions.c_temp ./../../c_output/transactions.c
+mv ./../../c_output/transactions.c_temp ./../../c_output/transactions.c
+rm -f ./../../c_output/threads.c
+
+ThreadNum= 1
+sed  s/#THREAD_NO#/0/g ./../c_output_templates/thread.template >  ./../../c_output/thread_0.c
+sed -i '/#THREAD_SEED_INITIALIZATIONS#/r ./../../c_output_intermediate/thread_local_var_init.c' ./../../c_output/thread_0.c
+sed -i '/#THREAD_SEED_INITIALIZATIONS#/d' ./../../c_output/thread_0.c
+sed -i '/#THREAD_VARIABLE_DECLARATIONS#/r ./../../c_output_intermediate/thread_0_variable_declarations.c' ./../../c_output/thread_0.c
+sed -i '/#THREAD_VARIABLE_DECLARATIONS#/d' ./../../c_output/thread_0.c
+sed -i '/#THREAD_FUNC#/r ./../../c_output_intermediate/thread_0.content' ./../../c_output/thread_0.c
+sed -i '/#THREAD_FUNC#/d' ./../../c_output/thread_0.c
+sed -i '/#THREAD_AND_TRANSACTION_NAMES#/r ./../../c_output_intermediate/thread_and_transaction_names.c' ./../../c_output/thread_0.c
+sed -i '/#THREAD_AND_TRANSACTION_NAMES#/d' ./../../c_output/thread_0.c
+cp ./../../c_output/thread_0.c ./../../c_output/thread_0.c_temp
+indent -bli0 -l180 -npsl ./../../c_output/thread_0.c_temp
+diff -w ./../../c_output/thread_0.c_temp ./../../c_output/thread_0.c
+mv ./../../c_output/thread_0.c_temp ./../../c_output/thread_0.c
+sed '/#THREAD_FUNCTION_DECLARATIONS#/r temp'  ./../c_output_templates/initialization.h.template  > ./../../c_output/initialization.h
+sed -i '/#THREAD_FUNCTION_DECLARATIONS#/d' ./../../c_output/initialization.h
+cp ./../../c_output/initialization.h ./../../c_output/initialization.h_temp
+indent -bli0 -l180 -npsl ./../../c_output/initialization.h_temp
+diff -w ./../../c_output/initialization.h_temp ./../../c_output/initialization.h
+mv ./../../c_output/initialization.h_temp ./../../c_output/initialization.h
+sed   s/#THREAD_NUM#/1/g  ./../c_output_templates/initialization.c.template > ./../../c_output/initialization.c
+sed -i '/#SETTING_VALUES_OF_THREAD_RUN_ARRAY#/r temp' ./../../c_output/initialization.c
+sed -i '/#SETTING_VALUES_OF_THREAD_RUN_ARRAY#/d' ./../../c_output/initialization.c
+cp ./../../c_output/initialization.c ./../../c_output/initialization.c_temp
+indent -bli0 -l180 -npsl ./../../c_output/initialization.c_temp
+diff -w ./../../c_output/initialization.c_temp ./../../c_output/initialization.c
+mv ./../../c_output/initialization.c_temp ./../../c_output/initialization.c
+rm -rf temp *~
+rm -rf ./../../c_output/*~
+
+Input Configuration File: input.cfg
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+----------------------------------------------------
+            Generating Intermediate C output        
+----------------------------------------------------
+
+- Generated code initializing simulation_parameters.
+- Generated code declaring thread local variables.
+- Generated code initializing seeds of random variables in thread.
+- Generated code initializing thread local variables in thread.
+- Generated code declaring shared variables.
+- Generated code initializing shared variables.
+- Generated code related to transactions.
+- Generated code related to threads.
+
+
+-------------------------------------------------------
+   Applying intermediate output to templates files     
+(This creates the final C code in 'c_output' directory)
+-------------------------------------------------------
+
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+
+-------------------------------------------------------
+The warning above is repeated to increase visibility.
+-------------------------------------------------------
+
+

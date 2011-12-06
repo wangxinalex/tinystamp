@@ -1,0 +1,351 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     PROPERTIES Section
+-----------------------------------------------------------------------------
+'1' is assigned to 'SerialThreadExecution'
+SerialThreadExecution is set to 1
+'0' is assigned to 'PrintStatistics'
+PrintStatistics is set to 0
+'1' is assigned to 'RandomDebug'
+RandomDebugParameter is set to 1
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+	Encountered FIXED VALUE '1'
+Name       : x
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &x
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'1' is assigned to 'x'
+	Encountered FIXED VALUE '2'
+Name       : y
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &y
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'2' is assigned to 'y'
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T1 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:READ from address of 'x'
+
+T2 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:WRITE to address of 'x'.
+
+T3 is comprised of the following operations:
+	Encountered SHARED variable 'y'
+	Encountered VARIABLE EXPRESSION 'y'
+Ele[0]: OpNo[0]:WRITE to address of 'y'.
+
+
+
+-----------------------------------------------------------------------------
+     THREADS Section
+-----------------------------------------------------------------------------
+'Th1' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T1
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+'Th2,Th3' is/are comprised of the following transactional pattern:
+TxBlock Start encountered at Container No 0 .
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T2
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 2
+TxBlock[1]: T3
+Container no at the end of TxBlock= 1 
+NextContainerID[0]= 2
+End of  3 times repeated TxBlockList
+TxBlock[2]: (GenerateAndAttachNewContainerForTxChoiceList for 1 repetition.
+NextContainerID[0]= 3
+Uniform distributed candidate list. Setting UniformDistNextTx as Random function.
+CurrentCandidate list is:
+	0	50.000000000000
+	1	50.000000000000
+NextContainerID[0]= 3
+TxBlock[3]: 5 times repeated Choice List:
+	- EQUAL PROBA : T1
+	- EQUAL PROBA : T2
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+MainSeed=1
+ListOfThreadSeeds={16838,5758,10113}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 0  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 0  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+Generating Random variable seeds for Thread 0...
+Generating TxCandidate seeds for Thread 0...
+Initial WriteValue is set to  14666 for Thread 0...
+Starting thread 0...
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] R(x,1)
+[Th1:T1] Try C
+[Th1:T1] C
+
+Generating Random variable seeds for Thread 1...
+Generating TxCandidate seeds for Thread 1...
+2:27224
+Initial WriteValue is set to  6441 for Thread 1...
+Starting thread 1...
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] W(x,6441)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+
+		[Th2:T3] S
+		[Th2:T3] W(y)
+		[Th2:T3] W(y,6442)
+		[Th2:T3] Try C
+		[Th2:T3] C
+
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] W(x,6443)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+
+		[Th2:T3] S
+		[Th2:T3] W(y)
+		[Th2:T3] W(y,6444)
+		[Th2:T3] Try C
+		[Th2:T3] C
+
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] W(x,6445)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+
+		[Th2:T3] S
+		[Th2:T3] W(y)
+		[Th2:T3] W(y,6446)
+		[Th2:T3] Try C
+		[Th2:T3] C
+
+
+		[Th2:T1] S
+		[Th2:T1] R(x)
+		[Th2:T1] R(x,6445)
+		[Th2:T1] Try C
+		[Th2:T1] C
+
+
+		[Th2:T1] S
+		[Th2:T1] R(x)
+		[Th2:T1] R(x,6445)
+		[Th2:T1] Try C
+		[Th2:T1] C
+
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] W(x,6447)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] W(x,6448)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] W(x,6449)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+Generating Random variable seeds for Thread 2...
+Generating TxCandidate seeds for Thread 2...
+2:23264
+Initial WriteValue is set to  11601 for Thread 2...
+Starting thread 2...
+
+				[Th3:T2] S
+				[Th3:T2] W(x)
+				[Th3:T2] W(x,11601)
+				[Th3:T2] Try C
+				[Th3:T2] C
+
+
+				[Th3:T3] S
+				[Th3:T3] W(y)
+				[Th3:T3] W(y,11602)
+				[Th3:T3] Try C
+				[Th3:T3] C
+
+
+				[Th3:T2] S
+				[Th3:T2] W(x)
+				[Th3:T2] W(x,11603)
+				[Th3:T2] Try C
+				[Th3:T2] C
+
+
+				[Th3:T3] S
+				[Th3:T3] W(y)
+				[Th3:T3] W(y,11604)
+				[Th3:T3] Try C
+				[Th3:T3] C
+
+
+				[Th3:T2] S
+				[Th3:T2] W(x)
+				[Th3:T2] W(x,11605)
+				[Th3:T2] Try C
+				[Th3:T2] C
+
+
+				[Th3:T3] S
+				[Th3:T3] W(y)
+				[Th3:T3] W(y,11606)
+				[Th3:T3] Try C
+				[Th3:T3] C
+
+
+				[Th3:T2] S
+				[Th3:T2] W(x)
+				[Th3:T2] W(x,11607)
+				[Th3:T2] Try C
+				[Th3:T2] C
+
+
+				[Th3:T2] S
+				[Th3:T2] W(x)
+				[Th3:T2] W(x,11608)
+				[Th3:T2] Try C
+				[Th3:T2] C
+
+
+				[Th3:T2] S
+				[Th3:T2] W(x)
+				[Th3:T2] W(x,11609)
+				[Th3:T2] Try C
+				[Th3:T2] C
+
+
+				[Th3:T2] S
+				[Th3:T2] W(x)
+				[Th3:T2] W(x,11610)
+				[Th3:T2] Try C
+				[Th3:T2] C
+
+
+				[Th3:T2] S
+				[Th3:T2] W(x)
+				[Th3:T2] W(x,11611)
+				[Th3:T2] Try C
+				[Th3:T2] C
+
+Shutting STM engine down...
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+
+-------------------------------------------------------
+The warning above is repeated to increase visibility.
+-------------------------------------------------------
+
+

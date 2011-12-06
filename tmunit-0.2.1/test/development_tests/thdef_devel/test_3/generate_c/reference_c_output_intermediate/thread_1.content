@@ -1,0 +1,4 @@
+ChosenTransactionID = ChooseTransaction( &(CandidateListContainer[0]) );
+ExecuteTransaction(ChosenTransactionID, ThLocals.TxDesc, &ThLocals);
+if(TerminateRequestedBySignal)
+   TERMINATE_THREAD;

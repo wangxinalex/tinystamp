@@ -1,0 +1,12 @@
+Definitions:	                     
+  y=0; x=0; z=0;                     
+
+Transactions:                        
+  T1 := W(x,1),@L1,W(y,1);           
+  T2 := {? [R(x) != R(y)]: W(z,1)};  
+
+Schedules:                           
+  S:=T1@L1,T2,T1;                    
+
+Invariants:    			     
+  [z != 1];                          

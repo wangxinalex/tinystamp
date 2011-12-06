@@ -1,0 +1,295 @@
+#!/bin/bash
+
+InitDir=$PWD
+
+ShowTestLogs=0;
+TryMatchingWithRefLogs=0;
+
+# Generate list of test directories
+TestDirList=`ls -d */ | grep "test" | tr -d /`;
+# Another alternative for TestDirList could be the following:
+# (But this is not tested)
+#    TestDirList=`ls -d */|gawk -F "/" '{print $1}'`;
+SingleTestExecutionDesired=0;
+
+SupportedSTMList="TINY_ETL TINY_CTL TINY_WT TL2 RSTM SWISS_TM WSTM"
+TestListToCompileInTestMode="linearizability-violation-test  serializability-violation-test  unnecessary-abort-test  unnecessary-abort-test_bis  write-commit-write-test invisible-write-test"
+
+
+# Manage input parameters
+
+while [[ $# > 0 ]]  ;
+do 
+    if [ $1 == "-h" ] ; then
+	echo ""
+	echo "Usage:"
+	echo ""
+	echo "   $0 [options]"
+	echo ""
+	echo "Options:"
+	echo ""
+	echo "   -h"
+	echo "       Prints this help message"
+	echo "   -s"
+	echo "       Prints tmunit test execution on console"
+	echo "       By default this option is OFF. The user should"
+	echo "       add this option to turn it on."
+	echo "   -m"
+	echo "       Try matching the current tmunit execution log"
+	echo "       with the saved reference log (if it exists)"
+	echo "   -t  <TestDirName>"
+	echo "       Execute the semantic test given by the name <TestDirName>"
+	echo "       If not given the default behaviour is to execute all"
+	echo "       semantic tests for desired STMs (see parameter -STM on how"
+	echo "       to execute a test with desired STMs"
+	echo "   -STM  <comma separated STM list> (default all)"
+	echo "       Execute all the semantic tests for the STMs given"
+	echo "       in the the parameter <comma separated STM list>."
+	echo "       If not given the default behaviour is to execute tests"
+	echo "       on all supported STMs. The possible STM parameter values"
+	echo "       are:"
+	echo ""
+	echo "          TINY_ETL"
+	echo "          TINY_CTL"
+	echo "          TINY_WT"
+	echo "          TL2"
+	echo "          RSTM"
+ 	echo "          SWISS_TM"
+	echo "          WSTM"
+	echo ""
+	echo ""
+	echo ""
+	exit
+    elif [ $1 == "-s" ]; then
+	ShowTestLogs=1;
+    elif [ $1 == "-m" ]; then
+	TryMatchingWithRefLogs=1;
+    elif [ $1 == "-STM" ]; then
+	echo $2 > STM_list_file;
+	STMList=`sed 's/,/ /g' STM_list_file`;
+	rm -f STM_list_file
+	shift;
+    elif [ $1 == "-t" ]; then
+	if [ -d $2 ]; then
+      	    TestDirList=$2
+	    SingleTestExecutionDesired=1;
+        else
+	    echo "Test '$2' does not exist in the semantic test suite."
+	    echo "A test is assumed to be in the semantic test suite if:"
+	    echo "   - It is under 'semantic_test_suite' directory, and"
+	    echo "   - The directory name has the string 'test' in it"
+	    echo ""
+	    exit
+	fi
+	shift;
+ 
+    fi
+    
+    shift;
+done 
+
+
+
+
+if [ -n "$STMList" ]; then
+
+echo "STMList: $STMList";
+
+for CurrentSTMName in $STMList
+do 
+   CurrentSTMSupported=0;
+   for SupportedSTMName in $SupportedSTMList
+   do
+	if [ $CurrentSTMName == $SupportedSTMName ] ; then
+	    CurrentSTMSupported=1;
+	    break;
+	fi
+   done
+   if [ $CurrentSTMSupported == "0" ]; then
+       echo "STM '$CurrentSTMName' is not found among supported STM list."
+       echo "Please check whether the name of STM '$CurrentSTMName' is typed wrong."
+       echo "The supported STM list is: "
+       for SupportedSTMName in $SupportedSTMList
+       do
+	   echo $SupportedSTMName
+       done
+       exit
+   fi    
+done
+
+else
+  echo ""
+  echo "No STM is specified, Executing test(s) for all supported STMs"
+  echo ""
+  STMList=$SupportedSTMList;
+
+
+fi
+
+if [ $SingleTestExecutionDesired == "0" ]; then
+  echo ""
+  echo "No test is specified, Executing all test(s) for the selected STMs."
+  echo ""
+
+fi 
+
+
+for TestName in $TestDirList
+do
+    
+
+echo ""
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+echo "               TEST:  $TestName"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+echo ""
+
+
+cd ../
+
+TestModeCompileParam=""
+
+for VisitedTestName in $TestListToCompileInTestMode
+do
+    if [ $TestName == $VisitedTestName ]; then
+	TestModeCompileParam="test_mode"
+	break;
+    fi	
+done
+
+
+
+for CurrentSTM in $STMList
+do	
+       STM_Parameter="STM=$CurrentSTM";
+
+	if [ $ShowTestLogs == "1" ] ; then
+ 
+	    echo ""
+	    echo "===================================================================="
+	    echo "                 Compiling for  $CurrentSTM"
+	    echo "===================================================================="
+	    echo ""
+        fi 
+
+	make clean >& temp.compilation.log
+	make $TestModeCompileParam $STM_Parameter >& temp.compilation.log
+
+	if [ $ShowTestLogs == "1" ] ; then
+	    echo "DONE"
+        
+	    echo ""
+	    echo "===================================================================="
+	    echo "                 Running test with $CurrentSTM"
+	    echo "===================================================================="
+	    echo ""
+	fi
+
+
+	if [ $ShowTestLogs == "1" ] ; then
+	    ./tmunit -S S  "semantic_test_suite/"$TestName"/input.cfg" | tee temp.log
+	else
+	    if [[ $CurrentSTM == "WSTM" ]]; then
+                ./tmunit -S S  "semantic_test_suite/"$TestName"/input.cfg" > temp.log 2>/dev/null
+            else
+	        ./tmunit -S S  "semantic_test_suite/"$TestName"/input.cfg" >& temp.log
+            fi
+	    if [ $? -eq 0 ]; then
+		echo  -ne "     $CurrentSTM\tpasses\t" 
+	    else
+		echo  -ne "     $CurrentSTM\t\tFAILS" 
+            fi
+	fi    
+
+	
+	
+	
+	ExtraDiffOption="";
+	if [ $TryMatchingWithRefLogs == "1" ] ; then
+ 	    if [[ $CurrentSTM == "TINY_ETL" ]]; then
+		ReferenceOutputDir="tiny-ETL"
+ 	    elif [[ $CurrentSTM == "TINY_CTL" ]]; then
+		ReferenceOutputDir="tiny-CTL"
+ 	    elif [[ $CurrentSTM == "TINY_WT" ]]; then
+		ReferenceOutputDir="tiny-WT"
+            elif [[ $CurrentSTM == "TL2" ]]; then
+		ReferenceOutputDir="tl2"
+            elif [[ $CurrentSTM == "RSTM" ]]; then
+		ReferenceOutputDir="rstm"
+            elif [[ $CurrentSTM == "SWISS_TM" ]]; then
+		ReferenceOutputDir="swiss_tm"
+            elif [[ $CurrentSTM == "WSTM" ]]; then
+		ReferenceOutputDir="wstm"
+	    fi
+
+	 
+	    ReferenceFile="semantic_test_suite/"$TestName"/"$ReferenceOutputDir"/reference.log"
+	    ReferenceFileDir="semantic_test_suite/"$TestName"/"$ReferenceOutputDir;
+	    if [ -e $ReferenceFile ]; then
+		grep -v "Starting thread" temp.log > temp.log_diffed_part
+		grep -v "Starting thread" $ReferenceFile > $ReferenceFile"_diffed_part"
+
+		if [[ $CurrentSTM == "SWISS_TM" ]]; then
+		    cp temp.log_diffed_part temp.log_diffed_part.init
+		    cp $ReferenceFile"_diffed_part" $ReferenceFile"_diffed_part.init"
+		    LineNo=$(grep -n "STM internal statistics:"  temp.log_diffed_part | gawk -F : '{print $1}');
+		    if [[ $LineNo != "" ]]; then
+			head -$LineNo temp.log_diffed_part > tmp.log_cur
+			mv tmp.log_cur temp.log_diffed_part  
+		    fi
+	
+		    LineNo=$(grep -n "STM internal statistics:"  $ReferenceFile"_diffed_part" | gawk -F : '{print $1}');
+		    if [[ $LineNo != "" ]]; then
+			head -$LineNo  $ReferenceFile"_diffed_part" > tmp.log_ref
+			mv tmp.log_ref $ReferenceFile"_diffed_part"  
+                    fi
+		fi
+
+		diff -q temp.log_diffed_part  $ReferenceFile"_diffed_part" > temp.diff.log
+
+		    
+#		diff -q temp.log  $ReferenceFile > temp.diff.log
+		if [ $? -eq 0 ]; then
+		    if [ $ShowTestLogs == "0" ] ; then
+			echo  -e \\t ref log matches
+		    else
+			echo Test output matches reference output in  $ReferenceFile
+		    fi  
+		else
+		    if [ $ShowTestLogs == "0" ] ; then
+			echo  -e \\t ref log DIFFERS
+			echo THE DIFFERENCES ARE:
+			diff temp.log_diffed_part  $ReferenceFile"_diffed_part" 
+
+#			cat temp.diff.log
+#			cp temp.log $ReferenceFileDir
+#			echo Copied temp.log under $ReferenceFileDir for further investigation 
+		    else
+			echo Test output DIFFERS FROM REFERENCE output in  $ReferenceFile
+		    fi    
+		fi
+
+		rm temp.log_diffed_part  $ReferenceFile"_diffed_part"
+
+	    else
+		if [ $ShowTestLogs == "0" ] ; then
+		    echo  -e \\t ref log DOES NOT EXIST
+		else
+		    echo No reference output "$ReferenceFile" found
+		fi  
+		
+            fi
+	    
+	else
+	    echo ""
+	fi
+
+done
+echo ""
+
+
+cd $InitDir
+
+done

@@ -1,0 +1,52 @@
+#!/usr/bin/perl
+
+
+$ShowDifference=$ARGV[2];
+$SilentDiff="-q";
+if( $ShowDifference == 1) 
+{
+    $SilentDiff="";
+}
+
+
+$TestTargetDir=$ARGV[0];
+
+
+$ReferenceDir= $TestTargetDir . "/reference_c_output_intermediate";
+$CommmandString = "diff $SilentDiff -r -x .svn c_output_intermediate $ReferenceDir";
+system($CommmandString);
+
+if ( $? != 0 ) 
+{  
+# TEST FAILS
+    exit(1);
+}
+
+
+$ReferenceDir= $TestTargetDir . "/reference_c_output";
+$CommmandString = "diff c_output $ReferenceDir $SilentDiff -r -x .svn -x cmd.trg -x reference.log ";
+system($CommmandString);
+
+
+if ( $? != 0 ) 
+{
+# TEST FAILS
+    exit(1);
+}
+
+
+$ExecutionLogFileName=$ARGV[1]; 
+$ReferenceLogFileName = $TestTargetDir . "/reference.log";
+$CommmandString = "diff $SilentDiff $ExecutionLogFileName $ReferenceLogFileName";
+system($CommmandString);
+
+if ( $? != 0 ) 
+{
+    # TEST FAILS
+    exit(1);
+}
+else
+{
+    # TEST SUCCESFUL
+    exit(0);
+}

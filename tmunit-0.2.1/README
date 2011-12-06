@@ -1,0 +1,705 @@
+
+======================================================================
+
+			      TMunit 
+         Transactional Memory Unit Testing and Evaluation Tool
+	 	       
+======================================================================
+
+
+	   Author: Derin Harmanci (derin.harmanci@unine.ch)
+
+
+
+----------------------------------------------------------------------
+Contents Of README
+----------------------------------------------------------------------
+
+	1. Installation
+	   1.1 Requirements
+	   1.2 Installation Steps
+
+	2. Usage
+	   2.1  Basic Usage
+	   2.2  C code generation
+	   2.3  Directory Layout
+	   2.4  Executables (what do they do?)
+	   2.5  Examples
+	   2.6  Semantic Tests
+
+	3. Release Notes
+	   3.1  Supported Platforms
+	   3.2  Supported STMs
+	   3.3  Remedies to possible problems 
+
+        4. Reference Papers	
+
+	
+----------------------------------------------------------------------
+1. Installation
+----------------------------------------------------------------------
+
+----------------------
+1.1 Requirements
+----------------------
+
+Programs that needs to be installed in your distribution to be able to
+run all features of TMunit: 
+
+    - bash
+    - gcc and g++ (tested with version 4.2.1)
+    - bison (tested with bison 2.3)
+    - flex  (tested with flex 2.5.33)
+    - perl	
+    - gawk  (optionally also awk [*not required by default*] if you would  
+             use scripts in test and semantic_test_suite directories) 
+    - sed   (version supporting the -i option)
+    - indent (for C code generation)
+    - "libatomic ops" library freely available from:
+         http://www.hpl.hp.com/research/linux/atomic_ops/
+    - At least one of the supported STMs 
+         (See Section 3.2 for download websites of STMs)
+
+
+----------------------
+1.2 Installation Steps
+----------------------
+
+   1.  Install  one of the  supported STMs.  Supported STMs  and their
+      download  websites can  be  found in  Section  3.2.  Rename  the
+      libraries  you  generate for  tinySTM  as  follows  (in the  lib
+      directory)
+      
+         For           Architecture	 LibraryName
+
+	 TINY_ETL      64-bit		 libstm_ETL_64b.a
+	 TINY_ETL      32-bit		 libstm_ETL_32b.a
+	 TINY_CTL      64-bit		 libstm_CTL_64b.a
+	 TINY_CTL      32-bit		 libstm_CTL_32b.a
+	 TINY_WT       64-bit		 libstm_WT_64b.a
+	 TINY_WT       32-bit		 libstm_WT_32b.a
+
+     Hint: To compile  tinySTM with with one of  the versions TINY_ETL
+     (Encounter Time Locking version)  , TINY_CTL (Commit Time Locking
+     version) or TINY_WT (Write Through version) use
+
+
+         For           Makefile line to use
+
+	 TINY_ETL      DEFINES += -DDESIGN=WRITE_BACK_ETL
+	 TINY_CTL      DEFINES += -DDESIGN=WRITE_BACK_CTL
+	 TINY_WT       DEFINES += -DDESIGN=WRITE_THROUGH
+
+
+
+   2. Enter  in the  directory where you  extracted the  tarball. This
+      directory will be called $TMUNIT_HOME hereafter.
+
+   3.   Edit  the path  variables  in  "environment.include" file  (in
+      $TMUNIT_HOME) to  point to the  locations of the  following (all
+      variables need not be set, see the notes following the list) :
+
+         LIBAO_HOME            (path to 64-bit libatomic ops lib 
+	                        installation)
+	 LIBAO_32b_HOME        (path to 32-bit libatomic ops lib 
+	                        installation)			
+         TINY_STM_0_9_5_HOME   (path to tinySTM home) 
+         TL2_HOME 	       (path to TL2 home) 
+         RSTM_HOME             (path to $RSTM_HOME/stm 
+	                        here we assume $RSTM_HOME is the
+         			home dir for RSTM)
+	 SWISS_TM_HOME	       (path to SwissTM home)			
+	 WSTM_HOME	       (path to $WSTM_HOME/libstm 
+	 		        here we assume $WSTM_HOME is the
+				home dir for WSTM) 
+
+     All the paths should be  absolute paths.
+
+     Note that all the paths for  all STMs need not be set, however it
+     is obligatory  to set  LIBAO_HOME path (also  LIBAO_32b_HOME path
+     for  32-bit compilations) and  at least  the path  to one  of the
+     supported  STMs. If  not the  compilation of  TMunit will  not be
+     successful.
+
+     By default  "tmunit" executable will  not run anywhere  but under
+     $TMUNIT_HOME  directory.  If  you  would  like  to  run  "tmunit"
+     executable anywhere  out of $TMUNIT_HOME directory  then also set
+     the
+
+         SRC_DIR_PATH
+ 
+     variable to the absolute path $TMUNIT_HOME.
+
+
+   4. Type
+
+         make clean
+
+
+   5. Type one of the following according to the STM you would use
+
+
+         * make            	 (to compile with tinySTM Encounter 
+	                          Time Locking (ETL) version)
+         * make STM=TINY_ETL     (to compile with tinySTM Encounter 
+	                          Time Locking (ETL) version)
+         * make STM=TINY_CTL     (to compile with tinySTM Commit 
+	                          Time Locking (CTL) version)
+         * make STM=TINY_WT      (to compile with tinySTM Write 
+	                          Through (WT) version)
+         * make STM=TL2    	 (to compile with TL2)
+         * make STM=RSTM   	 (to compile with RSTM)
+         * make STM=SWISS_TM     (to compile with SwissTM)
+         * make STM=WSTM   	 (to compile with WSTM)
+
+
+      TMunit should be  ready to use (except that  one should write an
+      input  configuration  file  which  TMunit should  process.   See
+      Section 2.5 of this file for example input configuration files).
+
+
+   6. If  you would  like to switch  from one  STM to the  other while
+      using TMunit, first type
+
+
+          make clean
+
+
+      then apply step  5 to compile TMunit on top of the STM you would
+      like to use.
+
+
+
+----------------------------------------------------------------------
+2. Usage
+----------------------------------------------------------------------
+
+
+----------------------
+2.1  Basic Usage
+----------------------
+
+Once the installation is complete the user can type 
+
+     ./tmunit -h 
+
+to get help  on TMunit. To try  a simple example, the user  can try to
+run the following example by typing:
+
+    ./tmunit -v trace test/listings_in_paper/basic_workload/basic_workload.cfg 
+
+The  "basic_workload.cfg" file  is the  input configuration  file that
+should be given to TMunit (in case of syntax or semantic errors TMunit
+would try to  help you find out the problem by  printing a message and
+pointing out the possible location of the error on which the error was
+found  out). When  executed  you  should see  the  list of  simulation
+parameters used,  followed by a  trace of transactional  accesses. The
+notation and format of traces is as follows:
+
+   Each line of the trace corresponds to a transactional action
+   of a transaction. The lines are prefixed with the name of the
+   transaction in the  [ThreadName:TransactionName]  format (names
+   come from the definitions in the configuration file). This
+   is followed by the transactional operation that is executed.
+   The possible transactional operation outputs are as follows:
+
+     - S
+          Start/restart of a transaction.
+     - R(Var)
+          The beginning of an TM READ on variable 'Var'.
+     - R(Var,Val)
+          The end of an TM READ on variable 'Var'. The value
+          returned by the TM READ appears on the 'Val' field.
+     - W(Var)
+          The beginning of an TM WRITE on variable 'Var'.
+     - W(Var,Val)
+          The end of an TM WRITE on variable 'Var'. The value
+          stored by the TM WRITE appears on the 'Val' field.
+     - Try C
+          The beginning of a TM COMMIT operation.
+     - C
+          The end of a TM COMMIT operation.
+
+
+----------------------
+2.2  C code generation
+----------------------
+
+To generate  a C  code with TMunit,  one should perform  the following
+steps:
+
+  1) Enter in $TMUNIT_HOME directory (see Section 1.2 for $TMUNIT_HOME
+     directory)
+
+  2) Type
+  
+         ./tmunit -g Input/configuration/file/with/its/path
+  	 (e.g., ./tmunit -g test/listings_in_paper/basic_workload/basic_workload.cfg)   
+
+     This will generate the C code under the "c_output" directory. 
+   
+
+  3) Type
+  
+         cd c_output
+
+  4) Compile the C code with one of the following (according to which
+     STM you would like to use): 
+  	
+         * make            	 (to compile with tinySTM Encounter 
+	                          Time Locking (ETL) version)
+         * make STM=TINY_ETL     (to compile with tinySTM Encounter 
+	                          Time Locking (ETL) version)
+         * make STM=TINY_CTL     (to compile with tinySTM Commit 
+	                          Time Locking (CTL) version)
+         * make STM=TINY_WT      (to compile with tinySTM Write 
+	                          Through (WT) version)
+         * make STM=TL2    	 (to compile with TL2)
+         * make STM=RSTM   	 (to compile with RSTM)
+         * make STM=SWISS_TM     (to compile with SwissTM)
+
+         * Compilation  with  WSTM  is  not  yet  supported,  this
+	   requires adaptation  of assembly code on  the CAS operation
+	   of WSTM for our platforms. The issue is not yet resolved
+
+         (if you  are trying out the  example in point  2 also include
+	  TRACE=ENABLE parameter to the make command)
+
+    This  will  generate  the  executable "benchrun"  and  the  script
+    "t_benchrun". The usage  of the  executables can  be  consulted by
+    typing.
+
+         ./benchrun -h    or
+         ./t_benchrun -h    
+
+
+    By default tracing is disabled (for performance reasons) so if you
+    would  like to  enable  tracing  with the  generated  C code  also
+    include TRACE=ENABLE parameter in the make command, e.g., type
+      
+
+         make STM=TINY_ETL TRACE=ENABLE
+
+
+    to compile the code with  tinySTM ETL version and tracing enabled.
+    However compilation with  TRACE=ENABLE will not automatically make
+    the trace appear during  execution. The user should explicitly ask
+    for trace  output using the -v option  of "benchrun" ("t_benchrun"
+    by default runs the executable by asking for tracing output)
+
+    If you  would like to learn  more about the  executables of TMunit
+    refer to Section 2.4.
+
+
+----------------------
+2.3  Directory Layout
+----------------------
+
+Files containing documentation
+
+        README (this file)
+
+Files related to installation/compilation
+
+      	environment.include
+      	Makefile
+
+Directories containing examples and tests
+
+	test
+	semantic_test_suite
+
+Directories reserved for C code output (do not delete those or your C
+code generation will fail!)
+
+	c_output_intermediate
+	c_output            
+
+Directories containing Tmunit source code:
+
+	general
+	code_generation  
+	language
+	execution
+
+
+
+----------------------
+2.4  Executables (what do they do?)
+----------------------
+
+The list of major executables appearing in TMunit distribution are:
+
+    - tmunit
+    - benchrun
+    - t_benchrun
+    - perform_test
+    
+In general, the usage of each executable can be obtained by typing the
+executable name followed by a -h option (e.g.  ./tmunit -h).
+
+  * tmunit
+
+    This is the  main program which executes a  schedule or performs a
+    simulation for  the scenario described in  the input configuration
+    file given  as a parameter  (the interpreted automaton).   This is
+    also the program which would  generate C code corresponding to the
+    input  configuration file  (which is  done using  -g  parameter of
+    TMunit). When  a C code is  generated the output  is written under
+    "c_output"  directory  under  $TMUNIT_HOME  (see Section  1.2  for
+    $TMUNIT_HOME directory).
+
+
+    The usage of the executable can be consulted by typing 
+
+         ./tmunit -h
+
+
+  * benchrun
+  
+    This  is  the  executable  that  performs  simulations  using  the
+    generated C code (generated automaton). This executable is however
+    not capable of executing schedules.  The executable is produced by
+    typing something similar to  one of the following under "c_output"
+    directory  (the "c_output"  directory  content is  generated by  a
+    prior execution of TMunit with the -g option)
+
+         * make            (to compile with tinySTM Encounter Time 
+	                    Locking version)
+
+         * make STM=TL2    (to compile with TL2)
+
+         * make STM=TL2  TRACE=ENABLE  (to compile with TL2 and with)
+	                                tracing support)
+
+    See the full list of STMs that can be compiled in Section 2.2. The
+    usage of the executable can be consulted by typing
+
+         ./benchrun -h
+
+
+  * t_benchrun
+        
+    This  is a  script  which uses  "benchrun"  executable to  execute
+    simulations. The script is useful in runs where a simulation trace
+    is to be generated.  "benchrun" executable generates a trace where
+    raw addresses  of transactional  read and write  operations appear
+    (such as Read of address 0xc8000000). t_benchrun is a wrapper that
+    post  processes  the  output  of  "benchrun" to  replace  the  raw
+    addresses  with  the   variables/arrays  appearing  on  the  input
+    configuration file which was used in generating "benchrun".
+
+    The usage of the executable can be consulted by typing 
+
+         ./t_benchrun -h
+   
+
+  * perform_test
+
+    This  is a  script to  execute and  report results  (pass/fail) of
+    semantic  tests found  in the  semantic_test_suite  directory (the
+    script  itself  is in  semantic_test_suite  directory).   It is  a
+    script that helps the user to execute a selected semantic test (or
+    all semantic tests at once) on top of different STMs without going
+    into  the details  of compilation  and execution  parameters.  The
+    script allows the user to choose  which test to execute as well as
+    which STMs to  use for the execution. The  STMs that are supported
+    by the script are
+
+    	 TINY_ETL    (tinySTM Encounter Time Locking (ETL) version)
+	 TINY_CTL    (tinySTM Commit Time Locking (CTL) version)
+	 TINY_WT     (tinySTM Write Through (WT) version)
+	 TL2 	     (TL2)
+	 RSTM 	     (RSTM)
+	 SWISS_TM    (SwissTM)
+	 WSTM	     (WSTM)
+     
+     (The list of supported STMs are  hard-coded in the line 15 of the
+     script, it  can be  modified according to  the STMs  installed in
+     your configuration)
+
+    The usage of the executable can be consulted by typing 
+
+         ./perform_test -h
+   
+
+----------------------
+2.5  Examples
+----------------------
+
+In  theory, all  the  tests  appearing in  the  "tests" directory  are
+examples on  how TMunit is  to be used.  In practice, the  examples of
+interest   are   under   "test/listings_in_paper"   directory   (under
+$TMUNIT_HOME [see Section 1.2 for $TMUNIT_HOME directory]). This
+directory contains the 
+
+	  bank-bench/  
+	  basic_workload/  
+	  dirty_read/  
+	  intset/  
+	  zombie_transactions/
+
+directories,  each of  which are  standalone examples.  Each directory
+contains the following:
+
+    - input  configuration file  with  the .cfg  extension. This  file
+      describes the  scenario to be  executed by TMunit  (the scenario
+      can be a  benchmark as in "intset" directory  or a semantic test
+      as in "dirty_read" directory).
+
+    - a  file with  .trg extension  which shows  how TMunit  should be
+      invoked  under $TMUNIT_HOME  (see Section  1.2  for $TMUNIT_HOME
+      directory) to obtain the "reference.log" file
+
+    - "reference.log"  file  which shows  the  output  that should  be
+      obtained when .trg file  is executed (except some messages given
+      due to compilation in test_mode)
+
+Some directories may contain also a "generate_c" subdirectory in which
+again similar .cfg and .trg files  are found. The .trg file inside the
+"generate_c"  subdirectory  shows  the   command  line  to  run  under
+$TMUNIT_HOME (see Section 1.2  for $TMUNIT_HOME directory) to generate
+the C code corresponding to the  .cfg file. A readily generated C code
+output  by  executing  the   .trg  is  given  in  "reference_c_output"
+directories.   If  you  would  like   to  execute  the  C  code  in  a
+reference_c_output directory, we would  suggest you copy the directory
+under $TMUNIT_HOME  directory and  work on that  local copy  to ensure
+that tests always pass.
+
+
+
+----------------------
+2.6  Semantic Tests
+----------------------
+
+Input examples  for semantic tests are  found in "semantic_test_suite"
+directory  under  $TMUNIT_HOME   (see  Section  1.2  for  $TMUNIT_HOME
+directory). The  semantic tests found  in the directory  are currently
+the ones that has been published  in [1] (see Section 4). The user can
+execute all the semantic tests either by typing
+
+	 
+    make semtests
+
+
+under $TMUNIT_HOME (see Section  1.2 for $TMUNIT_HOME directory) or by
+typing
+
+
+   ./perform_test 
+
+
+under $TMUNIT_HOME/semantic_test_suite  directory.
+
+Each subdirectory of the "semantic_test_suite" directory correspond to
+one of  the semantic  tests that  appear in [1].   The names  of tests
+mostly match with the names  in the paper.  The configuration files of
+each  test is  found in  the "input.cfg"  file under  the subdirectory
+representing  the test.  You  can run  a test  either by  executing it
+yourself using TMunit or  by passing through the "perform_test" script
+(see Section 2.4- "bullet perform_test" for the script).
+
+ - Execution using TMunit:
+
+   To run "false_sharing_test", type the following under $TMUNIT_HOME:
+
+
+      ./tmunit -S S semantic_test_suite/false_sharing_test/input.cfg  
+
+
+   The output of the above command line will be different according to
+   which STM was  used to compile TMunit (see Section 1.2  - Step 5 to
+   see how to compile TMunit with different STMs).
+
+ - Execution using perform_test:
+  
+   To   run    "false_sharing_test",   type   the    following   under
+   $TMUNIT_HOME/semantic_test_suite:
+
+
+      ./perform_test -t false_sharing_test 
+
+   
+   This will  execute the  "false_sharing_test" for all  the supported
+   STMs and report you whether the  test passes or fails for each case
+   (if you  have only part  of the supported  STMs you can  modify the
+   SupportedSTMList in  line 15 of "perform_test" script  to adapt the
+   supported STM script according to your configuration). 
+
+   If  you would  like to  run  the "false_sharing_test"  test with  a
+   specific STM (e.g., TL2) type:
+
+
+      ./perform_test -t false_sharing_test -STM TL2
+
+
+   This will execute the test only for TL2 and report the result. Type 
+
+     
+      ./perform_test -h 
+
+
+   for more detailed usage of "perform_test" script.
+
+
+---------------------------------------------------------------------
+3. Release Notes
+----------------------------------------------------------------------
+
+----------------------
+3.1  Supported Platforms
+----------------------
+
+Platform where TMunit was developed and tested:
+
+   OS                 : Linux
+   Linux kernel       : 2.6.22
+   Linux distribution : OpenSuse 10.3
+   Machine Arch       : x86_64 (Intel Core 2 - 2 cores)
+   gcc/g++            : version 4.2.1   
+
+
+Other platforms where TMunit was tested:
+
+   OS                 : Linux
+   Linux kernel       : 2.6.22
+   Linux distribution : OpenSuse 10.3
+   Machine Arch       : x86_64 (4*AMD Opteron Quad Core  - 16 cores)
+   gcc/g++            : version 4.2.1   
+
+
+   OS                 : Linux
+   Linux kernel       : 2.6.25
+   Linux distribution : Ubuntu 8.10
+   Machine Arch       : x86_64 (Intel Xeon - 8 cores)
+   gcc/g++            : version 4.3.2 (Ubuntu 4.3.2-1ubuntu11) 
+
+
+
+Note: TMunit compilation may not be straightforward on MacOs since 
+      TMunit uses thread local storage. We will try to solve this 
+      problem in the near future.
+
+
+----------------------
+3.2  Supported STMs
+----------------------
+
+The currently supported STMs are the following
+
+   - tinySTM  (tested with version 0.9.5)
+        available freely at: http://www.tmware.org/tinystm 
+
+   - TL2      (tested with version 0.9.5, should also work with later versions)
+        available freely at: http://stamp.stanford.edu 
+
+   - RSTM     (compiled with word-based version, named "llt")
+        avaliable freely at: 
+	http://www.cs.rochester.edu/research/synchronization/rstm/download.shtml	
+
+   - SwissTM   (word based version, tested with the version that
+                compiles under 32-bit, should work also with 64 bit
+		version but requires compilation flag modificiations
+                in Makefiles)
+        avaliable freely at: http://lpd.epfl.ch/site/research/tmeval
+       
+   - WSTM    (word based version, filename: libstm-v1.tar.gz)
+        avaliable freely at: http://www.cl.cam.ac.uk/research/srg/netos/lock-free/
+
+
+----------------------
+3.3  Remedies to possible problems 
+----------------------
+
+1. If you have compilation problems 
+
+    - Try checking whether your environment.include file correctly
+      points to the STM distributions and "libatomic ops" library
+
+    - Try a 
+
+          make clean
+
+      and retry your compilation
+
+
+2. If TMunit  prints out  a  syntax/semantic error  about your  input
+   config  file  where  the   error  indicator  pointer  points  to  a
+   meaningless location, the error maybe that
+   
+      - TMunit could not open the config file either because the file
+        does not exist or the path to the config file is wrong
+
+      - TMunit could not process the config file because the config file
+        is empty
+  
+      - The  last line of  the config  file is  not terminated  with a
+        newline character and TMunit found an error on that last line
+
+      - The line on which TMunit found an error is missing a ";"
+        termination for the line
+
+3. The  order of  the  sections in  a  configuration  file should  be
+   respected. The order should be as follows:
+
+      Properties
+      Definitions
+      Transactions
+      Threads
+      Schedules
+      Invariants
+    
+   However, it is not necessary to have all the sections in a config 
+   file (see next point for more information)
+
+4. A configuration file should have at least a "Transactions" section
+   and a "Threads" or a "Schedules" section. A segmentation fault can
+   occur if the user desires to execute a schedule for an input file
+   that does not define a schedule.
+
+   Similarly if  the user desires  to execute a simulation  defined in
+   the configuration  file but no  threads are defined (if  a schedule
+   execution is  not asked explicitly  TMunit will try to  execute the
+   threads defined in Threads section) a segmentation fault can occur.
+
+   
+5. Beware  that nested  condition  and  loop  support in  transaction
+   definitions is not yet full.  So the following nestings can work or
+   not  according to the  example you  have (to  be sure  execute your
+   example with  a trace  so that you  see what your  configuration is
+   executing):
+
+             - loop in loop 
+	     - condition in condition
+	     - Loop in condition
+	     - Condition in loop
+
+6. If you are not sure about how the input configuration file you have
+   written would  behave, do the following before  running TMunit with
+   your configuration file:
+
+     - In the properties section insert the line
+
+             SerialThreadExecution=1;  
+
+       this would execute each thread separately one after the other
+       (thus parallel execution would be cancelled, just for the sake
+        of understanding how each thread behaves)
+
+     - Run TMunit such that it generates a transactional trace
+       (i.e., run your config file with a command like   
+       	       ./tmunit -v trace  CONFIG_FILE_NAME
+       )
+
+
+      
+
+----------------------
+4. Reference Papers
+----------------------
+
+[1] Derin  Harmanci, Pascal  Felber,  Vincent  Gramoli, and  Christof
+    Fetzer,  TMunit: Testing  Software Transactional  Memories,4th ACM
+    SIGPLAN       Workshop       on      Transactional       Computing
+    (TRANSACT'09). February 2009
+

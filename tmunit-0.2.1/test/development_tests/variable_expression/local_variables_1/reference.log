@@ -1,0 +1,158 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+Name       : _a
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 100
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _b
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 150
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _c
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 2
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _d
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 5
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _a
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 50
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _SIZE
+Type       : VAR_LOCAL_SIMPLE_CONSTANT
+Operation  : INVALID_OPERATION
+Value      : 1000
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+Value evaluated for '_a'= 50
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_b'
+Value evaluated for '_b'= 150
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_a+_b'
+Value evaluated for '_a+_b'= 200
+	Encountered LOCAL variable '_c'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_c*_a'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_c*_a+_b'
+Value evaluated for '_c*_a+_b'= 250
+	Encountered LOCAL variable '_c'
+	Encountered VARIABLE EXPRESSION '_c'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_a'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_c+_a*_b'
+Value evaluated for '_c+_a*_b'= 7502
+	Encountered LOCAL variable '_c'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_a+_b'
+	Encountered VARIABLE EXPRESSION '_c*(_a+_b)'
+Value evaluated for '_c*(_a+_b)'= 400
+	Encountered LOCAL variable '_c'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_b'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_c'
+	Encountered VARIABLE EXPRESSION '_a+_b*_c'
+	Encountered VARIABLE EXPRESSION '_c*(_a+_b*_c)'
+Value evaluated for '_c*(_a+_b*_c)'= 700
+	Encountered LOCAL variable '_c'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_b'
+	Encountered DIVIDE operation
+	Encountered LOCAL variable '_c'
+	Encountered VARIABLE EXPRESSION '_a+_b/_c'
+	Encountered VARIABLE EXPRESSION '_c*(_a+_b/_c)'
+Value evaluated for '_c*(_a+_b/_c)'= 250
+	Encountered LOCAL variable '_c'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_a+_b'
+	Encountered DIVIDE operation
+	Encountered LOCAL variable '_d'
+	Encountered VARIABLE EXPRESSION '(_a+_b)/_d'
+	Encountered VARIABLE EXPRESSION '_c*((_a+_b)/_d)'
+Value evaluated for '_c*((_a+_b)/_d)'= 80
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered VARIABLE EXPRESSION '(_a)'
+Value evaluated for '(_a)'= 50
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_a+_b'
+	Encountered VARIABLE EXPRESSION '(_a+_b)'
+Value evaluated for '(_a+_b)'= 200
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered MINUS operation
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_a-_b'
+Value evaluated for '_a-_b'= -100
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_b'
+	Encountered MINUS operation
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_b-_a'
+Value evaluated for '_b-_a'= 100
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '-_a'
+Value evaluated for '-_a'= -50
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_a+_b'
+	Encountered VARIABLE EXPRESSION '-(_a+_b)'
+Value evaluated for '-(_a+_b)'= -200
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '-_a'
+	Encountered PLUS operation
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '-_a+_b'
+Value evaluated for '-_a+_b'= 100
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+

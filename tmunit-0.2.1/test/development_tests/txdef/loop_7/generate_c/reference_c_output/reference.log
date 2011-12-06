@@ -1,0 +1,62 @@
+MainSeed=1
+ListOfThreadSeeds={16838}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 0  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 0  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+TL2 system ready: GV=GV4
+Generating Random variable seeds for Thread 0...
+Seed of _R: 14666
+Initial WriteValue is set to  9940 for Thread 0...
+Starting thread 0...
+
+[Th1:T1] S
+[Th1:T1] W(x)
+[Th1:T1] W(x,9940)
+[Th1:T1] R(arr[0])
+[Th1:T1] R(arr[0],10)
+[Th1:T1] R(arr[1])
+[Th1:T1] R(arr[1],11)
+[Th1:T1] R(arr[2])
+[Th1:T1] R(arr[2],12)
+[Th1:T1] W(x)
+[Th1:T1] W(x,9941)
+[Th1:T1] Try C
+[Th1:T1] C
+
+Shutting STM engine down...
+TL2 system shutdown:
+  GCLOCK=0x2 Starts=1 Aborts=0
+  Overflows: R=0 W=0 L=0
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make STM=<name of desired STM>                       *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************

@@ -1,0 +1,216 @@
+
+Input Configuration File: test/listings_in_paper/basic_workload/basic_workload.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     PROPERTIES Section
+-----------------------------------------------------------------------------
+'0' is assigned to 'PrintStatistics'
+PrintStatistics is set to 0
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+	Encountered FIXED VALUE '10'
+Name       : x
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &x
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'10' is assigned to 'x'
+	Encountered FIXED VALUE '20'
+Name       : y
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &y
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'20' is assigned to 'y'
+Name       : _a
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _b
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T1 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:READ from address of 'x'
+	Encountered SHARED variable 'y'
+	Encountered VARIABLE EXPRESSION 'y'
+Ele[1]: OpNo[1]:READ from address of 'y'
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[2]: OpNo[2]:WRITE to address of 'x'.
+	Encountered SHARED variable 'y'
+	Encountered VARIABLE EXPRESSION 'y'
+Ele[3]: OpNo[3]:WRITE to address of 'y'.
+
+T2 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+Ele[0]: OpNo[0]:READ from address of 'x' into '_a'.
+	Encountered SHARED variable 'y'
+	Encountered VARIABLE EXPRESSION 'y'
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_b'
+Ele[1]: OpNo[1]:READ from address of 'y' into '_b'.
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered MINUS operation
+	Encountered FIXED VALUE '10'
+	Encountered VARIABLE EXPRESSION '_a-10'
+Ele[2]: OpNo[2]:WRITE  '_a-10' to address of 'x'.
+	Encountered SHARED variable 'y'
+	Encountered VARIABLE EXPRESSION 'y'
+	Encountered LOCAL variable '_b'
+	Encountered VARIABLE EXPRESSION '_b'
+	Encountered MINUS operation
+	Encountered FIXED VALUE '10'
+	Encountered VARIABLE EXPRESSION '_b-10'
+Ele[3]: OpNo[3]:WRITE  '_b-10' to address of 'y'.
+
+
+
+-----------------------------------------------------------------------------
+     THREADS Section
+-----------------------------------------------------------------------------
+'Th1' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T1
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 2
+TxBlock[1]: T2
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 0  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 0  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+Starting thread 0...
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] R(x,10)
+[Th1:T1] R(y)
+[Th1:T1] R(y,20)
+[Th1:T1] W(x)
+[Th1:T1] W(x,14666)
+[Th1:T1] W(y)
+[Th1:T1] W(y,14667)
+[Th1:T1] Try C
+[Th1:T1] C
+
+
+[Th1:T2] S
+[Th1:T2] R(x)
+[Th1:T2] R(x,14666)
+[Th1:T2] R(y)
+[Th1:T2] R(y,14667)
+[Th1:T2] W(x)
+[Th1:T2] W(x,14656)
+[Th1:T2] W(y)
+[Th1:T2] W(y,14657)
+[Th1:T2] Try C
+[Th1:T2] C
+
+Shutting STM engine down...
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+
+-------------------------------------------------------
+The warning above is repeated to increase visibility.
+-------------------------------------------------------
+
+

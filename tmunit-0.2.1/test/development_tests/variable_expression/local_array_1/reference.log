@@ -1,0 +1,35 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+	Encountered FIXED VALUE '0'
+	Encountered VARIABLE EXPRESSION '0'
+	Encountered FIXED VALUE '2'
+	Encountered VARIABLE EXPRESSION '2'
+	Encountered RANGE ''0' to '2' (increment 1)'
+	LOCAL Array '_m[' with elements in range: ''0' to '2' (increment 1)'
+	Encountered FIXED VALUE '25'
+'25' is assigned to all elements of array '_m'
+	Encountered FIXED VALUE '0'
+	Encountered VARIABLE EXPRESSION '0'
+	Encountered ARRAY variable '_m[0]'
+	Encountered VARIABLE EXPRESSION '_m[0]'
+Value evaluated for '_m[0]'= 25
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered ARRAY variable '_m[1]'
+	Encountered VARIABLE EXPRESSION '_m[1]'
+Value evaluated for '_m[1]'= 25
+	Encountered FIXED VALUE '2'
+	Encountered VARIABLE EXPRESSION '2'
+	Encountered ARRAY variable '_m[2]'
+	Encountered VARIABLE EXPRESSION '_m[2]'
+Value evaluated for '_m[2]'= 25
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+

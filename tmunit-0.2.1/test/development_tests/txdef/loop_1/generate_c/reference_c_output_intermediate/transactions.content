@@ -1,0 +1,8 @@
+case 0:
+TX_START;
+for( ThLocals->_i = 0; (ThLocals->_i <= 2); ThLocals->_i = (ThLocals->_i + 1) )
+{
+TM_READ(x);
+}
+TX_COMMIT;
+break;

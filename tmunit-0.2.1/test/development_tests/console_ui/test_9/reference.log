@@ -1,0 +1,8 @@
+
+To get help type: 
+	tmunit  -h 
+Unexpected FORMAT for Thread Configuration List Element '20'
+Format for the elements of this list is:
+
+	ThreadDefName:Number
+

@@ -1,0 +1,158 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     PROPERTIES Section
+-----------------------------------------------------------------------------
+'0' is assigned to 'PrintStatistics'
+PrintStatistics is set to 0
+'1' is assigned to 'RandomDebug'
+RandomDebugParameter is set to 1
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+Name       : _a
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+	Encountered FIXED VALUE '50'
+Name       : x
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &x
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'50' is assigned to 'x'
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T1 is comprised of the following operations:
+	Encountered LOCAL variable '_a'
+	Encountered VARIABLE EXPRESSION '_a'
+	Encountered '==' operation
+	Encountered FIXED VALUE '0'
+	Encountered VARIABLE EXPRESSION '0'
+	Encountered SIMPLE CONDITIONAL EXPRESSION '_a==0'
+Parsing behaviour for  CONDITION: '_a==0'
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:READ from address of 'x'
+Ele[1]: Encountered CONDITIONAL EXECUTION BLOCK with following conditions:
+	 - _a==0
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[2]: OpNo[1]:WRITE to address of 'x'.
+
+
+
+-----------------------------------------------------------------------------
+     THREADS Section
+-----------------------------------------------------------------------------
+'Th1' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T1
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+MainSeed=1
+ListOfThreadSeeds={16838}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 0  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 0  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+Generating Random variable seeds for Thread 0...
+Generating TxCandidate seeds for Thread 0...
+Initial WriteValue is set to  14666 for Thread 0...
+Starting thread 0...
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] R(x,50)
+[Th1:T1] W(x)
+[Th1:T1] W(x,14666)
+[Th1:T1] Try C
+[Th1:T1] C
+
+Shutting STM engine down...
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+
+-------------------------------------------------------
+The warning above is repeated to increase visibility.
+-------------------------------------------------------
+
+

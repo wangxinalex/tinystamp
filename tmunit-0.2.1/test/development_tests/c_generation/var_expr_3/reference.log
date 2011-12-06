@@ -1,0 +1,29 @@
+
+Input Configuration File: input.cfg
+Name       : a
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &a
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Value evaluated for 'a'= 20
+Value evaluated for 'R(a)'= 20
+Name       : a
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Value evaluated for 'a'= 30
+Value evaluated for 'R(a)'= 30
+VarExpr[0]: 20
+VarExpr[1]: (*a)
+VarExpr[2]: (*a)
+VarExpr[3]: TM_READ(a)
+VarExpr[4]: 30

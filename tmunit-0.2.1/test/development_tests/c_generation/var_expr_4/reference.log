@@ -1,0 +1,25 @@
+
+Input Configuration File: input.cfg
+Value evaluated for 'arr[1]'= 11
+Value evaluated for 'arr[2]'= 22
+Value evaluated for 'arr[3]'= 33
+Value evaluated for 'R(arr[2])'= 22
+Value evaluated for 'R(arr[1])'= 11
+Value evaluated for 'R(arr[3])'= 33
+VarExpr[0]: 1
+VarExpr[1]: 3
+VarExpr[2]: arr
+VarExpr[3]: 12
+VarExpr[4]: 2
+VarExpr[5]: 22
+VarExpr[6]: 11
+VarExpr[7]: 33
+VarExpr[8]: arr[1]
+VarExpr[9]: arr[1]
+VarExpr[10]: arr[2]
+VarExpr[11]: arr[2]
+VarExpr[12]: arr[3]
+VarExpr[13]: arr[3]
+VarExpr[14]: TM_READ(&(arr[2]))
+VarExpr[15]: TM_READ(&(arr[1]))
+VarExpr[16]: TM_READ(&(arr[3]))

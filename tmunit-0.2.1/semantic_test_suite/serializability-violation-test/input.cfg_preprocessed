@@ -1,0 +1,15 @@
+
+Definitions:
+ x=0;  y=0;  z=0;  t=0;
+
+Transactions:
+ T1 := W(x), W(y); 
+ T2 := W(z), W(t);    
+ T3 := R(z), @L2, W(y); 
+ TL := R(x), R(y), @L1, R(z), W(t);
+
+Schedules: 
+  S := TL@L1, T3@L2, T1, T2, T3, TL;
+
+Invariants:
+  [No-abort] ;

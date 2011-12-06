@@ -1,0 +1,30 @@
+
+Input Configuration File: input.cfg
+Name       : _a
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 20
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _b
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 15
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Value evaluated for '_a==_b'= 0
+Value evaluated for '_a!=_b'= 1
+Value evaluated for '_a<_b'= 0
+Value evaluated for '_a>_b'= 1
+Value evaluated for '_a<=_b'= 0
+Value evaluated for '_a>=_b'= 1
+VarExpr[0]: 20
+VarExpr[1]: ThLocals->_a
+VarExpr[2]: 15
+VarExpr[3]: ThLocals->_b
+VarExpr[4]: (ThLocals->_a == ThLocals->_b)
+VarExpr[5]: (ThLocals->_a != ThLocals->_b)
+VarExpr[6]: (ThLocals->_a < ThLocals->_b)
+VarExpr[7]: (ThLocals->_a > ThLocals->_b)
+VarExpr[8]: (ThLocals->_a <= ThLocals->_b)
+VarExpr[9]: (ThLocals->_a >= ThLocals->_b)

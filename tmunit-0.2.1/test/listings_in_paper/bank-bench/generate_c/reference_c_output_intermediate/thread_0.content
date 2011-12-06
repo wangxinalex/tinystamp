@@ -1,0 +1,6 @@
+for(; ; )
+{
+ExecuteTransaction(1, ThLocals.TxDesc, &ThLocals);
+if(TerminateRequestedBySignal)
+   TERMINATE_THREAD;
+}

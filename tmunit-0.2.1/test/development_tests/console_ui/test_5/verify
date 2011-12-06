@@ -1,0 +1,45 @@
+#!/bin/bash
+
+RefLogDir=$1
+CurrentLogFile=$2
+ShowDifferences=$3
+
+
+if [[ $ShowDifferences -eq 0 ]]; then
+   diff -q $CurrentLogFile $RefLogDir/reference.log_1  > temp_diff.log
+   if [[ $? -eq 0 ]]; then
+      TestPasses=1;
+   else
+      diff -q $CurrentLogFile $RefLogDir/reference.log_2  > temp_diff.log
+      if [[ $? -eq 0 ]]; then
+      	 TestPasses=1;
+      else
+         TestPasses=0;
+      fi
+    fi
+else
+   echo Comparing with reference.log_1
+   diff  $CurrentLogFile $RefLogDir/reference.log_1
+   if [[ $? -eq 0 ]]; then
+      TestPasses=1;
+   else
+      echo Comparing with reference.log_2
+      diff  $CurrentLogFile $RefLogDir/reference.log_2
+      if [[ $? -eq 0 ]]; then
+        TestPasses=1;
+      else
+	 echo Neither of ref files are matching
+        TestPasses=0;
+      fi	
+   fi
+fi
+
+
+
+if [[ $TestPasses -eq 0 ]]; then 
+    # TEST FAILS
+    exit 1;
+else
+    # TEST SUCCESFUL
+    exit 0 ;
+fi

@@ -1,0 +1,145 @@
+InputFile=$1
+echo $InputFile > InputFileNameWithPathFile
+InputFileName=`basename $InputFile`
+InputFileDir=`sed s/$InputFileName//g InputFileNameWithPathFile`
+ReferenceFile=$InputFileDir"reference.log"
+InputFileExtension=`echo $InputFileName|awk -F . '{print $NF}' `
+rm -f InputFileNameWithPathFile
+
+ShowDifferences=0;
+if [[ $2 == "show" ]]; then 
+   ShowDifferences=1;
+fi
+
+
+TestSpecificVerificationScript=$InputFileDir"verify";
+if [ -e $TestSpecificVerificationScript ]; then
+  TestSpecificVerificationScriptExists=1;
+fi
+
+ReferenceDir=$InputFileDir"reference_c_output"
+if [ -d $ReferenceDir ]; then
+  DirCheckMode=1;
+  mkdir -p ../c_output
+  rm -f ../c_output/*
+else
+  DirCheckMode=0;
+fi
+#echo "DirCheckMode: $DirCheckMode"
+
+
+cd ..
+
+
+if [[ $InputFileExtension == "trg" ]]; then
+    cp "test/"$InputFile .
+    if [ -e "test/"$InputFileDir"input.cfg" ]; then
+       cp "test/"$InputFileDir"input.cfg" .
+    fi
+    "./test/"$InputFile 2&> initial_temp.log 
+    rm -f *.trg
+    rm -f *.cfg
+else
+    ./tmunit "test/"$InputFile &> initial_temp.log
+fi
+
+grep -v "Starting thread" initial_temp.log | grep -v "Initial WriteValue" | grep -v "Generating Random variable seeds for" | grep -v "Generating TxCandidate seeds for" > temp.log
+#diff initial_temp.log temp.log
+
+
+if [ -e "test/"$ReferenceFile ]; then
+grep -v "Starting thread" "test/"$ReferenceFile | grep -v "Initial WriteValue" | grep -v "Generating Random variable seeds for" | grep -v "Generating TxCandidate seeds for" > "test/"$ReferenceFile"_filtered"
+fi
+
+
+if [[ $TestSpecificVerificationScriptExists -eq 1 ]]; then
+  VerifyScript="test/"$TestSpecificVerificationScript;
+   cp  $VerifyScript .
+
+   ./verify "test/"$InputFileDir temp.log $ShowDifferences     
+   if [[ $? -eq 0 ]]; then
+      TestPasses=1;
+   else
+      TestPasses=0;
+   fi
+   rm verify
+else 
+
+if [[ $ShowDifferences -eq 0 ]]; then
+   if [[ DirCheckMode -eq 0 ]]; then
+      diff -q temp.log "test/"$ReferenceFile"_filtered" > temp_diff.log
+      if [[ $? -eq 0 ]]; then
+      	 TestPasses=1;
+      else
+       	 TestPasses=0;
+      fi
+#      echo "TestPasses: $TestPasses" 	
+   else
+      diff -q temp.log "test/"$ReferenceFile"_filtered" > temp_diff.log
+      LogMatches=$?;
+#      echo "LogMatches: $LogMatches" 	
+      if [[ LogMatches -ne 0 ]]; then
+         TestPasses=0;
+      else
+#         echo "Diffing with reference_c_output directory.."
+         diff -r -q -x .svn c_output "test/"$ReferenceDir >> temp_diff.log
+	 if [[ $? -eq 0 ]]; then
+      	   TestPasses=1;
+         else
+       	   TestPasses=0;
+         fi
+      fi
+#      echo "TestPasses: $TestPasses" 	
+
+    fi
+else # if we ask for differences to be shown
+
+   if [[ DirCheckMode -eq 0 ]]; then
+      diff  temp.log "test/"$ReferenceFile"_filtered" 
+      if [[ $? -eq 0 ]]; then
+      	 TestPasses=1;
+      else
+       	 TestPasses=0;
+      fi
+#      echo "TestPasses: $TestPasses" 	
+   else
+      diff  temp.log "test/"$ReferenceFile"_filtered" 
+      LogMatches=$?;
+#      echo "LogMatches: $LogMatches" 	
+      if [[ LogMatches -ne 0 ]]; then
+         TestPasses=0;
+      else
+#         echo "Diffing with reference_c_output directory.."
+         diff -r -x .svn c_output "test/"$ReferenceDir 
+	 if [[ $? -eq 0 ]]; then
+      	   TestPasses=1;
+         else
+       	   TestPasses=0;
+         fi
+      fi
+#      echo "TestPasses: $TestPasses" 	
+
+    fi
+
+
+    if [[ $ShowDifferences -eq 0 ]]; then
+      rm temp.log temp_diff.log
+    fi
+
+fi
+
+fi
+
+
+if [[  TestPasses -eq 1 ]]; then
+ echo "TEST PASSED ("$InputFile")"
+else
+ echo "	TEST FAILED ("$InputFile")"
+fi
+
+if [ -e "test/"$ReferenceFile"_filtered" ]; then
+   rm "test/"$ReferenceFile"_filtered"
+fi
+
+cd test
+

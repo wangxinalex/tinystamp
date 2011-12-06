@@ -1,0 +1,49 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 1  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 500000  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+Starting thread 0...
+Starting thread 1...
+
+--------------------------
+EXECUTION TIMEOUT REACHED.
+--------------------------
+Shutting STM engine down...
+
+
+ ------------------ Statistics ------------------
+
+Th[0]: Cmmt= 264263, Abrt= 31027 Duration=0.510.948ns, 510ms, 0.510s
+Th[0]: Cmmt/s= 518162.745, Abrt/s= 60837.255, MaxRetries= 5
+	T_search(RO): Cmmt=211645, Abrt=23854, Cmmt/s= 414990.196, Abrt/s= 46772.549, MaxRetries= 3
+	T_update(U): Cmmt=52618, Abrt=7173, Cmmt/s= 103172.549, Abrt/s= 14064.706, MaxRetries= 5
+
+Th[1]: Cmmt= 266982, Abrt= 30905 Duration=0.510.908ns, 510ms, 0.510s
+Th[1]: Cmmt/s= 523494.118, Abrt/s= 60598.039, MaxRetries= 309
+	T_search(RO): Cmmt=213540, Abrt=23770, Cmmt/s= 418705.882, Abrt/s= 46607.843, MaxRetries= 309
+	T_update(U): Cmmt=53442, Abrt=7135, Cmmt/s= 104788.235, Abrt/s= 13990.196, MaxRetries= 4
+
+Aggregate Statistics:
+
+	Total Commit Num  = 531245
+	Total Abort  Num  = 61932
+	Exection Duration = 0.510000
+	Global Commit/s   = 1041656.862745
+	Global Abort/s    = 121435.294118
+	Global MaxRetries = 309
+
+

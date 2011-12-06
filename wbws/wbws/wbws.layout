@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="../tinySTM-1.0.3/Makefile" open="1" top="0" tabpos="2">
-		<Cursor position="4451" topLine="290" />
+	<File name="../tinySTM-1.0.3/Makefile" open="0" top="0" tabpos="2">
+		<Cursor position="4451" topLine="23" />
 	</File>
-	<File name="../tinySTM-1.0.3/include/stm.h" open="1" top="1" tabpos="3">
-		<Cursor position="6245" topLine="149" />
+	<File name="../tinySTM-1.0.3/include/mod_stats.h" open="0" top="0" tabpos="3">
+		<Cursor position="42" topLine="0" />
+	</File>
+	<File name="../tinySTM-1.0.3/include/stm.h" open="1" top="0" tabpos="2">
+		<Cursor position="23210" topLine="386" />
+	</File>
+	<File name="../tinySTM-1.0.3/src/mod_ab.c" open="1" top="1" tabpos="3">
+		<Cursor position="3220" topLine="59" />
 	</File>
 	<File name="../tinySTM-1.0.3/src/stm.c" open="1" top="0" tabpos="1">
-		<Cursor position="77753" topLine="2439" />
+		<Cursor position="78621" topLine="2471" />
+	</File>
+	<File name="../tinySTM-1.0.3/test/bank/bank.c" open="0" top="0" tabpos="0">
+		<Cursor position="8888" topLine="3" />
+	</File>
+	<File name="../tinySTM-1.0.3/test/intset/intset.c" open="0" top="0" tabpos="0">
+		<Cursor position="2803" topLine="63" />
+	</File>
+	<File name="../tinySTM-1.0.3/test/regression/irrevocability.c" open="0" top="0" tabpos="0">
+		<Cursor position="5463" topLine="158" />
+	</File>
+	<File name="../tinySTM-1.0.3/test/regression/types.c" open="0" top="0" tabpos="0">
+		<Cursor position="16100" topLine="504" />
 	</File>
 </CodeBlocks_layout_file>

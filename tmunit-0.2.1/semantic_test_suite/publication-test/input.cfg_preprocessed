@@ -1,0 +1,18 @@
+Definitions:
+ data  = 42;
+ ready =  0; 
+ val   =  0;
+ _tmp   =  0;
+
+
+Transactions:
+ T1 := W(ready, 1); 
+ T2 := R(data, _tmp ), @L, {? [R(ready)==1] :  W(val, _tmp)};
+
+
+Schedules:
+  S := T2@L, {data = 1},  T1,  T2;
+
+Invariants: 
+  [val!=42];
+  [No-abort];

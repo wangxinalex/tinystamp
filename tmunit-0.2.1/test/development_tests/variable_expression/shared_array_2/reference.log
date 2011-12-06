@@ -1,0 +1,65 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered FIXED VALUE '3'
+	Encountered VARIABLE EXPRESSION '3'
+	Encountered RANGE ''1' to '3' (increment 1)'
+	SHARED Array 'arr' with elements in range: ''1' to '3' (increment 1)'
+	Encountered FIXED VALUE '12'
+'12' is assigned to all elements of array 'arr'
+	Encountered FIXED VALUE '2'
+	Encountered VARIABLE EXPRESSION '2'
+	Encountered FIXED VALUE '22'
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered FIXED VALUE '11'
+	Encountered FIXED VALUE '3'
+	Encountered VARIABLE EXPRESSION '3'
+	Encountered FIXED VALUE '33'
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered ARRAY variable 'arr[1]'
+	Encountered VARIABLE EXPRESSION 'arr[1]'
+Value evaluated for 'arr[1]'= 11
+	Encountered FIXED VALUE '2'
+	Encountered VARIABLE EXPRESSION '2'
+	Encountered ARRAY variable 'arr[2]'
+	Encountered VARIABLE EXPRESSION 'arr[2]'
+Value evaluated for 'arr[2]'= 22
+	Encountered FIXED VALUE '3'
+	Encountered VARIABLE EXPRESSION '3'
+	Encountered ARRAY variable 'arr[3]'
+	Encountered VARIABLE EXPRESSION 'arr[3]'
+Value evaluated for 'arr[3]'= 33
+	Encountered FIXED VALUE '2'
+	Encountered VARIABLE EXPRESSION '2'
+	Encountered ARRAY variable 'arr[2]'
+	Encountered VARIABLE EXPRESSION 'arr[2]'
+	Encountered VARIABLE EXPRESSION 'R(arr[2])'
+Managed Read from 'arr[2]' returns 22
+Value evaluated for 'R(arr[2])'= 22
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered ARRAY variable 'arr[1]'
+	Encountered VARIABLE EXPRESSION 'arr[1]'
+	Encountered VARIABLE EXPRESSION 'R(arr[1])'
+Managed Read from 'arr[1]' returns 11
+Value evaluated for 'R(arr[1])'= 11
+	Encountered FIXED VALUE '3'
+	Encountered VARIABLE EXPRESSION '3'
+	Encountered ARRAY variable 'arr[3]'
+	Encountered VARIABLE EXPRESSION 'arr[3]'
+	Encountered VARIABLE EXPRESSION 'R(arr[3])'
+Managed Read from 'arr[3]' returns 33
+Value evaluated for 'R(arr[3])'= 33
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+

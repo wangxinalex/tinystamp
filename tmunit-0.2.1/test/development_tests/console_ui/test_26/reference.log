@@ -1,0 +1,46 @@
+
+--------------------------------------------
+tmunit -- STM Unit Testing & Evaluation Tool
+--------------------------------------------
+
+Usage:
+  tmunit [options] ConfigurationFileName
+
+Options:
+  -d, --duration <int>
+        Simulation duration in microseconds
+  -g, --generate
+        Generates a C file that corresponds to the input configuration file.
+  -h, --help
+        Print this message
+  -s, --seed <int>
+        Random Number Generator Seed (0=time-based, default=1)
+  -S, --schedule <string>
+        Schedule to apply on the transactions and threads. The name of
+        the given schedule should be defined in the Schedules section of
+        configuration file.
+  -t, --threads <ThreadConfigurationList>
+        <ThreadConfigurationList> is a list of the format
+
+               ThreadDefName:Num,ThreadDefName:Num,...
+
+        The list specifies how many threads should be created for each
+        thread definition 'ThreadDefName'. The 'ThreadDefName's given in
+        the list should appear as a definition in the configuration file.
+        The list need not cover all the thread definitions declared in
+        configuration file. The list only effects the threads definitions
+        appearing in the list, while for the remaining thread definitions
+        only one thread will created (which is the default for a thread
+        definition).
+  -v, --verbose <string>
+        <string> parameter is one of the following:
+             parser
+             trace
+             all
+        With 'parser' parameter, a verbose output of input file parsing 
+        will be activated.
+        With 'trace' parameter, the output of a trace of all the accesses
+        performed by all threads on the standart output is activated.
+        With 'all' parameter, both 'parser' and 'trace' parameters will be
+        activated.
+

@@ -1,0 +1,94 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     PROPERTIES Section
+-----------------------------------------------------------------------------
+'1' is assigned to 'SerialThreadExecution'
+SerialThreadExecution is set to 1
+'0' is assigned to 'PrintStatistics'
+PrintStatistics is set to 0
+'1' is assigned to 'RandomDebug'
+RandomDebugParameter is set to 1
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+	Encountered FIXED VALUE '1'
+Name       : x
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &x
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'1' is assigned to 'x'
+	Encountered FIXED VALUE '2'
+Name       : y
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &y
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'2' is assigned to 'y'
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T1 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:READ from address of 'x'
+
+T2 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:WRITE to address of 'x'.
+
+T3 is comprised of the following operations:
+	Encountered SHARED variable 'y'
+	Encountered VARIABLE EXPRESSION 'y'
+Ele[0]: OpNo[0]:READ from address of 'y'
+
+
+
+-----------------------------------------------------------------------------
+     THREADS Section
+-----------------------------------------------------------------------------
+'Th1' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T1
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+'Th2' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+NextContainerID[0]= 1
+TxBlock[0]: INFINITELY REPEATED T3
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 2
+
+ERROR: UNEXPECTED EXECUTABLE ELEMENT (a transaction/ a TxCandidate list / paranthesized block). An infinitely repeating executable element should be the LAST possible executable element in a thread definition!
+
+      @ line 17: Th2 := T3*,T1;
+                              ^

@@ -1,0 +1,16 @@
+
+Input Configuration File: input.cfg
+Value evaluated for '_m[0]'= 20
+Value evaluated for '_m[1]'= 21
+Value evaluated for '_m[2]'= 22
+VarExpr[0]: 0
+VarExpr[1]: 2
+VarExpr[2]: ThLocals->_m
+VarExpr[3]: 25
+VarExpr[4]: 22
+VarExpr[5]: 1
+VarExpr[6]: 21
+VarExpr[7]: 20
+VarExpr[8]: ThLocals->_m[0]
+VarExpr[9]: ThLocals->_m[1]
+VarExpr[10]: ThLocals->_m[2]

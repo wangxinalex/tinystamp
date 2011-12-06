@@ -1,0 +1,44 @@
+#!/usr/bin/perl
+
+$Tolerance=0.05;
+
+
+$TestTargetDir=$ARGV[0];
+$ExecutionLogFileName=$ARGV[1]; 
+$ShowDifference=$ARGV[2];
+
+$LogFileName = $TestTargetDir . "/reference.log";
+
+$ExtractedLine = `grep ^"TimeOut" $LogFileName | gawk '{print \$3}'`;
+@Lines= split('\n',$ExtractedLine); 
+$ExpectedDuration = $Lines[0]/ 1000000;
+
+$ExtractedLine = `grep "Exection Duration" $ExecutionLogFileName | gawk '{print \$4}'`;
+@Lines= split('\n',$ExtractedLine); 
+$ActualDuration  = $Lines[0]; 
+
+# print "ExpectedDuration: $ExpectedDuration\n";
+# print "ActualDuration: $ActualDuration\n";
+# print "LogFileName: $LogFileName\n";
+# print "ExecutionLogFileName: $ExecutionLogFileName\n";
+# print "ShowDifference: $ShowDifference\n";
+
+$CommandString= $TestTargetDir . "duration_diff  $ActualDuration  $ExpectedDuration $Tolerance";
+#print "$CommandString\n";
+$DurationsMatch=`$CommandString`;
+if( $DurationsMatch eq "1" )
+{
+  exit(0);	
+}
+else
+{
+   if( $ShowDifference == "1")	 
+   {
+     print "Durations DO NOT match:\n";
+     print "      Actual    = $ActualDuration\n";
+     print "      Expected  = $ExpectedDuration\n";
+     print "      Tolerance = $Tolerance\n";
+   }
+   exit(1);
+}
+

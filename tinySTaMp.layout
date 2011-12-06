@@ -43,20 +43,29 @@
 	<File name="stamp-0.9.10/genome/sequencer.h" open="0" top="0" tabpos="0">
 		<Cursor position="4378" topLine="123" />
 	</File>
-	<File name="stamp-0.9.10/intruder/decoder.c" open="1" top="0" tabpos="3">
-		<Cursor position="9578" topLine="356" />
+	<File name="stamp-0.9.10/intruder/decoder.c" open="0" top="0" tabpos="3">
+		<Cursor position="14374" topLine="428" />
 	</File>
-	<File name="stamp-0.9.10/intruder/decoder.h" open="1" top="0" tabpos="2">
-		<Cursor position="4715" topLine="115" />
+	<File name="stamp-0.9.10/intruder/decoder.h" open="0" top="0" tabpos="2">
+		<Cursor position="4715" topLine="112" />
 	</File>
 	<File name="stamp-0.9.10/intruder/detector.c" open="0" top="0" tabpos="0">
-		<Cursor position="5770" topLine="177" />
+		<Cursor position="4613" topLine="121" />
 	</File>
 	<File name="stamp-0.9.10/intruder/detector.h" open="0" top="0" tabpos="0">
 		<Cursor position="4681" topLine="119" />
 	</File>
-	<File name="stamp-0.9.10/intruder/intruder.c" open="1" top="1" tabpos="1">
-		<Cursor position="8006" topLine="406" />
+	<File name="stamp-0.9.10/intruder/dictionary.c" open="0" top="0" tabpos="0">
+		<Cursor position="7069" topLine="249" />
+	</File>
+	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="1">
+		<Cursor position="9268" topLine="275" />
+	</File>
+	<File name="stamp-0.9.10/intruder/stream.c" open="0" top="0" tabpos="2">
+		<Cursor position="9979" topLine="279" />
+	</File>
+	<File name="stamp-0.9.10/intruder/stream.h" open="0" top="0" tabpos="0">
+		<Cursor position="4777" topLine="115" />
 	</File>
 	<File name="stamp-0.9.10/kmeans/cluster.c" open="0" top="0" tabpos="0">
 		<Cursor position="6600" topLine="207" />
@@ -97,20 +106,26 @@
 	<File name="stamp-0.9.10/lib/list.h" open="0" top="0" tabpos="0">
 		<Cursor position="11883" topLine="344" />
 	</File>
+	<File name="stamp-0.9.10/lib/map.h" open="0" top="0" tabpos="0">
+		<Cursor position="8259" topLine="225" />
+	</File>
 	<File name="stamp-0.9.10/lib/memory.c" open="0" top="0" tabpos="0">
 		<Cursor position="6400" topLine="213" />
 	</File>
-	<File name="stamp-0.9.10/lib/queue.c" open="0" top="0" tabpos="0">
-		<Cursor position="14048" topLine="471" />
+	<File name="stamp-0.9.10/lib/queue.c" open="0" top="0" tabpos="3">
+		<Cursor position="14048" topLine="459" />
 	</File>
 	<File name="stamp-0.9.10/lib/queue.h" open="0" top="0" tabpos="0">
-		<Cursor position="7241" topLine="211" />
+		<Cursor position="7241" topLine="208" />
+	</File>
+	<File name="stamp-0.9.10/lib/random.c" open="0" top="0" tabpos="0">
+		<Cursor position="4730" topLine="127" />
 	</File>
 	<File name="stamp-0.9.10/lib/rbtree.c" open="0" top="0" tabpos="5">
 		<Cursor position="39095" topLine="1289" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.c" open="0" top="0" tabpos="1">
-		<Cursor position="38699" topLine="1009" />
+		<Cursor position="16484" topLine="458" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="2">
 		<Cursor position="9802" topLine="253" />
@@ -125,10 +140,10 @@
 		<Cursor position="0" topLine="18" />
 	</File>
 	<File name="stamp-0.9.10/lib/vector.c" open="0" top="0" tabpos="0">
-		<Cursor position="6483" topLine="204" />
+		<Cursor position="3454" topLine="81" />
 	</File>
 	<File name="stamp-0.9.10/lib/vector.h" open="0" top="0" tabpos="0">
-		<Cursor position="6604" topLine="191" />
+		<Cursor position="3401" topLine="83" />
 	</File>
 	<File name="stamp-0.9.10/ssca2/genScalData.c" open="0" top="0" tabpos="0">
 		<Cursor position="23056" topLine="1368" />
@@ -241,10 +256,13 @@
 	<File name="tinySTM/src/mod_stats.c" open="0" top="0" tabpos="3">
 		<Cursor position="3811" topLine="125" />
 	</File>
-	<File name="tinySTM/src/stm.c" open="0" top="0" tabpos="2">
-		<Cursor position="89070" topLine="2824" />
+	<File name="tinySTM/src/stm.c" open="0" top="0" tabpos="4">
+		<Cursor position="35954" topLine="1046" />
 	</File>
 	<File name="tinySTM/test/bank/bank.c" open="0" top="0" tabpos="0">
 		<Cursor position="12372" topLine="401" />
+	</File>
+	<File name="tinySTM/test/intset/intset.c" open="0" top="0" tabpos="0">
+		<Cursor position="36715" topLine="482" />
 	</File>
 </CodeBlocks_layout_file>

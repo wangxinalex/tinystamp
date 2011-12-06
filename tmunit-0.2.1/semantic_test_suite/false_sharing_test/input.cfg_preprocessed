@@ -1,0 +1,12 @@
+Definitions:
+ arr[0..1]=0;
+
+Transactions:
+ T1 := W(arr[0],1), @L;  
+ T2 := W(arr[1],2);
+
+Schedules:
+ S := T1@L, T2, T1;
+
+Invariants:
+ [No-abort]; 

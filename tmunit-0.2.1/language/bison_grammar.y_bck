@@ -1,0 +1,610 @@
+%{
+
+#ifndef  __GRAMMAR_H__
+#define  __GRAMMAR_H__
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+extern int yylex();
+
+#define YYERROR_VERBOSE
+int yyerror(char* ErrorMessage);
+
+#endif
+
+%}
+
+
+%union{
+   char*     string;
+};
+
+
+%token <string> COMMENT
+%token <string> SEMICOLON EOF_TOKEN
+%token <string> PROPERTIES_HEADER  DEFINITIONS_HEADER  TRANSACTIONS_HEADER THREADS_HEADER SCHEDULES_HEADER INVARIANTS_HEADER 
+%token <string> VALUE_ASSIGN  DEFINITION_ASSIGN
+%token <string> READ_ACCESS_OP WRITE_ACCESS_OP  DELAY_OP ABORT_OP MEM_ALLOC_OP MEM_FREE_OP MEM_BARRIER_OP JUMP_OP  AT_LABEL 
+
+%token <string> OPEN_BRACKETS CLOSE_BRACKETS  OPEN_PARANTHESES CLOSE_PARANTHESES COMMA  BAR 
+%token <string> OPEN_CURLY_BRACKETS CLOSE_CURLY_BRACKETS LOOP_START  CONDITION_START RANGE_SEPERATOR       
+%token <string> NAME ARRAY_NAME NAME_ALL_CAPITALS NUMBER FLOAT_NUMBER  COLON PERCENTAGE 
+ // ARRAY_NAME is a NAME followed by a "["
+
+%token <string> EQUAL NOT_EQUAL GREATER_EQUAL SMALLER_EQUAL GREATER_THAN  SMALLER_THAN 
+
+
+%left PLUS
+%left MINUS
+%left MULTIPLY DIVIDE
+
+%left AND OR
+%left NOT
+
+%type <string> Config Section  
+%type <string> PropertiesSection  DefinitionsSection  TransactionsSection ThreadsSection SchedulesSection InvariantsSection
+%type <string> SectionHeaders SectionTermination
+%type <string> PropertyDefList PropertyDef
+%type <string> VariableDefList VariableDef ArrayDef Delay
+%type <string> TxDefList TxDef TxSpec
+%type <string> TxSpecElementPair  TxSpecElement TxOp  TxLoopDef  TxConditionalDef  VarAssigns  ScheduleLabel  Jump
+%type <string> MemAccessOp  AbortOp  MemAllocOp  MemBarrierOp
+%type <string> LoopCondition LoopRange 
+%type <string> Condition ConditionalExpression VariableExpression
+%type <string> ArithmeticOp RelationalOp  UnaryBooleanOp BooleanOp
+%type <string> VarAssignList VarAssignment 
+%type <string> Constant FixedValue Range RandomizedRange Value ArrayAccess Variable 
+%type <string> ThreadDefList ThreadDef ThreadType
+%type <string> TxBlockList RegularTxDlyPair  RegularTxBlockDlyPair InfiniteRegularTxBlockDlyPair
+%type <string> TxChoiceList  SimplifiedTxChoiceList   FullySpecifiedTxChoiceList  FullySpecifiedChoiceElement
+%type <string> ScheduleDefList ScheduleDef ScheduleSpec TxPortion
+%type <string> InvariantDefList InvariantDef
+
+
+%% 
+
+Config : 
+    Section 
+    | COMMENT | Section Config | COMMENT Config
+    ;
+
+Section:  
+    PropertiesSection  |   DefinitionsSection  |  TransactionsSection  
+    | ThreadsSection | SchedulesSection | InvariantsSection
+    ;
+
+
+
+SectionHeaders:
+    PROPERTIES_HEADER
+    {
+	$$=$1;
+    }  
+    | DEFINITIONS_HEADER 
+    {
+	$$=$1;
+    }  
+    | TRANSACTIONS_HEADER  
+    {
+	$$=$1;
+    }  
+    | THREADS_HEADER 
+    {
+	$$=$1;
+    }  
+    | SCHEDULES_HEADER 
+    {
+	$$=$1;
+    }  
+    | INVARIANTS_HEADER
+    {
+	$$=$1;
+    }  
+    ;
+
+SectionTermination:
+    SectionHeaders
+    {
+	$$=$1;
+//	YYBACKUP(TRANSACTIONS_HEADER,$1);
+	
+    }  
+    | EOF_TOKEN
+    {
+	printf("EOF token encountered.\n");
+	return 0;
+    }
+    ;
+
+PropertiesSection:  
+    PROPERTIES_HEADER PropertyDefList 
+      {
+	  $$="Temp";
+      };
+    ;
+
+PropertyDefList: 
+    PropertyDef SEMICOLON 
+    | COMMENT
+    | PropertyDef SEMICOLON PropertyDefList
+    | COMMENT PropertyDefList	
+    ;
+
+PropertyDef:
+     NAME DEFINITION_ASSIGN FixedValue
+     ;
+
+
+DefinitionsSection: 
+     DEFINITIONS_HEADER VariableDefList SectionTermination
+      {
+	  printf("Definitions Section terminated.\n");
+      };
+     ;
+
+VariableDefList  : 
+     VariableDef SEMICOLON | COMMENT
+     | VariableDef SEMICOLON VariableDefList
+     | COMMENT VariableDefList	
+     ;
+
+VariableDef: 
+     NAME VALUE_ASSIGN Value 
+     {
+	 printf("%s is assigned %d.\n", $1,atoi($3));
+     }
+     | ArrayDef
+     ;
+
+ArrayDef: 
+     ARRAY_NAME  FixedValue CLOSE_BRACKETS
+     ;
+
+
+          
+TransactionsSection: 
+     TRANSACTIONS_HEADER 
+     {
+	 printf("Header read.\n");
+     }  
+     TxDefList SectionTermination
+     ;
+
+TxDefList: 
+     TxDef SEMICOLON | COMMENT
+     | TxDef SEMICOLON TxDefList
+     | COMMENT TxDefList	
+     ;
+
+TxDef: 
+     NAME_ALL_CAPITALS 
+       {
+	   printf("Found %s\n.", $1);
+       } 
+       DEFINITION_ASSIGN TxSpec
+     | NAME DEFINITION_ASSIGN TxSpec
+
+     ;
+
+TxSpec: 
+     TxSpecElementPair
+     {
+	 printf("Was here\n");
+     }   
+     | TxSpecElementPair COMMA Delay
+     | TxSpecElementPair COMMA TxSpec 
+     ;
+
+TxSpecElementPair: 
+     TxSpecElement | Delay COMMA TxSpecElement
+     ;
+
+TxSpecElement:  
+     TxOp | TxLoopDef | TxConditionalDef | VarAssigns | ScheduleLabel | Jump
+     ;
+
+Delay:
+     DELAY_OP VariableExpression CLOSE_PARANTHESES 
+      {
+	  $$="Temp";
+      };
+
+TxOp:
+     MemAccessOp | AbortOp | MemAllocOp | MemBarrierOp
+
+MemAccessOp: 
+     READ_ACCESS_OP  VariableExpression CLOSE_PARANTHESES 
+     | READ_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES 
+     | WRITE_ACCESS_OP  VariableExpression CLOSE_PARANTHESES 
+     | WRITE_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES 
+     ;
+
+
+AbortOp: 
+     ABORT_OP FixedValue CLOSE_PARANTHESES 
+      {
+	  $$="Temp";
+      };
+
+MemAllocOp: 
+     MEM_ALLOC_OP VariableExpression COMMA VariableExpression CLOSE_PARANTHESES 
+      {
+	  $$="Temp";
+      };
+
+     | MEM_FREE_OP VariableExpression CLOSE_PARANTHESES
+      {
+	  $$="Temp";
+      };
+
+MemBarrierOp: 
+     MEM_BARRIER_OP NAME COMMA NAME  CLOSE_PARANTHESES 
+      {
+	  $$="Temp";
+      };
+
+TxLoopDef:
+     LOOP_START LoopCondition COLON TxSpec  CLOSE_CURLY_BRACKETS 
+      {
+	  $$="Temp";
+      };
+
+LoopCondition:   
+     Condition | Variable VALUE_ASSIGN LoopRange  
+     ;
+
+LoopRange: 
+     OPEN_BRACKETS Range CLOSE_BRACKETS
+      {
+	  $$="Temp";
+      };
+
+TxConditionalDef: 
+     CONDITION_START Condition COLON TxSpec  CLOSE_CURLY_BRACKETS
+      {
+	  $$="Temp";
+      };
+
+Condition:   
+     OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS
+      {
+	  $$="Temp";
+      };
+
+ConditionalExpression:
+     OPEN_PARANTHESES VariableExpression  RelationalOp  VariableExpression CLOSE_PARANTHESES
+      {
+	  $$="Temp";
+      };
+     | UnaryBooleanOp   ConditionalExpression 
+     | OPEN_PARANTHESES ConditionalExpression BooleanOp ConditionalExpression CLOSE_PARANTHESES
+      {
+	  $$="Temp";
+      };
+
+
+
+
+
+VarAssigns: 
+     OPEN_CURLY_BRACKETS VarAssignList  CLOSE_CURLY_BRACKETS
+      {
+	  $$="Temp";
+      };
+
+VarAssignList: 
+     VarAssignment | VarAssignment COMMA VarAssignList
+     ;
+
+VarAssignment: 
+     Variable VALUE_ASSIGN VariableExpression
+     ;
+
+ScheduleLabel: 
+     AT_LABEL NAME
+      {
+	  $$="Temp";
+      };
+
+
+Jump: 
+     JUMP_OP ScheduleLabel CLOSE_PARANTHESES
+      {
+	  $$="Temp";
+      };
+
+RelationalOp: 
+     EQUAL 
+      {
+	  $$="Temp";
+      };
+     | NOT_EQUAL
+      {
+	  $$="Temp";
+      };
+
+     | SMALLER_THAN 
+      {
+	  $$="Temp";
+      };
+
+     | GREATER_THAN 
+      {
+	  $$="Temp";
+      };
+
+     | SMALLER_EQUAL 
+      {
+	  $$="Temp";
+      };
+     | GREATER_EQUAL
+      {
+	  $$="Temp";
+      };
+     | NOT
+      {
+	  $$="Temp";
+      };
+
+
+BooleanOp:    
+     AND 
+      {
+	  $$="Temp";
+      };
+
+    | OR  	      
+      {
+	  $$="Temp";
+      };
+
+
+
+UnaryBooleanOp: 
+     NOT
+      {
+	  $$="Temp";
+      };
+
+
+
+Value: 
+     FixedValue  | RandomizedRange 
+     ;
+
+FixedValue: 
+     NUMBER 
+      {
+	  $$="Temp";
+      };
+
+     | Constant
+      {
+	  $$="Temp";
+      };
+
+Constant: 
+     NAME_ALL_CAPITALS
+      {
+	  $$="Temp";
+      };
+
+RandomizedRange: 
+     SMALLER_THAN   Range  GREATER_THAN
+      {
+	  $$="Temp";
+      };
+
+Range:
+     VariableExpression RANGE_SEPERATOR VariableExpression  
+     | VariableExpression RANGE_SEPERATOR VariableExpression SEMICOLON VariableExpression  
+     ;
+
+Variable:
+     NAME | NAME  COLON  NAME
+     | ArrayAccess | NAME COLON ArrayAccess
+     ;
+
+ArrayAccess: 
+      ARRAY_NAME VariableExpression CLOSE_BRACKETS 
+      {
+	  $$="Temp";
+      };
+     ;
+
+VariableExpression: 
+     Value 
+     | Variable 
+     | MemAccessOp
+     | OPEN_PARANTHESES Value ArithmeticOp VariableExpression CLOSE_PARANTHESES
+      {
+	  $$="Temp";
+      };
+     | OPEN_PARANTHESES Variable ArithmeticOp VariableExpression CLOSE_PARANTHESES
+      {
+	  $$="Temp";
+      };
+	
+ArithmeticOp: 
+     PLUS 
+      {
+	  $$="Temp";
+      };
+     | MINUS 
+      {
+	  $$="Temp";
+      };
+
+     | MULTIPLY 
+      {
+	  $$="Temp";
+      };
+
+     | DIVIDE
+      {
+	  $$="Temp";
+      };
+
+
+
+
+ThreadsSection: 
+     THREADS_HEADER ThreadDefList  SectionTermination
+     ;
+
+ThreadDefList: 
+     ThreadDef SEMICOLON | COMMENT
+     |ThreadDef SEMICOLON ThreadDefList
+     | COMMENT ThreadDefList	
+     ;
+
+ThreadDef: 
+     ThreadType DEFINITION_ASSIGN  TxBlockList
+     ;
+
+ThreadType: 
+     NAME 
+     | NAME COMMA ThreadType 
+     | NAME_ALL_CAPITALS 
+     | NAME_ALL_CAPITALS COMMA ThreadType 
+     ;
+
+
+TxBlockList:
+     RegularTxDlyPair
+     | RegularTxBlockDlyPair
+     | InfiniteRegularTxBlockDlyPair
+     | RegularTxDlyPair COMMA TxBlockList
+     | RegularTxBlockDlyPair COMMA TxBlockList
+     ;
+
+
+RegularTxDlyPair:
+     NAME
+     | Delay COMMA NAME
+     | SMALLER_THAN  TxChoiceList  GREATER_THAN
+      {
+	  $$="Temp";
+      };
+
+     | Delay COMMA  SMALLER_THAN  TxChoiceList  GREATER_THAN
+     ;
+
+RegularTxBlockDlyPair:
+     OPEN_PARANTHESES   TxBlockList CLOSE_PARANTHESES
+      {
+	  $$="Temp";
+      };
+     | OPEN_PARANTHESES TxBlockList CLOSE_PARANTHESES  Variable
+      {
+	  $$="Temp";
+      };
+     | Delay COMMA OPEN_PARANTHESES TxBlockList CLOSE_PARANTHESES
+     | Delay COMMA OPEN_PARANTHESES TxBlockList CLOSE_PARANTHESES Variable
+     ;
+
+
+InfiniteRegularTxBlockDlyPair: 
+     OPEN_PARANTHESES TxBlockList CLOSE_PARANTHESES "*"
+      {
+	  $$="Temp";
+      };
+     | Delay COMMA OPEN_PARANTHESES TxBlockList CLOSE_PARANTHESES "*"
+     |  SMALLER_THAN TxChoiceList  GREATER_THAN MULTIPLY 
+      {
+	  $$="Temp";
+      };
+     | Delay COMMA SMALLER_THAN TxChoiceList GREATER_THAN MULTIPLY
+     ;
+
+TxChoiceList :
+     SimplifiedTxChoiceList
+     | FullySpecifiedTxChoiceList
+     ;
+
+SimplifiedTxChoiceList :
+     NAME
+     | NAME  BAR  SimplifiedTxChoiceList
+     ;
+
+
+FullySpecifiedTxChoiceList :
+     FullySpecifiedChoiceElement
+     | FullySpecifiedChoiceElement  BAR  NAME
+     | FullySpecifiedChoiceElement  BAR  FullySpecifiedTxChoiceList
+     ;
+
+
+FullySpecifiedChoiceElement :
+     NAME COLON FixedValue PERCENTAGE
+     | NAME COLON  FLOAT_NUMBER  PERCENTAGE
+     ;
+
+
+SchedulesSection: 
+     SCHEDULES_HEADER ScheduleDefList SectionTermination
+     ;
+
+ScheduleDefList: 
+     ScheduleDef SEMICOLON | COMMENT
+     | ScheduleDef SEMICOLON ScheduleDefList
+     | COMMENT ScheduleDefList	
+     ;
+
+ScheduleDef: 
+     NAME DEFINITION_ASSIGN ScheduleSpec
+     ;
+
+
+ScheduleSpec: 
+     TxPortion
+     | TxPortion COMMA ScheduleSpec
+     ;
+
+
+TxPortion: 
+     NAME 
+     | NAME ScheduleLabel
+     ;
+
+
+
+
+InvariantsSection: 
+     INVARIANTS_HEADER InvariantDefList SectionTermination
+     ;
+
+InvariantDefList: 
+     InvariantDef SEMICOLON | COMMENT
+     | InvariantDef SEMICOLON InvariantDefList
+     | COMMENT InvariantDefList	
+     ;
+
+InvariantDef: 
+     OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS
+      {
+	  $$="Temp";
+      };
+
+%%
+
+
+
+int yyerror(char* ErrorMessage)
+{
+	printf("ERROR: %s\n",ErrorMessage);
+	return 0;
+}
+
+
+
+int main(int argc, char*  argv[])
+{
+
+    yyparse();
+
+    return 0;
+}

@@ -1,0 +1,4 @@
+
+Transactions:
+T1:=R(x),R(y),W(x),W(y);	             
+T2:=R(x,_a),R(y,_b),W(x,_a-10),W(y,_b-10);   

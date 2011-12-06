@@ -1,0 +1,32 @@
+
+Input Configuration File: semantic_test_suite/non-transactional-dirty-read-test/input.cfg
+Initializing STM...
+TL2 system ready: GV=GV4
+Starting thread 0...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+[Th1:T] S
+[Th1:T] W(x)
+[Th1:T] W(x,1)
+[Th1:T]:L 
+-------  y = 0  -------
+[Th1:T] W(x)
+[Th1:T] W(x,2)
+[Th1:T] Try C
+[Th1:T] C
+
+
+
+-----------------------------------------------------
+             TEST COMPLETES SUCCESFULLY              
+-----------------------------------------------------
+
+Shutting STM engine down...
+TL2 system shutdown:
+  GCLOCK=0x2 Starts=1 Aborts=0
+  Overflows: R=0 W=0 L=0

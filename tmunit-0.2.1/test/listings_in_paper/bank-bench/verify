@@ -1,0 +1,77 @@
+#!/usr/bin/perl
+
+
+sub ExtractMetric {
+    my( $ExtractCommand ) = @_;
+  $ExtractedLine = `$ExtractCommand`;
+  @Lines= split('\n',$ExtractedLine); 
+  return $Lines[0];
+}
+
+
+$TestTargetDir=$ARGV[0];
+$ExecutionLogFileName=$ARGV[1]; 
+$ShowDifference=$ARGV[2];
+
+
+$ExtractCommand = "grep 'Total Commit Num' $ExecutionLogFileName | gawk '{print \$5}'";
+$TotalCommitNum = &ExtractMetric($ExtractCommand);
+# print  "TotalCommitNum= $TotalCommitNum\n";
+
+
+$ExtractCommand = "grep 'Total Abort  Num' $ExecutionLogFileName | gawk '{print \$5}'";
+$TotalAbortNum  = &ExtractMetric($ExtractCommand);
+# print  "TotalAbortNum= $TotalAbortNum\n";
+
+
+$ExtractCommand = "grep 'UnfinishedTx Num' $ExecutionLogFileName | gawk '{print \$4}'";
+$UnfinishedTxNum  = &ExtractMetric($ExtractCommand);
+# print  "UnfinishedTxNum= $UnfinishedTxNum\n";
+
+
+$ExtractCommand = "grep 'Starts=' $ExecutionLogFileName | gawk '{print \$2}' | gawk -F '=' '{print \$2}'";
+$TL2_StartNum  = &ExtractMetric($ExtractCommand);
+# print  "TL2_StartNum= $TL2_StartNum\n";
+
+
+$ExtractCommand = "grep 'Starts=' $ExecutionLogFileName | gawk '{print \$3}' | gawk -F '=' '{print \$2}'";
+$TL2_AbortNum  = &ExtractMetric($ExtractCommand);
+# print  "TL2_AbortNum= $TL2_AbortNum\n";
+
+@Criteria;
+
+
+$Criteria[0] = ($TL2_AbortNum == $TotalAbortNum);
+# print "Criteria[0]: $Criteria[0]\n";
+
+$TL2_CommitNum = $TL2_StartNum - $TL2_AbortNum - $UnfinishedTxNum ;
+#print "TL2_CommitNum= $TL2_CommitNum\n";
+
+$Criteria[1] = ($TL2_CommitNum == $TotalCommitNum);  
+# print "Criteria[1]: $Criteria[1]\n";
+
+if( $Criteria[0] && $Criteria[1] ) 
+{
+#    print "PASS\n";
+   if( $ShowDifference == "1")	 
+   {
+     print "Commit and abort numbers MATCH:\n";
+     print "      TMunit count = ($TotalCommitNum,$TotalAbortNum)\n";
+     print "      TL2    count = ($TL2_CommitNum,$TL2_AbortNum)\n";
+   }
+    exit(0);
+}
+else
+{
+#    printf "FAIL\n";
+   if( $ShowDifference == "1")	 
+   {
+     print "Commit and/or abort numbers DO NOT match:\n";
+     print "      TMunit count = ($TotalCommitNum,$TotalAbortNum)\n";
+     print "      TL2    count = ($TL2_CommitNum,$TL2_AbortNum)\n";
+   }
+
+    exit(1);
+}
+
+

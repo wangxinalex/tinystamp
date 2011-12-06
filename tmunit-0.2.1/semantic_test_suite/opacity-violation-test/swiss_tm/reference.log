@@ -1,0 +1,92 @@
+
+Input Configuration File: semantic_test_suite/opacity-violation-test/input.cfg
+Initializing STM...
+Starting thread 0...
+Starting thread 1...
+Starting thread 2...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+[Th1:T1] S
+[Th1:T1] W(x)
+[Th1:T1] W(x,1)
+[Th1:T1] Try C
+[Th1:T1] C
+
+
+		[Th2:T2] S
+		[Th2:T2] R(x)
+		[Th2:T2] R(x,1)
+		[Th2:T2]:L 
+
+				[Th3:T3] S
+				[Th3:T3] W(x)
+				[Th3:T3] W(x,2)
+				[Th3:T3] W(y)
+				[Th3:T3] W(y,2)
+				[Th3:T3] Try C
+				[Th3:T3] C
+
+		[Th2:T2] R(y)
+		[Th2:T2] A 
+		[Th2:T2] Terminates
+
+
+-----------------------------------------------------
+             TEST COMPLETES SUCCESFULLY              
+-----------------------------------------------------
+
+Shutting STM engine down...
+
+STM internal statistics: 
+========================
+Thread 1: 
+	Commit: 1
+	CommitReadOnly: 0
+	Abort: 0
+	AbortWriteLocked: 0
+	AbortWriteValidate: 0
+	AbortReadValidate: 0
+	AbortReadLocked: 0
+	AbortCommitValidate: 0
+	ClockOverflows: 0
+
+Thread 2: 
+	Commit: 0
+	CommitReadOnly: 0
+	Abort: 1
+	AbortWriteLocked: 0
+	AbortWriteValidate: 0
+	AbortReadValidate: 1
+	AbortReadLocked: 0
+	AbortCommitValidate: 0
+	ClockOverflows: 0
+
+Thread 3: 
+	Commit: 1
+	CommitReadOnly: 0
+	Abort: 0
+	AbortWriteLocked: 0
+	AbortWriteValidate: 0
+	AbortReadValidate: 0
+	AbortReadLocked: 0
+	AbortCommitValidate: 0
+	ClockOverflows: 0
+
+Total stats: 
+	Commit: 2
+	CommitReadOnly: 0
+	Abort: 1
+	AbortWriteLocked: 0
+	AbortWriteValidate: 0
+	AbortReadValidate: 1
+	AbortReadLocked: 0
+	AbortCommitValidate: 0
+	ClockOverflows: 0
+
+Configuration:
+	LockExtent: 4

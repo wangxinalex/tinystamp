@@ -1,0 +1,86 @@
+MainSeed=1
+ListOfThreadSeeds={16838,5758,10113,17515,31051,5627,23010,7419}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 1  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 1000000  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+TL2 system ready: GV=GV4
+Starting thread 0...
+Starting thread 1...
+Starting thread 2...
+Starting thread 3...
+Starting thread 4...
+Starting thread 5...
+Starting thread 6...
+Starting thread 7...
+TimeOut=1000000, time_out= (1,0)
+
+--------------------------
+EXECUTION TIMEOUT REACHED.
+--------------------------
+Shutting STM engine down...
+TL2 system shutdown:
+  GCLOCK=0x28148 Starts=154954 Aborts=72869
+  Overflows: R=0 W=0 L=0
+
+
+ ------------------ Statistics ------------------
+
+Th[0]: Cmmt= 1, Abrt= 3230 Duration=4.247.181ns, 4247ms, 4.247s
+Th[0]: Cmmt/s= 0.235, Abrt/s= 760.537, MaxRetries= 3230
+Th[1]: Cmmt= 30413, Abrt= 22314 Duration=4.250.406ns, 4250ms, 4.250s
+Th[1]: Cmmt/s= 7156.000, Abrt/s= 5250.353, MaxRetries= 22282
+Th[2]: Cmmt= 33815, Abrt= 21379 Duration=4.244.454ns, 4244ms, 4.244s
+Th[2]: Cmmt/s= 7967.719, Abrt/s= 5037.465, MaxRetries= 21362
+Th[3]: Cmmt= 9, Abrt= 14 Duration=4.247.266ns, 4247ms, 4.247s
+Th[3]: Cmmt/s= 2.119, Abrt/s= 3.296, MaxRetries= 5
+Th[4]: Cmmt= 10342, Abrt= 11709 Duration=4.246.310ns, 4246ms, 4.246s
+Th[4]: Cmmt/s= 2435.704, Abrt/s= 2757.654, MaxRetries= 11687
+Th[5]: Cmmt= 6638, Abrt= 14207 Duration=4.242.596ns, 4242ms, 4.242s
+Th[5]: Cmmt/s= 1564.828, Abrt/s= 3349.128, MaxRetries= 14187
+Th[6]: Cmmt= 95, Abrt= 5 Duration=3.14.129ns, 3014ms, 3.014s
+Th[6]: Cmmt/s= 31.520, Abrt/s= 1.659, MaxRetries= 1
+Th[7]: Cmmt= 772, Abrt= 11 Duration=4.16.230ns, 4016ms, 4.016s
+Th[7]: Cmmt/s= 192.231, Abrt/s= 2.739, MaxRetries= 6
+Aggregate Statistics:
+
+	Total Commit Num  = 82085
+	Total Abort  Num  = 72869
+	Exection Duration = 4.250000
+	Global Commit/s   = 19314.117647
+	Global Abort/s    = 17145.647059
+	Global MaxRetries = 22282
+
+
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************

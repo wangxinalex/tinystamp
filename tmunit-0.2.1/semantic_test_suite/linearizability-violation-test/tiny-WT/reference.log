@@ -1,0 +1,67 @@
+
+Input Configuration File: semantic_test_suite/linearizability-violation-test/input.cfg
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+Initializing STM...
+Starting thread 0...
+Starting thread 1...
+Starting thread 2...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+ThreadToEnable=0, Active=1
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] R(x,0)
+[Th1:T1]:L 
+ThreadToEnable=1, Active=1
+Performing context switch...
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] W(x,27224)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+ThreadToEnable=2, Active=1
+Performing context switch...
+
+				[Th3:T3] S
+				[Th3:T3] W(y)
+				[Th3:T3] W(y,23264)
+				[Th3:T3] Try C
+				[Th3:T3] C
+
+ThreadToEnable=0, Active=1
+Performing context switch...
+[Th1:T1] R(y)
+[Th1:T1] A 
+[Th1:T1] Invariant NO_ABORT fails. 
+
+
+-----------------------------------------------------
+                    TEST FAILS                       
+-----------------------------------------------------
+

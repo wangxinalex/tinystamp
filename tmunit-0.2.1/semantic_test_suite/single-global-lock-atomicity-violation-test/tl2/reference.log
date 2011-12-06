@@ -1,0 +1,43 @@
+
+Input Configuration File: semantic_test_suite/single-global-lock-atomicity-violation-test/input.cfg
+Initializing STM...
+TL2 system ready: GV=GV4
+Starting thread 0...
+Starting thread 1...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+		[Th2:T2] S
+		[Th2:T2] R(x)
+		[Th2:T2] R(x,0)
+		[Th2:T2] W(t1)
+		[Th2:T2] W(t1,0)
+		[Th2:T2]:L 
+-------  x = 1  -------
+
+[Th1:T1] S
+[Th1:T1] W(z)
+[Th1:T1] W(z,1)
+[Th1:T1] Try C
+[Th1:T1] C
+
+-------  t2 = 0  -------
+		[Th2:T2] W(y)
+		[Th2:T2] W(y,1)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+
+
+-----------------------------------------------------
+             TEST COMPLETES SUCCESFULLY              
+-----------------------------------------------------
+
+Shutting STM engine down...
+TL2 system shutdown:
+  GCLOCK=0x4 Starts=2 Aborts=0
+  Overflows: R=0 W=0 L=0

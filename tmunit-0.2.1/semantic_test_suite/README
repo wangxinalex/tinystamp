@@ -1,0 +1,22 @@
+
+The results  of the semantic tests that  you will find in  this directory will
+mostly match the results presented in the  Table 1 of [1]. However, if you run
+the "perform_test" script  for the following three tests  the pass/fail report
+you obtain from the execution will be reverse of what you see in Table 1.
+
+
+	linearizability-violation-test
+	serializability-violation-test
+	single-global-lock-atomicity-violation-test	
+
+
+This is just  due to the way the  tests have been designed. As  the test names
+imply, the tests check whether a  consistency criterion is violated or not. If
+those tests fail it means no voilation has occured and vice versa. That is why
+the results in the table are reversed.
+
+
+
+[1] Derin  Harmanci, Pascal  Felber,  Vincent  Gramoli, and  Christof
+    Fetzer, TMunit: Testing  Software Transactional Memories, TRANSACT
+    2009

@@ -1,0 +1,36 @@
+#!/usr/bin/perl
+
+my @files=`ls`;
+
+`mkdir images`;
+
+foreach my $file (@files) {
+	if($file=~m/.eps$/) {
+		chomp($file);
+		`convert -density 200 $file images/$file.png`;
+	}
+}
+
+open (INDEX, '>index.html');
+ print INDEX "
+<!DOCTYPE html>
+ <html lang=\"en\">
+  <head>
+   <meta charset=\"utf-8\">
+   <title>results</title>
+<LINK href=\"results.css\" rel=\"stylesheet\" type=\"text/css\">
+ </head>
+ <body>";
+
+foreach my $file (@files) {
+	if($file=~m/.eps$/) {
+		chomp($file);
+		print INDEX "  <a href=\"$file\"><img width=\"700\" src=\"images/$file.png\" /></a>\n"
+	}
+}
+
+print INDEX "
+</body>
+ </html>
+								  ";
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+InputFile=$1
+OutputFile="trace"
+
+grep "Address of" $InputFile | gawk '{ printf "\"%s\",\"%s\",", $3, $5}' > name_addr_pair_list
+sed  '/#VARIABLE_NAME_AND_ADDRESS_LIST#/r name_addr_pair_list' post_process.template >  post_process
+sed  -i '/#VARIABLE_NAME_AND_ADDRESS_LIST#/d' post_process
+chmod 754 post_process
+

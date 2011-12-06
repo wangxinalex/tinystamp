@@ -1,0 +1,16 @@
+;; Object execution/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "execution/"
+  :tables (list 
+   (semanticdb-table "tinySTM_new.h"
+    :major-mode 'c-mode
+    :tags '(("_STM_INTERFACE_H_" variable (:constant-flag t) nil [583 611]) ("stm.h" include nil nil [610 626]) ("TM_INIT" variable (:constant-flag t :default-value (nil)) nil [628 680]) ("TM_EXIT" variable (:constant-flag t :default-value (nil)) nil [681 733]) ("TM_INIT_THREAD" variable (:constant-flag t :default-value (nil)) nil [735 794]) ("TM_EXIT_THREAD" variable (:constant-flag t :default-value (nil)) nil [795 854]) ("TM_START" variable (:constant-flag t :default-value (nil)) nil [856 923]) ("STM_GET_ENV" variable (:constant-flag t :default-value (nil)) nil [924 979]) ("START_TX" variable (:constant-flag t :default-value (nil)) nil [980 1034]) ("_env" variable (:pointer 1 :default-value "STM_GET_ENV(TxDesc)" :type "int") nil [1033 1061]) ("sigsetjmp" function (:prototype-flag t :arguments (("" variable (:type ("_env" type (:type "class") nil nil)) (reparse-symbol arg-sub-list) [1117 1122])) :type "int") nil [1106 1126]) ("COMMIT_TX" variable (:constant-flag t :default-value (nil)) nil [1177 1231]) ("TM_LOAD" variable (:constant-flag t :default-value (nil)) nil [1233 1300]) ("TM_STORE" variable (:constant-flag t :default-value (nil)) nil [1302 1401]) ("TM_ABORT" variable (:constant-flag t :default-value (nil)) nil [1403 1456]) ("stm_tx_t" type (:typedef ("int") :superclasses "int" :type "typedef") nil [1617 1638]))
+    :file "tinySTM_new.h"
+    :pointmax 1771
+    :unmatched-syntax 'nil
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0pre3"
+  :semanticdb-version "2.0pre3"
+  )

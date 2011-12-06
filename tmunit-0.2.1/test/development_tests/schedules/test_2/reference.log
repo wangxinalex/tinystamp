@@ -1,0 +1,157 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     PROPERTIES Section
+-----------------------------------------------------------------------------
+'1' is assigned to 'SerialThreadExecution'
+SerialThreadExecution is set to 1
+'1' is assigned to 'RandomDebug'
+RandomDebugParameter is set to 1
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+	Encountered FIXED VALUE '10'
+Name       : x
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &x
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'10' is assigned to 'x'
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T1 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:READ from address of 'x'
+Ele[1]: Label @L1
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[2]: OpNo[1]:WRITE to address of 'x'.
+
+T2 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:WRITE to address of 'x'.
+Ele[1]: Label @L2
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[2]: OpNo[1]:READ from address of 'x'
+
+T3 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:READ from address of 'x'
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[1]: OpNo[1]:WRITE to address of 'x'.
+Ele[2]: Label @L3
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[3]: OpNo[2]:WRITE to address of 'x'.
+
+
+
+-----------------------------------------------------------------------------
+     THREADS Section
+-----------------------------------------------------------------------------
+'Th1' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T1
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+'Th2' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T2
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+'Th3' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T3
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+
+
+-----------------------------------------------------------------------------
+     SCHEDULES Section
+-----------------------------------------------------------------------------
+Sched[0]: (S1)
+	T3@L3,T1@L1,T2@L2,T3,T2,T1
+Sched[1]: (S2)
+	T1@L1,T3@L3,T2,T1,T3
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+
+MainSeed=1
+ListOfThreadSeeds={1804289383,846930886,1681692777}
+Initializing STM...
+Generating Random variable seeds for Thread 0...
+Generating TxCandidate seeds for Thread 0...
+Initial WriteValue is set to  1640212158 for Thread 0...
+Starting thread 0...
+Generating Random variable seeds for Thread 1...
+Generating TxCandidate seeds for Thread 1...
+Initial WriteValue is set to  1200404999 for Thread 1...
+Starting thread 1...
+Generating Random variable seeds for Thread 2...
+Generating TxCandidate seeds for Thread 2...
+Initial WriteValue is set to  1731419406 for Thread 2...
+Starting thread 2...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S1'               
+-----------------------------------------------------
+
+
+				[Th3:T3] S
+				[Th3:T3] R(x)
+				[Th3:T3] R(x,10)
+				[Th3:T3] W(x)
+				[Th3:T3] W(x,1731419406)
+				[Th3:T3]:L3 
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] A 
+[Th1:T1] Terminates
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] A 
+		[Th2:T2] Terminates
+				[Th3:T3] W(x)
+				[Th3:T3] W(x,1731419407)
+				[Th3:T3] Try C
+				[Th3:T3] C
+
+
+
+-----------------------------------------------------
+             TEST COMPLETES SUCCESFULLY              
+-----------------------------------------------------
+
+Shutting STM engine down...

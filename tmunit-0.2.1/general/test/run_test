@@ -1,0 +1,14 @@
+#!/bin/bash
+
+TestExecutable=$1
+TestLog=$TestExecutable"_log";
+./$TestExecutable >& temp_log
+ 
+diff   temp_log $TestLog
+if [[  $? -eq 0 ]]; then
+ echo "    TEST PASSED ("$TestExecutable")"
+else
+ echo "    TEST FAILED ("$TestExecutable")";
+fi
+
+rm temp_log;

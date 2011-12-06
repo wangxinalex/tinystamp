@@ -1,0 +1,5 @@
+
+To get help type: 
+	tmunit  -h 
+tmunit: Unexpected string '-t'.
+        Expecting integer argument for -d (--duration) option instead.

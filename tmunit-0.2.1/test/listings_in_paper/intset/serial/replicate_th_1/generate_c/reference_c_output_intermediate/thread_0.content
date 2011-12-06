@@ -1,0 +1,7 @@
+for(RepetitionNo[0]=0 ; RepetitionNo[0]< 10 ; RepetitionNo[0]++ )
+{
+ChosenTransactionID = ChooseTransaction( &(CandidateListContainer[0]) );
+ExecuteTransaction(ChosenTransactionID, ThLocals.TxDesc, &ThLocals);
+if(TerminateRequestedBySignal)
+   TERMINATE_THREAD;
+}

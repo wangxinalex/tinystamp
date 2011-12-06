@@ -1,0 +1,81 @@
+
+Input Configuration File: semantic_test_suite/serializability-violation-test/input.cfg
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+Initializing STM...
+Starting thread 0...
+Starting thread 1...
+Starting thread 2...
+Starting thread 3...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+ThreadToEnable=3, Active=1
+
+						[Th4:TL] S
+						[Th4:TL] R(x)
+						[Th4:TL] R(x,0)
+						[Th4:TL] R(y)
+						[Th4:TL] R(y,0)
+						[Th4:TL]:L1 
+ThreadToEnable=2, Active=1
+Performing context switch...
+
+				[Th3:T3] S
+				[Th3:T3] R(z)
+				[Th3:T3] R(z,0)
+				[Th3:T3]:L2 
+ThreadToEnable=0, Active=1
+Performing context switch...
+
+[Th1:T1] S
+[Th1:T1] W(x)
+[Th1:T1] W(x,14666)
+[Th1:T1] W(y)
+[Th1:T1] W(y,14667)
+[Th1:T1] Try C
+[Th1:T1] C
+
+ThreadToEnable=1, Active=1
+Performing context switch...
+
+		[Th2:T2] S
+		[Th2:T2] W(z)
+		[Th2:T2] W(z,27224)
+		[Th2:T2] W(t)
+		[Th2:T2] W(t,27225)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+ThreadToEnable=2, Active=1
+Performing context switch...
+				[Th3:T3] W(y)
+				[Th3:T3] A 
+				[Th3:T3] Invariant NO_ABORT fails. 
+
+
+-----------------------------------------------------
+                    TEST FAILS                       
+-----------------------------------------------------
+

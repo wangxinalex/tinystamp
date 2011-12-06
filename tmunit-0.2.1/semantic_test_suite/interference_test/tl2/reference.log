@@ -1,0 +1,39 @@
+
+Input Configuration File: semantic_test_suite/interference_test/input.cfg
+Initializing STM...
+TL2 system ready: GV=GV4
+Starting thread 0...
+Starting thread 1...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] R(x,0)
+[Th1:T1]:L 
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] W(x,1)
+		[Th2:T2] W(y)
+		[Th2:T2] W(y,1)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+[Th1:T1] R(y)
+[Th1:T1] A 
+[Th1:T1] Terminates
+
+
+-----------------------------------------------------
+             TEST COMPLETES SUCCESFULLY              
+-----------------------------------------------------
+
+Shutting STM engine down...
+TL2 system shutdown:
+  GCLOCK=0x2 Starts=3 Aborts=1
+  Overflows: R=0 W=0 L=0

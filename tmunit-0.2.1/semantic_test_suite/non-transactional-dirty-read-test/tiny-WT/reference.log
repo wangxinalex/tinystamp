@@ -1,0 +1,24 @@
+
+Input Configuration File: semantic_test_suite/non-transactional-dirty-read-test/input.cfg
+Initializing STM...
+Starting thread 0...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+[Th1:T] S
+[Th1:T] W(x)
+[Th1:T] W(x,1)
+[Th1:T]:L 
+-------  y = 1  -------
+Invariant '[y!=1]' not satisfied.
+Interruption in Schedule: One or more invariants not satisfied in non-transactional code.
+
+
+-----------------------------------------------------
+                    TEST FAILS                       
+-----------------------------------------------------
+

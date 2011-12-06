@@ -1,0 +1,4 @@
+./tmunit: option requires an argument -- 'd'
+
+To get help type: 
+	tmunit  -h 

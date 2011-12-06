@@ -1,0 +1,670 @@
+
+Input Configuration File: test/listings_in_paper/intset/serial/replicate_th_3/intset.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     PROPERTIES Section
+-----------------------------------------------------------------------------
+'1' is assigned to 'RandomSeed'
+MainSeed (the main random seed) is set to 1.
+'1' is assigned to 'ReadOnlyHint'
+ReadOnlyHint is set to 1
+'1' is assigned to 'SerialThreadExecution'
+SerialThreadExecution is set to 1
+'1' is assigned to 'RandomDebug'
+RandomDebugParameter is set to 1
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+Name       : _SIZE
+Type       : VAR_LOCAL_SIMPLE_CONSTANT
+Operation  : INVALID_OPERATION
+Value      : 3
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+	Encountered FIXED VALUE '0'
+	Encountered VARIABLE EXPRESSION '0'
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_SIZE'
+	Encountered VARIABLE EXPRESSION '2*_SIZE'
+	Encountered PLUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '2*_SIZE+1'
+	Encountered RANGE ''0' to '2*_SIZE+1' (increment 1)'
+	SHARED Array 'm' with elements in range: ''0' to '2*_SIZE+1' (increment 1)'
+	Encountered FIXED VALUE '0'
+'0' is assigned to all elements of array 'm'
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered LOCAL variable '_SIZE'
+	Encountered VARIABLE EXPRESSION '_SIZE'
+	Encountered RANGE ''1' to '_SIZE' (increment 1)'
+Name       : _NB
+Type       : OP_RANDOM_DIST_CONSTANT
+Operation  : UNKNOWN OPERATION
+Value      : 0
+Addr       : NULL
+OperandList: {0,2,0,1}
+Name       : _f
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _v
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T_search is comprised of the following operations:
+	Encountered LOCAL variable '_k'
+	Encountered FIXED VALUE '0'
+	Encountered VARIABLE EXPRESSION '0'
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '_NB'
+	Encountered MINUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '_NB-1'
+	Encountered RANGE ''0' to '_NB-1' (increment 1)'
+	Encountered Range ''0' to '_NB-1' (increment 1)' in LOOP definition.
+Ele[0]: LOOP (Looping Condition: ''_k='0' to '_NB-1' (increment 1)'')
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_k'
+	Encountered VARIABLE EXPRESSION '2*_k'
+	Encountered ARRAY variable 'm[2*_k]'
+	Encountered VARIABLE EXPRESSION 'm[2*_k]'
+Ele[1]: OpNo[0]:READ from address of 'm[2*_k]'
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_k'
+	Encountered VARIABLE EXPRESSION '2*_k'
+	Encountered PLUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '2*_k+1'
+	Encountered ARRAY variable 'm[2*_k+1]'
+	Encountered VARIABLE EXPRESSION 'm[2*_k+1]'
+Ele[2]: OpNo[1]:READ from address of 'm[2*_k+1]'
+Ele[3]: LOOP END (for the loop with condition: ''_k='0' to '_NB-1' (increment 1)'')
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '2*_NB'
+	Encountered ARRAY variable 'm[2*_NB]'
+	Encountered VARIABLE EXPRESSION 'm[2*_NB]'
+Ele[4]: OpNo[2]:READ from address of 'm[2*_NB]'
+
+T_update is comprised of the following operations:
+	Encountered LOCAL variable '_f'
+	Encountered VARIABLE EXPRESSION '_f'
+	Encountered '==' operation
+	Encountered FIXED VALUE '0'
+	Encountered VARIABLE EXPRESSION '0'
+	Encountered SIMPLE CONDITIONAL EXPRESSION '_f==0'
+Parsing behaviour for  CONDITION: '_f==0'
+	Encountered LOCAL variable '_k'
+	Encountered FIXED VALUE '0'
+	Encountered VARIABLE EXPRESSION '0'
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '_NB'
+	Encountered MINUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '_NB-1'
+	Encountered RANGE ''0' to '_NB-1' (increment 1)'
+	Encountered Range ''0' to '_NB-1' (increment 1)' in LOOP definition.
+Ele[0]: LOOP (Looping Condition: ''_k='0' to '_NB-1' (increment 1)'')
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_k'
+	Encountered VARIABLE EXPRESSION '2*_k'
+	Encountered ARRAY variable 'm[2*_k]'
+	Encountered VARIABLE EXPRESSION 'm[2*_k]'
+Ele[1]: OpNo[0]:READ from address of 'm[2*_k]'
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_k'
+	Encountered VARIABLE EXPRESSION '2*_k'
+	Encountered PLUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '2*_k+1'
+	Encountered ARRAY variable 'm[2*_k+1]'
+	Encountered VARIABLE EXPRESSION 'm[2*_k+1]'
+Ele[2]: OpNo[1]:READ from address of 'm[2*_k+1]'
+Ele[3]: LOOP END (for the loop with condition: ''_k='0' to '_NB-1' (increment 1)'')
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '2*_NB'
+	Encountered ARRAY variable 'm[2*_NB]'
+	Encountered VARIABLE EXPRESSION 'm[2*_NB]'
+Ele[4]: OpNo[2]:READ from address of 'm[2*_NB]'
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '2*_NB'
+	Encountered MINUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '2*_NB-1'
+	Encountered ARRAY variable 'm[2*_NB-1]'
+	Encountered VARIABLE EXPRESSION 'm[2*_NB-1]'
+Ele[5]: OpNo[3]:WRITE to address of 'm[2*_NB-1]'.
+	Encountered VARIABLE ASSIGNMENT block in Transaction definition
+	Encountered LOCAL variable '_f'
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered VARIABLE ASSIGNMENT '_f=1'
+	Encountered LOCAL variable '_v'
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '_NB'
+	Encountered VARIABLE ASSIGNMENT '_v=_NB'
+Ele[6]: ASSIGNMENTS:
+	- _f=1
+	- _v=_NB
+
+Parsing behaviour for  CONDITION: 'ELSE'
+	Encountered LOCAL variable '_k'
+	Encountered FIXED VALUE '0'
+	Encountered VARIABLE EXPRESSION '0'
+	Encountered LOCAL variable '_v'
+	Encountered VARIABLE EXPRESSION '_v'
+	Encountered MINUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '_v-1'
+	Encountered RANGE ''0' to '_v-1' (increment 1)'
+	Encountered Range ''0' to '_v-1' (increment 1)' in LOOP definition.
+Ele[7]: LOOP (Looping Condition: ''_k='0' to '_v-1' (increment 1)'')
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_k'
+	Encountered VARIABLE EXPRESSION '2*_k'
+	Encountered ARRAY variable 'm[2*_k]'
+	Encountered VARIABLE EXPRESSION 'm[2*_k]'
+Ele[8]: OpNo[4]:READ from address of 'm[2*_k]'
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_k'
+	Encountered VARIABLE EXPRESSION '2*_k'
+	Encountered PLUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '2*_k+1'
+	Encountered ARRAY variable 'm[2*_k+1]'
+	Encountered VARIABLE EXPRESSION 'm[2*_k+1]'
+Ele[9]: OpNo[5]:READ from address of 'm[2*_k+1]'
+Ele[10]: LOOP END (for the loop with condition: ''_k='0' to '_v-1' (increment 1)'')
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_v'
+	Encountered VARIABLE EXPRESSION '2*_v'
+	Encountered ARRAY variable 'm[2*_v]'
+	Encountered VARIABLE EXPRESSION 'm[2*_v]'
+Ele[11]: OpNo[6]:READ from address of 'm[2*_v]'
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_v'
+	Encountered VARIABLE EXPRESSION '2*_v'
+	Encountered PLUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '2*_v+1'
+	Encountered ARRAY variable 'm[2*_v+1]'
+	Encountered VARIABLE EXPRESSION 'm[2*_v+1]'
+Ele[12]: OpNo[7]:READ from address of 'm[2*_v+1]'
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_v'
+	Encountered VARIABLE EXPRESSION '2*_v'
+	Encountered MINUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '2*_v-1'
+	Encountered ARRAY variable 'm[2*_v-1]'
+	Encountered VARIABLE EXPRESSION 'm[2*_v-1]'
+Ele[13]: OpNo[8]:WRITE to address of 'm[2*_v-1]'.
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_v'
+	Encountered VARIABLE EXPRESSION '2*_v'
+	Encountered ARRAY variable 'm[2*_v]'
+	Encountered VARIABLE EXPRESSION 'm[2*_v]'
+Ele[14]: OpNo[9]:WRITE to address of 'm[2*_v]'.
+	Encountered FIXED VALUE '2'
+	Encountered MULTIPLY operation (or * sign)
+	Encountered LOCAL variable '_v'
+	Encountered VARIABLE EXPRESSION '2*_v'
+	Encountered PLUS operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '2*_v+1'
+	Encountered ARRAY variable 'm[2*_v+1]'
+	Encountered VARIABLE EXPRESSION 'm[2*_v+1]'
+Ele[15]: OpNo[10]:WRITE to address of 'm[2*_v+1]'.
+	Encountered VARIABLE ASSIGNMENT block in Transaction definition
+	Encountered LOCAL variable '_f'
+	Encountered FIXED VALUE '0'
+	Encountered VARIABLE EXPRESSION '0'
+	Encountered VARIABLE ASSIGNMENT '_f=0'
+Ele[16]: ASSIGNMENTS:
+	- _f=0
+
+Ele[17]: Encountered CONDITIONAL EXECUTION BLOCK with following conditions:
+	 - _f==0
+	 - ELSE
+
+
+
+-----------------------------------------------------------------------------
+     THREADS Section
+-----------------------------------------------------------------------------
+'P_1,P_2' is/are comprised of the following transactional pattern:
+GenerateAndAttachNewContainerForTxChoiceList for 1 repetition.
+NextContainerID[0]= 1
+NOT Uniform distributed candidate list. Setting PercentageDistNextTx as Random function.
+CurrentCandidate list is:
+	0	80.000000000000
+	1	20.000000000000
+NextContainerID[0]= 1
+TxBlock[0]: 10 times repeated Choice List:
+	- 0.800000 PROBA : T_search
+	- 0.200000 PROBA : T_update
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+MainSeed=1
+ListOfThreadSeeds={16838,5758}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 1  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 0  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+Generating Random variable seeds for Thread 0...
+Seed of _NB: 14666
+Generating TxCandidate seeds for Thread 0...
+0:9940
+Initial WriteValue is set to  29998 for Thread 0...
+Starting thread 0...
+
+[P_1:T_update] S
+[P_1:T_update] R(m[0])
+[P_1:T_update] R(m[0],0)
+[P_1:T_update] R(m[1])
+[P_1:T_update] R(m[1],0)
+[P_1:T_update] R(m[2])
+[P_1:T_update] R(m[2],0)
+[P_1:T_update] R(m[3])
+[P_1:T_update] R(m[3],0)
+[P_1:T_update] R(m[4])
+[P_1:T_update] R(m[4],0)
+[P_1:T_update] W(m[3])
+[P_1:T_update] W(m[3],29998)
+[P_1:T_update] Try C
+[P_1:T_update] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],0)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29998)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],0)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29998)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_update] S
+[P_1:T_update] R(m[0])
+[P_1:T_update] R(m[0],0)
+[P_1:T_update] R(m[1])
+[P_1:T_update] R(m[1],0)
+[P_1:T_update] R(m[2])
+[P_1:T_update] R(m[2],0)
+[P_1:T_update] R(m[3])
+[P_1:T_update] R(m[3],29998)
+[P_1:T_update] R(m[4])
+[P_1:T_update] R(m[4],0)
+[P_1:T_update] R(m[5])
+[P_1:T_update] R(m[5],0)
+[P_1:T_update] W(m[3])
+[P_1:T_update] W(m[3],29999)
+[P_1:T_update] W(m[4])
+[P_1:T_update] W(m[4],30000)
+[P_1:T_update] W(m[5])
+[P_1:T_update] W(m[5],30001)
+[P_1:T_update] Try C
+[P_1:T_update] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],0)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_update] S
+[P_1:T_update] R(m[0])
+[P_1:T_update] R(m[0],0)
+[P_1:T_update] R(m[1])
+[P_1:T_update] R(m[1],0)
+[P_1:T_update] R(m[2])
+[P_1:T_update] R(m[2],0)
+[P_1:T_update] W(m[1])
+[P_1:T_update] W(m[1],30002)
+[P_1:T_update] Try C
+[P_1:T_update] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],30002)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],30002)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29999)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],30000)
+[P_1:T_search] R(m[5])
+[P_1:T_search] R(m[5],30001)
+[P_1:T_search] R(m[6])
+[P_1:T_search] R(m[6],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],30002)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29999)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],30000)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+
+[P_1:T_search] S
+[P_1:T_search] R(m[0])
+[P_1:T_search] R(m[0],0)
+[P_1:T_search] R(m[1])
+[P_1:T_search] R(m[1],30002)
+[P_1:T_search] R(m[2])
+[P_1:T_search] R(m[2],0)
+[P_1:T_search] R(m[3])
+[P_1:T_search] R(m[3],29999)
+[P_1:T_search] R(m[4])
+[P_1:T_search] R(m[4],30000)
+[P_1:T_search] R(m[5])
+[P_1:T_search] R(m[5],30001)
+[P_1:T_search] R(m[6])
+[P_1:T_search] R(m[6],0)
+[P_1:T_search] Try C
+[P_1:T_search] C
+
+Generating Random variable seeds for Thread 1...
+Seed of _NB: 27224
+Generating TxCandidate seeds for Thread 1...
+0:6441
+Initial WriteValue is set to  13086 for Thread 1...
+Starting thread 1...
+
+		[P_2:T_update] S
+		[P_2:T_update] R(m[0])
+		[P_2:T_update] R(m[0],0)
+		[P_2:T_update] R(m[1])
+		[P_2:T_update] R(m[1],30002)
+		[P_2:T_update] R(m[2])
+		[P_2:T_update] R(m[2],0)
+		[P_2:T_update] R(m[3])
+		[P_2:T_update] R(m[3],29999)
+		[P_2:T_update] R(m[4])
+		[P_2:T_update] R(m[4],30000)
+		[P_2:T_update] W(m[3])
+		[P_2:T_update] W(m[3],13086)
+		[P_2:T_update] Try C
+		[P_2:T_update] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] R(m[5])
+		[P_2:T_search] R(m[5],30001)
+		[P_2:T_search] R(m[6])
+		[P_2:T_search] R(m[6],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] R(m[5])
+		[P_2:T_search] R(m[5],30001)
+		[P_2:T_search] R(m[6])
+		[P_2:T_search] R(m[6],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] R(m[3])
+		[P_2:T_search] R(m[3],13086)
+		[P_2:T_search] R(m[4])
+		[P_2:T_search] R(m[4],30000)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+
+		[P_2:T_search] S
+		[P_2:T_search] R(m[0])
+		[P_2:T_search] R(m[0],0)
+		[P_2:T_search] R(m[1])
+		[P_2:T_search] R(m[1],30002)
+		[P_2:T_search] R(m[2])
+		[P_2:T_search] R(m[2],0)
+		[P_2:T_search] Try C
+		[P_2:T_search] C
+
+Shutting STM engine down...
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+
+-------------------------------------------------------
+The warning above is repeated to increase visibility.
+-------------------------------------------------------
+
+

@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+
+$Time=$ARGV[0];
+$ReferenceTime=$ARGV[1];
+$ToleranceLimit=$ARGV[2];
+
+chop($Time);
+#print "Time=$Time\n";
+
+if ($Time > $ReferenceTime)
+{
+  $DiffTime = $Time - $ReferenceTime;
+}
+else
+{
+  $DiffTime = $ReferenceTime - $Time;
+}
+
+#print "DiffTime=$DiffTime\n";
+if ( $ToleranceLimit > $DiffTime) # If durations match
+{
+   print 1;
+}
+else   # If durations DO NOT match
+{
+   print 0;
+}

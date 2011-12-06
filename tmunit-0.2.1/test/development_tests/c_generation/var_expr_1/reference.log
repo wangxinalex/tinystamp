@@ -1,0 +1,85 @@
+
+Input Configuration File: input.cfg
+Name       : _a
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 100
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _b
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 150
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _c
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 2
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _d
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 5
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _a
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 50
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : _SIZE
+Type       : VAR_LOCAL_SIMPLE_CONSTANT
+Operation  : INVALID_OPERATION
+Value      : 1000
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Value evaluated for '_a'= 50
+Value evaluated for '_b'= 150
+Value evaluated for '_a+_b'= 200
+Value evaluated for '_c*_a+_b'= 250
+Value evaluated for '_c+_a*_b'= 7502
+Value evaluated for '_c*(_a+_b)'= 400
+Value evaluated for '_c*(_a+_b*_c)'= 700
+Value evaluated for '_c*(_a+_b/_c)'= 250
+Value evaluated for '_c*((_a+_b)/_d)'= 80
+Value evaluated for '(_a)'= 50
+Value evaluated for '(_a+_b)'= 200
+Value evaluated for '_a-_b'= -100
+Value evaluated for '_b-_a'= 100
+Value evaluated for '-_a'= -50
+Value evaluated for '-(_a+_b)'= -200
+Value evaluated for '-_a+_b'= 100
+VarExpr[0]: 100
+VarExpr[1]: ThLocals->_a
+VarExpr[2]: 150
+VarExpr[3]: ThLocals->_b
+VarExpr[4]: 2
+VarExpr[5]: ThLocals->_c
+VarExpr[6]: 5
+VarExpr[7]: ThLocals->_d
+VarExpr[8]: 50
+VarExpr[9]: 1000
+VarExpr[10]: ThLocals->_SIZE
+VarExpr[11]: (ThLocals->_a + ThLocals->_b)
+VarExpr[12]: (ThLocals->_c * ThLocals->_a)
+VarExpr[13]: ((ThLocals->_c * ThLocals->_a) + ThLocals->_b)
+VarExpr[14]: (ThLocals->_a * ThLocals->_b)
+VarExpr[15]: (ThLocals->_c + (ThLocals->_a * ThLocals->_b))
+VarExpr[16]: (ThLocals->_c * (ThLocals->_a + ThLocals->_b))
+VarExpr[17]: (ThLocals->_b * ThLocals->_c)
+VarExpr[18]: (ThLocals->_a + (ThLocals->_b * ThLocals->_c))
+VarExpr[19]: (ThLocals->_c * (ThLocals->_a + (ThLocals->_b * ThLocals->_c)))
+VarExpr[20]: (ThLocals->_b / ThLocals->_c)
+VarExpr[21]: (ThLocals->_a + (ThLocals->_b / ThLocals->_c))
+VarExpr[22]: (ThLocals->_c * (ThLocals->_a + (ThLocals->_b / ThLocals->_c)))
+VarExpr[23]: ((ThLocals->_a + ThLocals->_b) / ThLocals->_d)
+VarExpr[24]: (ThLocals->_c * ((ThLocals->_a + ThLocals->_b) / ThLocals->_d))
+VarExpr[25]: (ThLocals->_a - ThLocals->_b)
+VarExpr[26]: (ThLocals->_b - ThLocals->_a)
+VarExpr[27]: (-1 * ThLocals->_a)
+VarExpr[28]: -1
+VarExpr[29]: (-1 * (ThLocals->_a + ThLocals->_b))
+VarExpr[30]: ((-1 * ThLocals->_a) + ThLocals->_b)

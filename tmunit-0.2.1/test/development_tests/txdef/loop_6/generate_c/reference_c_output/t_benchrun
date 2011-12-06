@@ -1,0 +1,83 @@
+#!/bin/bash
+
+Parameter=$1
+if [[ $Parameter ]]; then
+  if [ $Parameter = "-h" -o   $Parameter = "--help" ]; then	   
+      echo ""
+      echo    "----------------------------------------------------"
+      echo    "  t_benchrun -- STM Unit Testing & Evaluation Tool  "
+      echo    "     Script running benchrun and processing its     "
+      echo    "       output to produce user-friendly traces       "
+      echo    "----------------------------------------------------"
+      echo    ""
+      echo    "Usage:"
+      echo    "  t_benchrun [options]"
+      echo    ""
+      echo    "Options:"
+      echo    "  -h, --help"
+      echo    "        Print this message"
+      echo    ""
+      echo    ""
+      echo    "NOTATION AND FORMAT OF TRACE"
+      echo    ""
+      echo    "   The notation and format of the trace is explained"
+      echo    "   in 'benchrun' help (type ./benchrun -h to see its"
+      echo    "   help). The only difference between the trace of"
+      echo    "   'benchrun' and that of 't_benchrun' is that the"
+      echo    "   memory address values of the trace of 'benchrun'"
+      echo    "   are replaced by the corresponding input"
+      echo    "   configuration variable and array names."
+      echo    ""
+      echo    ""
+      echo    "NOTES ON OPTIONS"
+      echo    ""
+      echo    "No other options are supported yet. If you would like"
+      echo    "to modify the duration and seed parameters or enable the"
+      echo    "printing of  statistics on the console during the"
+      echo    "execution of 't_benchrun', Do one of the following:"
+      echo    ""
+      echo    " 1)Indicate explicitly the duration/seed parameter or"
+      echo    "   statistic printing parameter in the configuration" 
+      echo    "   file and regenerate the C code. The parameters of"
+      echo    "   the configuration file become the default parameters"
+      echo    "   of the generated benchrun executable."
+      echo    ""
+      echo    " 2)To modify those parameters without regenerating C"
+      echo    "   code, open the 'main.c' in the directory where"
+      echo    "   'benchrun' executable is and modify manually the"
+      echo    "   values of the following variables in the"
+      echo    "   'InitializeSimulationParameters()'function:"
+      echo    ""
+      echo    "     - 'MainSeed' to modify the seed value. The value"
+      echo    "       should an unsigned value. Set 'MainSeed' to zero"
+      echo    "       if you would like the program to initialize the"
+      echo    "       random number generator with a value taken from"
+      echo    "       the hardware clock."
+      echo    ""
+      echo    "     - 'TimeOut' and 'WaitForTimeOut' to set a different"
+      echo    "       simulation duration. TimeOut should be an unsigned"
+      echo    "       value indicating the simulation duration in"
+      echo    "       microseconds. 'WaitForTimeOut' should be set to 1"
+      echo    "       so that the value set for TimeOut is effective (if"
+      echo    "       left zero the value of TimeOut is ignored)."
+      echo    ""
+      echo    "     - 'PrintStats' to enable/disable printing of"
+      echo    "       statistics at the end of simulation. Setting"
+      echo    "       'PrintStats' to 1 will enable that behaviour,"
+      echo    "       while setting it to zero will disable it."
+      echo ""
+      exit 0;
+  else
+      echo "$0: Unrecognized input parameter  '$Parameter'"
+      echo ""
+      echo "   Type $0  -h  to get help"
+      echo ""
+      exit 1;
+  fi    
+  
+fi
+
+./benchrun -v > log
+./prepare_post_process log
+./post_process log > post_process.log
+cat trace

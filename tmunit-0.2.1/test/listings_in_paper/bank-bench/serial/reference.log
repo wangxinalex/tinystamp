@@ -1,0 +1,589 @@
+
+Input Configuration File: test/listings_in_paper/bank-bench/serial/bank-bench.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     PROPERTIES Section
+-----------------------------------------------------------------------------
+'1' is assigned to 'RandomSeed'
+MainSeed (the main random seed) is set to 1.
+'1' is assigned to 'ReadOnlyHint'
+ReadOnlyHint is set to 1
+'1' is assigned to 'SerialThreadExecution'
+SerialThreadExecution is set to 1
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+Name       : _NB
+Type       : VAR_LOCAL_SIMPLE_CONSTANT
+Operation  : INVALID_OPERATION
+Value      : 4
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '_NB'
+	Encountered RANGE ''1' to '_NB' (increment 1)'
+	SHARED Array 'a' with elements in range: ''1' to '_NB' (increment 1)'
+	Encountered FIXED VALUE '0'
+'0' is assigned to all elements of array 'a'
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '_NB'
+	Encountered RANGE ''1' to '_NB' (increment 1)'
+Name       : _SRC
+Type       : OP_RANDOM_DIST_CONSTANT
+Operation  : UNKNOWN OPERATION
+Value      : 0
+Addr       : NULL
+OperandList: {0,2,0,1}
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '_NB'
+	Encountered RANGE ''1' to '_NB' (increment 1)'
+Name       : _DST
+Type       : OP_RANDOM_DIST_CONSTANT
+Operation  : UNKNOWN OPERATION
+Value      : 0
+Addr       : NULL
+OperandList: {0,2,0,1}
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T_transfer is comprised of the following operations:
+	Encountered LOCAL variable '_SRC'
+	Encountered VARIABLE EXPRESSION '_SRC'
+	Encountered ARRAY variable 'a[_SRC]'
+	Encountered VARIABLE EXPRESSION 'a[_SRC]'
+Ele[0]: OpNo[0]:READ from address of 'a[_SRC]'
+	Encountered LOCAL variable '_DST'
+	Encountered VARIABLE EXPRESSION '_DST'
+	Encountered ARRAY variable 'a[_DST]'
+	Encountered VARIABLE EXPRESSION 'a[_DST]'
+Ele[1]: OpNo[1]:READ from address of 'a[_DST]'
+	Encountered LOCAL variable '_SRC'
+	Encountered VARIABLE EXPRESSION '_SRC'
+	Encountered ARRAY variable 'a[_SRC]'
+	Encountered VARIABLE EXPRESSION 'a[_SRC]'
+Ele[2]: OpNo[2]:WRITE to address of 'a[_SRC]'.
+	Encountered LOCAL variable '_DST'
+	Encountered VARIABLE EXPRESSION '_DST'
+	Encountered ARRAY variable 'a[_DST]'
+	Encountered VARIABLE EXPRESSION 'a[_DST]'
+Ele[3]: OpNo[3]:WRITE to address of 'a[_DST]'.
+
+T_balance is comprised of the following operations:
+	Encountered LOCAL variable '_k'
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered LOCAL variable '_NB'
+	Encountered VARIABLE EXPRESSION '_NB'
+	Encountered RANGE ''1' to '_NB' (increment 1)'
+	Encountered Range ''1' to '_NB' (increment 1)' in LOOP definition.
+Ele[0]: LOOP (Looping Condition: ''_k='1' to '_NB' (increment 1)'')
+	Encountered LOCAL variable '_k'
+	Encountered VARIABLE EXPRESSION '_k'
+	Encountered ARRAY variable 'a[_k]'
+	Encountered VARIABLE EXPRESSION 'a[_k]'
+Ele[1]: OpNo[0]:READ from address of 'a[_k]'
+Ele[2]: LOOP END (for the loop with condition: ''_k='1' to '_NB' (increment 1)'')
+
+
+
+-----------------------------------------------------------------------------
+     THREADS Section
+-----------------------------------------------------------------------------
+'P_1' is/are comprised of the following transactional pattern:
+TxBlock Start encountered at Container No 0 .
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T_balance
+Container no at the end of TxBlock= 0 
+NextContainerID[0]= 1
+End of  10 times repeated TxBlockList
+TxBlock[1]: (Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+'P_2,P_3' is/are comprised of the following transactional pattern:
+TxBlock Start encountered at Container No 0 .
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T_transfer
+Container no at the end of TxBlock= 0 
+NextContainerID[0]= 1
+End of  10 times repeated TxBlockList
+TxBlock[1]: (Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 1  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+TimeOut                : 0  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+Starting thread 0...
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+
+[P_1:T_balance] S
+[P_1:T_balance] R(a[1])
+[P_1:T_balance] R(a[1],0)
+[P_1:T_balance] R(a[2])
+[P_1:T_balance] R(a[2],0)
+[P_1:T_balance] R(a[3])
+[P_1:T_balance] R(a[3],0)
+[P_1:T_balance] R(a[4])
+[P_1:T_balance] R(a[4],0)
+[P_1:T_balance] Try C
+[P_1:T_balance] C
+
+Starting thread 1...
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[2])
+		[P_2:T_transfer] R(a[2],0)
+		[P_2:T_transfer] R(a[4])
+		[P_2:T_transfer] R(a[4],0)
+		[P_2:T_transfer] W(a[2])
+		[P_2:T_transfer] W(a[2],13086)
+		[P_2:T_transfer] W(a[4])
+		[P_2:T_transfer] W(a[4],13087)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[1])
+		[P_2:T_transfer] R(a[1],0)
+		[P_2:T_transfer] R(a[4])
+		[P_2:T_transfer] R(a[4],13087)
+		[P_2:T_transfer] W(a[1])
+		[P_2:T_transfer] W(a[1],13088)
+		[P_2:T_transfer] W(a[4])
+		[P_2:T_transfer] W(a[4],13089)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[4])
+		[P_2:T_transfer] R(a[4],13089)
+		[P_2:T_transfer] R(a[1])
+		[P_2:T_transfer] R(a[1],13088)
+		[P_2:T_transfer] W(a[4])
+		[P_2:T_transfer] W(a[4],13090)
+		[P_2:T_transfer] W(a[1])
+		[P_2:T_transfer] W(a[1],13091)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[3])
+		[P_2:T_transfer] R(a[3],0)
+		[P_2:T_transfer] R(a[1])
+		[P_2:T_transfer] R(a[1],13091)
+		[P_2:T_transfer] W(a[3])
+		[P_2:T_transfer] W(a[3],13092)
+		[P_2:T_transfer] W(a[1])
+		[P_2:T_transfer] W(a[1],13093)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[3])
+		[P_2:T_transfer] R(a[3],13092)
+		[P_2:T_transfer] R(a[1])
+		[P_2:T_transfer] R(a[1],13093)
+		[P_2:T_transfer] W(a[3])
+		[P_2:T_transfer] W(a[3],13094)
+		[P_2:T_transfer] W(a[1])
+		[P_2:T_transfer] W(a[1],13095)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[3])
+		[P_2:T_transfer] R(a[3],13094)
+		[P_2:T_transfer] R(a[2])
+		[P_2:T_transfer] R(a[2],13086)
+		[P_2:T_transfer] W(a[3])
+		[P_2:T_transfer] W(a[3],13096)
+		[P_2:T_transfer] W(a[2])
+		[P_2:T_transfer] W(a[2],13097)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[2])
+		[P_2:T_transfer] R(a[2],13097)
+		[P_2:T_transfer] R(a[3])
+		[P_2:T_transfer] R(a[3],13096)
+		[P_2:T_transfer] W(a[2])
+		[P_2:T_transfer] W(a[2],13098)
+		[P_2:T_transfer] W(a[3])
+		[P_2:T_transfer] W(a[3],13099)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[1])
+		[P_2:T_transfer] R(a[1],13095)
+		[P_2:T_transfer] R(a[3])
+		[P_2:T_transfer] R(a[3],13099)
+		[P_2:T_transfer] W(a[1])
+		[P_2:T_transfer] W(a[1],13100)
+		[P_2:T_transfer] W(a[3])
+		[P_2:T_transfer] W(a[3],13101)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[2])
+		[P_2:T_transfer] R(a[2],13098)
+		[P_2:T_transfer] R(a[2])
+		[P_2:T_transfer] R(a[2],13098)
+		[P_2:T_transfer] W(a[2])
+		[P_2:T_transfer] W(a[2],13102)
+		[P_2:T_transfer] W(a[2])
+		[P_2:T_transfer] W(a[2],13103)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+
+		[P_2:T_transfer] S
+		[P_2:T_transfer] R(a[1])
+		[P_2:T_transfer] R(a[1],13100)
+		[P_2:T_transfer] R(a[2])
+		[P_2:T_transfer] R(a[2],13103)
+		[P_2:T_transfer] W(a[1])
+		[P_2:T_transfer] W(a[1],13104)
+		[P_2:T_transfer] W(a[2])
+		[P_2:T_transfer] W(a[2],13105)
+		[P_2:T_transfer] Try C
+		[P_2:T_transfer] C
+
+Starting thread 2...
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[3])
+				[P_3:T_transfer] R(a[3],13101)
+				[P_3:T_transfer] R(a[2])
+				[P_3:T_transfer] R(a[2],13105)
+				[P_3:T_transfer] W(a[3])
+				[P_3:T_transfer] W(a[3],3615)
+				[P_3:T_transfer] W(a[2])
+				[P_3:T_transfer] W(a[2],3616)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[3])
+				[P_3:T_transfer] R(a[3],3615)
+				[P_3:T_transfer] R(a[4])
+				[P_3:T_transfer] R(a[4],13090)
+				[P_3:T_transfer] W(a[3])
+				[P_3:T_transfer] W(a[3],3617)
+				[P_3:T_transfer] W(a[4])
+				[P_3:T_transfer] W(a[4],3618)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[3])
+				[P_3:T_transfer] R(a[3],3617)
+				[P_3:T_transfer] R(a[4])
+				[P_3:T_transfer] R(a[4],3618)
+				[P_3:T_transfer] W(a[3])
+				[P_3:T_transfer] W(a[3],3619)
+				[P_3:T_transfer] W(a[4])
+				[P_3:T_transfer] W(a[4],3620)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[4])
+				[P_3:T_transfer] R(a[4],3620)
+				[P_3:T_transfer] R(a[3])
+				[P_3:T_transfer] R(a[3],3619)
+				[P_3:T_transfer] W(a[4])
+				[P_3:T_transfer] W(a[4],3621)
+				[P_3:T_transfer] W(a[3])
+				[P_3:T_transfer] W(a[3],3622)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[4])
+				[P_3:T_transfer] R(a[4],3621)
+				[P_3:T_transfer] R(a[4])
+				[P_3:T_transfer] R(a[4],3621)
+				[P_3:T_transfer] W(a[4])
+				[P_3:T_transfer] W(a[4],3623)
+				[P_3:T_transfer] W(a[4])
+				[P_3:T_transfer] W(a[4],3624)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[1])
+				[P_3:T_transfer] R(a[1],13104)
+				[P_3:T_transfer] R(a[1])
+				[P_3:T_transfer] R(a[1],13104)
+				[P_3:T_transfer] W(a[1])
+				[P_3:T_transfer] W(a[1],3625)
+				[P_3:T_transfer] W(a[1])
+				[P_3:T_transfer] W(a[1],3626)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[3])
+				[P_3:T_transfer] R(a[3],3622)
+				[P_3:T_transfer] R(a[2])
+				[P_3:T_transfer] R(a[2],3616)
+				[P_3:T_transfer] W(a[3])
+				[P_3:T_transfer] W(a[3],3627)
+				[P_3:T_transfer] W(a[2])
+				[P_3:T_transfer] W(a[2],3628)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[2])
+				[P_3:T_transfer] R(a[2],3628)
+				[P_3:T_transfer] R(a[1])
+				[P_3:T_transfer] R(a[1],3626)
+				[P_3:T_transfer] W(a[2])
+				[P_3:T_transfer] W(a[2],3629)
+				[P_3:T_transfer] W(a[1])
+				[P_3:T_transfer] W(a[1],3630)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[1])
+				[P_3:T_transfer] R(a[1],3630)
+				[P_3:T_transfer] R(a[2])
+				[P_3:T_transfer] R(a[2],3629)
+				[P_3:T_transfer] W(a[1])
+				[P_3:T_transfer] W(a[1],3631)
+				[P_3:T_transfer] W(a[2])
+				[P_3:T_transfer] W(a[2],3632)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+
+				[P_3:T_transfer] S
+				[P_3:T_transfer] R(a[3])
+				[P_3:T_transfer] R(a[3],3627)
+				[P_3:T_transfer] R(a[3])
+				[P_3:T_transfer] R(a[3],3627)
+				[P_3:T_transfer] W(a[3])
+				[P_3:T_transfer] W(a[3],3633)
+				[P_3:T_transfer] W(a[3])
+				[P_3:T_transfer] W(a[3],3634)
+				[P_3:T_transfer] Try C
+				[P_3:T_transfer] C
+
+Shutting STM engine down...
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+
+-------------------------------------------------------
+The warning above is repeated to increase visibility.
+-------------------------------------------------------
+
+

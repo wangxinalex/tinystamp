@@ -1,0 +1,36 @@
+Array -> AllocatedArraySize=2,Array -> ArrayElementNum = 0
+Allocating space for the first time for dynamic array. AllocatedArraySize= 2
+Array size is now 1.
+Array size is now 2.
+Array -> AllocatedArraySize=4,Array -> ArrayElementNum = 2
+Reallocating space for dynamic array. AllocatedArraySize= 4
+Array size is now 3.
+ReturnedElement= 9
+ReturnedElement= 7
+ReturnedElement= 5
+Array -> AllocatedArraySize=2,Array -> ArrayElementNum = 0
+Allocating space for the first time for dynamic array. AllocatedArraySize= 2
+Array size is now 1.
+Array size is now 2.
+Array -> AllocatedArraySize=4,Array -> ArrayElementNum = 2
+Reallocating space for dynamic array. AllocatedArraySize= 4
+Array size is now 3.
+test_t EleNo[0]-> ID    = 0
+test_t EleNo[0]-> Value = 1.230000
+test_t EleNo[1]-> ID    = 1
+test_t EleNo[1]-> Value = 4.560000
+test_t EleNo[2]-> ID    = 2
+test_t EleNo[2]-> Value = 7.890000
+Array -> AllocatedArraySize=2,Array -> ArrayElementNum = 0
+Allocating space for the first time for dynamic array. AllocatedArraySize= 2
+Array size is now 1.
+Array size is now 2.
+Array -> AllocatedArraySize=4,Array -> ArrayElementNum = 2
+Reallocating space for dynamic array. AllocatedArraySize= 4
+Array size is now 3.
+array_t EleNo[0]-> Num    = 1
+array_t EleNo[0]-> Array: {0}
+array_t EleNo[1]-> Num    = 2
+array_t EleNo[1]-> Array: {0,10}
+array_t EleNo[2]-> Num    = 3
+array_t EleNo[2]-> Array: {0,15,30}

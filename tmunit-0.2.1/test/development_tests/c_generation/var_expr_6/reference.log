@@ -1,0 +1,41 @@
+
+Input Configuration File: input.cfg
+Name       : a
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &a
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Value evaluated for 'a>arr[0]'= 1
+Value evaluated for 'R(a)<arr[1]'= 0
+Value evaluated for 'arr[0]<=arr[1]'= 1
+Value evaluated for 'R(arr[0])!=R(a)'= 1
+Value evaluated for 'R(arr[0])==R(arr[2])'= 1
+VarExpr[0]: 40
+VarExpr[1]: (*a)
+VarExpr[2]: (*a)
+VarExpr[3]: 0
+VarExpr[4]: 2
+VarExpr[5]: arr
+VarExpr[6]: 1
+VarExpr[7]: 10
+VarExpr[8]: arr[0]
+VarExpr[9]: arr[0]
+VarExpr[10]: ((*a) > arr[0])
+VarExpr[11]: TM_READ(a)
+VarExpr[12]: arr[1]
+VarExpr[13]: arr[1]
+VarExpr[14]: (TM_READ(a) < arr[1])
+VarExpr[15]: (arr[0] <= arr[1])
+VarExpr[16]: TM_READ(&(arr[0]))
+VarExpr[17]: (TM_READ(&(arr[0])) != TM_READ(a))
+VarExpr[18]: arr[2]
+VarExpr[19]: arr[2]
+VarExpr[20]: TM_READ(&(arr[2]))
+VarExpr[21]: (TM_READ(&(arr[0])) == TM_READ(&(arr[2])))

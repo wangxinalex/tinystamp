@@ -1,0 +1,51 @@
+#include "initialization.h"
+
+unsigned ThreadNum ;
+unsigned* ThreadSeed;
+
+ThreadRunFunc ThreadRun[#THREAD_NUM#] = {NULL};
+
+
+void SetThreadNum()
+{
+    ThreadNum = #THREAD_NUM#;
+}
+
+
+void InitializeThreadSeeds(unsigned ThreadNum)
+{
+    assert (ThreadNum != 0);
+    ThreadSeed = (unsigned *)malloc(ThreadNum*sizeof(unsigned));
+    if (MainSeed == 0)
+    {
+      printf("MainSeed is ZERO.\n");
+      SRAND((int)time(0));
+    }
+    else
+      SRAND(MainSeed);
+
+    
+    unsigned ThreadNo;
+    for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
+	ThreadSeed[ThreadNo] = RAND();
+
+    printf("MainSeed=%u\n",MainSeed);
+    printf("ListOfThreadSeeds={");
+    for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
+    { 
+ 	printf("%u",ThreadSeed[ThreadNo]); 
+	if(ThreadNo < ThreadNum -1)
+	    printf(",");
+	else
+	    printf("}\n"); 
+    } 
+   
+
+}
+
+
+
+void InitializeThreadRunFunctions()
+{
+    #SETTING_VALUES_OF_THREAD_RUN_ARRAY#
+}

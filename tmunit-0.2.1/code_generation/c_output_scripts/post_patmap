@@ -1,0 +1,300 @@
+#!/usr/bin/perl
+
+sub VerifyDirectoryExistence
+{
+    my($DirName) = @_;
+    if( -d $DirName)
+    {
+	print "Exists ... OK\n";	
+    }
+    else
+    {
+	print "DOES NOT EXIST ... STOP\n";
+	exit;
+    }
+}
+
+
+
+sub PrintAndExecute {
+    my( $CommandString ) = @_;
+    print "$CommandString\n";
+    system($CommandString);
+    return $?;
+}
+
+sub ReplaceAndMoveFileContent {
+    my($InitialFile, $TargetFile, $ReplacedString, 
+       $FileNameContainingReplacingText) = @_;
+
+    PrintAndExecute( "sed '/$ReplacedString/r ". 
+		     $FileNameContainingReplacingText . 
+		     "'  $InitialFile  > $TargetFile");
+
+    PrintAndExecute( "sed -i '/$ReplacedString/d' $TargetFile" );
+}
+
+sub ReplaceFileContent {
+    my($TargetFile, $ReplacedString, $FileNameContainingReplacingText) = @_;
+    
+    PrintAndExecute( "sed -i '/$ReplacedString/r ". 
+		     $FileNameContainingReplacingText . "' $TargetFile");
+    PrintAndExecute( "sed -i '/$ReplacedString/d' $TargetFile" );
+}
+
+
+sub BeautifyFileIfPossible {
+    my($FileName) = @_;
+
+    PrintAndExecute ( "cp " . $FileName . " " . $FileName . "_temp");
+    PrintAndExecute ( "indent -bli0 -l180 -npsl " . $FileName . "_temp" );
+    $DiffResult = &PrintAndExecute ( "diff -w " . $FileName . "_temp " . 
+				     $FileName );
+    if($DiffResult == 0)
+    {
+	PrintAndExecute ("mv " . $FileName . "_temp " . $FileName );
+    } 
+
+}
+
+
+
+
+$NumberOfParameters = $#ARGV +1 ;
+
+if( $NumberOfParameters != 1)
+{
+    print "Current number of input parameters: $NumberOfParameters\n";
+    print "Script requires 1 parameter which is the number of threads\n";
+    exit;
+}
+
+$CommandString="grep '^SRC_DIR_PATH' ../../environment.include | gawk -F ':=' '{ print \$2}'";
+$SrcDirPathLine=`$CommandString`;
+@SplitArray = split(/\s+/,$SrcDirPathLine);
+$ArrayEndElementNo=$#SplitArray;
+$SrcDirPath = $SplitArray[$ArrayEndElementNo];
+print "SrcDirPath:$SrcDirPath\n";
+
+$TEMPLATE_FILE_DIR="$SrcDirPath/../c_output_templates";
+$GENERATED_CODE_DIR="$SrcDirPath/../../c_output_intermediate";
+$OUTPUT_DIR="$SrcDirPath/../../c_output";
+
+
+
+print "TEMPLATE_FILE_DIR:\t$TEMPLATE_FILE_DIR \t";
+VerifyDirectoryExistence ( $TEMPLATE_FILE_DIR);
+
+print "GENERATED_CODE_DIR:\t$GENERATED_CODE_DIR \t";
+VerifyDirectoryExistence ( $GENERATED_CODE_DIR);
+
+print "OUTPUT_DIR:\t\t$OUTPUT_DIR \t\t";
+VerifyDirectoryExistence ( $OUTPUT_DIR);
+
+
+
+
+#Copying files that need to be copied from template direcotry
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/barrier.* $OUTPUT_DIR");
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/cli.* $OUTPUT_DIR");
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/simulation_parameters.* $OUTPUT_DIR");
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/random.c  $OUTPUT_DIR" );
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/threads.h  $OUTPUT_DIR");
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/transactions.h  $OUTPUT_DIR");
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/Makefile $OUTPUT_DIR");
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/post_process.template $OUTPUT_DIR");
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/prepare_post_process  $OUTPUT_DIR");
+PrintAndExecute ( "cp $TEMPLATE_FILE_DIR/t_benchrun  $OUTPUT_DIR");
+PrintAndExecute ( "cp $GENERATED_CODE_DIR/thread_local_variables.h $OUTPUT_DIR");
+PrintAndExecute ( "cp $GENERATED_CODE_DIR/shared_var_definitions.* $OUTPUT_DIR");
+
+
+##############################################################################
+#                         Preparing main.c file                              #
+##############################################################################
+
+######  Replacing the simulation parameter initializations in template  ######
+$InitialFile  = "$TEMPLATE_FILE_DIR/main.template";
+$TargetFile   = "$OUTPUT_DIR/main.c"; 
+$ReplacedText = "#SIMULATION_PARAMETER_INITIALIZATIONS#"; 
+$ReplacingTextFile="$GENERATED_CODE_DIR/simulation_parameter_initialization.c";
+
+ReplaceAndMoveFileContent( $InitialFile, $TargetFile, $ReplacedText,  
+                           $ReplacingTextFile ); 
+
+
+###  Replacing shared variable initialization and allocations in template  ###
+$TargetFile   = "$OUTPUT_DIR/main.c"; 
+$ReplacedText = "#SHARED_VARIABLE_ALLOCATIONS#"; 
+$ReplacingTextFile="$GENERATED_CODE_DIR/shared_var_alloc.c";
+ReplaceFileContent( $TargetFile, $ReplacedText, $ReplacingTextFile ); 
+
+$TargetFile   = "$OUTPUT_DIR/main.c"; 
+$ReplacedText = "#SHARED_VARIABLE_INITIALIZATIONS#"; 
+$ReplacingTextFile="$GENERATED_CODE_DIR/shared_var_init.c";
+ReplaceFileContent( $TargetFile, $ReplacedText, $ReplacingTextFile ); 
+
+
+##############  Adjusting indentation etc. in  main.c file  ##################
+BeautifyFileIfPossible ("$OUTPUT_DIR/main.c");
+
+
+
+
+##############################################################################
+#                    Preparing transactions.c file                           #
+##############################################################################
+
+##############   Replacing text in transactions.c file   #####################
+$InitialFile  = "$TEMPLATE_FILE_DIR/transactions.template";
+$TargetFile   = "$OUTPUT_DIR/transactions.c"; 
+$ReplacedText = "#TRANSACTION_DEFINITIONS_AS_CASE_STATEMENTS#"; 
+$ReplacingTextFile = "$GENERATED_CODE_DIR/transactions.content";
+
+ReplaceAndMoveFileContent( $InitialFile, $TargetFile, $ReplacedText,  
+			   $ReplacingTextFile ); 
+
+
+$TargetFile   = "$OUTPUT_DIR/transactions.c"; 
+$ReplacedText = "#VARIABLE_DEFINITIONS_BEFORE_SWITCH_STATEMENT#"; 
+$ReplacingTextFile = "$GENERATED_CODE_DIR/execute_transaction_variable_defs.c";
+
+ReplaceFileContent( $TargetFile, $ReplacedText,  $ReplacingTextFile ); 
+
+
+##########  Adjusting indentation etc. in  transactions.c file  ##############
+BeautifyFileIfPossible ("$OUTPUT_DIR/transactions.c");
+
+
+
+
+
+##############################################################################
+##############################################################################
+#                                                                            #
+#                  Preparing files related to threads                        #
+#                                                                            #
+##############################################################################
+##############################################################################
+
+
+
+$ThreadFuncBaseName="RunThread_";
+PrintAndExecute( "rm -f $OUTPUT_DIR/threads.c" );
+
+open THREAD_COLLECTION_FILE, ">>  $OUTPUT_DIR/threads.c" 
+ or 
+die  "Could not open $OUTPUT_DIR/threads.c for writing.\n";
+
+
+$FunctionDeclarationList="";
+$FuncPointerInitializationList = "";
+ 
+$IncludeString = "#include \"threads.h\"";
+print THREAD_COLLECTION_FILE  "$IncludeString\n";
+ 
+$ThreadNum = $ARGV[0];
+print "\nThreadNum= $ThreadNum\n";
+for($ThreadNo=0; $ThreadNo< $ThreadNum; $ThreadNo++)
+ {
+    $IncludeString = "#include \"thread_" . $ThreadNo . ".c\"";
+    print THREAD_COLLECTION_FILE  "$IncludeString\n";
+    $FunctionDeclarationList= $FunctionDeclarationList . 
+                              "void* RunThread_". $ThreadNo .
+			      "(void *Parameters);\n" ; 
+
+    $FuncPointerInitializationList = $FuncPointerInitializationList . 
+	                             "    ThreadRun[" . $ThreadNo . 
+				     "] = RunThread_" . $ThreadNo .  " ;\n" ;
+
+    $ThreadFile  = "$OUTPUT_DIR/thread_" . $ThreadNo . ".c";
+
+    #######  Marking the thread no in appropriate positions  ##########
+    PrintAndExecute ("sed  s/#THREAD_NO#/". $ThreadNo . 
+		     "/g $TEMPLATE_FILE_DIR/thread.template >  $ThreadFile");
+
+    
+    #######  Inserting thread seed initializations to the thread file  ########
+    $ReplacedText      = "#THREAD_SEED_INITIALIZATIONS#";
+    $ReplacingTextFile =  "$GENERATED_CODE_DIR/thread_local_var_init.c";
+    ReplaceFileContent( $ThreadFile, $ReplacedText,  $ReplacingTextFile ); 
+
+    #######  Inserting thread variable declarations to the thread file  #######
+    $ReplacedText      = "#THREAD_VARIABLE_DECLARATIONS#";
+    $ReplacingTextFile =  "$GENERATED_CODE_DIR/thread_" . $ThreadNo .  
+	                 "_variable_declarations.c";
+    ReplaceFileContent( $ThreadFile, $ReplacedText,  $ReplacingTextFile ); 
+    
+    #######  Inserting C code corresponding to thread specification     #######  
+    #######  defined in the config file to the thread file              #######
+    $ReplacedText      = "#THREAD_FUNC#";
+    $ReplacingTextFile = "$GENERATED_CODE_DIR/thread_". $ThreadNo .".content";
+    ReplaceFileContent( $ThreadFile, $ReplacedText,  $ReplacingTextFile ); 
+
+    $ReplacedText      = "#THREAD_AND_TRANSACTION_NAMES#";
+    $ReplacingTextFile = "$GENERATED_CODE_DIR/thread_and_transaction_names.c";
+    ReplaceFileContent( $ThreadFile, $ReplacedText,  $ReplacingTextFile ); 
+
+
+
+
+    #########  Adjusting indentation etc. in  thread file  ###########
+    BeautifyFileIfPossible ($ThreadFile);
+ }
+
+close THREAD_COLLECTION_FILE;
+
+
+
+##############################################################################
+#                       Preparing initialization.h                           #
+##############################################################################
+open TEMP_FILE, ">temp" or die "Could not open file \'temp\'";
+print TEMP_FILE $FunctionDeclarationList;
+close TEMP_FILE;
+
+$InitialFile  = "$TEMPLATE_FILE_DIR/initialization.h.template";
+$TargetFile   = "$OUTPUT_DIR/initialization.h"; 
+$ReplacedText = "#THREAD_FUNCTION_DECLARATIONS#"; 
+$ReplacingTextFile = "temp";  # file with FunctionDeclarationList 
+
+ReplaceAndMoveFileContent( $InitialFile, $TargetFile, $ReplacedText,  
+			   $ReplacingTextFile ); 
+
+##########  Adjusting indentation etc. in  initialization.h file  #############
+BeautifyFileIfPossible ($TargetFile);
+
+
+##############################################################################
+#                       Preparing initialization.c                           #
+##############################################################################
+
+$TargetFile   = "$OUTPUT_DIR/initialization.c"; 
+PrintAndExecute("sed   s/#THREAD_NUM#/". $ThreadNum . 
+	    "/g  $TEMPLATE_FILE_DIR/initialization.c.template > $TargetFile");
+
+open TEMP_FILE, ">temp" or die "Could not open file \'temp\'";
+print TEMP_FILE $FuncPointerInitializationList;
+close TEMP_FILE;
+
+
+$ReplacedText = "#SETTING_VALUES_OF_THREAD_RUN_ARRAY#"; 
+$ReplacingTextFile = "temp";  # file with  FuncPointerInitializationList 
+ReplaceFileContent( $TargetFile, $ReplacedText, $ReplacingTextFile ); 
+
+##########  Adjusting indentation etc. in  initialization.c file  #############
+BeautifyFileIfPossible ($TargetFile);
+
+
+
+##############################################################################
+#                                CLEAN UP                                    #  
+##############################################################################
+
+PrintAndExecute ("rm -rf temp *~");  
+PrintAndExecute ("rm -rf $OUTPUT_DIR/*~");  
+
+# PrintAndExecute("rm -rf $GENERATED_CODE_DIR");
+
+
+

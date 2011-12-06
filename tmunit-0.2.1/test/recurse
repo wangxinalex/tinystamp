@@ -1,0 +1,35 @@
+#!/bin/bash
+
+RootDir=$1
+#echo $RootDir
+shift 
+Command="$@"
+
+if [[ $RootDir == "." ]]; then
+    SubDirNames=`ls -R  | grep :|sed s/://g|sed s/^.//g|sed s:^/::g`
+else
+    SubDirNames=`ls -R $RootDir | grep :|sed s/://g||sed s:^/::g`
+fi
+
+InitialDir=$PWD 
+
+SubDirNames=". "$SubDirNames;
+FileNoCounter=0;
+
+for CurrentDir in $SubDirNames
+do
+#	echo Entering $InitialDir"/"$CurrentDir;
+        CurrentDirFiles=`ls $CurrentDir"/"*.trg 2>/dev/null`;
+	if [[ $CurrentDirFiles == "" ]]; then
+	    CurrentDirFiles=`ls $CurrentDir"/"*.cfg 2>/dev/null`;
+	fi
+	for CurrentFile in $CurrentDirFiles
+	do
+	    FileNoCounter=$(($FileNoCounter+1))
+	    echo -ne "["$FileNoCounter"]  "
+	    $Command $CurrentFile
+#	    echo $CurrentFile
+	done
+       
+
+done

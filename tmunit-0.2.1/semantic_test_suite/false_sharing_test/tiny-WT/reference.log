@@ -1,0 +1,33 @@
+
+Input Configuration File: semantic_test_suite/false_sharing_test/input.cfg
+Initializing STM...
+Starting thread 0...
+Starting thread 1...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+[Th1:T1] S
+[Th1:T1] W(arr[0])
+[Th1:T1] W(arr[0],1)
+[Th1:T1]:L 
+
+		[Th2:T2] S
+		[Th2:T2] W(arr[1])
+		[Th2:T2] W(arr[1],2)
+		[Th2:T2] Try C
+		[Th2:T2] C
+
+[Th1:T1] Try C
+[Th1:T1] C
+
+
+
+-----------------------------------------------------
+             TEST COMPLETES SUCCESFULLY              
+-----------------------------------------------------
+
+Shutting STM engine down...

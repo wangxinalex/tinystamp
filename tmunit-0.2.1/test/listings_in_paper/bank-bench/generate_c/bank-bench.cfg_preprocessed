@@ -1,0 +1,20 @@
+Properties:
+  RandomSeed = 1;           
+  ReadOnlyHint = 1;         
+  WaitForTimeOut = 1;
+  Timeout = 1000000;   
+
+
+Definitions:						 
+  _NB = 8192;    					 
+  a[1.._NB]=0;						 
+  _SRC= <1.._NB>;						 
+  _DST= <1.._NB>;						 
+
+Transactions:			                         
+  T_transfer:= R(a[_SRC]),R(a[_DST]),W(a[_SRC]),W(a[_DST]);  
+  T_balance := {# _k=[1.._NB]: R(a[_k]) };                
+
+Threads:       	  	     	     			 
+  P_1 := T_balance*;	
+  P_2,P_3,P_4,P_5,P_6,P_7,P_8 := T_transfer*; 

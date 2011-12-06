@@ -1,0 +1,129 @@
+
+Input Configuration File: test/development_tests/schedules/dirty_read_1_no_stm/dirty_read_1.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+Name       : _y
+Type       : VAR_LOCAL_SIMPLE
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+	Encountered FIXED VALUE '0'
+Name       : x
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &x
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'0' is assigned to 'x'
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T1 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+Ele[0]: OpNo[0]:WRITE  '1' to address of 'x'.
+Ele[1]: Label @L1
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+	Encountered FIXED VALUE '2'
+	Encountered VARIABLE EXPRESSION '2'
+Ele[2]: OpNo[1]:WRITE  '2' to address of 'x'.
+
+T2 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+	Encountered LOCAL variable '_y'
+	Encountered VARIABLE EXPRESSION '_y'
+Ele[0]: OpNo[0]:READ from address of 'x' into '_y'.
+
+
+
+-----------------------------------------------------------------------------
+     SCHEDULES Section
+-----------------------------------------------------------------------------
+Sched[0]: (S)
+	T1@L1,T2,T1
+
+
+-----------------------------------------------------------------------------
+     INVARIANTS Section
+-----------------------------------------------------------------------------
+	Encountered LOCAL variable '_y'
+	Encountered VARIABLE EXPRESSION '_y'
+	Encountered '!=' operation
+	Encountered FIXED VALUE '1'
+	Encountered VARIABLE EXPRESSION '1'
+	Encountered SIMPLE CONDITIONAL EXPRESSION '_y!=1'
+Invariant[0]: [_y!=1]
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+Starting thread 0...
+Starting thread 1...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+ThreadToEnable=0, Active=1
+
+[Th1:T1] S
+[Th1:T1] W(x)
+[Th1:T1] W(x,1)
+[Th1:T1]:L1 
+ThreadToEnable=1, Active=1
+Performing context switch...
+
+		[Th2:T2] S
+		[Th2:T2] R(x)
+		[Th2:T2] R(x,1)
+Invariant '[_y!=1]' not satisfied.
+Interruption in Schedule: One or more invariants not satisfied in transcation 'T2'.
+
+
+-----------------------------------------------------
+                    TEST FAILS                       
+-----------------------------------------------------
+

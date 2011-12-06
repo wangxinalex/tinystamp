@@ -1,0 +1,6 @@
+TestedArraySize= 0 (after INITIALIZATION)	ArrayContents: EMPTY
+TestedArraySize= 1 (after ADD of element "10")	ArrayContents: {10}
+TestedArraySize= 2 (after ADD of element "20")	ArrayContents: {10,20}
+TestedArraySize= 3 (after ADD of element "30")	ArrayContents: {10,20,30}
+TestedArraySize= 2 (after CHOP)			ArrayContents: {10,20}
+TestedArraySize= 0 (after CLEAR)		ArrayContents: EMPTY

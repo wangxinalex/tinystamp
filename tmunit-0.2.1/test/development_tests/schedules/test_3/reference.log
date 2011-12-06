@@ -1,0 +1,216 @@
+
+Input Configuration File: input.cfg
+
+-------------------------------------------------
+     *******  Parsing starts  ********
+-------------------------------------------------
+
+
+
+-----------------------------------------------------------------------------
+     PROPERTIES Section
+-----------------------------------------------------------------------------
+'1' is assigned to 'SerialThreadExecution'
+SerialThreadExecution is set to 1
+'1' is assigned to 'RandomDebug'
+RandomDebugParameter is set to 1
+
+
+-----------------------------------------------------------------------------
+     DEFINITIONS Section
+-----------------------------------------------------------------------------
+	Encountered FIXED VALUE '10'
+Name       : x
+Type       : VAR_SHARED_UNMANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+Name       : &x
+Type       : VAR_SHARED_MANAGED
+Operation  : INVALID_OPERATION
+Value      : 0
+Addr       : NON_NULL
+OperandList: {4294967295,4294967295,4294967295,4294967295}
+'10' is assigned to 'x'
+
+
+-----------------------------------------------------------------------------
+     TRANSACTIONS Section
+-----------------------------------------------------------------------------
+T1 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:READ from address of 'x'
+Ele[1]: Label @L1
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[2]: OpNo[1]:WRITE to address of 'x'.
+
+T2 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:WRITE to address of 'x'.
+Ele[1]: Label @L2
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[2]: OpNo[1]:READ from address of 'x'
+
+T3 is comprised of the following operations:
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[0]: OpNo[0]:READ from address of 'x'
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[1]: OpNo[1]:WRITE to address of 'x'.
+Ele[2]: Label @L3
+	Encountered SHARED variable 'x'
+	Encountered VARIABLE EXPRESSION 'x'
+Ele[3]: OpNo[2]:WRITE to address of 'x'.
+
+
+
+-----------------------------------------------------------------------------
+     THREADS Section
+-----------------------------------------------------------------------------
+'Th1' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T1
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+'Th2' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T2
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+'Th3' is/are comprised of the following transactional pattern:
+Calling GenerateAndAttachNewContainerForSimpleTxBlock
+NextContainerID[0]= 1
+TxBlock[0]: T3
+Calling GenerateAndAttachContainersForForwardTxList for 1 repetition
+
+
+
+-----------------------------------------------------------------------------
+     SCHEDULES Section
+-----------------------------------------------------------------------------
+Sched[0]: (S1)
+	T3@L3,T1@L1,T2@L2,T3,T2,T1
+Sched[1]: (S2)
+	T1@L1,T3@L3,T2,T1,T3
+
+-------------------------------------------------
+     *******  Parsing completed  ********
+-------------------------------------------------
+
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+MainSeed=1
+ListOfThreadSeeds={16838,5758,10113}
+Initializing STM...
+Generating Random variable seeds for Thread 0...
+Generating TxCandidate seeds for Thread 0...
+Initial WriteValue is set to  14666 for Thread 0...
+Starting thread 0...
+Generating Random variable seeds for Thread 1...
+Generating TxCandidate seeds for Thread 1...
+Initial WriteValue is set to  27224 for Thread 1...
+Starting thread 1...
+Generating Random variable seeds for Thread 2...
+Generating TxCandidate seeds for Thread 2...
+Initial WriteValue is set to  23264 for Thread 2...
+Starting thread 2...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S2'               
+-----------------------------------------------------
+
+ThreadToEnable=0, Active=1
+
+[Th1:T1] S
+[Th1:T1] R(x)
+[Th1:T1] R(x,10)
+[Th1:T1]:L1 
+ThreadToEnable=2, Active=1
+Performing context switch...
+
+				[Th3:T3] S
+				[Th3:T3] R(x)
+				[Th3:T3] R(x,10)
+				[Th3:T3] W(x)
+				[Th3:T3] W(x,23264)
+				[Th3:T3]:L3 
+ThreadToEnable=1, Active=1
+Performing context switch...
+
+		[Th2:T2] S
+		[Th2:T2] W(x)
+		[Th2:T2] A 
+		[Th2:T2] Terminates
+ThreadToEnable=0, Active=1
+Performing context switch...
+[Th1:T1] W(x)
+[Th1:T1] A 
+[Th1:T1] Terminates
+ThreadToEnable=2, Active=1
+Performing context switch...
+				[Th3:T3] W(x)
+				[Th3:T3] W(x,23265)
+				[Th3:T3] Try C
+				[Th3:T3] C
+
+
+
+-----------------------------------------------------
+             TEST COMPLETES SUCCESFULLY              
+-----------------------------------------------------
+
+Shutting STM engine down...
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+
+
+-------------------------------------------------------
+The warning above is repeated to increase visibility.
+-------------------------------------------------------
+
+

@@ -1,0 +1,34 @@
+
+Input Configuration File: semantic_test_suite/publication-test/input.cfg
+Initializing STM...
+Starting thread 0...
+Starting thread 1...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+		[Th2:T2] S
+		[Th2:T2] R(data)
+		[Th2:T2] R(data,42)
+		[Th2:T2]:L 
+-------  data = 1  -------
+
+[Th1:T1] S
+[Th1:T1] W(ready)
+[Th1:T1] W(ready,1)
+[Th1:T1] Try C
+[Th1:T1] C
+
+		[Th2:T2] W(val)
+		[Th2:T2] W(val,42)
+Invariant '[val!=42]' not satisfied.
+Interruption in Schedule: One or more invariants not satisfied in transcation 'T2'.
+
+
+-----------------------------------------------------
+                    TEST FAILS                       
+-----------------------------------------------------
+

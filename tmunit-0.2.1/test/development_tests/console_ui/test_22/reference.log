@@ -1,0 +1,5 @@
+
+To get help type: 
+	tmunit  -h 
+tmunit: Unexpected string '-d'.
+        Expecting integer argument for -s (--seed) option instead.

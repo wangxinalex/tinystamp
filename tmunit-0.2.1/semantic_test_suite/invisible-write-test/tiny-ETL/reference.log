@@ -1,0 +1,50 @@
+
+Input Configuration File: semantic_test_suite/invisible-write-test/input.cfg
+
+*************************************************************
+*************************************************************
+*                        WARNING:                           *
+*                                                           *
+*                                                           *
+*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *
+*                                                           *
+*  This mode has some missing/modified features. If you     *
+*  did not mean to execute developping tests to verify/test *
+*  TMunit, please type                                      *
+*                                                           *
+*      make clean                                           *
+*      make                                                 *
+*                                                           *
+* on the command line in order to compile for simulations   *
+* (and user defined unit tests).                            *
+*                                                           *
+*************************************************************
+*************************************************************
+Initializing STM...
+Starting thread 0...
+Starting thread 1...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+ThreadToEnable=0, Active=1
+
+[Th1:T1] S
+[Th1:T1] W(x)
+[Th1:T1] W(x,14666)
+[Th1:T1]:L 
+ThreadToEnable=1, Active=1
+Performing context switch...
+
+		[Th2:T2] S
+		[Th2:T2] R(x)
+		[Th2:T2] A 
+		[Th2:T2] Invariant NO_ABORT fails. 
+
+
+-----------------------------------------------------
+                    TEST FAILS                       
+-----------------------------------------------------
+

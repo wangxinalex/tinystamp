@@ -1,0 +1,28 @@
+
+Input Configuration File: semantic_test_suite/non-transactional-dirty-read-test/input.cfg
+Initializing STM...
+Starting thread 0...
+
+
+-----------------------------------------------------
+               EXECUTING SCHEDULE 'S'               
+-----------------------------------------------------
+
+
+[Th1:T] S
+[Th1:T] W(x)
+[Th1:T] W(x,1)
+[Th1:T]:L 
+-------  y = 0  -------
+[Th1:T] W(x)
+[Th1:T] W(x,2)
+[Th1:T] Try C
+[Th1:T] C
+
+
+
+-----------------------------------------------------
+             TEST COMPLETES SUCCESFULLY              
+-----------------------------------------------------
+
+Shutting STM engine down...
