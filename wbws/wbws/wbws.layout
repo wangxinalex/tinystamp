@@ -11,16 +11,25 @@
 		<Cursor position="23210" topLine="386" />
 	</File>
 	<File name="../tinySTM-1.0.3/src/mod_ab.c" open="1" top="1" tabpos="3">
-		<Cursor position="3220" topLine="59" />
+		<Cursor position="2858" topLine="231" />
+	</File>
+	<File name="../tinySTM-1.0.3/src/mod_cb.c" open="0" top="0" tabpos="0">
+		<Cursor position="3141" topLine="100" />
 	</File>
 	<File name="../tinySTM-1.0.3/src/stm.c" open="1" top="0" tabpos="1">
 		<Cursor position="78621" topLine="2471" />
 	</File>
+	<File name="../tinySTM-1.0.3/test-asf/intset/intset.c" open="0" top="0" tabpos="0">
+		<Cursor position="30814" topLine="1352" />
+	</File>
+	<File name="../tinySTM-1.0.3/test-asf/intset/ptlcalls.h" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="287" />
+	</File>
 	<File name="../tinySTM-1.0.3/test/bank/bank.c" open="0" top="0" tabpos="0">
 		<Cursor position="8888" topLine="3" />
 	</File>
-	<File name="../tinySTM-1.0.3/test/intset/intset.c" open="0" top="0" tabpos="0">
-		<Cursor position="2803" topLine="63" />
+	<File name="../tinySTM-1.0.3/test/intset/intset.c" open="1" top="0" tabpos="4">
+		<Cursor position="45573" topLine="1729" />
 	</File>
 	<File name="../tinySTM-1.0.3/test/regression/irrevocability.c" open="0" top="0" tabpos="0">
 		<Cursor position="5463" topLine="158" />

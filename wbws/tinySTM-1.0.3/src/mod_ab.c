@@ -222,7 +222,7 @@ static double sc_percentile(smart_counter_t *c, int percentile)
  * Returns the instruction count.
  */
 static inline uint64_t rdtsc() {
-  /* TODO use gettimeofday if not x86. moreover you must ensure there is no 
+  /* TODO use gettimeofday if not x86. moreover you must ensure there is no
    * thread migration to be good on x86. */
   uint32_t lo, hi;
   __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
@@ -335,7 +335,7 @@ static void mod_ab_on_commit(TXPARAMS void *arg)
   if (check_fn == NULL || check_fn(TXARG)) {
     length = rdtsc() - samples->start;
     samples->total++;
-    /* Should be keep this sample? */
+    /* Should we keep this sample? */
     if ((samples->total % sampling_period) == 0) {
       attrs = stm_get_attributes(TXARG);
       samples->buffer[samples->nb].id = (attrs == NULL ? 0 : attrs->id);
