@@ -202,7 +202,8 @@ void processPackets (void* argPtr) {
             break;
 
         char* bytes;
-        TM_BEGIN();
+//        TM_BEGIN();
+        TM_JBS_BEGIN(11);
         bytes = TMSTREAM_GETPACKET(streamPtr);
         TM_END();
         INCREASE_COMMIT_COUNTER;
@@ -214,7 +215,8 @@ void processPackets (void* argPtr) {
         long flowId = packetPtr->flowId;
 
         error_t error;
-        TM_BEGIN();
+//        TM_BEGIN();
+        TM_JBS_BEGIN(12);
         error = TMDECODER_PROCESS(decoderPtr,
                                   bytes,
                                   (PACKET_HEADER_LENGTH + packetPtr->length));
@@ -231,7 +233,8 @@ void processPackets (void* argPtr) {
 
         char* data;
         long decodedFlowId;
-        TM_BEGIN();
+//        TM_BEGIN();
+        TM_JBS_BEGIN(13);
         data = TMDECODER_GETCOMPLETE(decoderPtr, &decodedFlowId);
         TM_END();
         INCREASE_COMMIT_COUNTER;

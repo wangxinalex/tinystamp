@@ -489,6 +489,12 @@
                                         } while (0)
 #    define TM_BEGIN()                  TM_START(0)
 #    define TM_BEGIN_RO()               TM_START(1)
+#    define TM_JBS_BEGIN(id)            TM_JBS_START(id)
+#    define TM_JBS_START(id)            do { \
+                                            stm_tx_attr_t _a = {id, 0}; \
+                                            sigjmp_buf *_e = stm_start(&_a); \
+                                            if (_e != NULL) sigsetjmp(*_e, 0); \
+                                        } while (0)
 #    define TM_END()                    stm_commit()
 //#    define TM_END()                    stm_commit(); add_one_commit()
 #    define TM_RESTART()                stm_abort(0)
