@@ -9,6 +9,7 @@ void ExecuteTransaction (unsigned TransactionID, stm_tx_t * TxDescr, ThLocalVarC
   sigjmp_buf *_e;
   stm_tx_attr_t _a;
 
+
   (ThLocals->Statistics).CurrentRetryNum = (unsigned long) -1;
   switch (TransactionID)
   {
