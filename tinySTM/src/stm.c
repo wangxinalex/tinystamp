@@ -2590,7 +2590,7 @@ int stm_commit(TXPARAM)
   /* Set status to COMMITTED */
   SET_STATUS(tx->status, TX_COMMITTED);
 
-    printf("\nr_set.nb_entries=%d w_set.nb_entries=%d attr.id=%d", tx->r_set.nb_entries, tx->w_set.nb_entries, tx->attr->id);
+//    printf("\nr_set.nb_entries= %d w_set.nb_entries= %d attr.id= %d", tx->r_set.nb_entries, tx->w_set.nb_entries, tx->attr->id);
 
   return 1;
 }

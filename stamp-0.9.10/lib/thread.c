@@ -468,7 +468,7 @@ unsigned long** getGlobal_abortsCounters() {
     return global_abortsCounters;
 }
 
-#define USE_ALGO_00 6
+#define USE_ALGO_06 6
 
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_00
