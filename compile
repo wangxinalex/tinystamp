@@ -4,3 +4,7 @@ make -j4
 cd ../stamp-0.9.10
 ./storiginal2.sh out-tinySTM.stm stm sim 1
 cd ..
+cd tmunit-0.2.1
+make clean
+make
+cd ..
