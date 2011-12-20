@@ -29,8 +29,8 @@
 //#define TM_START(TxDesc,Env,ReadOnlyTx)   stm_start(Env,ReadOnlyTx)
 #define TM_START(TxDesc,Env,ReadOnlyTx)   START_TX(TxDesc, ReadOnlyTx)
 #define STM_GET_ENV(TxDesc)               stm_get_env()
-#define START_TX(TxDesc, ReadOnlyTx)      stm_tx_attr_t _a = {0, ReadOnlyTx}; \
-                                          sigjmp_buf *_e = stm_start(&_a); \
+#define START_TX(TxDesc, ReadOnlyTx)       _a = (stm_tx_attr_t) {0, ReadOnlyTx}; \
+											_e = stm_start(&_a); \
                                           if (_e != NULL) sigsetjmp(*_e, 0);
 
 #define COMMIT_TX(TxDesc)                 stm_commit() 

@@ -190,14 +190,14 @@ int main(int argc, char*  argv[]) {
 	printf("\nInput Configuration File: %s\n",ConfigFileName);
 
 	char* CommandString= malloc(sizeof(char)*MAX_CONSOLE_MESSAGE_LENGHT);
-	char PreprocessedFileNameLength = strlen(ConfigFileName)+ strlen("_preprocessed") +1 ;
+	char PreprocessedFileNameLength = strlen(ConfigFileName)+strlen("_preprocessed")+1;
 	PreprocessedFileName = malloc(sizeof(char)*PreprocessedFileNameLength);
 	sprintf(PreprocessedFileName,"%s_preprocessed",ConfigFileName);
 	sprintf(CommandString,"%s/preprocess %s > %s", XSTR(ENV_PREPROCESSOR_SCRIPT_PATH), ConfigFileName,PreprocessedFileName);
 	system(CommandString);
 
 	if (argc > 1)
-	yyin = fopen(PreprocessedFileName, "r");
+		yyin = fopen(PreprocessedFileName, "r");
 
 	Initialize_DynamicArray(&Dyn_VariableExpressionArray);
 
@@ -207,7 +207,6 @@ int main(int argc, char*  argv[]) {
 		   "	 *******  Parsing starts  ********\n"
 		   "-------------------------------------------------\n\n"
 		  );
-
 
 	int ParsingReturnVal = yyparse();
 	bool ParseSuccessful = (ParsingReturnVal == 0);
@@ -235,14 +234,10 @@ int main(int argc, char*  argv[]) {
 		ParseSuccessful = FALSE;
 	}
 
-
-
 	if( ParseSuccessful ) {
 		#ifdef COMPILE_FOR_TEST
 			PrintDevelopperTestWarning();
 		#endif
-
-
 		// Overriding config file parameters which have been given from command line.
 		if(EnableTraceFromCommandLine)
 			EnableTrace = TRUE;
@@ -250,8 +245,6 @@ int main(int argc, char*  argv[]) {
 			TimeOut = CommandLineDuration;
 		if(SeedSetInCommandLine)
 			MainSeed = CommandLineSeed;
-
-
 
 		// If a  ThreadDefinition Config List has been  entered, check whether
 			// the Thread names given in the list are one of the defined threads
@@ -265,10 +258,10 @@ int main(int argc, char*  argv[]) {
 			unsigned FoundThreadNo  = FindThreadByName(CurrentElement ->ThreadDefName, (ThreadInfo_t*)Dyn_ThreadDefArray.ArrayStartAddress, ThreadDefNum);
 			bool ThreadNameNotFound = (FoundThreadNo == ThreadDefNum );
 			if( ThreadNameNotFound ) {
-			printf("\nERROR: main():\n"
+				printf("\nERROR: main():\n"
 						"The thread name '%s' given in the thread configuration list of '-t' parameter\n"
-				"does not exist in the configuration file '%s'\n\n",   CurrentElement ->  ThreadDefName, ConfigFileName);
-			exit(1);
+						"does not exist in the configuration file '%s'\n\n",   CurrentElement ->  ThreadDefName, ConfigFileName);
+				exit(1);
 			}
 
 			unsigned ReplicateNo=0;
@@ -287,7 +280,7 @@ int main(int argc, char*  argv[]) {
 				*DuplicateTxNamePtr = DuplicateThreadName;
 			}
 
-			ReplicateThreadNum += ReplicateNumForCurrentThreadDef ;
+			ReplicateThreadNum += ReplicateNumForCurrentThreadDef;
 		}
 
 		if(Generate_C_output) {  // C code generation
@@ -305,14 +298,12 @@ int main(int argc, char*  argv[]) {
 			#endif
 		}
 		else { // Interpreted Execution
-
 			/* 	TerminateRequestedBySignal = FALSE; */
 			/* 	EnableTrace = !NoTrace; */
-
 			if(ExecuteSchedule) {
 				EnableTrace = TRUE;
 
-		// Check whether the requested schedule name exists among the stored schedules
+				// Check whether the requested schedule name exists among the stored schedules
 				unsigned ScheduleNo = INVALID_SCHEDULE_NO;
 				unsigned SelectedScheduleNo =  ScheduleNum;
 				for(ScheduleNo=0; ScheduleNo< ScheduleNum ; ScheduleNo++) {
@@ -335,10 +326,8 @@ int main(int argc, char*  argv[]) {
 
 				unsigned ThreadNum = ScheduleThreadNum ;
 				InitializeThreadSeeds(ThreadNum);
-
 				pthread_t	   Thrd[ThreadNum];
 				thread_input_t  th_input[ThreadNum];
-
 				// Creating a barrier per thread.
 				// And extra barrier is also provided for the scheduler thread.
 				barrier_t* ThreadBarriers[ThreadNum];
@@ -690,16 +679,11 @@ int main(int argc, char*  argv[]) {
 				}
 			}
 		}
-
 		free(ConfigFileName);
-
 	}
-
-
 	sprintf(CommandString,"rm -f %s",PreprocessedFileName);
 	system(CommandString);
 	free(CommandString);
-
 	return 0;
 }
 

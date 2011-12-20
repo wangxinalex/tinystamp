@@ -1,0 +1,9 @@
+
+
+
+jbs@2mach ~/src/tinystamp/tmunit-0.2.1/c_output $ ./tmunit -g test/listings_in_paper/basic_workload/basic_workload.cfg 
+
+@2mach ~/src/tinystamp/tmunit-0.2.1/c_output $ make
+
+@2mach ~/src/tinystamp/tmunit-0.2.1/c_output $ ./benchrun -p 1 -d 200000
+

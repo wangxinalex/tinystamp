@@ -4,9 +4,11 @@
 
 void ExecuteTransaction(unsigned TransactionID, stm_tx_t* TxDescr, ThLocalVarCollection* ThLocals)
 {
-	
+
     Word ValueRead;
     sigjmp_buf *_e;
+	stm_tx_attr_t _a;
+
     #VARIABLE_DEFINITIONS_BEFORE_SWITCH_STATEMENT#
 
     (ThLocals->Statistics).CurrentRetryNum = (unsigned long) -1;
@@ -15,10 +17,10 @@ void ExecuteTransaction(unsigned TransactionID, stm_tx_t* TxDescr, ThLocalVarCol
 
 	#TRANSACTION_DEFINITIONS_AS_CASE_STATEMENTS#
 
-	default : 
+	default :
 	          printf("ExecuteTransaction: UNKNOWN TransactionID requested. Terminating...\n");
 	          assert(0);
-		     
+
     }
 
 
