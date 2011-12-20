@@ -1,0 +1,8 @@
+cd tmunit-0.2.1
+./tmunit -g test/listings_in_paper/basic_workload/basic_workload.cfg
+cd c_output
+make clean
+make
+./benchrun -p 1 -d 200000
+cd ../..
+

@@ -66,7 +66,7 @@ void PrintStatistics() {
 		double CommitRate = (double)(Statistics[ThreadNo]->CommitNum) / total_duration_s;
 		double AbortRate  = (double)(Statistics[ThreadNo]->AbortNum) / total_duration_s;
 		unsigned long ThreadMaxRetries = Statistics[ThreadNo]->MaxRetries;
-		printf("Th[%u]: Cmmt/s= %.3lf, Abrt/s= %.3lf, MaxRetries= %u\n", ThreadNo, CommitRate, AbortRate, ThreadMaxRetries);
+		printf("Th[%u]: Cmmt/s= %.3lf, Abrt/s= %.3lf, MaxRetries= %lu\n", ThreadNo, CommitRate, AbortRate, ThreadMaxRetries);
 		if (execution_duration_s < total_duration_s)
 			execution_duration_s = total_duration_s;
 
@@ -87,7 +87,7 @@ void PrintStatistics() {
 		"\tExection Duration = %lf\n"
 		"\tGlobal Commit/s   = %lf\n"
 		"\tGlobal Abort/s    = %lf\n"
-		"\tGlobal MaxRetries = %u\n\n\n",AggregateCommitNum,AggregateAbortNum,execution_duration_s,TxCommitRate,TxAbortRate,GlobalMaxRetries);
+		"\tGlobal MaxRetries = %lu\n\n\n",AggregateCommitNum,AggregateAbortNum,execution_duration_s,TxCommitRate,TxAbortRate,GlobalMaxRetries);
 }
 
 void PrintDevelopperTestWarning()
@@ -221,57 +221,55 @@ void signal_catcher(int sig) {
 
 int main(int argc, char*  argv[]) {
     // Initializations
-    InitializeSimulationParameters();
-    ProcessCommandLineArguments(argc, argv);
-    TerminateRequestedBySignal = FALSE;
+	InitializeSimulationParameters();
+	ProcessCommandLineArguments(argc, argv);
+	TerminateRequestedBySignal = FALSE;
+	unsigned maxThreadNum;
 
-    SetThreadNum();
-    InitializeSharedVariables();
+	SetThreadNum();
+	InitializeSharedVariables();
 
-    InitializeThreadSeeds(ThreadNum);
-    PrintEffectiveSimulationParameters();
+	InitializeThreadSeeds(ThreadNum);
+	PrintEffectiveSimulationParameters();
 
-    // Prepare thread functions and parameters to pass them
-    unsigned short  ThreadNo;
-    pthread_t       Thrd[ThreadNum];
-    thread_input_t  th_input[ThreadNum];
-    for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++) {
+	// Prepare thread functions and parameters to pass them
+	unsigned short  ThreadNo;
+	pthread_t       Thrd[ThreadNum];
+	thread_input_t  th_input[ThreadNum];
+	for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
 		th_input[ThreadNo].thread_ID  = ThreadNo;
 		th_input[ThreadNo].ThreadSeed = ThreadSeed[ThreadNo];
     }
     InitializeThreadRunFunctions();
 
-// *INDENT-OFF*
+	// *INDENT-OFF*
     if (	signal(SIGHUP, signal_catcher) == SIG_ERR ||
 			signal(SIGINT, signal_catcher) == SIG_ERR ||
 			signal(SIGTERM, signal_catcher) == SIG_ERR ) {
 		perror("Signal setup problem occured.\n");
 		exit(1);
     }
-// *INDENT-ON*
+	// *INDENT-ON*
 
-
-    if( SerialThreadExecution )
-    {
-        #ifndef  NO_STM
-           printf("Initializing STM...\n");
-        #endif
-           TM_INIT(0);
+    if( SerialThreadExecution ) {
+		#ifndef  NO_STM
+			printf("Initializing STM...\n");
+		#endif
+		TM_INIT(0);
 
         unsigned ThreadNo;
-        for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++ ) {
-    	  ThreadRun[ThreadNo]((void *)&(th_input[ThreadNo]));
-        }
+		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+			ThreadRun[ThreadNo]((void *)&(th_input[ThreadNo]));
+		}
 
-        #ifndef  NO_STM
-          printf("Shutting STM engine down...\n");
-        #endif
+		#ifndef  NO_STM
+			printf("Shutting STM engine down...\n");
+		#endif
         TM_EXIT(0);
 
-        #ifdef COMPILE_FOR_TEST
-           PrintDevelopperTestWarning();
-        #endif
-
+		#ifdef COMPILE_FOR_TEST
+			PrintDevelopperTestWarning();
+		#endif
     }
     else {
 		if (PrintStats) {
@@ -279,21 +277,20 @@ int main(int argc, char*  argv[]) {
 		}
 		else
 			Statistics = NULL;
+		printf("Initializing STM...\n");
+		TM_INIT(0);
 
-			printf("Initializing STM...\n");
-			TM_INIT(0);
+		// Start threads (threads will execute their main functionality after all
+		// threads are generated, this is provided by the barrier)
+		barrier_init(&barrier, ThreadNum+1);
 
-			// Start threads (threads will execute their main functionality after all
-			// threads are generated, this is provided by the barrier)
-			barrier_init(&barrier, ThreadNum+1);
+		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+			pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[ThreadNo],(void *)&(th_input[ThreadNo]) );
+		}
 
-			for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++) {
-				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[ThreadNo],(void *)&(th_input[ThreadNo]) );
-			}
+		barrier_cross(&barrier);
 
-			barrier_cross(&barrier);
-
-			if( WaitForTimeOut ) {
+		if( WaitForTimeOut ) {
 				struct timespec time_out;
 				struct timespec left_time_out;
 				time_out.tv_sec = TimeOut/1000000;
@@ -319,7 +316,7 @@ int main(int argc, char*  argv[]) {
 			// *INDENT-ON*
 			}
 
-			for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
+			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
 				pthread_join(Thrd[ThreadNo],NULL);
 
 			printf("Shutting STM engine down...\n");
@@ -327,7 +324,7 @@ int main(int argc, char*  argv[]) {
 
 			if (PrintStats) {
 				PrintStatistics();
-			for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
+			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
 				free(Statistics[ThreadNo]);
 			free(Statistics);
 		}

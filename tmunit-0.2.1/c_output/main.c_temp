@@ -66,7 +66,7 @@ void PrintStatistics() {
 		double CommitRate = (double)(Statistics[ThreadNo]->CommitNum) / total_duration_s;
 		double AbortRate  = (double)(Statistics[ThreadNo]->AbortNum) / total_duration_s;
 		unsigned long ThreadMaxRetries = Statistics[ThreadNo]->MaxRetries;
-		printf("Th[%u]: Cmmt/s= %.3lf, Abrt/s= %.3lf, MaxRetries= %u\n", ThreadNo, CommitRate, AbortRate, ThreadMaxRetries);
+		printf("Th[%u]: Cmmt/s= %.3lf, Abrt/s= %.3lf, MaxRetries= %lu\n", ThreadNo, CommitRate, AbortRate, ThreadMaxRetries);
 		if (execution_duration_s < total_duration_s)
 			execution_duration_s = total_duration_s;
 
@@ -87,7 +87,7 @@ void PrintStatistics() {
 		"\tExection Duration = %lf\n"
 		"\tGlobal Commit/s   = %lf\n"
 		"\tGlobal Abort/s    = %lf\n"
-		"\tGlobal MaxRetries = %u\n\n\n",AggregateCommitNum,AggregateAbortNum,execution_duration_s,TxCommitRate,TxAbortRate,GlobalMaxRetries);
+		"\tGlobal MaxRetries = %lu\n\n\n",AggregateCommitNum,AggregateAbortNum,execution_duration_s,TxCommitRate,TxAbortRate,GlobalMaxRetries);
 }
 
 void PrintDevelopperTestWarning()
@@ -228,6 +228,7 @@ int main (int argc, char *argv[])
   InitializeSimulationParameters ();
   ProcessCommandLineArguments (argc, argv);
   TerminateRequestedBySignal = FALSE;
+  unsigned maxThreadNum;
 
   SetThreadNum ();
   InitializeSharedVariables ();
@@ -246,15 +247,14 @@ int main (int argc, char *argv[])
   }
   InitializeThreadRunFunctions ();
 
-// *INDENT-OFF*
+	// *INDENT-OFF*
     if (	signal(SIGHUP, signal_catcher) == SIG_ERR ||
 			signal(SIGINT, signal_catcher) == SIG_ERR ||
 			signal(SIGTERM, signal_catcher) == SIG_ERR ) {
 		perror("Signal setup problem occured.\n");
 		exit(1);
     }
-// *INDENT-ON*
-
+	// *INDENT-ON*
 
   if (SerialThreadExecution)
   {
@@ -277,7 +277,6 @@ int main (int argc, char *argv[])
 #ifdef COMPILE_FOR_TEST
     PrintDevelopperTestWarning ();
 #endif
-
   }
   else
   {
@@ -287,7 +286,6 @@ int main (int argc, char *argv[])
     }
     else
       Statistics = NULL;
-
     printf ("Initializing STM...\n");
     TM_INIT (0);
 
