@@ -207,7 +207,7 @@ int main(int argc, char*  argv[]) {
     unsigned short  ThreadNo;
     pthread_t       Thrd[ThreadNum];
     thread_input_t  th_input[ThreadNum];
-    for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++) {
+    for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
 		th_input[ThreadNo].thread_ID  = ThreadNo;
 		th_input[ThreadNo].ThreadSeed = ThreadSeed[ThreadNo];
     }
@@ -222,28 +222,25 @@ int main(int argc, char*  argv[]) {
     }
 // *INDENT-ON*
 
-
-    if( SerialThreadExecution )
-    {
+    if( SerialThreadExecution ) {
         #ifndef  NO_STM
-           printf("Initializing STM...\n");
+			printf("Initializing STM...\n");
         #endif
-           TM_INIT(0);
+		TM_INIT(0);
 
         unsigned ThreadNo;
-        for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++ ) {
-    	  ThreadRun[ThreadNo]((void *)&(th_input[ThreadNo]));
-        }
+        for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+			ThreadRun[ThreadNo]((void *)&(th_input[ThreadNo]));
+		}
 
         #ifndef  NO_STM
-          printf("Shutting STM engine down...\n");
+			printf("Shutting STM engine down...\n");
         #endif
         TM_EXIT(0);
 
         #ifdef COMPILE_FOR_TEST
-           PrintDevelopperTestWarning();
+			PrintDevelopperTestWarning();
         #endif
-
     }
     else {
 		if (PrintStats) {
@@ -259,7 +256,7 @@ int main(int argc, char*  argv[]) {
 			// threads are generated, this is provided by the barrier)
 			barrier_init(&barrier, ThreadNum+1);
 
-			for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++) {
+			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
 				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[ThreadNo],(void *)&(th_input[ThreadNo]) );
 			}
 
@@ -291,7 +288,7 @@ int main(int argc, char*  argv[]) {
 			// *INDENT-ON*
 			}
 
-			for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
+			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
 				pthread_join(Thrd[ThreadNo],NULL);
 
 			printf("Shutting STM engine down...\n");
@@ -299,7 +296,7 @@ int main(int argc, char*  argv[]) {
 
 			if (PrintStats) {
 				PrintStatistics();
-			for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
+			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
 				free(Statistics[ThreadNo]);
 			free(Statistics);
 		}
