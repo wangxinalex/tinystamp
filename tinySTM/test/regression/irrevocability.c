@@ -3,10 +3,11 @@
  *   irrevocability.c
  * Author(s):
  *   Pascal Felber <pascal.felber@unine.ch>
+ *   Patrick Marlier <patrick.marlier@unine.ch>
  * Description:
  *   Regression test for irrevocability.
  *
- * Copyright (c) 2007-2009.
+ * Copyright (c) 2007-2011.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -76,7 +77,7 @@ void *test(void *v)
   sigjmp_buf *e;
   thread_data_t *d = (thread_data_t *)v;
 
-  seed = (unsigned int)time(0);
+  seed = (unsigned int)time(NULL);
   stm_init_thread();
   while (stop == 0) {
     irrevocable = (rand_r(&seed) < RAND_MAX / 100 * d->irrevocable_percent ? 1 : 0);

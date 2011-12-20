@@ -1,4 +1,4 @@
-ROOT = ../..
+ROOT ?= ../..
 
 include $(ROOT)/Makefile.common
 
@@ -20,8 +20,9 @@ intset-rb.o:	intset.c
 intset-sl.o:	intset.c
 	$(CC) $(CFLAGS) $(DEFINES) -DUSE_SKIPLIST -c -o $@ $<
 
+# FIXME in case of ABI $(TMLIB) must be replaced to abi/...
 $(BINS):	%:	%.o $(TMLIB)
-	$(CC) -o $@ $< $(LDFLAGS)
+	$(LD) -o $@ $< $(LDFLAGS)
 
 clean:
 	rm -f $(BINS) *.o

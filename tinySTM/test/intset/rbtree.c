@@ -22,48 +22,48 @@
  *
  * For the license of bayes/sort.h and bayes/sort.c, please see the header
  * of the files.
- *
+ * 
  * ------------------------------------------------------------------------
- *
+ * 
  * For the license of kmeans, please see kmeans/LICENSE.kmeans
- *
+ * 
  * ------------------------------------------------------------------------
- *
+ * 
  * For the license of ssca2, please see ssca2/COPYRIGHT
- *
+ * 
  * ------------------------------------------------------------------------
- *
+ * 
  * For the license of lib/mt19937ar.c and lib/mt19937ar.h, please see the
  * header of the files.
- *
+ * 
  * ------------------------------------------------------------------------
- *
+ * 
  * For the license of lib/rbtree.h and lib/rbtree.c, please see
  * lib/LEGALNOTICE.rbtree and lib/LICENSE.rbtree
- *
+ * 
  * ------------------------------------------------------------------------
- *
+ * 
  * Unless otherwise noted, the following license applies to STAMP files:
- *
+ * 
  * Copyright (c) 2007, Stanford University
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- *
+ * 
  *     * Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *
+ * 
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the
  *       distribution.
- *
+ * 
  *     * Neither the name of Stanford University nor the names of its
  *       contributors may be used to endorse or promote products derived
  *       from this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY STANFORD UNIVERSITY ``AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -101,6 +101,8 @@ typedef struct node {
 
 struct rbtree {
     node_t* root;
+    /* TODO Check if set TM_PURE or use directly the function */
+    TM_PURE
     long (*compare)(const void*, const void*);   /* returns {-1,0,1}, 0 -> equal */
 };
 
@@ -232,14 +234,14 @@ lookup (rbtree_t* s, void* k)
 static node_t*
 TMlookup (TM_ARGDECL  rbtree_t* s, void* k)
 {
-    node_t* p = TX_LDNODE(s, root);     //TX_LDNODE=> TM_SHARED_READ
+    node_t* p = TX_LDNODE(s, root);
 
     while (p != NULL) {
-        long cmp = s->compare(k, TX_LDF_P(p, k));  // TX_LDF_P => TM_SHARED_READ
+        long cmp = s->compare(k, TX_LDF_P(p, k));
         if (cmp == 0) {
             return p;
         }
-        p = ((cmp < 0) ? TX_LDNODE(p, l) : TX_LDNODE(p, r));    //TX_LDNODE=> TM_SHARED_READ
+        p = ((cmp < 0) ? TX_LDNODE(p, l) : TX_LDNODE(p, r));
     }
 
     return NULL;
@@ -1306,7 +1308,7 @@ releaseNode (node_t* n)
 {
 #ifndef SIMULATOR
     free(n);
-#endif
+#endif    
 }
 
 

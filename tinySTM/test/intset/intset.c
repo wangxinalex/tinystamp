@@ -3,10 +3,11 @@
  *   intset.c
  * Author(s):
  *   Pascal Felber <pascal.felber@unine.ch>
+ *   Patrick Marlier <patrick.marlier@unine.ch>
  * Description:
  *   Integer set stress test.
  *
- * Copyright (c) 2007-2009.
+ * Copyright (c) 2007-2011.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,13 +27,68 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <sys/time.h>
 #include <time.h>
 
-#include <atomic_ops.h>
+#define RO                              1
+#define RW                              0
 
-#include "stm.h"
-#include "mod_mem.h"
+#if defined(TM_GCC) 
+# include "../../abi/gcc/tm_macros.h"
+#elif defined(TM_DTMC) 
+# include "../../abi/dtmc/tm_macros.h"
+/* TODO to be removed when DTMC will support annotations (should be ok now) */
+//static double tanger_wrapperpure_erand48(unsigned short int __xsubi[3]) __attribute__ ((weakref("erand48")));
+#elif defined(TM_INTEL)
+# include "../../abi/intel/tm_macros.h"
+#elif defined(TM_ABI)
+# include "../../abi/tm_macros.h"
+#endif /* defined(TM_ABI) */
+
+#if defined(TM_GCC) || defined(TM_DTMC) || defined(TM_INTEL) || defined(TM_ABI)
+# define TM_COMPILER
+/* Add some attributes to library function */
+TM_PURE 
+void exit(int status);
+TM_PURE 
+void perror(const char *s);
+#else /* Compile with explicit calls to tinySTM */
+
+# include "stm.h"
+# include "mod_mem.h"
+# include "mod_ab.h"
+
+/*
+ * Useful macros to work with transactions. Note that, to use nested
+ * transactions, one should check the environment returned by
+ * stm_get_env() and only call sigsetjmp() if it is not null.
+ */
+# define TM_START(id, ro)                   { stm_tx_attr_t _a = {id, ro}; \
+                                              sigjmp_buf *_e = stm_start(&_a); \
+                                              if (_e != NULL) sigsetjmp(*_e, 0); 
+# define TM_START_TS(ts, label)             { sigjmp_buf *_e = stm_start(NULL); \
+                                              if (_e != NULL && sigsetjmp(*_e, 0)) goto label; \
+	                                      stm_set_extension(0, &ts)
+# define TM_LOAD(addr)                      stm_load((stm_word_t *)addr)
+# define TM_UNIT_LOAD(addr, ts)             stm_unit_load((stm_word_t *)addr, ts)
+# define TM_STORE(addr, value)              stm_store((stm_word_t *)addr, (stm_word_t)value)
+# define TM_UNIT_STORE(addr, value, ts)     stm_unit_store((stm_word_t *)addr, (stm_word_t)value, ts)
+# define TM_COMMIT                          stm_commit(); }
+# define TM_MALLOC(size)                    stm_malloc(size)
+# define TM_FREE(addr)                      stm_free(addr, sizeof(*addr))
+# define TM_FREE2(addr, size)               stm_free(addr, size)
+
+# define TM_INIT                            stm_init(); mod_mem_init(0); mod_ab_init(0, NULL)
+# define TM_EXIT                            stm_exit()
+# define TM_INIT_THREAD                     stm_init_thread()
+# define TM_EXIT_THREAD                     stm_exit_thread()
+
+/* Annotations used in this benchmark */
+# define TM_SAFE
+# define TM_PURE
+
+#endif /* Compile with explicit calls to tinySTM */
 
 #ifdef DEBUG
 # define IO_FLUSH                       fflush(NULL)
@@ -43,22 +99,6 @@
 # error "Must define USE_LINKEDLIST or USE_RBTREE or USE_SKIPLIST or USE_HASHSET"
 #endif /* !(defined(USE_LINKEDLIST) || defined(USE_RBTREE) || defined(USE_SKIPLIST) || defined(USE_HASHSET)) */
 
-/*
- * Useful macros to work with transactions. Note that, to use nested
- * transactions, one should check the environment returned by
- * stm_get_env() and only call sigsetjmp() if it is not null.
- */
-#define RO                              1
-#define RW                              0
-#define START(id, ro)                   { stm_tx_attr_t _a = {id, ro}; sigjmp_buf *_e = stm_start(&_a); if (_e != NULL) sigsetjmp(*_e, 0); 
-#define START_TS(ts, label)             { sigjmp_buf *_e = stm_start(NULL); if (_e != NULL && sigsetjmp(*_e, 0)) goto label; stm_set_extension(0, &ts)
-#define LOAD(addr)                      stm_load((stm_word_t *)addr)
-#define UNIT_LOAD(addr, ts)             stm_unit_load((stm_word_t *)addr, ts)
-#define STORE(addr, value)              stm_store((stm_word_t *)addr, (stm_word_t)value)
-#define UNIT_STORE(addr, value, ts)     stm_unit_store((stm_word_t *)addr, (stm_word_t)value, ts)
-#define COMMIT                          stm_commit(); }
-#define MALLOC(size)                    stm_malloc(size)
-#define FREE(addr, size)                stm_free(addr, size)
 
 #define DEFAULT_DURATION                10000
 #define DEFAULT_INITIAL                 256
@@ -73,8 +113,10 @@
 /* ################################################################### *
  * GLOBALS
  * ################################################################### */
-
-static volatile AO_t stop;
+/* TODO I propose to use int in place of stm_word_t. Ok?
+ * It should use a cacheline since it could close to something else (next to stmlib if static)
+ * */
+static volatile int stop;
 
 static inline void rand_init(unsigned short *seed)
 {
@@ -124,14 +166,15 @@ typedef struct intset {
   node_t *head;
 } intset_t;
 
-node_t *new_node(val_t val, node_t *next, int transactional)
+TM_SAFE
+static node_t *new_node(val_t val, node_t *next, int transactional)
 {
   node_t *node;
 
   if (!transactional) {
     node = (node_t *)malloc(sizeof(node_t));
   } else {
-    node = (node_t *)MALLOC(sizeof(node_t));
+    node = (node_t *)TM_MALLOC(sizeof(node_t));
   }
   if (node == NULL) {
     perror("malloc");
@@ -144,7 +187,7 @@ node_t *new_node(val_t val, node_t *next, int transactional)
   return node;
 }
 
-intset_t *set_new()
+static intset_t *set_new()
 {
   intset_t *set;
   node_t *min, *max;
@@ -160,7 +203,7 @@ intset_t *set_new()
   return set;
 }
 
-void set_delete(intset_t *set)
+static void set_delete(intset_t *set)
 {
   node_t *node, *next;
 
@@ -173,7 +216,7 @@ void set_delete(intset_t *set)
   free(set);
 }
 
-int set_size(intset_t *set)
+static int set_size(intset_t *set)
 {
   int size = 0;
   node_t *node;
@@ -188,7 +231,7 @@ int set_size(intset_t *set)
   return size;
 }
 
-int set_contains(intset_t *set, val_t val, int transactional)
+static int set_contains(intset_t *set, val_t val, int transactional)
 {
   int result;
   node_t *prev, *next;
@@ -208,30 +251,32 @@ int set_contains(intset_t *set, val_t val, int transactional)
     }
     result = (next->val == val);
   } else if (transactional == 1) {
-    START(0, RO);
-    prev = (node_t *)LOAD(&set->head);
-    next = (node_t *)LOAD(&prev->next);
+    TM_START(0, RO);
+    prev = (node_t *)TM_LOAD(&set->head);
+    next = (node_t *)TM_LOAD(&prev->next);
     while (1) {
-      v = LOAD(&next->val);
+      v = TM_LOAD(&next->val);
       if (v >= val)
         break;
       prev = next;
-      next = (node_t *)LOAD(&prev->next);
+      next = (node_t *)TM_LOAD(&prev->next);
     }
     result = (v == val);
-    COMMIT;
-  } else {
+    TM_COMMIT;
+  } 
+#ifndef TM_COMPILER
+  else {
     /* Unit transactions */
     stm_word_t ts, start_ts, val_ts;
   restart:
     start_ts = stm_get_clock();
     /* Head node is never removed */
-    prev = (node_t *)UNIT_LOAD(&set->head, &ts);
-    next = (node_t *)UNIT_LOAD(&prev->next, &ts);
+    prev = (node_t *)TM_UNIT_LOAD(&set->head, &ts);
+    next = (node_t *)TM_UNIT_LOAD(&prev->next, &ts);
     if (ts > start_ts)
       start_ts = ts;
     while (1) {
-      v = UNIT_LOAD(&next->val, &val_ts);
+      v = TM_UNIT_LOAD(&next->val, &val_ts);
       if (val_ts > start_ts) {
         /* Restart traversal (could also backtrack) */
         goto restart;
@@ -239,10 +284,10 @@ int set_contains(intset_t *set, val_t val, int transactional)
       if (v >= val)
         break;
       prev = next;
-      next = (node_t *)UNIT_LOAD(&prev->next, &ts);
+      next = (node_t *)TM_UNIT_LOAD(&prev->next, &ts);
       if (ts > start_ts) {
         /* Verify that node has not been modified (value and pointer are updated together) */
-        UNIT_LOAD(&prev->val, &val_ts);
+        TM_UNIT_LOAD(&prev->val, &val_ts);
         if (val_ts > start_ts) {
           /* Restart traversal (could also backtrack) */
           goto restart;
@@ -252,11 +297,12 @@ int set_contains(intset_t *set, val_t val, int transactional)
     }
     result = (v == val);
   }
+#endif /* TM_COMPILER */
 
   return result;
 }
 
-int set_add(intset_t *set, val_t val, int transactional)
+static int set_add(intset_t *set, val_t val, int transactional)
 {
   int result;
   node_t *prev, *next;
@@ -279,33 +325,35 @@ int set_add(intset_t *set, val_t val, int transactional)
       prev->next = new_node(val, next, transactional);
     }
   } else if (transactional <= 2) {
-    START(1, RW);
-    prev = (node_t *)LOAD(&set->head);
-    next = (node_t *)LOAD(&prev->next);
+    TM_START(1, RW);
+    prev = (node_t *)TM_LOAD(&set->head);
+    next = (node_t *)TM_LOAD(&prev->next);
     while (1) {
-      v = LOAD(&next->val);
+      v = TM_LOAD(&next->val);
       if (v >= val)
         break;
       prev = next;
-      next = (node_t *)LOAD(&prev->next);
+      next = (node_t *)TM_LOAD(&prev->next);
     }
     result = (v != val);
     if (result) {
-      STORE(&prev->next, new_node(val, next, transactional));
+      TM_STORE(&prev->next, new_node(val, next, transactional));
     }
-    COMMIT;
-  } else {
+    TM_COMMIT;
+  } 
+#ifndef TM_COMPILER
+  else {
     /* Unit transactions */
     stm_word_t ts, start_ts, val_ts;
   restart:
     start_ts = stm_get_clock();
     /* Head node is never removed */
-    prev = (node_t *)UNIT_LOAD(&set->head, &ts);
-    next = (node_t *)UNIT_LOAD(&prev->next, &ts);
+    prev = (node_t *)TM_UNIT_LOAD(&set->head, &ts);
+    next = (node_t *)TM_UNIT_LOAD(&prev->next, &ts);
     if (ts > start_ts)
       start_ts = ts;
     while (1) {
-      v = UNIT_LOAD(&next->val, &val_ts);
+      v = TM_UNIT_LOAD(&next->val, &val_ts);
       if (val_ts > start_ts) {
         /* Restart traversal (could also backtrack) */
         goto restart;
@@ -313,10 +361,10 @@ int set_add(intset_t *set, val_t val, int transactional)
       if (v >= val)
         break;
       prev = next;
-      next = (node_t *)UNIT_LOAD(&prev->next, &ts);
+      next = (node_t *)TM_UNIT_LOAD(&prev->next, &ts);
       if (ts > start_ts) {
         /* Verify that node has not been modified (value and pointer are updated together) */
-        UNIT_LOAD(&prev->val, &val_ts);
+        TM_UNIT_LOAD(&prev->val, &val_ts);
         if (val_ts > start_ts) {
           /* Restart traversal (could also backtrack) */
           goto restart;
@@ -328,17 +376,18 @@ int set_add(intset_t *set, val_t val, int transactional)
     if (result) {
       node_t *n = new_node(val, next, 0);
       /* Make sure that there are no concurrent updates to that memory location */
-      if (!UNIT_STORE(&prev->next, n, &ts)) {
+      if (!TM_UNIT_STORE(&prev->next, n, &ts)) {
         free(n);
         goto restart;
       }
     }
   }
+#endif /* ! TM_COMPILER */
 
   return result;
 }
 
-int set_remove(intset_t *set, val_t val, int transactional)
+static int set_remove(intset_t *set, val_t val, int transactional)
 {
   int result;
   node_t *prev, *next;
@@ -363,36 +412,38 @@ int set_remove(intset_t *set, val_t val, int transactional)
       free(next);
     }
   } else if (transactional <= 3) {
-    START(2, RW);
-    prev = (node_t *)LOAD(&set->head);
-    next = (node_t *)LOAD(&prev->next);
+    TM_START(2, RW);
+    prev = (node_t *)TM_LOAD(&set->head);
+    next = (node_t *)TM_LOAD(&prev->next);
     while (1) {
-      v = LOAD(&next->val);
+      v = TM_LOAD(&next->val);
       if (v >= val)
         break;
       prev = next;
-      next = (node_t *)LOAD(&prev->next);
+      next = (node_t *)TM_LOAD(&prev->next);
     }
     result = (v == val);
     if (result) {
-      n = (node_t *)LOAD(&next->next);
-      STORE(&prev->next, n);
+      n = (node_t *)TM_LOAD(&next->next);
+      TM_STORE(&prev->next, n);
       /* Free memory (delayed until commit) */
-      FREE(next, sizeof(node_t));
+      TM_FREE2(next, sizeof(node_t));
     }
-    COMMIT;
-  } else {
+    TM_COMMIT;
+  } 
+#ifndef TM_COMPILER
+  else {
     /* Unit transactions */
     stm_word_t ts, start_ts, val_ts;
   restart:
     start_ts = stm_get_clock();
     /* Head node is never removed */
-    prev = (node_t *)UNIT_LOAD(&set->head, &ts);
-    next = (node_t *)UNIT_LOAD(&prev->next, &ts);
+    prev = (node_t *)TM_UNIT_LOAD(&set->head, &ts);
+    next = (node_t *)TM_UNIT_LOAD(&prev->next, &ts);
     if (ts > start_ts)
       start_ts = ts;
     while (1) {
-      v = UNIT_LOAD(&next->val, &val_ts);
+      v = TM_UNIT_LOAD(&next->val, &val_ts);
       if (val_ts > start_ts) {
         /* Restart traversal (could also backtrack) */
         goto restart;
@@ -400,10 +451,10 @@ int set_remove(intset_t *set, val_t val, int transactional)
       if (v >= val)
         break;
       prev = next;
-      next = (node_t *)UNIT_LOAD(&prev->next, &ts);
+      next = (node_t *)TM_UNIT_LOAD(&prev->next, &ts);
       if (ts > start_ts) {
         /* Verify that node has not been modified (value and pointer are updated together) */
-        UNIT_LOAD(&prev->val, &val_ts);
+        TM_UNIT_LOAD(&prev->val, &val_ts);
         if (val_ts > start_ts) {
           /* Restart traversal (could also backtrack) */
           goto restart;
@@ -414,15 +465,15 @@ int set_remove(intset_t *set, val_t val, int transactional)
     result = (v == val);
     if (result) {
       /* Make sure that the transaction does not access versions more recent than start_ts */
-      START_TS(start_ts, restart);
-      n = (node_t *)LOAD(&next->next);
-      STORE(&prev->next, n);
+      TM_START_TS(start_ts, restart);
+      n = (node_t *)TM_LOAD(&next->next);
+      TM_STORE(&prev->next, n);
       /* Free memory (delayed until commit) */
-      FREE(next, sizeof(node_t));
-      COMMIT;
+      TM_FREE2(next, sizeof(node_t));
+      TM_COMMIT;
     }
   }
-
+#endif /* ! TM_COMPILER */
   return result;
 }
 
@@ -431,7 +482,7 @@ int set_remove(intset_t *set, val_t val, int transactional)
 /* ################################################################### *
  * RBTREE
  * ################################################################### */
-
+/* TODO: compare function is pointer thus switch to irrevocable */
 # define TRANSACTIONAL                  1
 
 # define INIT_SET_PARAMETERS            /* Nothing */
@@ -440,16 +491,13 @@ int set_remove(intset_t *set, val_t val, int transactional)
 # define TM_ARGDECL                     /* Nothing */
 # define TM_ARG                         /* Nothing */
 # define TM_ARG_ALONE                   /* Nothing */
-# define TM_CALLABLE                    /* Nothing */
+# define TM_CALLABLE                    TM_SAFE
 
-# define TM_SHARED_READ(var)            LOAD(&(var))
-# define TM_SHARED_READ_P(var)          LOAD(&(var))
+# define TM_SHARED_READ(var)            TM_LOAD(&(var))
+# define TM_SHARED_READ_P(var)          TM_LOAD(&(var))
 
-# define TM_SHARED_WRITE(var, val)      STORE(&(var), val)
-# define TM_SHARED_WRITE_P(var, val)    STORE(&(var), val)
-
-# define TM_MALLOC(size)                MALLOC(size)
-# define TM_FREE(ptr)                   FREE(ptr, sizeof(*ptr))
+# define TM_SHARED_WRITE(var, val)      TM_STORE(&(var), val)
+# define TM_SHARED_WRITE_P(var, val)    TM_STORE(&(var), val)
 
 # include "rbtree.h"
 
@@ -463,17 +511,17 @@ static long compare(const void *a, const void *b)
   return ((val_t)a - (val_t)b);
 }
 
-intset_t *set_new()
+static intset_t *set_new()
 {
   return rbtree_alloc(&compare);
 }
 
-void set_delete(intset_t *set)
+static void set_delete(intset_t *set)
 {
   rbtree_free(set);
 }
 
-int set_size(intset_t *set)
+static int set_size(intset_t *set)
 {
   int size;
   node_t *n;
@@ -490,7 +538,7 @@ int set_size(intset_t *set)
   return size;
 }
 
-int set_contains(intset_t *set, val_t val, int transactional)
+static int set_contains(intset_t *set, val_t val, int transactional)
 {
   int result;
 
@@ -502,15 +550,15 @@ int set_contains(intset_t *set, val_t val, int transactional)
   if (!transactional) {
     result = rbtree_contains(set, (void *)val);
   } else {
-    START(0, RO);
+    TM_START(0, RO);
     result = TMrbtree_contains(set, (void *)val);
-    COMMIT;
+    TM_COMMIT;
   }
 
   return result;
 }
 
-int set_add(intset_t *set, val_t val, int transactional)
+static int set_add(intset_t *set, val_t val, int transactional)
 {
   int result;
 
@@ -522,15 +570,15 @@ int set_add(intset_t *set, val_t val, int transactional)
   if (!transactional) {
     result = rbtree_insert(set, (void *)val, (void *)val);
   } else {
-    START(1, RW);
+    TM_START(1, RW);
     result = TMrbtree_insert(set, (void *)val, (void *)val);
-    COMMIT;
+    TM_COMMIT;
   }
 
   return result;
 }
 
-int set_remove(intset_t *set, val_t val, int transactional)
+static int set_remove(intset_t *set, val_t val, int transactional)
 {
   int result;
 
@@ -542,9 +590,9 @@ int set_remove(intset_t *set, val_t val, int transactional)
   if (!transactional) {
     result = rbtree_delete(set, (void *)val);
   } else {
-    START(2, RW);
+    TM_START(2, RW);
     result = TMrbtree_delete(set, (void *)val);
-    COMMIT;
+    TM_COMMIT;
   }
 
   return result;
@@ -581,7 +629,8 @@ typedef struct intset {
   int max_level;
 } intset_t;
 
-inline int rand_100()
+TM_PURE
+static inline int rand_100()
 {
   unsigned short *seed;
 # ifdef TLS
@@ -592,7 +641,8 @@ inline int rand_100()
   return rand_range(100, seed);
 }
 
-int random_level(intset_t *set)
+TM_PURE
+static int random_level(intset_t *set)
 {
   int l = 0;
   while (l < set->max_level && rand_100() < set->prob)
@@ -600,14 +650,15 @@ int random_level(intset_t *set)
   return l;
 }
 
-node_t *new_node(val_t val, level_t level, int transactional)
+TM_SAFE
+static node_t *new_node(val_t val, level_t level, int transactional)
 {
   node_t *node;
 
   if (!transactional) {
     node = (node_t *)malloc(sizeof(node_t) + level * sizeof(node_t *));
   } else {
-    node = (node_t *)MALLOC(sizeof(node_t) + level * sizeof(node_t *));
+    node = (node_t *)TM_MALLOC(sizeof(node_t) + level * sizeof(node_t *));
   }
   if (node == NULL) {
     perror("malloc");
@@ -620,7 +671,7 @@ node_t *new_node(val_t val, level_t level, int transactional)
   return node;
 }
 
-intset_t *set_new(level_t max_level, int prob)
+static intset_t *set_new(level_t max_level, int prob)
 {
   intset_t *set;
   int i;
@@ -646,7 +697,7 @@ intset_t *set_new(level_t max_level, int prob)
   return set;
 }
 
-void set_delete(intset_t *set)
+static void set_delete(intset_t *set)
 {
   node_t *node, *next;
 
@@ -659,7 +710,7 @@ void set_delete(intset_t *set)
   free(set);
 }
 
-int set_size(intset_t *set)
+static int set_size(intset_t *set)
 {
   int size = 0;
   node_t *node;
@@ -674,7 +725,7 @@ int set_size(intset_t *set)
   return size;
 }
 
-int set_contains(intset_t *set, val_t val, int transactional)
+static int set_contains(intset_t *set, val_t val, int transactional)
 {
   int result, i;
   node_t *node, *next;
@@ -697,27 +748,27 @@ int set_contains(intset_t *set, val_t val, int transactional)
     node = node->forward[0];
     result = (node->val == val);
   } else {
-    START(0, RO);
+    TM_START(0, RO);
     v = VAL_MIN; /* Avoid compiler warning (should not be necessary) */
     node = set->head;
-    for (i = LOAD(&set->level); i >= 0; i--) {
-      next = (node_t *)LOAD(&node->forward[i]);
+    for (i = TM_LOAD(&set->level); i >= 0; i--) {
+      next = (node_t *)TM_LOAD(&node->forward[i]);
       while (1) {
-        v = LOAD(&next->val);
+        v = TM_LOAD(&next->val);
         if (v >= val)
           break;
         node = next;
-        next = (node_t *)LOAD(&node->forward[i]);
+        next = (node_t *)TM_LOAD(&node->forward[i]);
       }
     }
     result = (v == val);
-    COMMIT;
+    TM_COMMIT;
   }
 
   return result;
 }
 
-int set_add(intset_t *set, val_t val, int transactional)
+static int set_add(intset_t *set, val_t val, int transactional)
 {
   int result, i;
   node_t *update[MAX_LEVEL + 1];
@@ -759,18 +810,18 @@ int set_add(intset_t *set, val_t val, int transactional)
       result = 1;
     }
   } else {
-    START(1, RW);
+    TM_START(1, RW);
     v = VAL_MIN; /* Avoid compiler warning (should not be necessary) */
     node = set->head;
-    level = LOAD(&set->level);
+    level = TM_LOAD(&set->level);
     for (i = level; i >= 0; i--) {
-      next = (node_t *)LOAD(&node->forward[i]);
+      next = (node_t *)TM_LOAD(&node->forward[i]);
       while (1) {
-        v = LOAD(&next->val);
+        v = TM_LOAD(&next->val);
         if (v >= val)
           break;
         node = next;
-        next = (node_t *)LOAD(&node->forward[i]);
+        next = (node_t *)TM_LOAD(&node->forward[i]);
       }
       update[i] = node;
     }
@@ -782,22 +833,22 @@ int set_add(intset_t *set, val_t val, int transactional)
       if (l > level) {
         for (i = level + 1; i <= l; i++)
           update[i] = set->head;
-        STORE(&set->level, l);
+        TM_STORE(&set->level, l);
       }
       node = new_node(val, l, transactional);
       for (i = 0; i <= l; i++) {
-        node->forward[i] = (node_t *)LOAD(&update[i]->forward[i]);
-        STORE(&update[i]->forward[i], node);
+        node->forward[i] = (node_t *)TM_LOAD(&update[i]->forward[i]);
+        TM_STORE(&update[i]->forward[i], node);
       }
       result = 1;
     }
-    COMMIT;
+    TM_COMMIT;
   }
 
   return result;
 }
 
-int set_remove(intset_t *set, val_t val, int transactional)
+static int set_remove(intset_t *set, val_t val, int transactional)
 {
   int result, i;
   node_t *update[MAX_LEVEL + 1];
@@ -831,45 +882,44 @@ int set_remove(intset_t *set, val_t val, int transactional)
       }
       while (set->level > 0 && set->head->forward[set->level]->forward[0] == NULL)
         set->level--;
-      free(node->forward);
       free(node);
       result = 1;
     }
   } else {
-    START(2, RW);
+    TM_START(2, RW);
     v = VAL_MIN; /* Avoid compiler warning (should not be necessary) */
     node = set->head;
-    level = LOAD(&set->level);
+    level = TM_LOAD(&set->level);
     for (i = level; i >= 0; i--) {
-      next = (node_t *)LOAD(&node->forward[i]);
+      next = (node_t *)TM_LOAD(&node->forward[i]);
       while (1) {
-        v = LOAD(&next->val);
+        v = TM_LOAD(&next->val);
         if (v >= val)
           break;
         node = next;
-        next = (node_t *)LOAD(&node->forward[i]);
+        next = (node_t *)TM_LOAD(&node->forward[i]);
       }
       update[i] = node;
     }
-    node = (node_t *)LOAD(&node->forward[0]);
+    node = (node_t *)TM_LOAD(&node->forward[0]);
 
     if (v != val) {
       result = 0;
     } else {
       for (i = 0; i <= level; i++) {
-        if ((node_t *)LOAD(&update[i]->forward[i]) == node)
-          STORE(&update[i]->forward[i], (node_t *)LOAD(&node->forward[i]));
+        if ((node_t *)TM_LOAD(&update[i]->forward[i]) == node)
+          TM_STORE(&update[i]->forward[i], (node_t *)TM_LOAD(&node->forward[i]));
       }
       i = level;
-      while (i > 0 && (node_t *)LOAD(&set->head->forward[i]) == set->tail)
+      while (i > 0 && (node_t *)TM_LOAD(&set->head->forward[i]) == set->tail)
         i--;
       if (i != level)
-        STORE(&set->level, i);
+        TM_STORE(&set->level, i);
       /* Free memory (delayed until commit) */
-      FREE(node, sizeof(node_t) + node->level * sizeof(node_t *));
+      TM_FREE2(node, sizeof(node_t) + node->level * sizeof(node_t *));
       result = 1;
     }
-    COMMIT;
+    TM_COMMIT;
   }
 
   return result;
@@ -900,21 +950,23 @@ typedef struct intset {
   bucket_t **buckets;
 } intset_t;
 
-uint32_t hash(uint32_t a)
+TM_PURE
+static uint32_t hash(uint32_t a)
 {
   /* Knuth's multiplicative hash function */
-  a *= 2654435761;
+  a *= 2654435761UL;
   return a;
 }
 
-bucket_t *new_entry(val_t val, bucket_t *next, int transactional)
+TM_SAFE
+static bucket_t *new_entry(val_t val, bucket_t *next, int transactional)
 {
   bucket_t *b;
 
   if (!transactional) {
     b = (bucket_t *)malloc(sizeof(bucket_t));
   } else {
-    b = (bucket_t *)MALLOC(sizeof(bucket_t));
+    b = (bucket_t *)TM_MALLOC(sizeof(bucket_t));
   }
   if (b == NULL) {
     perror("malloc");
@@ -927,7 +979,7 @@ bucket_t *new_entry(val_t val, bucket_t *next, int transactional)
   return b;
 }
 
-intset_t *set_new()
+static intset_t *set_new()
 {
   intset_t *set;
 
@@ -936,14 +988,14 @@ intset_t *set_new()
     exit(1);
   }
   if ((set->buckets = (bucket_t **)calloc(NB_BUCKETS, sizeof(bucket_t *))) == NULL) {
-    perror("malloc");
+    perror("calloc");
     exit(1);
   }
 
   return set;
 }
 
-void set_delete(intset_t *set)
+static void set_delete(intset_t *set)
 {
   unsigned int i;
   bucket_t *b, *next;
@@ -960,7 +1012,7 @@ void set_delete(intset_t *set)
   free(set);
 }
 
-int set_size(intset_t *set)
+static int set_size(intset_t *set)
 {
   int size = 0;
   unsigned int i;
@@ -977,7 +1029,7 @@ int set_size(intset_t *set)
   return size;
 }
 
-int set_contains(intset_t *set, val_t val, int transactional)
+static int set_contains(intset_t *set, val_t val, int transactional)
 {
   int result, i;
   bucket_t *b;
@@ -999,24 +1051,24 @@ int set_contains(intset_t *set, val_t val, int transactional)
       b = b->next;
     }
   } else {
-    START(0, RO);
+    TM_START(0, RO);
     i = HASH(val);
-    b = (bucket_t *)LOAD(&set->buckets[i]);
+    b = (bucket_t *)TM_LOAD(&set->buckets[i]);
     result = 0;
     while (b != NULL) {
-      if (LOAD(&b->val) == val) {
+      if (TM_LOAD(&b->val) == val) {
         result = 1;
         break;
       }
-      b = (bucket_t *)LOAD(&b->next);
+      b = (bucket_t *)TM_LOAD(&b->next);
     }
-    COMMIT;
+    TM_COMMIT;
   }
 
   return result;
 }
 
-int set_add(intset_t *set, val_t val, int transactional)
+static int set_add(intset_t *set, val_t val, int transactional)
 {
   int result, i;
   bucket_t *b, *first;
@@ -1041,27 +1093,27 @@ int set_add(intset_t *set, val_t val, int transactional)
       set->buckets[i] = new_entry(val, first, transactional);
     }
   } else {
-    START(0, RW);
+    TM_START(0, RW);
     i = HASH(val);
-    first = b = (bucket_t *)LOAD(&set->buckets[i]);
+    first = b = (bucket_t *)TM_LOAD(&set->buckets[i]);
     result = 1;
     while (b != NULL) {
-      if (LOAD(&b->val) == val) {
+      if (TM_LOAD(&b->val) == val) {
         result = 0;
         break;
       }
-      b = (bucket_t *)LOAD(&b->next);
+      b = (bucket_t *)TM_LOAD(&b->next);
     }
     if (result) {
-      STORE(&set->buckets[i], new_entry(val, first, transactional));
+      TM_STORE(&set->buckets[i], new_entry(val, first, transactional));
     }
-    COMMIT;
+    TM_COMMIT;
   }
 
   return result;
 }
 
-int set_remove(intset_t *set, val_t val, int transactional)
+static int set_remove(intset_t *set, val_t val, int transactional)
 {
   int result, i;
   bucket_t *b, *prev;
@@ -1093,29 +1145,29 @@ int set_remove(intset_t *set, val_t val, int transactional)
       free(b);
     }
   } else {
-    START(0, RW);
+    TM_START(0, RW);
     i = HASH(val);
-    prev = b = (bucket_t *)LOAD(&set->buckets[i]);
+    prev = b = (bucket_t *)TM_LOAD(&set->buckets[i]);
     result = 0;
     while (b != NULL) {
-      if (LOAD(&b->val) == val) {
+      if (TM_LOAD(&b->val) == val) {
         result = 1;
         break;
       }
       prev = b;
-      b = (bucket_t *)LOAD(&b->next);
+      b = (bucket_t *)TM_LOAD(&b->next);
     }
     if (result) {
       if (prev == b) {
         /* First element of bucket */
-        STORE(&set->buckets[i], LOAD(&b->next));
+        TM_STORE(&set->buckets[i], TM_LOAD(&b->next));
       } else {
-        STORE(&prev->next, LOAD(&b->next));
+        TM_STORE(&prev->next, TM_LOAD(&b->next));
       }
       /* Free memory (delayed until commit) */
-      FREE(b, sizeof(bucket_t));
+      TM_FREE2(b, sizeof(bucket_t));
     }
-    COMMIT;
+    TM_COMMIT;
   }
 
   return result;
@@ -1134,7 +1186,7 @@ typedef struct barrier {
   int crossing;
 } barrier_t;
 
-void barrier_init(barrier_t *b, int n)
+static void barrier_init(barrier_t *b, int n)
 {
   pthread_cond_init(&b->complete, NULL);
   pthread_mutex_init(&b->mutex, NULL);
@@ -1142,7 +1194,7 @@ void barrier_init(barrier_t *b, int n)
   b->crossing = 0;
 }
 
-void barrier_cross(barrier_t *b)
+static void barrier_cross(barrier_t *b)
 {
   pthread_mutex_lock(&b->mutex);
   /* One more thread through */
@@ -1169,6 +1221,7 @@ typedef struct thread_data {
   unsigned long nb_remove;
   unsigned long nb_contains;
   unsigned long nb_found;
+#ifndef TM_COMPILER
   unsigned long nb_aborts;
   unsigned long nb_aborts_1;
   unsigned long nb_aborts_2;
@@ -1182,6 +1235,7 @@ typedef struct thread_data {
   unsigned long locked_reads_ok;
   unsigned long locked_reads_failed;
   unsigned long max_retries;
+#endif /* ! TM_COMPILER */
   unsigned short seed[3];
   int diff;
   int range;
@@ -1193,7 +1247,7 @@ typedef struct thread_data {
   char padding[64];
 } thread_data_t;
 
-void *test(void *data)
+static void *test(void *data)
 {
   int op, val, last = -1;
   thread_data_t *d = (thread_data_t *)data;
@@ -1205,7 +1259,7 @@ void *test(void *data)
 #endif /* ! TLS */
 
   /* Create transaction */
-  stm_init_thread();
+  TM_INIT_THREAD;
   /* Wait on barrier */
   barrier_cross(d->barrier);
 
@@ -1252,6 +1306,7 @@ void *test(void *data)
       d->nb_contains++;
     }
   }
+#ifndef TM_COMPILER
   stm_get_stats("nb_aborts", &d->nb_aborts);
   stm_get_stats("nb_aborts_1", &d->nb_aborts_1);
   stm_get_stats("nb_aborts_2", &d->nb_aborts_2);
@@ -1265,15 +1320,17 @@ void *test(void *data)
   stm_get_stats("locked_reads_ok", &d->locked_reads_ok);
   stm_get_stats("locked_reads_failed", &d->locked_reads_failed);
   stm_get_stats("max_retries", &d->max_retries);
+#endif /* ! TM_COMPILER */
   /* Free transaction */
-  stm_exit_thread();
+  TM_EXIT_THREAD;
 
   return NULL;
 }
 
-void catcher(int sig)
+static void catcher(int sig)
 {
   static int nb = 0;
+  // TODO this signal isn t really usefull. We don't do some particular like aborting
   printf("CAUGHT SIGNAL %d\n", sig);
   if (++nb >= 3)
     exit(1);
@@ -1285,7 +1342,9 @@ int main(int argc, char **argv)
     // These options don't set a flag
     {"help",                      no_argument,       NULL, 'h'},
     {"do-not-alternate",          no_argument,       NULL, 'a'},
+#ifndef TM_COMPILER
     {"contention-manager",        required_argument, NULL, 'c'},
+#endif /* ! TM_COMPILER */
     {"duration",                  required_argument, NULL, 'd'},
     {"initial-size",              required_argument, NULL, 'i'},
     {"num-threads",               required_argument, NULL, 'n'},
@@ -1299,13 +1358,17 @@ int main(int argc, char **argv)
   };
 
   intset_t *set;
-  int i, c, val, size;
+  int i, c, val, size, ret;
+  unsigned long reads, updates;
+#ifndef TM_COMPILER
   char *s;
-  unsigned long reads, updates, aborts, aborts_1, aborts_2,
+  unsigned long aborts, aborts_1, aborts_2,
     aborts_locked_read, aborts_locked_write,
     aborts_validate_read, aborts_validate_write, aborts_validate_commit,
     aborts_invalid_memory, aborts_killed,
     locked_reads_ok, locked_reads_failed, max_retries;
+  stm_ab_stats_t ab_stats;
+#endif /* ! TM_COMPILER */
   thread_data_t *data;
   pthread_t *threads;
   pthread_attr_t attr;
@@ -1318,8 +1381,10 @@ int main(int argc, char **argv)
   int range = DEFAULT_RANGE;
   int seed = DEFAULT_SEED;
   int update = DEFAULT_UPDATE;
-  char *cm = NULL;
   int alternate = 1;
+#ifndef TM_COMPILER
+  char *cm = NULL;
+#endif /* ! TM_COMPILER */
 #ifdef USE_LINKEDLIST
   int unit_tx = 0;
 #endif /* LINKEDLIST */
@@ -1328,7 +1393,12 @@ int main(int argc, char **argv)
 
   while(1) {
     i = 0;
-    c = getopt_long(argc, argv, "hac:d:i:n:r:s:u:"
+    c = getopt_long(argc, argv, "ha"
+#ifndef TM_COMPILER
+                    "c:"
+#endif /* ! TM_COMPILER */
+		    // TODO need to be alpha-ordered?
+                    "d:i:n:r:s:u:"
 #ifdef USE_LINKEDLIST
                     "x"
 #endif /* LINKEDLIST */
@@ -1364,9 +1434,11 @@ int main(int argc, char **argv)
               "        Print this message\n"
               "  -a, --do-not-alternate\n"
               "        Do not alternate insertions and removals\n"
-              "  -c, --contention-manager <string>\n"
+#ifndef TM_COMPILER
+	      "  -c, --contention-manager <string>\n"
               "        Contention manager for resolving conflicts (default=suicide)\n"
-              "  -d, --duration <int>\n"
+#endif /* ! TM_COMPILER */
+	      "  -d, --duration <int>\n"
               "        Test duration in milliseconds (0=infinite, default=" XSTR(DEFAULT_DURATION) ")\n"
               "  -i, --initial-size <int>\n"
               "        Number of elements to insert before test (default=" XSTR(DEFAULT_INITIAL) ")\n"
@@ -1387,9 +1459,11 @@ int main(int argc, char **argv)
      case 'a':
        alternate = 0;
        break;
+#ifndef TM_COMPILER
      case 'c':
        cm = optarg;
        break;
+#endif /* ! TM_COMPILER */
      case 'd':
        duration = atoi(optarg);
        break;
@@ -1436,7 +1510,9 @@ int main(int argc, char **argv)
 #elif defined(USE_HASHSET)
   printf("Set type     : hash set\n");
 #endif /* defined(USE_HASHSET) */
+#ifndef TM_COMPILER
   printf("CM           : %s\n", (cm == NULL ? "DEFAULT" : cm));
+#endif /* TM_COMPILER */
   printf("Duration     : %d\n", duration);
   printf("Initial size : %d\n", initial);
   printf("Nb threads   : %d\n", nb_threads);
@@ -1451,7 +1527,7 @@ int main(int argc, char **argv)
          (int)sizeof(int),
          (int)sizeof(long),
          (int)sizeof(void *),
-         (int)sizeof(stm_word_t));
+         (int)sizeof(size_t));
 
   timeout.tv_sec = duration / 1000;
   timeout.tv_nsec = (duration % 1000) * 1000000;
@@ -1488,9 +1564,9 @@ int main(int argc, char **argv)
 
   /* Init STM */
   printf("Initializing STM\n");
-  stm_init();
-  mod_mem_init(0);
+  TM_INIT;
 
+#ifndef TM_COMPILER
   if (stm_get_parameter("compile_flags", &s))
     printf("STM flags    : %s\n", s);
 
@@ -1498,7 +1574,7 @@ int main(int argc, char **argv)
     if (stm_set_parameter("cm_policy", cm) == 0)
       printf("WARNING: cannot set contention manager \"%s\"\n", cm);
   }
-
+#endif /* ! TM_COMPILER */
   if (alternate == 0 && range != initial * 2)
     printf("WARNING: range is not twice the initial set size\n");
 
@@ -1529,6 +1605,7 @@ int main(int argc, char **argv)
     data[i].nb_remove = 0;
     data[i].nb_contains = 0;
     data[i].nb_found = 0;
+#ifndef TM_COMPILER
     data[i].nb_aborts = 0;
     data[i].nb_aborts_1 = 0;
     data[i].nb_aborts_2 = 0;
@@ -1542,6 +1619,7 @@ int main(int argc, char **argv)
     data[i].locked_reads_ok = 0;
     data[i].locked_reads_failed = 0;
     data[i].max_retries = 0;
+#endif /* ! TM_COMPILER */
     data[i].diff = 0;
     rand_init(data[i].seed);
     data[i].set = set;
@@ -1572,7 +1650,7 @@ int main(int argc, char **argv)
     sigemptyset(&block_set);
     sigsuspend(&block_set);
   }
-  AO_store_full(&stop, 1);
+  stop = 1;
   gettimeofday(&end, NULL);
   printf("STOPPING...\n");
 
@@ -1585,6 +1663,7 @@ int main(int argc, char **argv)
   }
 
   duration = (end.tv_sec * 1000 + end.tv_usec / 1000) - (start.tv_sec * 1000 + start.tv_usec / 1000);
+#ifndef TM_COMPILER
   aborts = 0;
   aborts_1 = 0;
   aborts_2 = 0;
@@ -1597,15 +1676,17 @@ int main(int argc, char **argv)
   aborts_killed = 0;
   locked_reads_ok = 0;
   locked_reads_failed = 0;
+  max_retries = 0;
+#endif /* ! TM_COMPILER */
   reads = 0;
   updates = 0;
-  max_retries = 0;
   for (i = 0; i < nb_threads; i++) {
     printf("Thread %d\n", i);
     printf("  #add        : %lu\n", data[i].nb_add);
     printf("  #remove     : %lu\n", data[i].nb_remove);
     printf("  #contains   : %lu\n", data[i].nb_contains);
     printf("  #found      : %lu\n", data[i].nb_found);
+#ifndef TM_COMPILER
     printf("  #aborts     : %lu\n", data[i].nb_aborts);
     printf("    #lock-r   : %lu\n", data[i].nb_aborts_locked_read);
     printf("    #lock-w   : %lu\n", data[i].nb_aborts_locked_write);
@@ -1631,17 +1712,20 @@ int main(int argc, char **argv)
     aborts_killed += data[i].nb_aborts_killed;
     locked_reads_ok += data[i].locked_reads_ok;
     locked_reads_failed += data[i].locked_reads_failed;
+    if (max_retries < data[i].max_retries)
+      max_retries = data[i].max_retries;
+#endif /* ! TM_COMPILER */
     reads += data[i].nb_contains;
     updates += (data[i].nb_add + data[i].nb_remove);
     size += data[i].diff;
-    if (max_retries < data[i].max_retries)
-      max_retries = data[i].max_retries;
   }
   printf("Set size      : %d (expected: %d)\n", set_size(set), size);
+  ret = (set_size(set) != size);
   printf("Duration      : %d (ms)\n", duration);
   printf("#txs          : %lu (%f / s)\n", reads + updates, (reads + updates) * 1000.0 / duration);
   printf("#read txs     : %lu (%f / s)\n", reads, reads * 1000.0 / duration);
   printf("#update txs   : %lu (%f / s)\n", updates, updates * 1000.0 / duration);
+#ifndef TM_COMPILER
   printf("#aborts       : %lu (%f / s)\n", aborts, aborts * 1000.0 / duration);
   printf("  #lock-r     : %lu (%f / s)\n", aborts_locked_read, aborts_locked_read * 1000.0 / duration);
   printf("  #lock-w     : %lu (%f / s)\n", aborts_locked_write, aborts_locked_write * 1000.0 / duration);
@@ -1656,11 +1740,24 @@ int main(int argc, char **argv)
   printf("#lr-failed    : %lu (%f / s)\n", locked_reads_failed, locked_reads_failed * 1000.0 / duration);
   printf("Max retries   : %lu\n", max_retries);
 
+  for (i = 0; stm_get_ab_stats(i, &ab_stats) != 0; i++) {
+    printf("Atomic block  : %d\n", i);
+    printf("  #samples    : %lu\n", ab_stats.samples);
+    printf("  Mean        : %f\n", ab_stats.mean);
+    printf("  Variance    : %f\n", ab_stats.variance);
+    printf("  Min         : %f\n", ab_stats.min); 
+    printf("  Max         : %f\n", ab_stats.max);
+    printf("  50th perc.  : %f\n", ab_stats.percentile_50);
+    printf("  90th perc.  : %f\n", ab_stats.percentile_90);
+    printf("  95th perc.  : %f\n", ab_stats.percentile_95);
+  }
+#endif /* ! TM_COMPILER */
+
   /* Delete set */
   set_delete(set);
 
   /* Cleanup STM */
-  stm_exit();
+  TM_EXIT;
 
 #ifndef TLS
   pthread_key_delete(rng_seed_key);
@@ -1669,5 +1766,5 @@ int main(int argc, char **argv)
   free(threads);
   free(data);
 
-  return 0;
+  return ret;
 }

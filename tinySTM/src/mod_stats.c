@@ -3,10 +3,11 @@
  *   mod_stats.c
  * Author(s):
  *   Pascal Felber <pascal.felber@unine.ch>
+ *   Patrick Marlier <patrick.marlier@unine.ch>
  * Description:
  *   Module for gathering global statistics about transactions.
  *
- * Copyright (c) 2007-2009.
+ * Copyright (c) 2007-2011.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -207,7 +208,7 @@ void mod_stats_init()
   if (mod_stats_initialized)
     return;
 
-  stm_register(mod_stats_on_thread_init, mod_stats_on_thread_exit, NULL, mod_stats_on_commit, mod_stats_on_abort, NULL);
+  stm_register(mod_stats_on_thread_init, mod_stats_on_thread_exit, NULL, NULL, mod_stats_on_commit, mod_stats_on_abort, NULL);
   mod_stats_key = stm_create_specific();
   if (mod_stats_key < 0) {
     fprintf(stderr, "Cannot create specific key\n");

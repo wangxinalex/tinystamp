@@ -39,8 +39,8 @@ include Makefile.common
 # Refer to [PPoPP-08] for more details.
 ########################################################################
 
-# DEFINES += -DDESIGN=WRITE_BACK_ETL
- DEFINES += -DDESIGN=WRITE_BACK_CTL
+DEFINES += -DDESIGN=WRITE_BACK_ETL
+# DEFINES += -DDESIGN=WRITE_BACK_CTL
 # DEFINES += -DDESIGN=WRITE_THROUGH
 
 ########################################################################
@@ -74,7 +74,7 @@ include Makefile.common
 ########################################################################
 
 # Pick one contention manager (CM)
- DEFINES += -DCM=CM_SUICIDE
+DEFINES += -DCM=CM_SUICIDE
 # DEFINES += -DCM=CM_DELAY
 # DEFINES += -DCM=CM_BACKOFF
 # DEFINES += -DCM=CM_MODULAR
@@ -93,8 +93,8 @@ DEFINES += -DIRREVOCABLE_ENABLED
 # from disabling them.
 ########################################################################
 
-DEFINES += -DINTERNAL_STATS
-# DEFINES += -UINTERNAL_STATS
+# DEFINES += -DINTERNAL_STATS
+DEFINES += -UINTERNAL_STATS
 
 ########################################################################
 # Ensure that the global clock does not share the same cache line than
@@ -139,8 +139,8 @@ DEFINES += -UUSE_BLOOM_FILTER
 # enabling this feature.
 ########################################################################
 
-DEFINES += -DEPOCH_GC
-# DEFINES += -UEPOCH_GC
+# DEFINES += -DEPOCH_GC
+DEFINES += -UEPOCH_GC
 
 ########################################################################
 # Keep track of conflicts between transactions and notifies the
@@ -186,12 +186,28 @@ DEFINES += -UDEBUG
 DEFINES += -UDEBUG2
 
 ########################################################################
-# Degree of parallelism - additionally find the best degree of
-# parallelism and run these amount of threads
+# Catch SIGBUS and SIGSEGV signals
 ########################################################################
 
-# DEFINES += -DDOP
-  DEFINES += -UDOP
+# DEFINES += -DSIGNAL_HANDLER
+DEFINES += -USIGNAL_HANDLER
+
+########################################################################
+# Enable ASF Hybrid mode
+########################################################################
+
+ifdef HYBRID_ASF
+  ifneq ($(HYBRID_ASF), 0)
+    DEFINES += -DHYBRID_ASF -DASF_STACK -fomit-frame-pointer
+  else
+    DEFINES += -UHYBRID_ASF
+  endif
+else
+  DEFINES += -UHYBRID_ASF
+endif
+
+# TODO Enable the construction of 32bit lib on 64bit environment 
+
 
 ########################################################################
 # Various default values can also be overridden:
@@ -228,7 +244,7 @@ DEFINES += -UDEBUG2
 # DEFINES += -DLOCK_SHIFT_EXTRA=2
 # DEFINES += -DMIN_BACKOFF=0x04UL
 # DEFINES += -DMAX_BACKOFF=0x80000000UL
-DEFINES += -DVR_THRESHOLD_DEFAULT=-1
+# DEFINES += -DVR_THRESHOLD_DEFAULT=3
 
 ########################################################################
 # Do not modify anything below this point!
@@ -257,7 +273,7 @@ CFLAGS += $(DEFINES)
 
 MODULES := $(patsubst %.c,%.o,$(wildcard $(SRCDIR)/mod_*.c))
 
-.PHONY:	all doc test tanger clean
+.PHONY:	all doc test abi clean check
 
 all:	$(TMLIB)
 
@@ -276,13 +292,27 @@ $(TMLIB):	$(SRCDIR)/$(TM).o $(SRCDIR)/wrappers.o $(GC) $(MODULES)
 test:	$(TMLIB)
 	$(MAKE) -C test
 
-tanger:
-	$(MAKE) -C tanger
+test-asf:	$(TMLIB)
+	$(MAKE) -C test-asf
+
+abi:
+	$(MAKE) -C abi
+
+abi-%: 	
+	$(MAKE) -C abi $(subst abi-,,$@)
 
 doc:
 	$(DOXYGEN)
 
+check: 	$(TMLIB)
+	$(MAKE) -C test check
+
+# TODO add an install rule
+#install: 	$(TMLIB)
+
 clean:
 	rm -f $(TMLIB) $(SRCDIR)/*.o
-	$(MAKE) -C tanger clean
+	$(MAKE) -C abi clean
 	TARGET=clean $(MAKE) -C test
+	TARGET=clean $(MAKE) -C test-asf
+

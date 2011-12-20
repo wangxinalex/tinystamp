@@ -356,8 +356,7 @@ TMdecoder_process (TM_ARGDECL  decoder_t* decoderPtr, char* bytes, long numByte)
             status = TMMAP_INSERT(fragmentedMapPtr,
                                   (void*)flowId,
                                   (void*)fragmentListPtr);
-            //  #  define TMMAP_INSERT(map, key, data) \
-            //          TMRBTREE_INSERT(map, (void*)(key), (void*)(data))
+            //  #  define TMMAP_INSERT(map, key, data)          TMRBTREE_INSERT(map, (void*)(key), (void*)(data))
             assert(status);
 
         } else {

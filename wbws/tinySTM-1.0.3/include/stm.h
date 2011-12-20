@@ -367,7 +367,7 @@ int stm_aborted(TXPARAM);
  * Check if the current transaction is still active and in irrevocable
  * state.
  *
- * @return
+ * @return 
  *   True (non-zero) if the transaction is active and irrevocable, false
  *   (zero) otherwise.
  */
@@ -579,7 +579,7 @@ int stm_unit_store2(volatile stm_word_t *addr, stm_word_t value, stm_word_t mask
  * Enable or disable snapshot extensions for the current transaction,
  * and optionally set an upper bound for the snapshot.  This function is
  * useful for implementing efficient algorithms with unit loads and
- * stores while preserving compatibility with regular transactions.
+ * stores while preserving compatibility with with regular transactions.
  *
  * @param enable
  *   True (non-zero) to enable snapshot extensions, false (zero) to
@@ -636,7 +636,7 @@ sigjmp_buf *hytm_start(TXPARAMS stm_tx_attr_t *attr);
 
 /**
  * Try to commit an hybrid transaction.
- *
+ * 
  * @return
  *   1 upon success, 0 otherwise.
  */
@@ -651,7 +651,7 @@ int hytm_commit(TXPARAM);
 void hytm_abort(TXPARAMS int abort_reason);
 
 /**
- * Transactional hybrid load.
+ * Transactional hybrid load. 
  *
  * @param addr
  *   Address of the memory location.
@@ -701,7 +701,7 @@ sigjmp_buf *tm_start(TXPARAMS stm_tx_attr_t *attr);
 
 /**
  * Try to commit a transaction.
- *
+ * 
  * @return
  *   1 upon success, 0 otherwise.
  */
@@ -716,7 +716,7 @@ int tm_commit(TXPARAM);
 void tm_abort(TXPARAMS int abort_reason);
 
 /**
- * Transactional load.
+ * Transactional load. 
  *
  * @param addr
  *   Address of the memory location.
@@ -756,7 +756,7 @@ void tm_store2(TXPARAMS volatile stm_word_t *addr, stm_word_t value, stm_word_t 
 int tm_hybrid(TXPARAM);
 
 /**
- * Abort the current hybrid transaction and retry it using software mode.
+ * Abort the current hybrid transaction and retry it using software mode. 
  * No effect is the transaction is already in software mode.
  */
 void tm_restart_software(TXPARAM);

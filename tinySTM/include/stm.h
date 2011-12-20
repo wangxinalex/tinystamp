@@ -3,10 +3,11 @@
  *   stm.h
  * Author(s):
  *   Pascal Felber <pascal.felber@unine.ch>
+ *   Patrick Marlier <patrick.marlier@unine.ch>
  * Description:
  *   STM functions.
  *
- * Copyright (c) 2007-2009.
+ * Copyright (c) 2007-2011.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,8 +26,9 @@
  *   programming with STM.
  * @author
  *   Pascal Felber <pascal.felber@unine.ch>
+ *   Patrick Marlier <patrick.marlier@unine.ch>
  * @date
- *   2007-2009
+ *   2007-2011
  */
 
 /**
@@ -76,10 +78,12 @@
 # include <stdio.h>
 # include <stdlib.h>
 
+# include "../src/atomic.h" // FIXME atomic.h should be in include/ ?
+
 /* Version string */
-# define STM_VERSION                    "1.0.0"
+# define STM_VERSION                    "1.0.3"
 /* Version number (times 100) */
-# define STM_VERSION_NB                 100
+# define STM_VERSION_NB                 103
 
 # ifdef __cplusplus
 extern "C" {
@@ -93,8 +97,8 @@ extern "C" {
  * performance on architectures that do not support TLS or for easier
  * compiler integration.
  */
-# ifdef EXPLICIT_TX_PARAMETER
 struct stm_tx;
+# ifdef EXPLICIT_TX_PARAMETER
 #  define TXTYPE                        struct stm_tx *
 #  define TXPARAM                       struct stm_tx *tx
 #  define TXPARAMS                      struct stm_tx *tx,
@@ -141,11 +145,26 @@ typedef struct stm_tx_attr {
    */
   unsigned int read_only : 1;
   /**
+   * Indicates whether the transaction should use visible reads.  This
+   * information is used when the transaction starts or restarts.  If a
+   * transaction automatically switches to visible read mode (e.g.,
+   * after having repeatedly aborted with invisible reads), this flag is
+   * updated accordingly.  If no attributes are specified when starting
+   * a transaction, the default behavior is to use invisible reads.
+   */
+  unsigned int visible_reads : 1;
+  /**
    * Indicates that the transaction should not retry execution using
    * sigsetjmp() after abort.  If no attributes are specified when
    * starting a transaction, the default behavior is to retry.
    */
   unsigned int no_retry : 1;
+  /**
+   * Indicates how soon the transaction should be completed.  This
+   * information may be used by a contention manager or the scheduler to
+   * prioritize transactions.
+   */
+  stm_word_t deadline;
 } stm_tx_attr_t;
 
 /**
@@ -249,8 +268,9 @@ void stm_exit_thread(TXPARAM);
  * Start a transaction.
  *
  * @param attr
- *   Specifies optional attributes associated to the transaction.  If
- *   null, the transaction uses default attributes.
+ *   Specifies optional attributes associated to the transaction.
+ *   Attributes are copied in transaction-local storage.  If null, the
+ *   transaction uses default attributes.
  * @return
  *   Environment (stack context) to be used to jump back upon abort.  It
  *   is the responsibility of the application to call sigsetjmp()
@@ -277,6 +297,9 @@ int stm_commit(TXPARAM);
  * where sigsetjmp() has been called after starting the outermost
  * transaction (unless the attributes indicate that the transaction
  * should not retry).
+ *
+ * @param abort_reason
+ *   Reason for aborting the transaction.
  */
 void stm_abort(TXPARAMS int abort_reason);
 
@@ -375,6 +398,16 @@ sigjmp_buf *stm_get_env(TXPARAM);
 stm_tx_attr_t *stm_get_attributes(TXPARAM);
 
 /**
+ * Get attributes associated with the specified transaction.
+ * These attributes were passed as parameters when starting the
+ * transaction.
+ *
+ * @return Attributes associated with the specified transaction, or NULL
+ *   if no attributes were specified when starting the transaction.
+ */
+stm_tx_attr_t *stm_get_attributes_tx(struct stm_tx *tx);
+
+/**
  * Get various statistics about the current thread/transaction.  See the
  * source code (stm.c) for a list of supported statistics.
  *
@@ -388,6 +421,19 @@ stm_tx_attr_t *stm_get_attributes(TXPARAM);
  */
 int stm_get_stats(TXPARAMS const char *name, void *val);
 
+/**
+ * Get various statistics about the current thread/transaction.  See the
+ * mehtod above, that does exactly the same thing. The only difference is,
+ * that this method returns a pointer and not the value itself.
+ *
+ * @param name
+ *   Name of the statistics.
+ * @param val
+ *   Pointer to the variable that should hold the value of the
+ *   statistics.
+ * @return
+ *   1 upon success, 0 otherwise.
+ */
 void* stm_get_stats_position(TXPARAMS const char *name);
 
 /**
@@ -459,6 +505,8 @@ void stm_set_specific(TXPARAMS int key, void *data);
  *   Function called upon cleanup of a transactional thread.
  * @param on_start
  *   Function called upon start of a transaction.
+ * @param on_precommit
+ *   Function called before transaction try to commit.
  * @param on_commit
  *   Function called upon successful transaction commit.
  * @param on_abort
@@ -471,6 +519,7 @@ void stm_set_specific(TXPARAMS int key, void *data);
 int stm_register(void (*on_thread_init)(TXPARAMS void *arg),
                  void (*on_thread_exit)(TXPARAMS void *arg),
                  void (*on_start)(TXPARAMS void *arg),
+                 void (*on_precommit)(TXPARAMS void *arg),
                  void (*on_commit)(TXPARAMS void *arg),
                  void (*on_abort)(TXPARAMS void *arg),
                  void *arg);
@@ -567,19 +616,166 @@ void stm_set_extension(TXPARAMS int enable, stm_word_t *timestamp);
 stm_word_t stm_get_clock();
 
 /**
- * Enter irrevokable mode for the current transaction.  If successful,
+ * Enter irrevocable mode for the current transaction.  If successful,
  * the function returns 1.  Otherwise, it aborts and execution continues
  * at the point where sigsetjmp() has been called after starting the
  * outermost transaction (unless the attributes indicate that the
  * transaction should not retry).
  *
- * @param enable
+ * @param serial
  *   True (non-zero) for serial-irrevocable mode (no transaction can
  *   execute concurrently), false for parallel-irrevocable mode.
  * @return
  *   1 upon success, 0 otherwise.
  */
 int stm_set_irrevocable(TXPARAMS int serial);
+
+#ifdef HYBRID_ASF
+
+/**
+ * Start an hybrid transaction.
+ *
+ * @param attr
+ *   Specifies optional attributes associated to the transaction.
+ *   Attributes are copied in transaction-local storage.  If null, the
+ *   transaction uses default attributes.
+ * @return
+ *   Environment (stack context) to be used to jump back upon abort.  It
+ *   is the responsibility of the application to call sigsetjmp()
+ *   immediately after starting the transaction.  If the transaction is
+ *   nested, the function returns NULL and one should not call
+ *   sigsetjmp() as an abort will restart the top-level transaction
+ *   (flat nesting).
+ */
+sigjmp_buf *hytm_start(TXPARAMS stm_tx_attr_t *attr);
+
+/**
+ * Try to commit an hybrid transaction.
+ *
+ * @return
+ *   1 upon success, 0 otherwise.
+ */
+int hytm_commit(TXPARAM);
+
+/**
+ * Explicitly abort an hybrid transaction.
+ *
+ * @param abort_reason
+ *   Reason for aborting the transaction.
+ */
+void hytm_abort(TXPARAMS int abort_reason);
+
+/**
+ * Transactional hybrid load.
+ *
+ * @param addr
+ *   Address of the memory location.
+ * @return
+ *   Value read from the specified address.
+ */
+stm_word_t hytm_load(TXPARAMS volatile stm_word_t *addr);
+
+/**
+ * Transactional hybrid store.
+ *
+ * @param addr
+ *   Address of the memory location.
+ * @param value
+ *   Value to be written.
+ */
+void hytm_store(TXPARAMS volatile stm_word_t *addr, stm_word_t value);
+
+/**
+ * Transactional hybrid store.
+ *
+ * @param addr
+ *   Address of the memory location.
+ * @param value
+ *   Value to be written.
+ * @param mask
+ *   Mask specifying the bits to be written.
+ */
+void hytm_store2(TXPARAMS volatile stm_word_t *addr, stm_word_t value, stm_word_t mask);
+
+/**
+ * Start a transaction.
+ *
+ * @param attr
+ *   Specifies optional attributes associated to the transaction.
+ *   Attributes are copied in transaction-local storage.  If null, the
+ *   transaction uses default attributes.
+ * @return
+ *   Environment (stack context) to be used to jump back upon abort.  It
+ *   is the responsibility of the application to call sigsetjmp()
+ *   immediately after starting the transaction.  If the transaction is
+ *   nested, the function returns NULL and one should not call
+ *   sigsetjmp() as an abort will restart the top-level transaction
+ *   (flat nesting).
+ */
+sigjmp_buf *tm_start(TXPARAMS stm_tx_attr_t *attr);
+
+/**
+ * Try to commit a transaction.
+ *
+ * @return
+ *   1 upon success, 0 otherwise.
+ */
+int tm_commit(TXPARAM);
+
+/**
+ * Explicitly abort a transaction.
+ *
+ * @param abort_reason
+ *   Reason for aborting the transaction.
+ */
+void tm_abort(TXPARAMS int abort_reason);
+
+/**
+ * Transactional load.
+ *
+ * @param addr
+ *   Address of the memory location.
+ * @return
+ *   Value read from the specified address.
+ */
+stm_word_t tm_load(TXPARAMS volatile stm_word_t *addr);
+
+/**
+ * Transactional store.
+ *
+ * @param addr
+ *   Address of the memory location.
+ * @param value
+ *   Value to be written.
+ */
+void tm_store(TXPARAMS volatile stm_word_t *addr, stm_word_t value);
+
+/**
+ * Transactional store.
+ *
+ * @param addr
+ *   Address of the memory location.
+ * @param value
+ *   Value to be written.
+ * @param mask
+ *   Mask specifying the bits to be written.
+ */
+void tm_store2(TXPARAMS volatile stm_word_t *addr, stm_word_t value, stm_word_t mask);
+
+/**
+ * Check if the current transaction is an hybrid transaction.
+ *
+ * @return
+ *   True (non-zero) if the transaction is hybrid, false (zero) otherwise.
+ */
+int tm_hybrid(TXPARAM);
+
+/**
+ * Abort the current hybrid transaction and retry it using software mode.
+ * No effect is the transaction is already in software mode.
+ */
+void tm_restart_software(TXPARAM);
+#endif /* HYBRID_ASF */
 
 #ifdef __cplusplus
 }
