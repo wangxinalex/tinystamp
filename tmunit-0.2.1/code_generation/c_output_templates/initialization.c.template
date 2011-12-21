@@ -1,33 +1,28 @@
 #include "initialization.h"
 
-unsigned ThreadNum ;
+unsigned ThreadNum;
+unsigned maxThreadNum;
 unsigned* ThreadSeed;
 
 ThreadRunFunc ThreadRun[#THREAD_NUM#] = {NULL};
 
-
-void SetThreadNum()
-{
+void SetThreadNum() {
     ThreadNum = #THREAD_NUM#;
 }
 
-
-void InitializeThreadSeeds(unsigned ThreadNum)
-{
+void InitializeThreadSeeds(unsigned ThreadNum) {
     assert (ThreadNum != 0);
     ThreadSeed = (unsigned *)malloc(ThreadNum*sizeof(unsigned));
-    if (MainSeed == 0)
-    {
-      printf("MainSeed is ZERO.\n");
-      SRAND((int)time(0));
+    if (MainSeed == 0) {
+		printf("MainSeed is ZERO.\n");
+		SRAND((int)time(0));
     }
     else
       SRAND(MainSeed);
 
-    if (MainMax == 0)
-    {
-      printf("MainMax is ZERO. I'll add 10 now.\n");
-      MainMax=10;
+    if (MainMax == 0) {
+		printf("MainMax is ZERO. I'll add 10 now.\n");
+		MainMax=10;
     }
 
     unsigned ThreadNo;
@@ -36,21 +31,15 @@ void InitializeThreadSeeds(unsigned ThreadNum)
 
     printf("MainSeed=%u\n",MainSeed);
     printf("ListOfThreadSeeds={");
-    for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
-    {
- 	printf("%u",ThreadSeed[ThreadNo]);
-	if(ThreadNo < ThreadNum -1)
-	    printf(",");
-	else
-	    printf("}\n");
+    for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++) {
+		printf("%u",ThreadSeed[ThreadNo]);
+		if(ThreadNo < ThreadNum -1)
+			printf(",");
+		else
+			printf("}\n");
     }
-
-
 }
 
-
-
-void InitializeThreadRunFunctions()
-{
+void InitializeThreadRunFunctions() {
     #SETTING_VALUES_OF_THREAD_RUN_ARRAY#
 }

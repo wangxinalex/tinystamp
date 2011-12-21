@@ -8,12 +8,12 @@
 #include "rng_interface.h" // For random number seed initializations
 #include "simulation_parameters.h"  // For the definition MainSeed variable
 
-typedef struct thread_input_struct 
+typedef struct thread_input_struct
 {
     unsigned short thread_ID;
     unsigned       MaxTxNumToExecute;
     unsigned       ThreadSeed;
-} 
+}
 thread_input_t;
 
 

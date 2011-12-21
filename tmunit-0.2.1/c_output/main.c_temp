@@ -31,6 +31,7 @@ __thread stm_tx_t *TxDesc = (stm_tx_t *) 0x1;
 
 extern unsigned *ThreadSeed;
 extern unsigned ThreadNum;
+extern unsigned maxThreadNum;
 extern ThreadRunFunc ThreadRun[];
 
 #include "shared_var_definitions.h"
@@ -49,7 +50,7 @@ void PrintStatistics() {
     unsigned long GlobalMaxRetries = 0;
 
     unsigned ThreadNo;
-    for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++) {
+    for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
 		struct timeval start_time = Statistics[ThreadNo] -> start_time ;
 		struct timeval   end_time = Statistics[ThreadNo] -> end_time   ;
 
@@ -231,13 +232,15 @@ int main (int argc, char *argv[])
   InitializeSimulationParameters ();
   ProcessCommandLineArguments (argc, argv);
   TerminateRequestedBySignal = FALSE;
-  unsigned maxThreadNum;
 
   SetThreadNum ();
+  maxThreadNum = MainMax;
   InitializeSharedVariables ();
 
   InitializeThreadSeeds (ThreadNum);
   PrintEffectiveSimulationParameters ();
+
+  printf ("maxThreadNum = %u\n", maxThreadNum);
 
   // Prepare thread functions and parameters to pass them
   unsigned short ThreadNo;
