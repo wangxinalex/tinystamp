@@ -3,7 +3,7 @@
 
 int PrintHelpMessage()
 {
-    
+
     printf("\n"
 	   "--------------------------------------------------\n"
 	   "  benchrun -- STM Unit Testing & Evaluation Tool  \n"
@@ -19,7 +19,7 @@ int PrintHelpMessage()
 	   "  -h, --help\n"
 	   "        Print this message\n"
 	   "  -p, --print-stats <int>\n"
-	   "        Enables/disables the printing of statistiscs\n" 
+	   "        Enables/disables the printing of statistiscs\n"
            "        (0=disable, 1=enable)\n"
 	   "  -s, --seed <int>\n"
 	   "        Random Number Generator Seed (0=time-based, default=%d)\n"
@@ -44,16 +44,16 @@ int PrintHelpMessage()
 	   "   of a transaction. The lines are prefixed with the name of the\n"
 	   "   transaction in the  [ThreadName:TransactionName]  format. This\n"
 	   "   is followed by the transactional operation that is executed.\n"
-	   "   The possible transactional operation outputs are as follows:\n" 
+	   "   The possible transactional operation outputs are as follows:\n"
 	   "\n"
 	   "     - S\n"
 	   "          Start/restart of a transaction.\n"
-	   "     - R(Addr)\n" 
+	   "     - R(Addr)\n"
 	   "          The beginning of an TM READ on address 'Addr'.\n"
 	   "     - R(Addr,Val)\n"
 	   "          The end of an TM READ on address 'Addr'. The value\n"
 	   "          returned by the TM READ appears on the 'Val' field.\n"
-	   "     - W(Addr)\n" 
+	   "     - W(Addr)\n"
 	   "          The beginning of an TM WRITE on address 'Addr'.\n"
 	   "     - W(Addr,Val)\n"
 	   "          The end of an TM WRITE on address 'Addr'. The value\n"
@@ -75,7 +75,7 @@ int PrintHowToGetHelp()
     sprintf(Message,"\nTo get help type: \n\tbenchrun  -h \n");
     fprintf(stderr,"%s",Message);
     free(Message);
-    
+
     return 0;
 }
 
@@ -101,7 +101,7 @@ int ProcessCommandLineArguments(int argc, char*  argv[])
   bool OptArgIsBoolean ;
   bool OptArgIsZero;
   bool OptArgIsOne ;
- 
+
   while(1) {
     i = 0;
     c = getopt_long(argc, argv, "hd:p:s:v", long_options, &i);
@@ -114,7 +114,7 @@ int ProcessCommandLineArguments(int argc, char*  argv[])
     if(c == 0 && long_options[i].flag == 0)
       c = long_options[i].val;
 
- 
+
     switch(c) {
      case 0:
        /* Flag is automatically set */
@@ -155,7 +155,7 @@ int ProcessCommandLineArguments(int argc, char*  argv[])
 		   "          Expecting 0 or 1 as argument for -p (--print-stat) option instead.\n",optarg);
 	    PrintHowToGetHelp();
 	    exit(1);
-	}	    
+	}
 	 break;
 
      case 's':

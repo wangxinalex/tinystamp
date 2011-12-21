@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Author(s):
  *   Derin Harmanci <derin.harmanci@unine.ch>
  *
@@ -22,6 +22,7 @@
 #include "general.h"
 
 extern unsigned MainSeed;
+extern unsigned MainMax;
 extern bool JustGenerateTrace;
 extern bool EnableTrace;
 extern bool SerialThreadExecution;
@@ -32,15 +33,16 @@ extern unsigned DelayUnit;
 extern unsigned TimeOut;
 extern bool WaitForTimeOut;
 extern bool TimeOutValueSet;
-extern bool TransmitReadOnlyTxHint; 
+extern bool TransmitReadOnlyTxHint;
 
 extern bool VerboseParserOutput;
 extern bool EnableTraceFromCommandLine;
 extern bool DurationSetInCommandLine;
 extern bool SeedSetInCommandLine;
+extern bool MaxSetInCommandLine;
 extern unsigned CommandLineDuration;
 extern unsigned CommandLineSeed;
-
+extern unsigned CommandLineMax;
 
 extern bool RandomDebug;
 

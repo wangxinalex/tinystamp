@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Author(s):
  *   Derin Harmanci <derin.harmanci@unine.ch>
  *
@@ -20,6 +20,7 @@
 
 
 unsigned MainSeed;
+unsigned MainMax;
 bool JustGenerateTrace;
 bool EnableTrace;
 bool SerialThreadExecution;
@@ -30,15 +31,16 @@ unsigned DelayUnit;
 unsigned TimeOut;
 bool WaitForTimeOut;
 bool TimeOutValueSet;
-bool TransmitReadOnlyTxHint; 
+bool TransmitReadOnlyTxHint;
 
 bool VerboseParserOutput;
 bool EnableTraceFromCommandLine;
 bool DurationSetInCommandLine;
 bool SeedSetInCommandLine;
+bool MaxSetInCommandLine;
 unsigned CommandLineDuration;
 unsigned CommandLineSeed;
-
+unsigned CommandLineMax;
 
 bool RandomDebug;
 

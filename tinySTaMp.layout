@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
+	<File name="stamp-0.9.10-tinySTM-1.0.0/tm.h" open="0" top="0" tabpos="0">
+		<Cursor position="16857" topLine="452" />
+	</File>
 	<File name="stamp-0.9.10/intruder/decoder.c" open="0" top="0" tabpos="2">
 		<Cursor position="11420" topLine="339" />
 	</File>
 	<File name="stamp-0.9.10/intruder/detector.c" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="0">
+		<Cursor position="7698" topLine="180" />
+	</File>
+	<File name="stamp-0.9.10/lib/tm.h" open="0" top="0" tabpos="0">
+		<Cursor position="18034" topLine="470" />
+	</File>
+	<File name="tinySTM/abi/abi.c" open="0" top="0" tabpos="0">
+		<Cursor position="6331" topLine="229" />
+	</File>
+	<File name="tinySTM/abi/itmuser.h" open="0" top="0" tabpos="0">
+		<Cursor position="1230" topLine="39" />
+	</File>
+	<File name="tinySTM/abi/lib.map" open="0" top="0" tabpos="0">
+		<Cursor position="217" topLine="0" />
 	</File>
 	<File name="tinySTM/include/stm.h" open="0" top="0" tabpos="1">
 		<Cursor position="13792" topLine="412" />
@@ -16,11 +34,74 @@
 	<File name="tmunit-0.2.1/README" open="0" top="0" tabpos="0">
 		<Cursor position="2591" topLine="129" />
 	</File>
-	<File name="tmunit-0.2.1/execution/thread.c" open="1" top="0" tabpos="1">
+	<File name="tmunit-0.2.1/c_output/cli.c" open="0" top="0" tabpos="0">
+		<Cursor position="319" topLine="0" />
+	</File>
+	<File name="tmunit-0.2.1/c_output/transactions.c" open="0" top="0" tabpos="0">
+		<Cursor position="148" topLine="0" />
+	</File>
+	<File name="tmunit-0.2.1/c_output/transactions.h" open="0" top="0" tabpos="0">
+		<Cursor position="1706" topLine="17" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_scripts/post_patmap" open="0" top="0" tabpos="0">
+		<Cursor position="3925" topLine="104" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/Makefile" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="110" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/barrier.c" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="6" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/barrier.h" open="0" top="0" tabpos="0">
+		<Cursor position="322" topLine="0" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/cli.c" open="1" top="1" tabpos="0">
+		<Cursor position="5634" topLine="138" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.c.template" open="0" top="0" tabpos="0">
+		<Cursor position="257" topLine="18" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.h.template" open="0" top="0" tabpos="0">
+		<Cursor position="592" topLine="6" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/main.template" open="0" top="0" tabpos="0">
+		<Cursor position="7420" topLine="261" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/t_benchrun" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="1" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/thread.template" open="0" top="0" tabpos="0">
+		<Cursor position="642" topLine="87" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/threads.h" open="0" top="0" tabpos="0">
+		<Cursor position="25" topLine="0" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/transactions.h" open="0" top="0" tabpos="0">
+		<Cursor position="2945" topLine="46" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/transactions.template" open="0" top="0" tabpos="0">
+		<Cursor position="148" topLine="0" />
+	</File>
+	<File name="tmunit-0.2.1/execution/thread.c" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="tmunit-0.2.1/execution/tmunit.c" open="1" top="1" tabpos="2">
-		<Cursor position="13972" topLine="380" />
+	<File name="tmunit-0.2.1/execution/tinySTM_new.h" open="0" top="0" tabpos="0">
+		<Cursor position="1432" topLine="21" />
+	</File>
+	<File name="tmunit-0.2.1/execution/tmunit.c" open="0" top="0" tabpos="2">
+		<Cursor position="11215" topLine="293" />
+	</File>
+	<File name="tmunit-0.2.1/language/simulation_parameters.h" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="25" />
+	</File>
+	<File name="tmunit-0.2.1/test/listings_in_paper/intset/serial/replicate_th_1/generate_c/reference_c_output/cli.c" open="0" top="0" tabpos="0">
+		<Cursor position="48" topLine="178" />
+	</File>
+	<File name="tmunit-0.2.1/test/listings_in_paper/intset/serial/replicate_th_1/generate_c/reference_c_output/initialization.c" open="0" top="0" tabpos="0">
+		<Cursor position="844" topLine="30" />
+	</File>
+	<File name="tmunit-0.2.1/test/listings_in_paper/intset/serial/replicate_th_1/generate_c/reference_c_output/main.c" open="0" top="0" tabpos="0">
+		<Cursor position="4847" topLine="133" />
 	</File>
 	<File name="wbws/tinySTM-1.0.3/include/stm.h" open="0" top="0" tabpos="2">
 		<Cursor position="13789" topLine="409" />

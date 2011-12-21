@@ -844,6 +844,60 @@
 		<Unit filename="tinySTaMp.layout" />
 		<Unit filename="tmunit-0.2.1/Makefile" />
 		<Unit filename="tmunit-0.2.1/README" />
+		<Unit filename="tmunit-0.2.1/c_output/Makefile" />
+		<Unit filename="tmunit-0.2.1/c_output/barrier.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/barrier.h" />
+		<Unit filename="tmunit-0.2.1/c_output/barrier.o" />
+		<Unit filename="tmunit-0.2.1/c_output/benchrun" />
+		<Unit filename="tmunit-0.2.1/c_output/cli.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/cli.h" />
+		<Unit filename="tmunit-0.2.1/c_output/cli.o" />
+		<Unit filename="tmunit-0.2.1/c_output/initialization.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/initialization.h" />
+		<Unit filename="tmunit-0.2.1/c_output/initialization.o" />
+		<Unit filename="tmunit-0.2.1/c_output/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/main.c_temp" />
+		<Unit filename="tmunit-0.2.1/c_output/main.o" />
+		<Unit filename="tmunit-0.2.1/c_output/post_process.template" />
+		<Unit filename="tmunit-0.2.1/c_output/prepare_post_process" />
+		<Unit filename="tmunit-0.2.1/c_output/random.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/random.o" />
+		<Unit filename="tmunit-0.2.1/c_output/rng_interface.h" />
+		<Unit filename="tmunit-0.2.1/c_output/shared_var_definitions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/shared_var_definitions.h" />
+		<Unit filename="tmunit-0.2.1/c_output/shared_var_definitions.o" />
+		<Unit filename="tmunit-0.2.1/c_output/simulation_parameters.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/simulation_parameters.h" />
+		<Unit filename="tmunit-0.2.1/c_output/simulation_parameters.o" />
+		<Unit filename="tmunit-0.2.1/c_output/t_benchrun" />
+		<Unit filename="tmunit-0.2.1/c_output/thread_0.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/thread_local_variables.h" />
+		<Unit filename="tmunit-0.2.1/c_output/threads.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/threads.h" />
+		<Unit filename="tmunit-0.2.1/c_output/threads.o" />
+		<Unit filename="tmunit-0.2.1/c_output/transactions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tmunit-0.2.1/c_output/transactions.h" />
+		<Unit filename="tmunit-0.2.1/c_output/transactions.o" />
 		<Unit filename="tmunit-0.2.1/code_generation/Makefile" />
 		<Unit filename="tmunit-0.2.1/code_generation/c_output_scripts/post_patmap" />
 		<Unit filename="tmunit-0.2.1/code_generation/c_output_templates/Makefile" />

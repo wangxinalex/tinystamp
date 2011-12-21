@@ -24,7 +24,12 @@ void InitializeThreadSeeds(unsigned ThreadNum)
     else
       SRAND(MainSeed);
 
-    
+    if (MainMax == 0)
+    {
+      printf("MainMax is ZERO. I'll add 10 now.\n");
+      MainMax=10;
+    }
+
     unsigned ThreadNo;
     for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
 	ThreadSeed[ThreadNo] = RAND();
@@ -32,14 +37,14 @@ void InitializeThreadSeeds(unsigned ThreadNum)
     printf("MainSeed=%u\n",MainSeed);
     printf("ListOfThreadSeeds={");
     for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
-    { 
- 	printf("%u",ThreadSeed[ThreadNo]); 
+    {
+ 	printf("%u",ThreadSeed[ThreadNo]);
 	if(ThreadNo < ThreadNum -1)
 	    printf(",");
 	else
-	    printf("}\n"); 
-    } 
-   
+	    printf("}\n");
+    }
+
 
 }
 

@@ -61,7 +61,8 @@ void PrintDevelopperTestWarning();
 
 
 int InitializeSimulationParameters() {
-	MainSeed = 1 ;
+	MainSeed = 1;
+	MainMax = 10;
 	ReadConfigOnly = FALSE;
 	ParseOnly = FALSE;
 	PrintStats = TRUE;
@@ -245,6 +246,8 @@ int main(int argc, char*  argv[]) {
 			TimeOut = CommandLineDuration;
 		if(SeedSetInCommandLine)
 			MainSeed = CommandLineSeed;
+		if(MaxSetInCommandLine)
+			MainMax = CommandLineMax;
 
 		// If a  ThreadDefinition Config List has been  entered, check whether
 			// the Thread names given in the list are one of the defined threads
@@ -857,17 +860,19 @@ void PrintEffectiveSimulationParameters() {
 	   "EnableTrace			: %d  (0: FALSE, 1: TRUE; DEFAULT:0)\n"
 	   "PrintStats			 : %d  (0: FALSE, 1: TRUE; DEFAULT:1)\n"
 	   "MainSeed			   : %u  (0: seed from clock; DEFAULT: 1)\n"
+	   "MainMax			   : %u  (0: seed will be 10; DEFAULT: 10)\n"
 	   "TimeOut				: %u  (in microseconds, valid only if WaitForTimeOut is 1)\n"
 	   "\n"
-	   "\n",						\
-	   JustGenerateTrace,					\
-	   SerialThreadExecution,				\
+	   "\n",							\
+	   JustGenerateTrace,				\
+	   SerialThreadExecution,			\
 	   WaitForTimeOut,					\
-	   TransmitReadOnlyTxHint,				\
+	   TransmitReadOnlyTxHint,			\
 	   EnableTrace,						\
 	   PrintStats,						\
 	   MainSeed,						\
-	   TimeOut						\
+	   MainMax,							\
+	   TimeOut							\
 	);
 }
 

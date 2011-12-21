@@ -71,7 +71,7 @@
 
 
 /*
- * 
+ *
  * Author(s):
  *   Derin Harmanci <derin.harmanci@unine.ch>
  *
@@ -97,7 +97,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "syntax_error.h" 
+#include "syntax_error.h"
 #include "syntax_debug.h"
 #include "general.h"
 #include "simulation_parameters.h"
@@ -129,7 +129,7 @@ struct TxBlockListReturnStruct
 };
 
 
-struct ExpressionReturnStruct 
+struct ExpressionReturnStruct
 {
     char* string;
     short int  Token;
@@ -280,7 +280,7 @@ typedef union YYSTYPE
    char*     string;
    struct TxBlockListReturnStruct* TxBlockListReturn;
    struct EvaluatedVariableExpressionStruct* EvaluatedVarExpr;
-   struct RangeInfoStruct*   RangeInfo;     
+   struct RangeInfoStruct*   RangeInfo;
    struct VariableExpressionStruct*   VarExprPtr;
    struct ConditionReturnStruct*  ConditionReturn;
    struct VariableReturnStruct*   VariableReturn;
@@ -1895,7 +1895,7 @@ yyreduce:
 /* Line 1464 of yacc.c  */
 #line 196 "bison_grammar.y"
     {
-       TM_EXIT_THREAD(TxDesc); 
+       TM_EXIT_THREAD(TxDesc);
        TM_EXIT(TxDesc);
    ;}
     break;
@@ -1942,7 +1942,7 @@ yyreduce:
 	  VarExpr* ArrayVarExpr = (yyvsp[(1) - (3)].VarExprPtr);
 	  int ArrayElementNum = (int) (ArrayVarExpr -> OperandID[1] - ArrayVarExpr -> OperandID[0] +1) ;
 	  assert(ArrayElementNum > 0);
-	  
+
 	  int  ElementNo;
 	  for( ElementNo=0; ElementNo < ArrayElementNum; ElementNo ++)
 	  {
@@ -1969,18 +1969,18 @@ yyreduce:
 	  bool ArrayExists = (ArrayVarExpr != NULL);
 	  if( !ArrayExists)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Can NOT SET element of UNKNOWN ARRAY  '%s'. Terminating...\n", ActualArrayName);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      exit(1);
 	  }
-	  
+
 	  VarExpr* ElementVarExpr;
 	  FindVarExpr((yyvsp[(2) - (5)].string),&ElementVarExpr);
 	  if(ElementVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", (yyvsp[(2) - (5)].string));
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -2004,8 +2004,8 @@ yyreduce:
 
 	  // The following can be done with an Evaluation on the managed version of ArrayVarExpr
 	  ((Word*)(ArrayVarExpr -> Addr))[ElementIndexToAccess] = atoi((yyvsp[(5) - (5)].string));
-	  
-	  
+
+
     ;}
     break;
 
@@ -2025,18 +2025,18 @@ yyreduce:
 	  bool ArrayExists = (ArrayVarExpr != NULL);
 	  if( !ArrayExists)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Can NOT SET element of UNKNOWN ARRAY  '%s'. Terminating...\n", ActualArrayName);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      exit(1);
 	  }
-	  
+
 	  VarExpr* ElementVarExpr;
 	  FindVarExpr((yyvsp[(2) - (5)].string),&ElementVarExpr);
 	  if(ElementVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", (yyvsp[(2) - (5)].string));
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -2059,8 +2059,8 @@ yyreduce:
 	  signed long ElementIndexToAccess = ElementNoToAccess - ArrayLowerLimit;
 
 	  ((Word*)(ArrayVarExpr -> Addr))[ElementIndexToAccess] = atoi((yyvsp[(5) - (5)].string));
-	  
-	  
+
+
     ;}
     break;
 
@@ -2076,30 +2076,30 @@ yyreduce:
 	FindVarExpr((yyvsp[(1) - (3)].string),&CurrentVarExpr);
 	bool LocalVariableAlreadyExist = (CurrentVarExpr != NULL);
 	if( !LocalVariableAlreadyExist)
-	{    
+	{
 	    Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	    unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	    CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
 
 	    VAR_EXPR_Initialize(CurrentVarExpr);
-	    CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (3)].string)); 
+	    CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (3)].string));
 	    CurrentVarExpr -> Type = VAR_SHARED_CONSTANT_UNMANAGED;
 	    CurrentVarExpr -> Addr = SharedVarAddr;
 
 	    Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	    LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	    CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	    
+
 	    unsigned ManagedVersionNameLength = strlen("&") + strlen((yyvsp[(1) - (3)].string)) + 1 ;
 	    char* ManagedVersionName = malloc(ManagedVersionNameLength*sizeof(char));
 	    sprintf(ManagedVersionName,"&%s",(yyvsp[(1) - (3)].string));
 
 	    VAR_EXPR_Initialize(CurrentVarExpr);
-	    CurrentVarExpr -> Name = dupstr(ManagedVersionName); 
+	    CurrentVarExpr -> Name = dupstr(ManagedVersionName);
 	    CurrentVarExpr -> Type = VAR_SHARED_CONSTANT_MANAGED;
 	    CurrentVarExpr -> Addr = SharedVarAddr;
 	}
-	*((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi((yyvsp[(3) - (3)].string)); 
+	*((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi((yyvsp[(3) - (3)].string));
 	if(VerboseParserOutput)
 	    VAR_EXPR_Print(CurrentVarExpr);
 
@@ -2128,8 +2128,8 @@ yyreduce:
        VarExpr* EvaluatedVarExpr;
        FindVarExpr((yyvsp[(3) - (4)].string), &EvaluatedVarExpr);
        assert(EvaluatedVarExpr != NULL);
-       
-       START_TX(TxDesc,NULL);
+
+       START_TX(TxDesc,0);
        signed long AccessedVarExprValue = EvaluateVarExpr(EvaluatedVarExpr);
        printf("Value evaluated for '%s'= %ld\n", (yyvsp[(3) - (4)].string) , AccessedVarExprValue);
        COMMIT_TX(TxDesc);
@@ -2148,10 +2148,10 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 413 "bison_grammar.y"
-    { 
+    {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     PROPERTIES Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        ;}
     break;
 
@@ -2179,10 +2179,10 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 443 "bison_grammar.y"
-    { 
+    {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     DEFINITIONS Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        ;}
     break;
 
@@ -2194,7 +2194,7 @@ yyreduce:
 	  VarExpr* ArrayVarExpr = (yyvsp[(1) - (3)].VarExprPtr);
 	  int ArrayElementNum = (int) (ArrayVarExpr -> OperandID[1] - ArrayVarExpr -> OperandID[0] +1) ;
 	  assert(ArrayElementNum > 0);
-	  
+
 	  int  ElementNo;
 	  for( ElementNo=0; ElementNo < ArrayElementNum; ElementNo ++)
 	  {
@@ -2216,7 +2216,7 @@ yyreduce:
 	  ActualArrayName[LastCharPos]='\0';
 
 //	  ALLOC_AND_RETURN_STRING("%s",ActualArrayName);
-	  
+
 	  REPORT_READ_INPUT("\tSHARED Array '%s' with elements in range: '%s'\n",ActualArrayName, (yyvsp[(2) - (3)].RangeInfo)->string);
 	  FREE_RULE_STRINGS(3);
 
@@ -2226,7 +2226,7 @@ yyreduce:
 	  {
 	      AllocVarExpr(ActualArrayName, &ArrayVarExpr );
 	  }
-	  
+
 	  // Are all characters capital letters?
 	  unsigned CharNum = strlen(ActualArrayName);
 	  unsigned CharNo;
@@ -2250,8 +2250,8 @@ yyreduce:
 	  assert( ArrayLowerBoundVarExpr != NULL);
 	  VarExpr* ArrayUpperBoundVarExpr  = GetVarExprPtr((yyvsp[(2) - (3)].RangeInfo) -> MaxValExpressionID);
 	  assert( ArrayUpperBoundVarExpr != NULL);
-	  
-	  
+
+
 
 	  ArrayVarExpr -> OperandID[0] = EvaluateVarExpr(ArrayLowerBoundVarExpr);
 	  ArrayVarExpr -> OperandID[1] = EvaluateVarExpr(ArrayUpperBoundVarExpr);
@@ -2281,7 +2281,7 @@ yyreduce:
 	  ActualArrayName[LastCharPos]='\0';
 
 //	  ALLOC_AND_RETURN_STRING("%s",ActualArrayName);
-	  
+
 	  REPORT_READ_INPUT("\tLOCAL Array '%s' with elements in range: '%s'\n",(yyvsp[(1) - (3)].string), (yyvsp[(2) - (3)].RangeInfo)->string);
 	  FREE_RULE_STRINGS(3);
 
@@ -2291,7 +2291,7 @@ yyreduce:
 	  {
 	      AllocVarExpr(ActualArrayName, &ArrayVarExpr );
 	  }
-	  
+
 	  // Are all characters capital letters?
 	  unsigned CharNum = strlen(ActualArrayName);
 	  unsigned CharNo;
@@ -2315,8 +2315,8 @@ yyreduce:
 	  assert( ArrayLowerBoundVarExpr != NULL);
 	  VarExpr* ArrayUpperBoundVarExpr  = GetVarExprPtr((yyvsp[(2) - (3)].RangeInfo) -> MaxValExpressionID);
 	  assert( ArrayUpperBoundVarExpr != NULL);
-	  
-	  
+
+
 
 	  ArrayVarExpr -> OperandID[0] = EvaluateVarExpr(ArrayLowerBoundVarExpr);
 	  ArrayVarExpr -> OperandID[1] = EvaluateVarExpr(ArrayUpperBoundVarExpr);
@@ -2344,13 +2344,13 @@ yyreduce:
 	FindVarExpr((yyvsp[(1) - (3)].string),&CurrentVarExpr);
 	bool LocalVariableAlreadyExist = (CurrentVarExpr != NULL);
 	if( !LocalVariableAlreadyExist)
-	{    
+	{
 	    Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	    unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	    CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
 
 	    VAR_EXPR_Initialize(CurrentVarExpr);
-	    CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (3)].string)); 
+	    CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (3)].string));
 
 	    // Are all characters (after the underscore) capital letters?
 	    unsigned CharNum = strlen((yyvsp[(1) - (3)].string));
@@ -2370,9 +2370,9 @@ yyreduce:
 		CurrentVarExpr -> Type = VAR_LOCAL_SIMPLE_CONSTANT;
 	    else
 		CurrentVarExpr -> Type = VAR_LOCAL_SIMPLE;
-	    
+
 	}
-	CurrentVarExpr -> Value = (unsigned)atoi((yyvsp[(3) - (3)].string)); 
+	CurrentVarExpr -> Value = (unsigned)atoi((yyvsp[(3) - (3)].string));
 	if(VerboseParserOutput)
 	    VAR_EXPR_Print(CurrentVarExpr);
 
@@ -2391,42 +2391,42 @@ yyreduce:
 	   FindVarExpr((yyvsp[(1) - (3)].string),&CurrentVarExpr);
 	   bool VariableAlreadyExist = (CurrentVarExpr != NULL);
 	   if( !VariableAlreadyExist)
-	   {    
+	   {
 	       void* SharedVarAddr = (void *)malloc(sizeof(Word));
-	       
+
 	       // Since we are generating a shared array expression we generate two copies, one for managed and one for unmanaged accesses.
 	       // Creating Unmanaged copy
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	       unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	       
+
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (3)].string)); 
+	       CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (3)].string));
 	       CurrentVarExpr -> Type = VAR_SHARED_UNMANAGED;
 	       CurrentVarExpr -> Addr = SharedVarAddr;
 	       if(VerboseParserOutput)
 		   VAR_EXPR_Print(CurrentVarExpr);
-	       
+
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
-	       
+
 	       LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	       
+
 	       // Creating Managed copy
 	       unsigned ManagedVersionNameLength = strlen("&") + strlen((yyvsp[(1) - (3)].string)) + 1 ;
 	       char* ManagedVersionName = malloc(ManagedVersionNameLength*sizeof(char));
 	       sprintf(ManagedVersionName,"&%s",(yyvsp[(1) - (3)].string));
-	       
+
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr(ManagedVersionName); 
+	       CurrentVarExpr -> Name = dupstr(ManagedVersionName);
 	       CurrentVarExpr -> Type = VAR_SHARED_MANAGED;
 	       CurrentVarExpr -> Addr = SharedVarAddr;
-	       
+
 	   }
-	   *((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi((yyvsp[(3) - (3)].string)); 
+	   *((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi((yyvsp[(3) - (3)].string));
 	   if(VerboseParserOutput)
 	       VAR_EXPR_Print(CurrentVarExpr);
-	   
+
 	   REPORT_READ_INPUT("'%s' is assigned to '%s'\n", (yyvsp[(3) - (3)].string), (yyvsp[(1) - (3)].string));
 	   FREE_RULE_STRINGS(3);
        ;}
@@ -2438,39 +2438,39 @@ yyreduce:
 #line 691 "bison_grammar.y"
     {
 	   void* SharedVarAddr = (void *)malloc(sizeof(Word));
-	   
-	   
+
+
 	   VarExpr* CurrentVarExpr;
 	   FindVarExpr((yyvsp[(1) - (3)].string),&CurrentVarExpr);
 	   bool LocalVariableAlreadyExist = (CurrentVarExpr != NULL);
 	   if( !LocalVariableAlreadyExist)
-	   {    
+	   {
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	       unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	       
+
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (3)].string)); 
+	       CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (3)].string));
 	       CurrentVarExpr -> Type = VAR_SHARED_CONSTANT_UNMANAGED;
 	       CurrentVarExpr -> Addr = SharedVarAddr;
-	       
+
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	       LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	       
+
 	       unsigned ManagedVersionNameLength = strlen("&") + strlen((yyvsp[(1) - (3)].string)) + 1 ;
 	       char* ManagedVersionName = malloc(ManagedVersionNameLength*sizeof(char));
 	       sprintf(ManagedVersionName,"&%s",(yyvsp[(1) - (3)].string));
-	       
+
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr(ManagedVersionName); 
+	       CurrentVarExpr -> Name = dupstr(ManagedVersionName);
 	       CurrentVarExpr -> Type = VAR_SHARED_CONSTANT_MANAGED;
 	       CurrentVarExpr -> Addr = SharedVarAddr;
 	   }
-	   *((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi((yyvsp[(3) - (3)].string)); 
+	   *((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi((yyvsp[(3) - (3)].string));
 	   if(VerboseParserOutput)
 	       VAR_EXPR_Print(CurrentVarExpr);
-	   
+
 	   REPORT_READ_INPUT("'%s' is assigned to '%s'\n", (yyvsp[(3) - (3)].string), (yyvsp[(1) - (3)].string));
 	   FREE_RULE_STRINGS(3);
        ;}
@@ -2495,31 +2495,31 @@ yyreduce:
 	   char*    ActualArrayName = dupstr((yyvsp[(1) - (5)].string));
 	   unsigned LastCharPos     = strlen(ActualArrayName)-1;
 	   ActualArrayName[LastCharPos]='\0';
-	   
+
 	   // Checking array's existence
 	   VarExpr* ArrayVarExpr;
 	   FindVarExpr(ActualArrayName,&ArrayVarExpr);
 	   bool ArrayExists = (ArrayVarExpr != NULL);
 	   if( !ArrayExists)
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT SET element of UNKNOWN ARRAY  '%s'. Terminating...\n", ActualArrayName);
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
+
 	   VarExpr* ElementVarExpr;
 	   FindVarExpr((yyvsp[(2) - (5)].string),&ElementVarExpr);
 	   if(ElementVarExpr == NULL)
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", (yyvsp[(2) - (5)].string));
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
+
 	   signed long ElementNoToAccess = EvaluateVarExpr(ElementVarExpr);
 	   unsigned ArrayLowerLimit = ArrayVarExpr -> OperandID[0];
 	   unsigned ArrayUpperLimit = ArrayVarExpr -> OperandID[1];
@@ -2534,11 +2534,11 @@ yyreduce:
 	       assert(0);
 	   }
 	   signed long ElementIndexToAccess = ElementNoToAccess - ArrayLowerLimit;
-	   
+
 	   // The following can be done with an Evaluation on the managed version of ArrayVarExpr
 	   ((Word*)(ArrayVarExpr -> Addr))[ElementIndexToAccess] = atoi((yyvsp[(5) - (5)].string));
-	   
-	   
+
+
        ;}
     break;
 
@@ -2551,31 +2551,31 @@ yyreduce:
 	   char*    ActualArrayName = dupstr((yyvsp[(1) - (5)].string));
 	   unsigned LastCharPos     = strlen(ActualArrayName)-1;
 	   ActualArrayName[LastCharPos]='\0';
-	   
+
 	   // Checking array's existence
 	   VarExpr* ArrayVarExpr;
 	   FindVarExpr(ActualArrayName,&ArrayVarExpr);
 	   bool ArrayExists = (ArrayVarExpr != NULL);
 	   if( !ArrayExists)
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT SET element of UNKNOWN ARRAY  '%s'. Terminating...\n", ActualArrayName);
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
+
 	   VarExpr* ElementVarExpr;
 	   FindVarExpr((yyvsp[(2) - (5)].string),&ElementVarExpr);
 	   if(ElementVarExpr == NULL)
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", (yyvsp[(2) - (5)].string));
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
+
 	   signed long ElementNoToAccess = EvaluateVarExpr(ElementVarExpr);
 	   unsigned ArrayLowerLimit = ArrayVarExpr -> OperandID[0];
 	   unsigned ArrayUpperLimit = ArrayVarExpr -> OperandID[1];
@@ -2590,10 +2590,10 @@ yyreduce:
 	       assert(0);
 	   }
 	   signed long ElementIndexToAccess = ElementNoToAccess - ArrayLowerLimit;
-	   
+
 	   ((Word*)(ArrayVarExpr -> Addr))[ElementIndexToAccess] = atoi((yyvsp[(5) - (5)].string));
-	   
-	   
+
+
        ;}
     break;
 
@@ -2601,7 +2601,7 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 836 "bison_grammar.y"
-    { 
+    {
 	   REPORT_READ_INPUT("'%s' is assigned to '%s:%s'\n", (yyvsp[(4) - (4)].string), (yyvsp[(1) - (4)].string), (yyvsp[(2) - (4)].VariableReturn)->string);
 	   FREE_RULE_STRINGS(4);
        ;}
@@ -2616,14 +2616,14 @@ yyreduce:
 	   unsigned CurrentVarExprID = FindVarExpr((yyvsp[(1) - (5)].string),&CurrentVarExpr);
 	   bool LocalVariableAlreadyExist = (CurrentVarExpr != NULL);
 	   if( !LocalVariableAlreadyExist)
-	   {    
+	   {
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	       CurrentVarExprID = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, CurrentVarExprID, sizeof(VarExpr));
 
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (5)].string)); 
-	       
+	       CurrentVarExpr -> Name = dupstr((yyvsp[(1) - (5)].string));
+
 	       // Are all characters (after the underscore) capital letters?
 	       unsigned CharNum = strlen((yyvsp[(1) - (5)].string));
 	       unsigned CharNo;
@@ -2642,18 +2642,18 @@ yyreduce:
 		   CurrentVarExpr -> Type = OP_RANDOM_DIST_CONSTANT;
 	       else
 		   CurrentVarExpr -> Type = OP_RANDOM_DIST;
-	       
+
 	   }
 	   else if( CurrentVarExpr -> Type == OP_RANDOM_DIST_CONSTANT )
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT assign new value to CONSTANT LOCAL VARIABLE '%s'. Terminating...\n", (yyvsp[(1) - (5)].string));
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
-	   
+
+
 	   // Operand Map for random variables:
 	   //   OperandID[0]: MinValExpressionID
 	   //   OperandID[1]: MaxValExpressionID
@@ -2661,7 +2661,7 @@ yyreduce:
 	   //   OperandID[3]: Increment between values in the range
 	   //   OperandID[4]: Random distribution function pointer
            // OperandID[3] and OperandID[4] are not yet used.
-	   
+
 	   struct RangeInfoStruct* ParsedRangeInfo = (yyvsp[(4) - (5)].RangeInfo);
 	   CurrentVarExpr -> Operation    = 1; // Operation is set to non-zero for the variable to initially have a random value.
 	   CurrentVarExpr -> OperandID[0] = ParsedRangeInfo -> MinValExpressionID ;
@@ -2675,7 +2675,7 @@ yyreduce:
 
 
 	   FREE_RULE_STRINGS(5);
-	   
+
        ;}
     break;
 
@@ -2698,15 +2698,15 @@ yyreduce:
 	     TxDefArray[TxDefNo].Name = dupstr(CurrentTxDef ->  Name);
 
 	     TxDefArray[TxDefNo].TxDefOptionNum = CurrentTxDefOptionNum;
-	     TxDefArray[TxDefNo].TxOpNum  =  (unsigned*)malloc( CurrentTxDefOptionNum*sizeof(unsigned) ); 
+	     TxDefArray[TxDefNo].TxOpNum  =  (unsigned*)malloc( CurrentTxDefOptionNum*sizeof(unsigned) );
 	     TxDefArray[TxDefNo].TxOpList    =  (TxOpContainer_t**) malloc( CurrentTxDefOptionNum*sizeof(TxOpContainer_t*) ) ;
-	     TxDefArray[TxDefNo].VarToUpdateNum  = CurrentTxDef -> VarToUpdateNum; 
+	     TxDefArray[TxDefNo].VarToUpdateNum  = CurrentTxDef -> VarToUpdateNum;
 	     unsigned SizeOfVarToUpdateListInMemory = CurrentTxDef -> VarToUpdateNum * sizeof(unsigned);
 	     TxDefArray[TxDefNo].VarListToUpdate = (unsigned*) malloc(SizeOfVarToUpdateListInMemory);
 	     memcpy(TxDefArray[TxDefNo].VarListToUpdate, CurrentTxDef ->VarListToUpdate, SizeOfVarToUpdateListInMemory);
 
-		     
-	     // We do not need the OptionConditionID list. It is just filled 
+
+	     // We do not need the OptionConditionID list. It is just filled
 	     // in for the copying of the data structure works correctly.
 	     unsigned CopySizeInMemory = CurrentTxDefOptionNum*sizeof(int);
 	     TxDefArray[TxDefNo].OptionConditionID     = (int*) malloc(CopySizeInMemory);
@@ -2718,7 +2718,7 @@ yyreduce:
 
 
 	     // We do not need any OptionNo. It is put here as a constant for backwards compatibility.
-	     unsigned OptionNo=0;	   
+	     unsigned OptionNo=0;
 	     unsigned TxOpListSizeInMemory = (CurrentTxDef -> TxOpNum[OptionNo])*sizeof(TxOpContainer_t);
 	     TxDefArray[TxDefNo].TxOpList[OptionNo] = (TxOpContainer_t*)malloc(TxOpListSizeInMemory);
 	     memcpy(TxDefArray[TxDefNo].TxOpList[OptionNo], CurrentTxDef ->TxOpList[OptionNo], TxOpListSizeInMemory);
@@ -2730,8 +2730,8 @@ yyreduce:
 	     free(CurrentTxDef ->  Name);
 	 }
 	 Free_DynamicArray(&Dyn_TxDefArray);
-	 
-	 
+
+
      ;}
     break;
 
@@ -2739,7 +2739,7 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 970 "bison_grammar.y"
-    { 
+    {
 
 #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
 	   InitializeTempThreadStructuresUsedInParsing();
@@ -2751,7 +2751,7 @@ yyreduce:
 
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     TRANSACTIONS Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        ;}
     break;
 
@@ -2780,35 +2780,35 @@ yyreduce:
 	   unsigned TxOpNo;
 	   for(TxOpNo=0; TxOpNo< AddedElement -> TxOpNum[0] ; TxOpNo++)
 	   {
-	       TxOpContainer_t* SourceTxOpContainer = (TxOpContainer_t*)GetElement_DynamicArray(&CurrentTxOpList,TxOpNo,sizeof(TxOpContainer_t)); 
-	       TxOpContainer_t* TargetTxOpContainer = &(AddedElement -> TxOpList[0][TxOpNo]); 
+	       TxOpContainer_t* SourceTxOpContainer = (TxOpContainer_t*)GetElement_DynamicArray(&CurrentTxOpList,TxOpNo,sizeof(TxOpContainer_t));
+	       TxOpContainer_t* TargetTxOpContainer = &(AddedElement -> TxOpList[0][TxOpNo]);
 	       TX_OP_CONTAINER_Copy(SourceTxOpContainer, TargetTxOpContainer);
 	   }
 
 
-	   bool TransactionReadOnly = TRUE; 
+	   bool TransactionReadOnly = TRUE;
 	   AddedElement -> InherentDelay = 0;
-	   unsigned TxOpNum = AddedElement -> TxOpNum[0]; 
+	   unsigned TxOpNum = AddedElement -> TxOpNum[0];
 	   for(TxOpNo=0; TxOpNo< TxOpNum; TxOpNo++)
 	   {
 	       TxOpContainer_t* CurrentTxOpContainer = &(AddedElement -> TxOpList[0][TxOpNo]);
-	       
+
 	       if(TransactionReadOnly )
 	       {
-		   bool CurrentTxOpIsAWrite = (CurrentTxOpContainer -> TxOperation == WRITE); 
+		   bool CurrentTxOpIsAWrite = (CurrentTxOpContainer -> TxOperation == WRITE);
 		   if(CurrentTxOpIsAWrite )
 		   {
 		       TransactionReadOnly = FALSE;
-		       // if the inherent delay is also calculated in the same as this then remove this break 
-		       break; 
+		       // if the inherent delay is also calculated in the same as this then remove this break
+		       break;
 		   }
 	       }
-	       
+
 /* 	       CurrentTxInfo -> InherentDelay +=  CurrentTxOpContainer -> PrecedingDelay; */
 /* 	       bool LastTxOp = (TxOpNo == TxOpNum -1); */
 /* 	       if( LastTxOp ) */
 /* 		   CurrentTxInfo -> InherentDelay +=  CurrentTxOpContainer -> DelayBeforeCommit; */
-	       
+
 	   }
 	   AddedElement -> ReadOnly = TransactionReadOnly;
 	   Clear_DynamicArray(&CurrentTxOpList);
@@ -2829,7 +2829,7 @@ yyreduce:
 	       AddedScheduleThreadInfo -> Name = SchedThreadName;
 
 	       // There is only one transaction per thread
-	       AddedScheduleThreadInfo -> TxContainerNum = 1;     
+	       AddedScheduleThreadInfo -> TxContainerNum = 1;
 	       AddedScheduleThreadInfo -> TxContainerList = (TxContainer_t*)malloc(sizeof(TxContainer_t));
 	       (AddedScheduleThreadInfo -> TxContainerList)-> CandidateTxNum = 1;
 	       (AddedScheduleThreadInfo -> TxContainerList)-> TxCandidateList = (TxCandidate_t*)malloc(sizeof(TxCandidate_t));
@@ -2846,11 +2846,11 @@ yyreduce:
 	       (AddedScheduleThreadInfo -> TxContainerList)-> LoopStartNode = FALSE   ;
 
 	       AddedScheduleThreadInfo -> TxDefNum = 1;
-	       AddedScheduleThreadInfo -> TxDefArray = (TxInfo_t*) malloc(sizeof(TxInfo_t)); 
+	       AddedScheduleThreadInfo -> TxDefArray = (TxInfo_t*) malloc(sizeof(TxInfo_t));
 	       TX_INFO_Copy(AddedElement, AddedScheduleThreadInfo -> TxDefArray);
 
 	       ScheduleThreadNum++;
-	   }     
+	   }
 
 #endif
 
@@ -2938,14 +2938,14 @@ yyreduce:
 	   unsigned TxOpListSize  = GetSize_DynamicArray(&CurrentTxOpList);
 	   bool     TxOpListEmpty = (TxOpListSize == 0);
 	   TxOpContainer_t* TxOpContainerToAttach = NULL;
-	   
+
 	   if( TxOpListEmpty  )
 	   {
 	       // Generate New TxOp and set TxOpContainerToAttach with its pointer
 	       TxOpInfo_t  CurrentOpInfo;
 	       CurrentOpInfo.Delay = 0 ;
 	       CurrentOpInfo.Op    = INVALID ;
-	  
+
 	       GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 
 	       // We set the pointer of the first element of CurrentTxOpList to TxOpContainerToAttach
@@ -2958,8 +2958,8 @@ yyreduce:
 	   }
 
 	   TxOpContainerToAttach -> VarAssignNum = GetSize_DynamicArray(&Dyn_VarAssignList);
-	   TxOpContainerToAttach -> VarAssigns   = MakeStaticCopy_DynamicArray(&Dyn_VarAssignList, sizeof(var_assign_t)); 
-	   
+	   TxOpContainerToAttach -> VarAssigns   = MakeStaticCopy_DynamicArray(&Dyn_VarAssignList, sizeof(var_assign_t));
+
 	   Clear_DynamicArray(&Dyn_VarAssignList);
 
 	   ALLOC_AND_RETURN_STRING("%s",(yyvsp[(1) - (1)].string));
@@ -2979,23 +2979,23 @@ yyreduce:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = LABEL_OP ;
-	  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 
 		  // Adding  the label name to the last added TxOpContainer
 		  unsigned LastTxOpNo = GetSize_DynamicArray(&CurrentTxOpList) - 1;
 		  TxOpContainer_t* LabelOpContainer = (TxOpContainer_t*) GetElement_DynamicArray(&CurrentTxOpList,LastTxOpNo, sizeof(TxOpContainer_t));
-		     // We would like to stript the @ sign at the beginning of 
-		     // LABEL string so we start copying from the element 1 of 
-		     // $1 instead of its 0th element 
+		     // We would like to stript the @ sign at the beginning of
+		     // LABEL string so we start copying from the element 1 of
+		     // $1 instead of its 0th element
 		  LabelOpContainer -> Label = dupstr(&((yyvsp[(1) - (1)].string)[1]));
 
 
 //		  CurrentDelayVal = 0 ;
-		  
-	      } 
-	   
-	  #endif 
+
+	      }
+
+	  #endif
 
 	   ALLOC_AND_RETURN_STRING("Label %s",(yyvsp[(1) - (1)].string));
 	   FREE_RULE_STRINGS(1);
@@ -3044,27 +3044,27 @@ yyreduce:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = READ ;
-		  
+
 //		  CurrentOpInfo.AddrGenIDList[0] = CurrentAssociatedAddrGenIDArray[0];
 //		  CurrentOpInfo.AddrGenIDList[1] = CurrentAssociatedAddrGenIDArray[1];
 
 		  CurrentOpInfo.AddrOp = GetMemAccessOpAddressParameter((yyvsp[(2) - (3)].string));
 		  CurrentOpInfo.AddrGenIDList[0] = (unsigned) -1;
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
-		  
+
 //		  CurrentDelayVal = 0 ;
-		  
+
 //		  CurrentAssociatedAddrGenIDArray[0] = INVALID_ADDR_GEN_ID;
 //		  CurrentAssociatedAddrGenIDArray[1] = INVALID_ADDR_GEN_ID;
 //		  CurrentAddrOp = INVALID_ADDR_OP;
-	      } 
-	   
-	  #endif 
+	      }
+
+	  #endif
 
 	  ALLOC_AND_RETURN_STRING("READ from address of '%s'", (yyvsp[(2) - (3)].string));
  	  FREE_RULE_STRINGS(3);
-   
+
        ;}
     break;
 
@@ -3080,23 +3080,23 @@ yyreduce:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = READ ;
-		  
+
 //		  CurrentOpInfo.AddrGenIDList[0] = CurrentAssociatedAddrGenIDArray[0];
 //		  CurrentOpInfo.AddrGenIDList[1] = CurrentAssociatedAddrGenIDArray[1];
 
 		  CurrentOpInfo.AddrOp = GetMemAccessOpAddressParameter((yyvsp[(2) - (5)].string));
 		  CurrentOpInfo.AddrGenIDList[0] = GetReadAccessTargetParameter((yyvsp[(4) - (5)].string));
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
-		  
+
 //		  CurrentDelayVal = 0 ;
-		  
+
 //		  CurrentAssociatedAddrGenIDArray[0] = INVALID_ADDR_GEN_ID;
 //		  CurrentAssociatedAddrGenIDArray[1] = INVALID_ADDR_GEN_ID;
 //		  CurrentAddrOp = INVALID_ADDR_OP;
-	      } 
-	   
-	  #endif 
+	      }
+
+	  #endif
 
 	  ALLOC_AND_RETURN_STRING("READ from address of '%s' into '%s'.",(yyvsp[(2) - (5)].string), (yyvsp[(4) - (5)].string));
  	  FREE_RULE_STRINGS(5);
@@ -3115,21 +3115,21 @@ yyreduce:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = WRITE ;
-		  
+
 //		  CurrentOpInfo.AddrGenIDList[0] = CurrentAssociatedAddrGenIDArray[0];
 //		  CurrentOpInfo.AddrGenIDList[1] = CurrentAssociatedAddrGenIDArray[1];
 		  CurrentOpInfo.AddrOp = GetMemAccessOpAddressParameter((yyvsp[(2) - (3)].string));
 		  CurrentOpInfo.AddrGenIDList[0] = (unsigned) -1;
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 
 //		  CurrentDelayVal = 0 ;
-		  
+
 //		  CurrentAssociatedAddrGenIDArray[0] = INVALID_ADDR_GEN_ID;
 //		  CurrentAssociatedAddrGenIDArray[1] = INVALID_ADDR_GEN_ID;
 //		  CurrentAddrOp = INVALID_ADDR_OP;
-	      } 
-	 #endif 
+	      }
+	 #endif
 
 	  ALLOC_AND_RETURN_STRING("WRITE to address of '%s'.",(yyvsp[(2) - (3)].string));
  	  FREE_RULE_STRINGS(3);
@@ -3150,22 +3150,22 @@ yyreduce:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = WRITE ;
-		  
+
 //		  CurrentOpInfo.AddrGenIDList[0] = CurrentAssociatedAddrGenIDArray[0];
 //		  CurrentOpInfo.AddrGenIDList[1] = CurrentAssociatedAddrGenIDArray[1];
 		  CurrentOpInfo.AddrOp = GetMemAccessOpAddressParameter((yyvsp[(2) - (5)].string));
 		  CurrentOpInfo.AddrGenIDList[0] = GetWriteAccessTargetParameter((yyvsp[(4) - (5)].string));
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
-		  
+
 //		  CurrentDelayVal = 0 ;
-		  
+
 //		  CurrentAssociatedAddrGenIDArray[0] = INVALID_ADDR_GEN_ID;
 //		  CurrentAssociatedAddrGenIDArray[1] = INVALID_ADDR_GEN_ID;
 //		  CurrentAddrOp = INVALID_ADDR_OP;
-	      } 
+	      }
 	 #endif
-	      
+
 	  ALLOC_AND_RETURN_STRING("WRITE  '%s' to address of '%s'.",(yyvsp[(4) - (5)].string), (yyvsp[(2) - (5)].string));
  	  FREE_RULE_STRINGS(5);
        ;}
@@ -3183,13 +3183,13 @@ yyreduce:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = ABORT ;
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
-		  
-	      } 
+
+	      }
 	 #endif
 
-	  
+
 	  ALLOC_AND_RETURN_STRING("ABORT with probability '%s'",(yyvsp[(2) - (3)].string));
  	  FREE_RULE_STRINGS(3);
       ;}
@@ -3234,13 +3234,13 @@ yyreduce:
 	  unsigned LoopConditionTxOpPos = (yyvsp[(2) - (6)].ConditionReturn) -> ConditionTxOpContainerPos  ;
 	  unsigned LoopEndTxOpPos = GetSize_DynamicArray(&CurrentTxOpList) - 1 ;
 	  char* String = dupstr((yyvsp[(2) - (6)].ConditionReturn)->string);
-	  
+
 	  // Make the forward link to the next operation after the loop (Link to jump over the loop)
 	  // LOOP_BACK in following function is named like that due to reuse of previous version of tmunit.
 	  // Actually it corresponds to a BRANCH or a JUMP in the new design.
 	  InsertBranchAmongTxOpContainers(&CurrentTxOpList, LoopConditionTxOpPos, LoopEndTxOpPos+1, LOOP_BACK, 0);
 
-	  // Make the backwards link from last element of the loop to the conditional tx_op_container. 
+	  // Make the backwards link from last element of the loop to the conditional tx_op_container.
 	  // Again NEXT is the reuse of the previous version of tmunit.
 	  InsertBranchAmongTxOpContainers(&CurrentTxOpList, LoopEndTxOpPos, LoopConditionTxOpPos,  NEXT, 0);
 
@@ -3256,7 +3256,7 @@ yyreduce:
 /* Line 1464 of yacc.c  */
 #line 1415 "bison_grammar.y"
     {
-	    // yyvsp[0].string  is the string corresponding to the 
+	    // yyvsp[0].string  is the string corresponding to the
 	    // 'LoopCondition' in the above 'TxLoopDef' rule
 	    REPORT_READ_INPUT("Ele[%u]: LOOP (Looping Condition: '%s')\n",TxDefElementNo, yyvsp[0].ConditionReturn -> string);
 	    TxDefElementNo++;
@@ -3287,23 +3287,23 @@ yyreduce:
 	       LoopIteratorVarExpr -> Type = VAR_LOCAL_SIMPLE;
 	       LoopIteratorVarExpr -> Value = 0;
 	   }
-	   
+
 //	   VarExpr* LowerLimitVarExpr = GetVarExprPtr($3 -> MinValExpressionID);
 //	   LoopIteratorVarExpr -> Value = EvaluateVarExpr(LowerLimitVarExpr);
 
 	   VarExpr* UpperLimitVarExpr = GetVarExprPtr((yyvsp[(3) - (3)].RangeInfo) -> MaxValExpressionID);
-	   
-	   unsigned LoopIteratorConditionStringLength = strlen((yyvsp[(1) - (3)].VariableReturn)->string) + strlen("<=") + strlen(UpperLimitVarExpr->Name) + 1; 	   
+
+	   unsigned LoopIteratorConditionStringLength = strlen((yyvsp[(1) - (3)].VariableReturn)->string) + strlen("<=") + strlen(UpperLimitVarExpr->Name) + 1;
 	   char* LoopIteratorConditionString = malloc(LoopIteratorConditionStringLength*sizeof(char));
 	   sprintf(LoopIteratorConditionString,"%s<=%s",(yyvsp[(1) - (3)].VariableReturn)->string,UpperLimitVarExpr->Name);
-	   
+
 	   VarExpr* LoopConditionVarExpr;
 	   unsigned LoopConditionVarExprID = AllocVarExpr(LoopIteratorConditionString, &LoopConditionVarExpr);
 	   LoopConditionVarExpr -> Type = OP_RELATIONAL;
 	   LoopConditionVarExpr -> Operation = SMALLER_EQUAL;
-	   LoopConditionVarExpr -> OperandID[0] = LoopIteratorID;	   
-	   LoopConditionVarExpr -> OperandID[1] = (yyvsp[(3) - (3)].RangeInfo) -> MaxValExpressionID;   
-	   LoopConditionVarExpr -> OperandID[2] = (yyvsp[(3) - (3)].RangeInfo) -> MinValExpressionID;   
+	   LoopConditionVarExpr -> OperandID[0] = LoopIteratorID;
+	   LoopConditionVarExpr -> OperandID[1] = (yyvsp[(3) - (3)].RangeInfo) -> MaxValExpressionID;
+	   LoopConditionVarExpr -> OperandID[2] = (yyvsp[(3) - (3)].RangeInfo) -> MinValExpressionID;
 
 	   unsigned IteratorIncementStringLenght = strlen((yyvsp[(1) - (3)].VariableReturn)->string) + strlen("+") + strlen("9999")+ 1;
 	   char* IteratorIncementString = (char *)malloc(IteratorIncementStringLenght * sizeof(char));
@@ -3313,7 +3313,7 @@ yyreduce:
 	   char* IncrementValueExprString = (char*) malloc(IncrementValueExprStringLenght*sizeof(char));
 	   sprintf(IncrementValueExprString,"%u", (yyvsp[(3) - (3)].RangeInfo)->Increment);
 
-	   
+
 	   VarExpr* IncrementValueExpr;
 	   unsigned IncrementValueExprID = FindVarExpr(IncrementValueExprString, &IncrementValueExpr);
 	   if( IncrementValueExpr == NULL)
@@ -3322,8 +3322,8 @@ yyreduce:
 	       IncrementValueExpr -> Type = VAR_LOCAL_SIMPLE_CONSTANT;
 	       IncrementValueExpr -> Value = (yyvsp[(3) - (3)].RangeInfo)->Increment;
 	   }
-	   
-	   
+
+
 	   VarExpr* LoopIteratorIncementExpr;
 	   unsigned LoopIteratorIncementExprID = FindVarExpr(IteratorIncementString, &LoopIteratorIncementExpr);
 	   if(LoopIteratorIncementExpr == NULL)
@@ -3334,33 +3334,33 @@ yyreduce:
 	       LoopIteratorIncementExpr -> OperandID[0] = LoopIteratorID;
 	       LoopIteratorIncementExpr -> OperandID[1] = IncrementValueExprID;
 	   }
-	   
+
 
 	   // Generating a tx_op_container for the above condition.
 	   TxOpInfo_t  CurrentOpInfo;
 	   CurrentOpInfo.Delay = 0 ;
 	   CurrentOpInfo.Op    = INVALID ;
 	   CurrentOpInfo.AddrOp = 0;
-	   
+
 	   GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 	   unsigned LoopConditionTxOpPos = GetSize_DynamicArray(&CurrentTxOpList) - 1 ;
 	   TxOpContainer_t* LoopConditionTxOpContainer = GetElement_DynamicArray(&CurrentTxOpList, LoopConditionTxOpPos, sizeof(TxOpContainer_t) );
 	   LoopConditionTxOpContainer -> ConditionExprPos =  LoopConditionVarExprID;
-	  
-	   LoopConditionTxOpContainer -> LoopIteratorContainer = TRUE; 
+
+	   LoopConditionTxOpContainer -> LoopIteratorContainer = TRUE;
 	   LoopConditionTxOpContainer -> LoopExecuting = FALSE;
 	   LoopConditionTxOpContainer -> VarAssignNum = 1;
 	   LoopConditionTxOpContainer -> VarAssigns = (var_assign_t*)malloc(sizeof(var_assign_t));
 	   (LoopConditionTxOpContainer -> VarAssigns[0]).AssignedVarID = LoopIteratorID;
 	   (LoopConditionTxOpContainer -> VarAssigns[0]).EvaluatedVarExprID = LoopIteratorIncementExprID;
-	  
-	  
+
+
            struct ConditionReturnStruct* ReturnVal = (struct ConditionReturnStruct*)malloc(sizeof(struct ConditionReturnStruct));
 
 	   unsigned ReturnStringSize = strlen((yyvsp[(1) - (3)].VariableReturn)->string) + strlen((yyvsp[(2) - (3)].string)) + strlen((yyvsp[(3) - (3)].RangeInfo)->string) +1 ;
 	   char* ReturnString = (char*) malloc(ReturnStringSize * sizeof(char));
 	   sprintf(ReturnString,"'%s%s%s'",(yyvsp[(1) - (3)].VariableReturn)->string, (yyvsp[(2) - (3)].string), (yyvsp[(3) - (3)].RangeInfo)->string);
-	   
+
 	   ReturnVal-> string= ReturnString;
 	   ReturnVal-> ConditionTxOpContainerPos = LoopConditionTxOpPos;
 	   (yyval.ConditionReturn) = ReturnVal;
@@ -3395,7 +3395,7 @@ yyreduce:
 	  for(TxOpNo =0; TxOpNo< TxOpNum; TxOpNo++)
 	  {
 	      unsigned ConditionTerminatingTxOpPos     = ConditionTerminatingTxOpArray[TxOpNo];
-	      assert(ConditionTerminatingTxOpPos < IfElseBlockSuccessorTxOpContainerPos ); 
+	      assert(ConditionTerminatingTxOpPos < IfElseBlockSuccessorTxOpContainerPos );
 	      InsertBranchAmongTxOpContainers(&CurrentTxOpList, ConditionTerminatingTxOpPos, IfElseBlockSuccessorTxOpContainerPos, NEXT, 0);
 	  }
 
@@ -3448,12 +3448,12 @@ yyreduce:
 
 	  unsigned ConditionalBlockStartTxOpPos = ConditionInfo-> ConditionTxOpContainerPos;
 	  unsigned ConditionalBlockSuccessorTxOpPos =  GetSize_DynamicArray(&CurrentTxOpList) ;
-	  // The successor block should be at least 1 tx_op_container further 
-	  // than the initial conditional tx_op_container ( a distance of 1  
+	  // The successor block should be at least 1 tx_op_container further
+	  // than the initial conditional tx_op_container ( a distance of 1
           // is  when no tx_op defined in the conditional block)
 	  assert( ConditionalBlockSuccessorTxOpPos - ConditionalBlockStartTxOpPos >= 1);
 
-	  // Make the forward link to the next operation after the condition (either another condition or some TxOp) 
+	  // Make the forward link to the next operation after the condition (either another condition or some TxOp)
 	  // LOOP_BACK in following function is named like that due to reuse of previous version of tmunit.
 	  // Actualy it corresponds to a BRANCH or a JUMP in the new design.
 	  InsertBranchAmongTxOpContainers(&CurrentTxOpList, ConditionalBlockStartTxOpPos, ConditionalBlockSuccessorTxOpPos, LOOP_BACK, 0);
@@ -3462,7 +3462,7 @@ yyreduce:
 	  Extend_DynamicArray( &ConditionTerminationTxOpList,sizeof(unsigned));
 	  unsigned LastAddedElementPos = GetSize_DynamicArray(&ConditionTerminationTxOpList) - 1;
 	  unsigned * CurrentElement = (unsigned*) GetElement_DynamicArray(&ConditionTerminationTxOpList, LastAddedElementPos , sizeof(unsigned));
-	  *CurrentElement = ConditionalBlockSuccessorTxOpPos -1; 
+	  *CurrentElement = ConditionalBlockSuccessorTxOpPos -1;
 
 	  ALLOC_AND_RETURN_STRING("%s",ConditionInfo-> string);
 	  FREE_RULE_STRINGS(4);
@@ -3477,14 +3477,14 @@ yyreduce:
 	     // yyvsp[1].string  indicates the  string returned for the "Condition"  in ConditionalTxSpecElement rule.
 	     REPORT_READ_INPUT("Parsing behaviour for  CONDITION: '%s'\n",yyvsp[1].string);
 
-	     if( EndOfIfElseBlock) 
+	     if( EndOfIfElseBlock)
 	     {
-		 char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+		 char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 		 sprintf(ErrorMessage,"Encountered UNEXPECTED CONDITION BLOCK (with condition '%s') after an ELSE block.", yyvsp[1].string );
 		 yyerror(ErrorMessage);
 		 free(ErrorMessage);
 		 exit(1);
-		 
+
 	     }
 
          ;}
@@ -3506,27 +3506,27 @@ yyreduce:
     {
 
 	  char* ConditionString = (yyvsp[(2) - (3)].string);
-	  
+
 	  VarExpr* ConditionVarExpr;
 	  unsigned ConditionVarExprID = FindVarExpr(ConditionString, &ConditionVarExpr);
 	  if( ConditionVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN Conditional Expression '%s' is encountered while constructing conditional transaction block.\n", ConditionString);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      assert(0);
 	  }
-	  
+
 	  TxOpInfo_t  CurrentOpInfo;
 	  CurrentOpInfo.Delay = 0 ;
 	  CurrentOpInfo.Op    = INVALID ;
 	  CurrentOpInfo.AddrOp = 0;
-	  
+
 	  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 	  unsigned ConditionTxOpPos = GetSize_DynamicArray(&CurrentTxOpList) - 1 ;
 	  TxOpContainer_t* ConditionTxOpContainer = GetElement_DynamicArray(&CurrentTxOpList, ConditionTxOpPos, sizeof(TxOpContainer_t) );
-	  
+
 	  ConditionTxOpContainer -> ConditionExprPos =  ConditionVarExprID;
 
 	  struct ConditionReturnStruct* ReturnVal = (struct ConditionReturnStruct*)malloc(sizeof(struct ConditionReturnStruct));
@@ -3536,7 +3536,7 @@ yyreduce:
 	  (yyval.ConditionReturn) = ReturnVal;
 
 
-	  
+
 
 //	  ALLOC_AND_RETURN_STRING("%s",$2);
 	  FREE_RULE_STRINGS(3);
@@ -3573,7 +3573,7 @@ yyreduce:
 	 unsigned FirstExprID = FindVarExpr((yyvsp[(1) - (3)].string), &FirstExpr);
 	 if( FirstExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Variable Expression '%s' is encountered in Conditinal Expression. Terminating...\n", (yyvsp[(1) - (3)].string));
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
@@ -3583,19 +3583,19 @@ yyreduce:
 	 unsigned SecondExprID = FindVarExpr((yyvsp[(3) - (3)].string), &SecondExpr);
 	 if( SecondExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Variable Expression '%s' is encountered in Conditinal Expression. Terminating...\n", (yyvsp[(3) - (3)].string));
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
 	     assert(0);
 	 }
-	 
+
 
 
 	 unsigned ConditionalExpressionStringLength = strlen((yyvsp[(1) - (3)].string)) + strlen((yyvsp[(2) - (3)].string)) + strlen((yyvsp[(3) - (3)].string)) +1;
 	 char* ConditionalExpressionString = (char*)malloc(ConditionalExpressionStringLength*sizeof(char));
 	 sprintf(ConditionalExpressionString,"%s%s%s",(yyvsp[(1) - (3)].string), (yyvsp[(2) - (3)].string), (yyvsp[(3) - (3)].string));
-	 
+
 	 VarExpr* ConditionalVarExpr;
 	 FindOrAllocVarExpr(ConditionalExpressionString, &ConditionalVarExpr);
 	 assert(ConditionalVarExpr != NULL);
@@ -3603,9 +3603,9 @@ yyreduce:
 	 ConditionalVarExpr -> Operation = ResolveOperationType((yyvsp[(2) - (3)].string));
 	 ConditionalVarExpr -> OperandID[0] = FirstExprID;
 	 ConditionalVarExpr -> OperandID[1] = SecondExprID;
-	  
+
 	 (yyval.string) = ConditionalExpressionString;
-	 
+
 	 FREE_RULE_STRINGS(3);
 	 REPORT_READ_INPUT("\tEncountered SIMPLE CONDITIONAL EXPRESSION '%s'\n",(yyval.string));
      ;}
@@ -3632,7 +3632,7 @@ yyreduce:
 	 unsigned SimpleCondExprID = FindVarExpr((yyvsp[(3) - (4)].string), &SimpleCondExpr);
 	 if( SimpleCondExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Simple Conditional Expression '%s' is encountered in Complex Conditional Expression. Terminating...\n", (yyvsp[(3) - (4)].string));
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
@@ -3642,14 +3642,14 @@ yyreduce:
 	 unsigned ConditionalExpressionStringLength = strlen((yyvsp[(1) - (4)].string)) + strlen((yyvsp[(2) - (4)].string)) + strlen((yyvsp[(3) - (4)].string)) + strlen((yyvsp[(4) - (4)].string)) + 1;
 	 char* ConditionalExpressionString = (char*)malloc(ConditionalExpressionStringLength*sizeof(char));
 	 sprintf(ConditionalExpressionString,"%s%s%s%s",(yyvsp[(1) - (4)].string), (yyvsp[(2) - (4)].string), (yyvsp[(3) - (4)].string), (yyvsp[(4) - (4)].string));
-	 
+
 	 VarExpr* ConditionalVarExpr;
 	 FindOrAllocVarExpr(ConditionalExpressionString, &ConditionalVarExpr);
 	 assert(ConditionalVarExpr != NULL);
 	 ConditionalVarExpr -> Type = OP_BOOLEAN_UNARY;
 	 ConditionalVarExpr -> Operation = ResolveOperationType((yyvsp[(1) - (4)].string));
 	 ConditionalVarExpr -> OperandID[0] = SimpleCondExprID;
-	  
+
 	 (yyval.string) = ConditionalExpressionString;
 
 	 FREE_RULE_STRINGS(4);
@@ -3673,11 +3673,11 @@ yyreduce:
 #line 1777 "bison_grammar.y"
     {
 	    char* AccessedConditionalString = (yyvsp[(2) - (3)].string);
-	    unsigned NewStringSize = strlen("(") + strlen(AccessedConditionalString) + strlen(")") +1; 
+	    unsigned NewStringSize = strlen("(") + strlen(AccessedConditionalString) + strlen(")") +1;
 	    char* ReturnString = malloc(NewStringSize*sizeof(char));
 	    sprintf(ReturnString,"(%s)",AccessedConditionalString);
 	    (yyval.string) = ReturnString;
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
      ;}
     break;
 
@@ -3691,7 +3691,7 @@ yyreduce:
 	 unsigned SimpleCondExprID = FindVarExpr((yyvsp[(3) - (4)].string), &SimpleCondExpr);
 	 if( SimpleCondExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Complex Conditional Expression '%s' is encountered in Complex Conditional Expression. Terminating...\n", (yyvsp[(3) - (4)].string));
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
@@ -3701,14 +3701,14 @@ yyreduce:
 	 unsigned ConditionalExpressionStringLength = strlen((yyvsp[(1) - (4)].string)) + strlen((yyvsp[(2) - (4)].string)) + strlen((yyvsp[(3) - (4)].string)) + strlen((yyvsp[(4) - (4)].string)) + 1;
 	 char* ConditionalExpressionString = (char*)malloc(ConditionalExpressionStringLength*sizeof(char));
 	 sprintf(ConditionalExpressionString,"%s%s%s%s",(yyvsp[(1) - (4)].string), (yyvsp[(2) - (4)].string), (yyvsp[(3) - (4)].string), (yyvsp[(4) - (4)].string));
-	 
+
 	 VarExpr* ConditionalVarExpr;
 	 FindOrAllocVarExpr(ConditionalExpressionString, &ConditionalVarExpr);
 	 assert(ConditionalVarExpr != NULL);
 	 ConditionalVarExpr -> Type = OP_BOOLEAN_UNARY;
 	 ConditionalVarExpr -> Operation = ResolveOperationType((yyvsp[(1) - (4)].string));
 	 ConditionalVarExpr -> OperandID[0] = SimpleCondExprID;
-	  
+
 	 (yyval.string) = ConditionalExpressionString;
 
 	 FREE_RULE_STRINGS(4);
@@ -3740,7 +3740,7 @@ yyreduce:
 	 unsigned FirstExprID = FindVarExpr(FirstExprStr, &FirstExpr);
 	 if( FirstExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Complex Conditional Expression '%s' is encountered in a Boolean Expression. Terminating...\n", FirstExprStr);
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
@@ -3750,19 +3750,19 @@ yyreduce:
 	 unsigned SecondExprID = FindVarExpr(SecondExprStr, &SecondExpr);
 	 if( SecondExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Complex Conditional Expression '%s' is encountered in a Boolean Expression. Terminating...\n", SecondExprStr);
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
 	     assert(0);
 	 }
-	 
+
 
 
 	 unsigned ConditionalExpressionStringLength = strlen(FirstExprStr) + strlen(BooleanOpStr) + strlen(SecondExprStr) +1;
 	 char* ConditionalExpressionString = (char*)malloc(ConditionalExpressionStringLength*sizeof(char));
 	 sprintf(ConditionalExpressionString,"%s%s%s", FirstExprStr, BooleanOpStr, SecondExprStr);
-	 
+
 	 VarExpr* ConditionalVarExpr;
 	 FindOrAllocVarExpr(ConditionalExpressionString, &ConditionalVarExpr);
 	 assert(ConditionalVarExpr != NULL);
@@ -3770,7 +3770,7 @@ yyreduce:
 	 ConditionalVarExpr -> Operation = ResolveOperationType(BooleanOpStr);
 	 ConditionalVarExpr -> OperandID[0] = FirstExprID;
 	 ConditionalVarExpr -> OperandID[1] = SecondExprID;
-	  
+
 	 (yyval.string) = ConditionalExpressionString;
 
 	 FREE_RULE_STRINGS(5);
@@ -3802,7 +3802,7 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 1890 "bison_grammar.y"
-    { 
+    {
 	  ALLOC_AND_RETURN_STRING("%s\n",(yyvsp[(1) - (1)].string));
 	  FREE_RULE_STRINGS(1);
       ;}
@@ -3812,7 +3812,7 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 1896 "bison_grammar.y"
-    { 
+    {
 	  ALLOC_AND_RETURN_STRING("%s%s\n",(yyvsp[(1) - (3)].string),(yyvsp[(3) - (3)].string));
 	  FREE_RULE_STRINGS(3);
       ;}
@@ -3822,7 +3822,7 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 1906 "bison_grammar.y"
-    { 
+    {
 	  VarExpr* AssignedVar;
 	  unsigned AssignedVarExprID = FindVarExpr((yyvsp[(1) - (3)].VariableReturn) -> string, &AssignedVar);
 	  if( AssignedVar == NULL)
@@ -3830,10 +3830,10 @@ yyreduce:
 	      bool NewLocalVariable = ( ((yyvsp[(1) - (3)].VariableReturn)->string)[0] == '_' );
 	      if( !NewLocalVariable )
 	      {
-		  // Look whether the AssignedVar Name includes scope 
-		  // IF YES just skip 
+		  // Look whether the AssignedVar Name includes scope
+		  // IF YES just skip
 		  // IF NO  do the following
-		  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+		  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 		  sprintf(ErrorMessage,"UNKNOWN SHARED VARIABLE '%s'.\n"
 			               "Can not define shared variables inside a transaction definition/variable assignment.\n"
 			               "Only local variables can be defined at the point where they are first used.\n"
@@ -3843,7 +3843,7 @@ yyreduce:
 		  exit(1);
 	      }
 
-	      // Undefined arrays are caught before this point. 
+	      // Undefined arrays are caught before this point.
 /* 	      unsigned VariableNameLastCharPos = strlen($1->string) - 1 ; */
 /* 	      bool NewLocalArrayDefinition =  ($1->string)[VariableNameLastCharPos] == ']'; */
 /* 	      if( NewLocalArrayDefinition) */
@@ -3857,16 +3857,16 @@ yyreduce:
 /* 		  exit(1); */
 
 /* 	      } */
-	      
+
 	      AssignedVarExprID = AllocVarExpr((yyvsp[(1) - (3)].VariableReturn)->string, &AssignedVar);
-	      AssignedVar -> Type = VAR_LOCAL_SIMPLE;	      	      
+	      AssignedVar -> Type = VAR_LOCAL_SIMPLE;
 	  }
 
 
-	  // If variable is random and if it has not been encountered 
+	  // If variable is random and if it has not been encountered
 	  // before, it will be added to Dyn_VarExprToUpdateList
 	  ExtendVarExprToUpdate((yyvsp[(1) - (3)].VariableReturn)->string);
-	  
+
 
 	  bool AssignedVariableConstant = ( AssignedVar -> Type == VAR_SHARED_CONSTANT_UNMANAGED   \
 					                        ||                                 \
@@ -3882,18 +3882,18 @@ yyreduce:
 	                                  );
 	  if( AssignedVariableConstant )
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"CAN NOT ASSIGN VALUE to CONSTANT VARIABLE '%s'.Terminating...\n", (yyvsp[(1) - (3)].VariableReturn) -> string);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      exit(1);
 	  }
 
-	  
+
 	  VarExpr* EvaluatedVarExpr;
 	  unsigned EvaluatedVarExprID = FindVarExpr((yyvsp[(3) - (3)].string), &EvaluatedVarExpr);
 	  assert( EvaluatedVarExpr != NULL);
-	  
+
 	  Extend_DynamicArray(&Dyn_VarAssignList,sizeof(var_assign_t));
 	  unsigned LastAssignPos = GetSize_DynamicArray(&Dyn_VarAssignList) -1 ;
 	  var_assign_t* CurrentAssign = (var_assign_t*)GetElement_DynamicArray(&Dyn_VarAssignList, LastAssignPos, sizeof(var_assign_t));
@@ -4090,17 +4090,17 @@ yyreduce:
 /* Line 1464 of yacc.c  */
 #line 2123 "bison_grammar.y"
     {
-	   
+
 	   struct RangeInfoStruct* ReturnedRangeInfo = (struct RangeInfoStruct*)malloc(sizeof(struct RangeInfoStruct));
 	   VarExpr* DummyVarExpr;
 	   unsigned RangeLimitVarExprID = FindOrAllocVarExpr((yyvsp[(1) - (3)].string),&DummyVarExpr);
 	   ReturnedRangeInfo -> MinValExpressionID = RangeLimitVarExprID;
 
-	   RangeLimitVarExprID = FindOrAllocVarExpr((yyvsp[(3) - (3)].string),&DummyVarExpr); 
+	   RangeLimitVarExprID = FindOrAllocVarExpr((yyvsp[(3) - (3)].string),&DummyVarExpr);
 	   ReturnedRangeInfo -> MaxValExpressionID = RangeLimitVarExprID;
 	   ReturnedRangeInfo -> Increment = 1 ;
 
-	   char* TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	   char* TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	   sprintf(TempString,"'%s' to '%s' (increment 1)",(yyvsp[(1) - (3)].string), (yyvsp[(3) - (3)].string));
 	   ReturnedRangeInfo ->string = TempString;
 
@@ -4137,7 +4137,7 @@ yyreduce:
 	   struct VariableReturnStruct* ReturnVal = (struct VariableReturnStruct*)malloc(sizeof(struct VariableReturnStruct));
 	   ReturnVal -> string = dupstr((yyvsp[(1) - (1)].string));
 	   ReturnVal -> VariableType = SHARED;
-	   
+
 	   (yyval.VariableReturn) = ReturnVal;
 	   FREE_RULE_STRINGS(1);
        ;}
@@ -4178,8 +4178,8 @@ yyreduce:
 	       ReturnVal -> VariableType = LOCAL_CONSTANT;
 	   else
 	       ReturnVal -> VariableType = LOCAL;
-	   
-	   
+
+
 	   (yyval.VariableReturn) = ReturnVal;
 	   FREE_RULE_STRINGS(1);
        ;}
@@ -4200,7 +4200,7 @@ yyreduce:
 	   struct VariableReturnStruct* ReturnVal = (struct VariableReturnStruct*)malloc(sizeof(struct VariableReturnStruct));
 	   ReturnVal -> string = dupstr((yyvsp[(1) - (1)].string));
 	   ReturnVal -> VariableType = SHARED_CONSTANT;
-	   
+
 	   (yyval.VariableReturn) = ReturnVal;
 	   FREE_RULE_STRINGS(1);
        ;}
@@ -4261,10 +4261,10 @@ yyreduce:
 #line 2262 "bison_grammar.y"
     {
 	   REPORT_READ_INPUT("\tEncountered LOCAL ARRAY variable '%s' in the scope '%s'\n",(yyvsp[(2) - (2)].VariableReturn)->string,(yyvsp[(1) - (2)].string));
-	   
+
 	   if( (yyvsp[(2) - (2)].VariableReturn)->VariableType == SHARED_ARRAY);
 	   {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Scope '%s' encountered before Shared array '%s'.\n"
 		                   "Scopes are only allowed for local variables/arrays.\n", (yyvsp[(1) - (2)].string) , (yyvsp[(2) - (2)].VariableReturn) -> string);
 	      yyerror(ErrorMessage);
@@ -4282,7 +4282,7 @@ yyreduce:
 	       ReturnVal -> VariableType = SCOPED_LOCAL_CONSTANT_ARRAY;
 	   else if((yyvsp[(2) - (2)].VariableReturn) -> VariableType == LOCAL_ARRAY)
 	       ReturnVal -> VariableType = SCOPED_LOCAL_ARRAY;
-	   
+
 	   (yyval.VariableReturn) = ReturnVal;
 
 	   FREE_RULE_STRINGS(3);
@@ -4306,9 +4306,9 @@ yyreduce:
 	  if( ArrayVarExpr == NULL)
 	  {
 
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN ARRAY '%s' is encountered  in Array Element access.\n"
-		                   "Can not define arrays inside transaction definitions\n" 
+		                   "Can not define arrays inside transaction definitions\n"
  		                   "(can not known size of array in advance).\n"
                                    "Arrays should be defined in the 'Definitions' section\n",ActualArrayName);
 	      yyerror(ErrorMessage);
@@ -4320,7 +4320,7 @@ yyreduce:
 	  unsigned IndexVarExprID = FindVarExpr((yyvsp[(2) - (3)].string), &IndexVarExpr);
 	  if( IndexVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN INDEX expression '%s' is encountered in Array Element access. Terminating...\n", (yyvsp[(2) - (3)].string));
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -4329,18 +4329,18 @@ yyreduce:
 
 	  // Since we are generating a shared array expression we generate two copies, one for managed and one for unmanaged accesses.
 	  // Creating Unmanaged copy (if non-existant)
-	  VarExpr* ArrayAccessVarExpr; 
-	  char *ArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  VarExpr* ArrayAccessVarExpr;
+	  char *ArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ArrayAccessString, "%s%s%s", (yyvsp[(1) - (3)].string), (yyvsp[(2) - (3)].string), (yyvsp[(3) - (3)].string));
 	  FindOrAllocVarExpr(ArrayAccessString, &ArrayAccessVarExpr);
 	  assert(ArrayAccessVarExpr != NULL);
 	  ArrayAccessVarExpr -> Type = OP_UNMANAGED_ARRAY_ACCESS;
 	  ArrayAccessVarExpr -> OperandID[0] = ArrayVarExprID;
 	  ArrayAccessVarExpr -> OperandID[1] = IndexVarExprID;
-	  
+
 	  // Creating Managed copy (if non-existant)
-	  VarExpr* ManagedArrayAccessVarExpr; 
-	  char *ManagedArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  VarExpr* ManagedArrayAccessVarExpr;
+	  char *ManagedArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ManagedArrayAccessString, "&%s%s%s", (yyvsp[(1) - (3)].string), (yyvsp[(2) - (3)].string), (yyvsp[(3) - (3)].string));
 	  FindOrAllocVarExpr(ManagedArrayAccessString, &ManagedArrayAccessVarExpr);
 	  assert(ManagedArrayAccessVarExpr != NULL);
@@ -4352,7 +4352,7 @@ yyreduce:
 	  struct VariableReturnStruct* ReturnVal = (struct VariableReturnStruct*)malloc(sizeof(struct VariableReturnStruct));
 	  ReturnVal -> string = ArrayAccessString;
 	  ReturnVal -> VariableType = SHARED_ARRAY;
-	  
+
 	  (yyval.VariableReturn) = ReturnVal;
 
 	  FREE_RULE_STRINGS(3);
@@ -4374,9 +4374,9 @@ yyreduce:
 	  unsigned ArrayVarExprID = FindVarExpr(ActualArrayName, &ArrayVarExpr);
 	  if( ArrayVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN ARRAY '%s' is encountered  in Array Element access.\n"
-		                   "Can not define arrays inside transaction definitions\n" 
+		                   "Can not define arrays inside transaction definitions\n"
  		                   "(can not known size of array in advance).\n"
                                    "Arrays should be defined in the 'Definitions' section\n",ActualArrayName);
 	      yyerror(ErrorMessage);
@@ -4388,7 +4388,7 @@ yyreduce:
 	  unsigned IndexVarExprID = FindVarExpr((yyvsp[(2) - (3)].string), &IndexVarExpr);
 	  if( IndexVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN INDEX expression '%s' is encountered in Array Element access. Terminating...\n", (yyvsp[(2) - (3)].string));
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -4396,15 +4396,15 @@ yyreduce:
 	  }
 
 
-	  VarExpr* ArrayAccessVarExpr; 
-	  char *ArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  VarExpr* ArrayAccessVarExpr;
+	  char *ArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ArrayAccessString, "%s%s%s", (yyvsp[(1) - (3)].string), (yyvsp[(2) - (3)].string), (yyvsp[(3) - (3)].string));
 	  FindOrAllocVarExpr(ArrayAccessString, &ArrayAccessVarExpr);
 	  assert(ArrayAccessVarExpr != NULL);
 	  ArrayAccessVarExpr -> Type = OP_UNMANAGED_ARRAY_ACCESS;
 	  ArrayAccessVarExpr -> OperandID[0] = ArrayVarExprID;
 	  ArrayAccessVarExpr -> OperandID[1] = IndexVarExprID;
-	  
+
 
 	  struct VariableReturnStruct* ReturnVal = (struct VariableReturnStruct*)malloc(sizeof(struct VariableReturnStruct));
 	  ReturnVal -> string = ArrayAccessString;
@@ -4428,7 +4428,7 @@ yyreduce:
 	       ReturnVal -> VariableType = LOCAL_CONSTANT_ARRAY;
 	   else
 	       ReturnVal -> VariableType = LOCAL_ARRAY;
-	  
+
 	  (yyval.VariableReturn) = ReturnVal;
 
 	  FREE_RULE_STRINGS(3);
@@ -4445,17 +4445,17 @@ yyreduce:
 	  FindVarExpr((yyvsp[(2) - (3)].string), &InputVarExpr);
 	  if( InputVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN VARIABLE EXPRESSION '%s' is encountered in STM_LOAD access. Terminating...\n",(yyvsp[(2) - (3)].string));
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      assert(0);
 	  }
-	  
+
 	  bool NotSupportedVariableExpression  = (InputVarExpr -> Type > VAR_SHARED_ARRAY_CONSTANT ) && (InputVarExpr -> Type != OP_UNMANAGED_ARRAY_ACCESS);
 	  if( NotSupportedVariableExpression )
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Variable Expression '%s' is not an access to a standalone shared variable/array.\n"
 		                   "Other kind of variable expression are not allowed in managed accesses.\n",(yyvsp[(2) - (3)].string));
 	      yyerror(ErrorMessage);
@@ -4463,7 +4463,7 @@ yyreduce:
 
 	      exit(1);
 	  }
-	  
+
 
 	  // Chopping last character (character '[') of array name
 	  unsigned ActualAccessedVarExprNameLength = strlen("&") + strlen((yyvsp[(1) - (3)].string)) + 1;
@@ -4474,7 +4474,7 @@ yyreduce:
 	  unsigned ActualVarExprID = FindVarExpr(ActualAccessedVarExprName, &AccessedVarExpr);
 	  if( AccessedVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage, "MANAGED COPY of Variable Expression '%s' can NOT be FOUND. Terminating...\n",(yyvsp[(2) - (3)].string));
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -4482,17 +4482,17 @@ yyreduce:
 	  }
 
 
-	  VarExpr* ManagedAccessVarExpr; 
-	  char *ManagedAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  VarExpr* ManagedAccessVarExpr;
+	  char *ManagedAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ManagedAccessString, "%s%s%s", (yyvsp[(1) - (3)].string), (yyvsp[(2) - (3)].string), (yyvsp[(3) - (3)].string));
 	  FindOrAllocVarExpr(ManagedAccessString, &ManagedAccessVarExpr);
 	  assert(ManagedAccessVarExpr != NULL);
 	  ManagedAccessVarExpr -> Type = OP_MEMORY_READ;
 	  ManagedAccessVarExpr -> OperandID[0] = ActualVarExprID;
-	  
+
 	  (yyval.string) = ManagedAccessString;
 	  FREE_RULE_STRINGS(3);
-	  
+
       ;}
     break;
 
@@ -4503,7 +4503,7 @@ yyreduce:
     {
 	   yyerror("STM_STORE is not allowed in variable/relational/boolean expression evaluation.\n");
 	   exit(1);
-	  
+
       ;}
     break;
 
@@ -4533,7 +4533,7 @@ yyreduce:
 #line 2511 "bison_grammar.y"
     {
 	    ALLOC_AND_RETURN_STRING("%s",(yyvsp[(1) - (1)].string));
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
        ;}
     break;
 
@@ -4548,10 +4548,10 @@ yyreduce:
 /* 	    ReturnVal->string = dupstr(AccessedVarExpr -> string); */
 /* 	    ReturnVal->Value  = AccessedVarExpr ->Value; */
 /* 	    $$ = ReturnVal ;	     */
-	   
-	   
+
+
 	    ALLOC_AND_RETURN_STRING("%s",(yyvsp[(1) - (1)].VariableReturn) -> string);
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
        ;}
     break;
 
@@ -4561,8 +4561,8 @@ yyreduce:
 #line 2529 "bison_grammar.y"
     {
 	    ALLOC_AND_RETURN_STRING("%s",(yyvsp[(1) - (1)].string));
-	    FREE_RULE_STRINGS(1); 
-	  
+	    FREE_RULE_STRINGS(1);
+
       ;}
     break;
 
@@ -4578,7 +4578,7 @@ yyreduce:
 /* 	    ReturnVal->Value  = AccessedVarExpr ->Value; */
 /* 	    $$ = ReturnVal ;	     */
 	    ALLOC_AND_RETURN_STRING("%s",(yyvsp[(1) - (1)].string));
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
 
         ;}
     break;
@@ -4598,7 +4598,7 @@ yyreduce:
 
 	    VarExpr* CurrentVarExpr;
 	    FindVarExpr(NewExpressionString, &CurrentVarExpr);
-	    
+
 	    bool Found= (CurrentVarExpr != NULL);
 	    if( !Found )
 	    {  // If variable expr found, we allocate it.
@@ -4606,10 +4606,10 @@ yyreduce:
 
 		// We need to construct the VarExpr structure
 		CurrentVarExpr -> Type = OP_ARITH;
-		
+
 
 		// Since we came until this  point the Both of the operands of
-                // the Variable expression should be already in the 
+                // the Variable expression should be already in the
                 // Dyn_VariableExpressionArray
 		VarExpr* FirstOperand;
 		unsigned FirstOperandID = FindVarExpr("-1", &FirstOperand);
@@ -4636,8 +4636,8 @@ yyreduce:
 		CurrentVarExpr -> OperandID[0] = FirstOperandID;
 		CurrentVarExpr -> OperandID[1] = SecondOperandID;
 		CurrentVarExpr -> Operation    = MULTIPLY;
-		
-	    
+
+
 	    }
 
 /* 	    unsigned long  EvaluatedValue = EvaluateVarExpr(CurrentVarExpr); */
@@ -4646,8 +4646,8 @@ yyreduce:
 /* 	    ReturnVal->Value  =  EvaluatedValue;  */
 /* 	    $$ = ReturnVal ;	   */
 	    (yyval.string) = NewExpressionString;
-	    FREE_RULE_STRINGS(1); 
-	     
+	    FREE_RULE_STRINGS(1);
+
          ;}
     break;
 
@@ -4664,7 +4664,7 @@ yyreduce:
 
 	    VarExpr* CurrentVarExpr;
 	    FindVarExpr(NewExpressionString, &CurrentVarExpr);
-	    
+
 	    bool Found= (CurrentVarExpr != NULL);
 	    if( !Found )
 	    {  // If variable expr found, we allocate it.
@@ -4672,10 +4672,10 @@ yyreduce:
 
 		// We need to construct the VarExpr structure
 		CurrentVarExpr -> Type = OP_ARITH;
-		
+
 
 		// Since we came until this  point the Both of the operands of
-                // the Variable expression should be already in the 
+                // the Variable expression should be already in the
                 // Dyn_VariableExpressionArray
 		VarExpr* FirstOperand;
 		unsigned FirstOperandID = FindVarExpr(FirstAccessedVarExprString, &FirstOperand);
@@ -4687,8 +4687,8 @@ yyreduce:
 		CurrentVarExpr -> OperandID[0] = FirstOperandID;
 		CurrentVarExpr -> OperandID[1] = SecondOperandID;
 		CurrentVarExpr -> Operation    = ResolveOperationType((yyvsp[(2) - (3)].string));
-		
-	    
+
+
 	    }
 
 
@@ -4698,7 +4698,7 @@ yyreduce:
 /* 	    ReturnVal->Value  = EvaluatedValue; */
 /* 	    $$ = ReturnVal ;	     */
 	    (yyval.string) = NewExpressionString;
-	    FREE_RULE_STRINGS(3); 
+	    FREE_RULE_STRINGS(3);
 
          ;}
     break;
@@ -4715,7 +4715,7 @@ yyreduce:
 /* 	    ReturnVal->Value  = AccessedVarExpr ->Value; */
 /* 	    $$ = ReturnVal ;	     */
 	    ALLOC_AND_RETURN_STRING("%s",(yyvsp[(1) - (1)].string));
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
 
         ;}
     break;
@@ -4729,13 +4729,13 @@ yyreduce:
 
 /* 	    struct EvaluatedVariableExpressionStruct* ReturnVal = malloc(sizeof(struct EvaluatedVariableExpressionStruct)); */
 	    char* AccessedVarExprString = (yyvsp[(2) - (3)].string);
-	    unsigned NewStringSize = strlen("(") + strlen(AccessedVarExprString) + strlen(")") +1; 
+	    unsigned NewStringSize = strlen("(") + strlen(AccessedVarExprString) + strlen(")") +1;
 	    char* ReturnString = malloc(NewStringSize*sizeof(char));
 	    sprintf(ReturnString,"(%s)",AccessedVarExprString);
 /* 	    ReturnVal->Value  = AccessedVarExpr ->Value; */
 /* 	    $$ = ReturnVal ;	     */
 	    (yyval.string) = ReturnString;
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
 	 ;}
     break;
 
@@ -4743,7 +4743,7 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 2696 "bison_grammar.y"
-    { 
+    {
 /* VariableExpression:  */
 /*      VariableExpressionElement */
 /*         {  */
@@ -4775,7 +4775,7 @@ yyreduce:
 /* 	    $$ = ReturnVal ;	     */
 	    REPORT_READ_INPUT("\tEncountered VARIABLE EXPRESSION '%s'\n",(yyvsp[(1) - (1)].string));
 	    ALLOC_AND_RETURN_STRING("%s",(yyvsp[(1) - (1)].string));
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
 
         ;}
     break;
@@ -4784,7 +4784,7 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 2732 "bison_grammar.y"
-    { 
+    {
 	    char* FirstAccessedVarExprString = (yyvsp[(1) - (3)].string);
 	    char*  SecondAccessedVarExprString = (yyvsp[(3) - (3)].string);
 
@@ -4793,7 +4793,7 @@ yyreduce:
 
 	    VarExpr* CurrentVarExpr;
 	    FindVarExpr(NewExpressionString, &CurrentVarExpr);
-	    
+
 	    bool Found= (CurrentVarExpr != NULL);
 	    if( !Found )
 	    {  // If variable expr found, we allocate it.
@@ -4801,10 +4801,10 @@ yyreduce:
 
 		// We need to construct the VarExpr structure
 		CurrentVarExpr -> Type = OP_ARITH;
-		
+
 
 		// Since we came until this  point the Both of the operands of
-                // the Variable expression should be already in the 
+                // the Variable expression should be already in the
                 // Dyn_VariableExpressionArray
 		VarExpr* FirstOperand;
 		unsigned FirstOperandID = FindVarExpr(FirstAccessedVarExprString, &FirstOperand);
@@ -4816,8 +4816,8 @@ yyreduce:
 		CurrentVarExpr -> OperandID[0] = FirstOperandID;
 		CurrentVarExpr -> OperandID[1] = SecondOperandID;
 		CurrentVarExpr -> Operation    = ResolveOperationType((yyvsp[(2) - (3)].string));
-		
-	    
+
+
 	    }
 /* 	    unsigned long  EvaluatedValue = EvaluateVarExpr(CurrentVarExpr); */
 /* 	    struct EvaluatedVariableExpressionStruct* ReturnVal = malloc(sizeof(struct EvaluatedVariableExpressionStruct)); */
@@ -4826,7 +4826,7 @@ yyreduce:
 /* 	    $$ = ReturnVal ;	     */
 	    (yyval.string) = NewExpressionString;
 	    REPORT_READ_INPUT("\tEncountered VARIABLE EXPRESSION '%s'\n",NewExpressionString);
-	    FREE_RULE_STRINGS(3); 
+	    FREE_RULE_STRINGS(3);
 /*      | OPEN_PARANTHESES VariableExpression  ArithmeticOp VariableExpressionElementAccess CLOSE_PARANTHESES */
 /*        { */
 /* 	    struct EvaluatedVariableExpressionStruct* AccessedVarExpr = $2; */
@@ -4923,10 +4923,10 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 2858 "bison_grammar.y"
-    { 
+    {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     THREADS Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        ;}
     break;
 
@@ -4955,9 +4955,9 @@ yyreduce:
 		 }
 		 Clear_DynamicArray(&Dyn_CurrentThreadDefList);
 		 Clear_DynamicArray(&CurrentTxContainerList);
-		 
+
 		 ThreadTypeNum = 0;
-		 
+
 	     }
            #endif
 
@@ -4973,7 +4973,7 @@ yyreduce:
 	    TxBlockNo=0;
 
            #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
- 	       CurrentTxContainerNo = 0; 
+ 	       CurrentTxContainerNo = 0;
 	   #endif
 	;}
     break;
@@ -4984,12 +4984,12 @@ yyreduce:
 #line 2913 "bison_grammar.y"
     {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
-	      Extend_DynamicArray(&Dyn_CurrentThreadDefList,sizeof(char*)); 
+	      Extend_DynamicArray(&Dyn_CurrentThreadDefList,sizeof(char*));
 	      unsigned LastElementNo = GetSize_DynamicArray(&Dyn_CurrentThreadDefList) - 1 ;
 	      char** CurrentThreadDefListElement = (char**)GetElement_DynamicArray(&Dyn_CurrentThreadDefList, LastElementNo, sizeof(char*));
 	      *CurrentThreadDefListElement = dupstr((yyvsp[(1) - (1)].string));
 	      ThreadTypeNum++;
-	  #endif     
+	  #endif
 
 	  ALLOC_AND_RETURN_STRING("%s",(yyvsp[(1) - (1)].string));
 	  FREE_RULE_STRINGS(1);
@@ -5002,12 +5002,12 @@ yyreduce:
 #line 2926 "bison_grammar.y"
     {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
-	      Extend_DynamicArray(&Dyn_CurrentThreadDefList,sizeof(char*)); 
+	      Extend_DynamicArray(&Dyn_CurrentThreadDefList,sizeof(char*));
 	      unsigned LastElementNo = GetSize_DynamicArray(&Dyn_CurrentThreadDefList) - 1 ;
 	      char** CurrentThreadDefListElement = (char**)GetElement_DynamicArray(&Dyn_CurrentThreadDefList, LastElementNo, sizeof(char*));
 	      *CurrentThreadDefListElement = dupstr((yyvsp[(3) - (3)].string));
 	      ThreadTypeNum++;
-	  #endif     
+	  #endif
 
 	  ALLOC_AND_RETURN_STRING("%s,%s",(yyvsp[(1) - (3)].string),(yyvsp[(3) - (3)].string));
 	  FREE_RULE_STRINGS(3);
@@ -5023,9 +5023,9 @@ yyreduce:
 	     // The following assignment is for the purpose of passing the
              // BoundedRepetition field to the return value
 	     (yyval.TxBlockListReturn) = (yyvsp[(1) - (1)].TxBlockListReturn);
-	  #endif 
+	  #endif
 
-	     // The following line is only for debugging  
+	     // The following line is only for debugging
 	     // REPORT_READ_INPUT("TxBlockListElement: Bounded:%d, Block:%s",$1 -> BoundedRepetition,$1->string);
 	   REPORT_READ_INPUT("TxBlock[%u]: %s",TxBlockNo,(yyvsp[(1) - (1)].TxBlockListReturn)->string);
 	   FREE_RULE_STRINGS(1);
@@ -5038,12 +5038,12 @@ yyreduce:
 /* Line 1464 of yacc.c  */
 #line 2957 "bison_grammar.y"
     {
-	   // The following two lines are only for debugging  
+	   // The following two lines are only for debugging
 	   // REPORT_READ_INPUT("TxBlockList: Bounded:%d, Block:%s",$1 -> BoundedRepetition,$1->string);
 	   // REPORT_READ_INPUT("TxBlockListElement: Bounded:%d, Block:%s",$3 -> BoundedRepetition,$3->string);
 
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
-	   if( (yyvsp[(1) - (3)].TxBlockListReturn) -> BoundedRepetition == FALSE) 
+	   if( (yyvsp[(1) - (3)].TxBlockListReturn) -> BoundedRepetition == FALSE)
 	   {
 	       REPORT_SEMANTIC_ERROR("UNEXPECTED EXECUTABLE ELEMENT (a transaction/ a TxCandidate list / paranthesized block). An infinitely repeating executable element should be the LAST possible executable element in a thread definition!\n");
 	   }
@@ -5053,7 +5053,7 @@ yyreduce:
              // BoundedRepetition field to the return value
 	     (yyval.TxBlockListReturn) = (yyvsp[(3) - (3)].TxBlockListReturn);
 	   }
-	  #endif 
+	  #endif
 
 
 	   REPORT_READ_INPUT("TxBlock[%u]: %s",TxBlockNo,(yyvsp[(3) - (3)].TxBlockListReturn)->string);
@@ -5069,14 +5069,14 @@ yyreduce:
     {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
              //  ALLOC_AND_RETURN_STRING("%s",$1);
-	     char *TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char *TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(TempString,"%s",(yyvsp[(1) - (1)].string));
 
 	     struct TxBlockListReturnStruct* NewRetVal =  (struct TxBlockListReturnStruct*) malloc(sizeof(struct TxBlockListReturnStruct));
 	     NewRetVal -> string = TempString;
 	     NewRetVal -> BoundedRepetition = TRUE;
 	     (yyval.TxBlockListReturn) = NewRetVal;
-	  #endif 
+	  #endif
 	  FREE_RULE_STRINGS(1);
       ;}
     break;
@@ -5088,14 +5088,14 @@ yyreduce:
     {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
              //  ALLOC_AND_RETURN_STRING("%s",$1);
-	     char *TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char *TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(TempString,"%s",(yyvsp[(1) - (1)].string));
 
 	     struct TxBlockListReturnStruct* NewRetVal =  (struct TxBlockListReturnStruct*) malloc(sizeof(struct TxBlockListReturnStruct));
 	     NewRetVal -> string = TempString;
 	     NewRetVal -> BoundedRepetition = FALSE;
 	     (yyval.TxBlockListReturn) = NewRetVal;
-	  #endif 
+	  #endif
 
 	  FREE_RULE_STRINGS(1);
       ;}
@@ -5136,7 +5136,7 @@ yyreduce:
 	      CurrentDelayVal = atoi((yyvsp[(1) - (1)].string));
 	      DelayOpEncountered = TRUE;
 	  }
-	      
+
 
   	  ALLOC_AND_RETURN_STRING("%s\n",(yyvsp[(1) - (1)].string));
 	  FREE_RULE_STRINGS(1);
@@ -5150,12 +5150,12 @@ yyreduce:
     {
 
            #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
- 	        if ( !ParseOnly ) 
- 		{ 
- 		    GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal); 
- 		    Clear_DynamicArray(&CurrentTxCandidateList); 
- 		    CurrentTxContainerNo++; 
- 		} 
+ 	        if ( !ParseOnly )
+ 		{
+ 		    GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal);
+ 		    Clear_DynamicArray(&CurrentTxCandidateList);
+ 		    CurrentTxContainerNo++;
+ 		}
             #endif
 
   	  ALLOC_AND_RETURN_STRING("Choice List:\n%s",(yyvsp[(2) - (3)].string));
@@ -5171,13 +5171,13 @@ yyreduce:
 
            #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
 
- 	        if ( !ParseOnly ) 
- 		{ 
- 		    GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal); 
+ 	        if ( !ParseOnly )
+ 		{
+ 		    GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal);
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo, LOOP_BACK, atoi((yyvsp[(4) - (4)].string)) );
- 		    Clear_DynamicArray(&CurrentTxCandidateList); 
-		    CurrentTxContainerNo++; 
- 		} 
+ 		    Clear_DynamicArray(&CurrentTxCandidateList);
+		    CurrentTxContainerNo++;
+ 		}
             #endif
 
 		ALLOC_AND_RETURN_STRING("%s times repeated Choice List:\n%s",(yyvsp[(4) - (4)].string),(yyvsp[(2) - (4)].string));
@@ -5208,7 +5208,7 @@ yyreduce:
 	     {
 		 if( VerboseParserOutput)
 		     printf("Container no at the end of TxBlock= %u \n",CurrentTxContainerNo-1);
-		 if( (yyvsp[(3) - (4)].TxBlockListReturn) -> BoundedRepetition == FALSE) 
+		 if( (yyvsp[(3) - (4)].TxBlockListReturn) -> BoundedRepetition == FALSE)
 		 {
 		     REPORT_SEMANTIC_ERROR("UNEXPECTED TX BLOCK including an infinitely repeating executable element.\n"
                                            "An infinitely repeating executable element should be the LAST possible executable element in a thread definition!\n");
@@ -5233,7 +5233,7 @@ yyreduce:
 		 if( VerboseParserOutput )
 		     printf("Container no at the end of TxBlock= %u \n",CurrentTxContainerNo-1);
 
-		 if( (yyvsp[(3) - (5)].TxBlockListReturn) -> BoundedRepetition == FALSE) 
+		 if( (yyvsp[(3) - (5)].TxBlockListReturn) -> BoundedRepetition == FALSE)
 		 {
 		     REPORT_SEMANTIC_ERROR("UNEXPECTED REPEATED TX BLOCK including an infinitely repeating executable element.\n"
                                            "An infinitely repeating executable element should be the LAST possible executable element in a thread definition!\n");
@@ -5276,9 +5276,9 @@ yyreduce:
 		 GenerateAndAttachNewContainerForSimpleTxBlock((yyvsp[(1) - (2)].string), &DelayOpEncountered, CurrentDelayVal);
 		 #ifdef COMPILE_FOR_TEST
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo, LOOP_BACK, ITERATION_NUM_OF_INFINITE_LOOPS_FOR_TESTS );
-		 #else   
+		 #else
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo , NEXT, 0);
-		 #endif   
+		 #endif
 		 CurrentTxContainerNo++;
 	     }
           #endif
@@ -5295,17 +5295,17 @@ yyreduce:
     {
 
            #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
-	      if ( !ParseOnly ) 
-	      { 
-		  GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal); 
+	      if ( !ParseOnly )
+	      {
+		  GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal);
                   #ifdef COMPILE_FOR_TEST
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo, LOOP_BACK, ITERATION_NUM_OF_INFINITE_LOOPS_FOR_TESTS );
-		  #else   
+		  #else
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo , NEXT, 0);
-		  #endif   
- 		  Clear_DynamicArray(&CurrentTxCandidateList); 
-		  CurrentTxContainerNo++; 
- 		} 
+		  #endif
+ 		  Clear_DynamicArray(&CurrentTxCandidateList);
+		  CurrentTxContainerNo++;
+ 		}
             #endif
 
 
@@ -5328,10 +5328,10 @@ yyreduce:
 
                  #ifdef COMPILE_FOR_TEST
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo-1, TxBlockStartContainerNo, LOOP_BACK, ITERATION_NUM_OF_INFINITE_LOOPS_FOR_TESTS);
-		 #else   
+		 #else
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo-1, TxBlockStartContainerNo, NEXT, 0);
-		 #endif   
-		 
+		 #endif
+
 	     }
           #endif
 
@@ -5350,9 +5350,9 @@ yyreduce:
 	    TxBlockStartContainerNo = CurrentTxContainerNo;
 
 	    if ( !ParseOnly && VerboseParserOutput )
-		printf("TxBlock Start encountered at Container No %u .\n",TxBlockStartContainerNo); 
+		printf("TxBlock Start encountered at Container No %u .\n",TxBlockStartContainerNo);
 	   #endif
- 
+
          ;}
     break;
 
@@ -5418,7 +5418,7 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 3260 "bison_grammar.y"
-    {  
+    {
 
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
 	      AddNewTxCanidate(&CurrentTxCandidateList, (yyvsp[(1) - (3)].string), atof((yyvsp[(2) - (3)].string)) );
@@ -5443,10 +5443,10 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 3281 "bison_grammar.y"
-    { 
+    {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     SCHEDULES Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
 	   ScheduleNo=0;
        ;}
     break;
@@ -5455,8 +5455,8 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 3296 "bison_grammar.y"
-    { 
-	  
+    {
+
 	  Extend_DynamicArray(&Dyn_ScheduleList,sizeof(Schedule));
 	  unsigned LastAddedElementPos = GetSize_DynamicArray(&Dyn_ScheduleList) - 1;
 	  Schedule* CurrentSchedule = (Schedule*) GetElement_DynamicArray(&Dyn_ScheduleList, LastAddedElementPos, sizeof(Schedule));
@@ -5466,8 +5466,8 @@ yyreduce:
 	  CurrentSchedule -> ScheduleLength = GetSize_DynamicArray(&Dyn_Schedule);
 	  ScheduleNum++;
 	  Clear_DynamicArray(&Dyn_Schedule);
-	      
-	      
+
+
 	  REPORT_READ_INPUT("Sched[%u]: (%s)\n\t%s\n",ScheduleNo,(yyvsp[(1) - (3)].string),(yyvsp[(3) - (3)].string));
 	  ScheduleNo++;
       ;}
@@ -5502,7 +5502,7 @@ yyreduce:
 	   Extend_DynamicArray(&Dyn_Schedule,sizeof(ScheduleElement));
 	   unsigned LastAddedElementPos = GetSize_DynamicArray(&Dyn_Schedule) - 1;
 	   ScheduleElement* SchedElement = (ScheduleElement*) GetElement_DynamicArray(&Dyn_Schedule, LastAddedElementPos, sizeof(ScheduleElement));
-	   
+
 	   unsigned FoundTxNo = FindTxByName((yyvsp[(1) - (1)].string), TxDefArray, TxDefNum);
 	   if(FoundTxNo == TxDefNum )
 	   {
@@ -5520,7 +5520,7 @@ yyreduce:
 	       SchedElement -> VarAssignNum  = 0;
 
 	   }
-	   
+
 	   ALLOC_AND_RETURN_STRING("%s",(yyvsp[(1) - (1)].string));
 	   FREE_RULE_STRINGS(1);
        ;}
@@ -5535,7 +5535,7 @@ yyreduce:
 	   Extend_DynamicArray(&Dyn_Schedule,sizeof(ScheduleElement));
 	   unsigned LastAddedElementPos = GetSize_DynamicArray(&Dyn_Schedule) - 1;
 	   ScheduleElement* SchedElement = (ScheduleElement*) GetElement_DynamicArray(&Dyn_Schedule, LastAddedElementPos, sizeof(ScheduleElement));
-	   
+
 	   unsigned FoundTxNo = FindTxByName((yyvsp[(1) - (2)].string), TxDefArray, TxDefNum);
 	   if(FoundTxNo == TxDefNum )
 	   {
@@ -5545,7 +5545,7 @@ yyreduce:
 	   {
 	       SchedElement->ThreadID = FoundTxNo;
 	       SchedElement->TxID     = 0;
-	       
+
 
 	       char* LabelStringToMatch = &((yyvsp[(2) - (2)].string)[1]);
 	       unsigned TxOpNo;
@@ -5591,11 +5591,11 @@ yyreduce:
 
 	    VarExpr* CurrentAssertionExpr;
 	    unsigned AssertionExprID = FindVarExpr(AssertionExpressionString, &CurrentAssertionExpr);
-	    
+
 	    bool Found= (CurrentAssertionExpr != NULL);
 	    if( !Found )
-	    { 
-		char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	    {
+		char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 		sprintf(ErrorMessage,"UNKNOWN CONDITIONAL EXPRESSION '%s' is encountered in Schedule definition. Terminating...\n",AssertionExpressionString);
 		yyerror(ErrorMessage);
 		free(ErrorMessage);
@@ -5612,7 +5612,7 @@ yyreduce:
 	   SchedElement-> AssertionExprID = AssertionExprID ;
 	   SchedElement -> VarAssignList = NULL;
 	   SchedElement -> VarAssignNum  = 0;
- 
+
 	   SchedElement->ThreadID = 0;
 	   SchedElement->TxID     = 0;
 	   SchedElement-> LabelTxOpContainerNo = 0;
@@ -5631,16 +5631,16 @@ yyreduce:
 	  Extend_DynamicArray(&Dyn_Schedule,sizeof(ScheduleElement));
 	  unsigned LastAddedElementPos = GetSize_DynamicArray(&Dyn_Schedule) - 1;
 	  ScheduleElement* SchedElement = (ScheduleElement*) GetElement_DynamicArray(&Dyn_Schedule, LastAddedElementPos, sizeof(ScheduleElement));
-	  
+
 	  SchedElement -> VarAssignNum  = GetSize_DynamicArray(&Dyn_VarAssignList);
-	  SchedElement -> VarAssignList = MakeStaticCopy_DynamicArray(&Dyn_VarAssignList, sizeof(var_assign_t)); 
+	  SchedElement -> VarAssignList = MakeStaticCopy_DynamicArray(&Dyn_VarAssignList, sizeof(var_assign_t));
 
 	  SchedElement-> Assertion = FALSE;
 	  SchedElement-> AssertionExprID = 0 ;
 	  SchedElement->ThreadID = 0;
 	  SchedElement->TxID     = 0;
 	  SchedElement-> LabelTxOpContainerNo = 0;
-	  
+
 	  Clear_DynamicArray(&Dyn_VarAssignList);
       ;}
     break;
@@ -5657,10 +5657,10 @@ yyreduce:
 
 /* Line 1464 of yacc.c  */
 #line 3474 "bison_grammar.y"
-    { 
+    {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     INVARIANTS Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        ;}
     break;
 
@@ -5702,11 +5702,11 @@ yyreduce:
 
 	    VarExpr* CurrentInvariantExpr;
 	    unsigned InvariantExprID = FindVarExpr(InvariantExpressionString, &CurrentInvariantExpr);
-	    
+
 	    bool Found= (CurrentInvariantExpr != NULL);
 	    if( !Found )
-	    { 
-		char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	    {
+		char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 		sprintf(ErrorMessage,"UNKNOWN CONDITIONAL EXPRESSION '%s' is encountered in STM_LOAD access. Terminating...\n",InvariantExpressionString);
 		yyerror(ErrorMessage);
 		free(ErrorMessage);
@@ -5717,14 +5717,14 @@ yyreduce:
 	    unsigned LastAddedInvariantPos = GetSize_DynamicArray(&Dyn_InvariantArray) - 1;
 	    Invariant* CurrentInvariant = GetElement_DynamicArray(&Dyn_InvariantArray, LastAddedInvariantPos, sizeof(Invariant));
 
-	    unsigned CondExprStringLength = strlen((yyvsp[(1) - (3)].string)) +  strlen(InvariantExpressionString) + strlen((yyvsp[(3) - (3)].string)) +1 ;	 
+	    unsigned CondExprStringLength = strlen((yyvsp[(1) - (3)].string)) +  strlen(InvariantExpressionString) + strlen((yyvsp[(3) - (3)].string)) +1 ;
 	    CurrentInvariant -> Name = (char*)malloc(CondExprStringLength*sizeof(char));
 	    sprintf(CurrentInvariant -> Name,"%s%s%s",(yyvsp[(1) - (3)].string), InvariantExpressionString, (yyvsp[(3) - (3)].string));
 	    CurrentInvariant -> VarExprID = InvariantExprID;
 
 	    InvariantNum++;
 
-	    
+
 	    (yyval.string) = dupstr(CurrentInvariant -> Name);
 
 //	  ALLOC_AND_RETURN_STRING("%s%s%s",$1,$2,$3);

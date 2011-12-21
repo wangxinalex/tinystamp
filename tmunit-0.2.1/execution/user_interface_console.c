@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Author(s):
  *   Derin Harmanci <derin.harmanci@unine.ch>
  *
@@ -22,7 +22,7 @@ dyn_arr_t Dyn_ThreadDefConfigList;
 
 int PrintHelpMessage()
 {
-    
+
     printf("\n"
 	   "--------------------------------------------\n"
 	   "tmunit -- STM Unit Testing & Evaluation Tool\n"
@@ -45,8 +45,10 @@ int PrintHelpMessage()
 	   "        Print this message\n"
 	   "  -s, --seed <int>\n"
 	   "        Random Number Generator Seed (0=time-based, default=%d)\n"
+	   "  -m, --max <int>\n"
+	   "        Max amount of threads (if 0 it will be 10 :-) )\n"
 	   "  -S, --schedule <string>\n"
-	   "        Schedule to apply on the transactions and threads. The name of\n" 
+	   "        Schedule to apply on the transactions and threads. The name of\n"
 	   "        the given schedule should be defined in the Schedules section of\n"
 	   "        configuration file.\n"
 	   "  -t, --threads <ThreadConfigurationList>\n"
@@ -67,7 +69,7 @@ int PrintHelpMessage()
 	   "             parser\n"
 	   "             trace\n"
 	   "             all\n"
-	   "        With 'parser' parameter, a verbose output of input file parsing \n" 
+	   "        With 'parser' parameter, a verbose output of input file parsing \n"
            "        will be activated.\n"
 	   "        With 'trace' parameter, the output of a trace of all the accesses\n"
 	   "        performed by all threads on the standart output is activated.\n"
@@ -85,7 +87,7 @@ int PrintHowToGetHelp()
     sprintf(Message,"\nTo get help type: \n\ttmunit  -h \n");
     fprintf(stderr,"%s",Message);
     free(Message);
-    
+
     return 0;
 }
 
@@ -93,92 +95,95 @@ int PrintHowToGetHelp()
 
 // The  structure of  the  function is  the  courtesy of  Pascal Felber  (from
 // tinySTM test/intset.c). The function is adapted to the needs of TMunit
-int ProcessCommandLineArguments(int argc, char*  argv[])
-{
+int ProcessCommandLineArguments(int argc, char*  argv[]) {
+	struct option long_options[] = {
+		// These options don't set a flag
+		{"help",                      no_argument,       NULL, 'h'},
+		{"generate",                  no_argument,       NULL, 'g'},
+		{"duration",                  required_argument, NULL, 'd'},
+		{"threads",                   required_argument, NULL, 't'},
+		{"seed",                      required_argument, NULL, 's'},
+		{"max",                       required_argument, NULL, 'm'},
+		{"schedule",                  required_argument, NULL, 'S'},
+		{"verbose",                   required_argument, NULL, 'v'},
+		{NULL, 0, NULL, 0}
+	};
 
-  struct option long_options[] = {
-    // These options don't set a flag
-    {"help",                      no_argument,       NULL, 'h'},
-    {"generate",                  no_argument,       NULL, 'g'},
-    {"duration",                  required_argument, NULL, 'd'},
-    {"threads",                   required_argument, NULL, 't'},
-    {"seed",                      required_argument, NULL, 's'},
-    {"schedule",                  required_argument, NULL, 'S'},
-    {"verbose",                   required_argument, NULL, 'v'},
-    {NULL, 0, NULL, 0}
-  };
+	int i,c,duration,seed,max;
+	int ObligatoryArgumentStartPos;
+	while(1) {
+		i = 0;
+		c = getopt_long(argc, argv, "hgd:t:s:m:S:v:", long_options, &i);
 
-  int i,c,duration,seed;
-  int ObligatoryArgumentStartPos;
-  while(1) {
-    i = 0;
-    c = getopt_long(argc, argv, "hgd:t:s:S:v:", long_options, &i);
+		if(c == -1) {
+			ObligatoryArgumentStartPos = optind;
+			break;
+		}
 
-    if(c == -1)
-    {
-	ObligatoryArgumentStartPos = optind;
-      break;
-    }
-
-    if(c == 0 && long_options[i].flag == 0)
-      c = long_options[i].val;
-
+	if(c == 0 && long_options[i].flag == 0)
+		c = long_options[i].val;
 
     // Following declarations are for use in -t option
-    char* ThreadDefinitionConfigList;
-    char* intermediate_info;
+	char* ThreadDefinitionConfigList;
+	char* intermediate_info;
     char* ElementPtr;
 //    char* ElementString;
 //    char* ElementParseIntermediateString;
- 
-    switch(c) {
-     case 0:
-       /* Flag is automatically set */
-       break;
-     case 'h':
-	 PrintHelpMessage();
-	 exit(0);
-     case 'g':
-	 Generate_C_output = TRUE;
-	 break;
-     case 'd':
-       duration = atoi(optarg);
-       if( duration == 0)
-       {
-	   bool optargIsZeroString = (strcmp(optarg,"0") == 0);
-	   if( !optargIsZeroString )
-	   {
-	       // If we are here it means that a string which does not correspond to an integer value is encountered
-	       printf("tmunit: Unexpected string '%s'.\n"
-                      "        Expecting integer argument for -d (--duration) option instead.\n",optarg);
-	       PrintHowToGetHelp();
-	       exit(1);
-	   }
-       }
 
-       CommandLineDuration  = duration;
-       DurationSetInCommandLine = TRUE;
-
-       break;
-     case 's':
-       seed = atoi(optarg);
-       if( seed == 0)
-       {
-	   bool optargIsZeroString = (strcmp(optarg,"0") == 0);
-	   if( !optargIsZeroString )
-	   {
-	       // If we are here it means that a string which does not correspond to an integer value is encountered
-	       printf("tmunit: Unexpected string '%s'.\n"
-		      "        Expecting integer argument for -s (--seed) option instead.\n",optarg);
-	       PrintHowToGetHelp();
-	       exit(1);
-	   }
-       }
-       CommandLineSeed = seed;
-       SeedSetInCommandLine= TRUE;
-
-       break;
-
+	switch(c) {
+		case 0:
+			/* Flag is automatically set */
+			break;
+		case 'h':
+			PrintHelpMessage();
+			exit(0);
+		case 'g':
+			Generate_C_output = TRUE;
+			break;
+		case 'd':
+			duration = atoi(optarg);
+			if( duration == 0) {
+				bool optargIsZeroString = (strcmp(optarg,"0") == 0);
+				if( !optargIsZeroString) {
+					// If we are here it means that a string which does not correspond to an integer value is encountered
+					printf("tmunit: Unexpected string '%s'.\n"
+							"        Expecting integer argument for -d (--duration) option instead.\n",optarg);
+					PrintHowToGetHelp();
+					exit(1);
+				}
+			}
+			CommandLineDuration  = duration;
+			DurationSetInCommandLine = TRUE;
+			break;
+		case 's':
+			seed = atoi(optarg);
+			if( seed == 0) {
+				bool optargIsZeroString = (strcmp(optarg,"0") == 0);
+				if( !optargIsZeroString ) {
+					// If we are here it means that a string which does not correspond to an integer value is encountered
+					printf("tmunit: Unexpected string '%s'.\n"
+							"        Expecting integer argument for -s (--seed) option instead.\n",optarg);
+					PrintHowToGetHelp();
+					exit(1);
+				}
+			}
+			CommandLineSeed = seed;
+			SeedSetInCommandLine = TRUE;
+			break;
+		case 'm':
+			max = atoi(optarg);
+			if( max == 0) {
+				bool optargIsZeroString = (strcmp(optarg,"0") == 0);
+				if( !optargIsZeroString ) {
+					// If we are here it means that a string which does not correspond to an integer value is encountered
+					printf("tmunit: Unexpected string '%s'.\n"
+							"        Expecting integer argument for -m (--max) option instead.\n",optarg);
+					max=10;
+				}
+			}
+			CommandLineMax = max;
+			MaxSetInCommandLine= TRUE;
+			break;
      case 'S':
 	 ExecuteSchedule=TRUE;
 	 SelectedScheduleName= dupstr(optarg);
@@ -214,7 +219,7 @@ int ProcessCommandLineArguments(int argc, char*  argv[])
 	     {
 		 // HARMANCI DEBUG
 		 // printf("\tThreadDefName:%s\n",ThreadDefName);
-		 
+
 	     }
 	     char* NumToGenerate = strtok_r(NULL,":",&ElementParseIntermediateString);
 	     if(NumToGenerate == NULL)
@@ -227,7 +232,7 @@ int ProcessCommandLineArguments(int argc, char*  argv[])
 			,ElementPtr);
 		 PrintHowToGetHelp();
 		 exit(1);
-	     } 
+	     }
 	     else
 	     {
 		 // HARMANCI DEBUG
@@ -237,7 +242,7 @@ int ProcessCommandLineArguments(int argc, char*  argv[])
 		 unsigned LastElementPos = GetSize_DynamicArray(&Dyn_ThreadDefConfigList) - 1 ;
 		 thread_def_config_t* CurrentElement = GetElement_DynamicArray(&Dyn_ThreadDefConfigList, LastElementPos, sizeof(thread_def_config_t));
 		 CurrentElement ->  ThreadDefName  = dupstr(ThreadDefName);
-		 CurrentElement ->  ReplicationNum = atoi(NumToGenerate); 
+		 CurrentElement ->  ReplicationNum = atoi(NumToGenerate);
 
 	     }
 
@@ -250,7 +255,7 @@ int ProcessCommandLineArguments(int argc, char*  argv[])
 
        break;
      case 'v':
-	 if( strcmp(optarg,"parser") == 0 ) 
+	 if( strcmp(optarg,"parser") == 0 )
 	     VerboseParserOutput = TRUE;
 	 else if( strcmp(optarg,"trace") == 0 )
 	     EnableTraceFromCommandLine=TRUE;
@@ -274,7 +279,7 @@ int ProcessCommandLineArguments(int argc, char*  argv[])
     }
   }
 
-  
+
   if ( argv[ObligatoryArgumentStartPos] == NULL)
   {
       char* ErrorMessage= malloc(sizeof(char)*MAX_CONSOLE_MESSAGE_LENGHT);
@@ -285,7 +290,7 @@ int ProcessCommandLineArguments(int argc, char*  argv[])
       PrintHowToGetHelp();
 
       exit(1);
-  }      
+  }
   else
   {
 /*       bool NoOptionalArgumentEntered = (ObligatoryArgumentStartPos == 1); */

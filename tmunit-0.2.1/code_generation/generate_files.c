@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Author(s):
  *   Derin Harmanci <derin.harmanci@unine.ch>
  *
@@ -40,7 +40,7 @@ void Generate_C_Code()
 
     GenerateCodeInitializingGlobalOptions();
 
-    Generate_Thread_Local_Variables(); 
+    Generate_Thread_Local_Variables();
     Generate_ThreadLocalVariableInitializations();
 
     GenerateSharedVariableDefinitions();
@@ -64,21 +64,21 @@ void Generate_C_Code()
            "\n" );
 
     // Part which runs on script after the files to be written by C code are generated
-    
-     char DummyString[100]; 
-     sprintf(DummyString,"%s",POST_PATMAP_SCRIPT_PATH);     
-     chdir(DummyString); 
-    
-     sprintf(DummyString,"./post_patmap %u", ThreadDefNum); 
-     system(DummyString); 
-     chdir(XSTR(ENV_SRC_DIR_PATH)); 
 
-    
+     char DummyString[100];
+     sprintf(DummyString,"%s",POST_PATMAP_SCRIPT_PATH);
+     chdir(DummyString);
+
+     sprintf(DummyString,"./post_patmap %u", ThreadDefNum);
+     system(DummyString);
+     chdir(XSTR(ENV_SRC_DIR_PATH));
+
+
 }
 
 
 
-    
+
 void GenerateSharedVariableDefinitions()
 {
 
@@ -87,7 +87,7 @@ void GenerateSharedVariableDefinitions()
     char CurrentFileName[100];
 
     sprintf(CurrentFileName,"%s/shared_var_definitions.h", INTERMEDIATE_GENERATED_C_OUTPUT_PATH);
-    
+
     SharedVariableDeclarationFile = fopen(CurrentFileName,"w");
     assert (SharedVariableDeclarationFile != NULL);
 
@@ -96,7 +96,7 @@ void GenerateSharedVariableDefinitions()
     assert (SharedVariableDefinitionFile != NULL);
 
 
-    
+
     ThreadInfo_t* FirstThreadDef  = &(ThreadDefArray[0]);
     VarExpr*      VarExprList     = FirstThreadDef->VarExprList;
     unsigned      VarExprListSize = FirstThreadDef->VarExprNum ;
@@ -132,18 +132,18 @@ void GenerateSharedVariableDefinitions()
  		                (CurrentVarExpr -> Type == VAR_SHARED_ARRAY_CONSTANT) ;
 	    if(SharedArray)
 	    {
-		
+
 		char* SharedArrayName = dupstr(CurrentVarExpr ->Name);
 		fprintf(SharedVariableDeclarationFile, "extern Word* %s;\n",SharedArrayName);
 		fprintf(SharedVariableDeclarationFile, "extern unsigned  %s_array_size;\n",SharedArrayName);
-		
+
 		fprintf(SharedVariableDefinitionFile, "Word* %s;\n",SharedArrayName);
 		fprintf(SharedVariableDefinitionFile, "unsigned  %s_array_size;\n",SharedArrayName);
 	    }
 
 	}
 
-    }    
+    }
 
     fprintf(SharedVariableDeclarationFile,"\n#endif\n");
 
@@ -163,7 +163,7 @@ void GenerateSharedVariableInitializations()
     char* MemoryAllocationCode= NULL;
     char* InitializationCode= NULL;
     char* TempCodeLine = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
-  
+
 
     bool SharedDataInitializationRequired = FALSE;
     MemoryAllocationCode = strext(MemoryAllocationCode,"// Allocating memory for shared variables and arrays.\n");
@@ -220,7 +220,7 @@ void GenerateSharedVariableInitializations()
  		                (CurrentVarExpr -> Type == VAR_SHARED_ARRAY_CONSTANT) ;
 	    if(SharedArray)
 	    {
-		
+
 		char* SharedArrayName = dupstr(CurrentVarExpr ->Name);
 		unsigned ArrayLowerBound = CurrentVarExpr -> OperandID[0];
 		unsigned ArrayUpperBound = CurrentVarExpr -> OperandID[1];
@@ -231,14 +231,14 @@ void GenerateSharedVariableInitializations()
 
 		sprintf(TempCodeLine, "%s = (Word*)malloc(%s_array_size*sizeof(Word));\n", SharedArrayName, SharedArrayName);
 		MemoryAllocationCode = strext(MemoryAllocationCode,TempCodeLine);
-		
+
 
 		Word* ArrayAddress = (Word *)VAR_EXPR_Evaluate(CurrentVarExpr,VarExprList, VarExprListSize);
 
 
 		if(FirstArrayEncountered)
 		    InitializationCode = strext(InitializationCode,"unsigned ElementNo;\n");
-		   
+
 		sprintf(TempCodeLine, "for(ElementNo=0; ElementNo< %s_array_size ; ElementNo++)\n", SharedArrayName);
 		InitializationCode = strext(InitializationCode,TempCodeLine);
 
@@ -265,15 +265,15 @@ void GenerateSharedVariableInitializations()
 
 		sprintf(TempCodeLine, "printf(\"Address of %s[%%u] : %%p\\n\",ElementNo, &(%s[ElementNo]) );\n", SharedArrayName, SharedArrayName);
 		AddrValuePrintCode = strext(AddrValuePrintCode,TempCodeLine);
- 
+
 
 		SharedDataInitializationRequired = TRUE;
-		
+
 	    }
 
 	}
 
-    }    
+    }
 
 
 
@@ -282,30 +282,30 @@ void GenerateSharedVariableInitializations()
     char CurrentFileName[100];
 
     sprintf(CurrentFileName,"%s/shared_var_init.c",INTERMEDIATE_GENERATED_C_OUTPUT_PATH);
-    
+
     SharedVariableInitializationFile = fopen(CurrentFileName,"w");
     assert (SharedVariableInitializationFile != NULL);
-    
+
     sprintf(CurrentFileName,"%s/shared_var_alloc.c",INTERMEDIATE_GENERATED_C_OUTPUT_PATH);
-    
+
     SharedVariableAllocationFile = fopen(CurrentFileName,"w");
     assert (SharedVariableAllocationFile != NULL);
 
 
     // If there is no shared variable to initialize then empty the initialization file
-    if( SharedDataInitializationRequired) 
-    { 
+    if( SharedDataInitializationRequired)
+    {
 	fprintf(SharedVariableAllocationFile,"%s",MemoryAllocationCode);
 	fprintf(SharedVariableInitializationFile,"%s",InitializationCode);
 
 //	AddrValuePrintCode = strext(AddrValuePrintCode,SharedVariableNameList);
 //	AddrValuePrintCode = strext(AddrValuePrintCode,");\n");
-	AddrValuePrintCode = strext(AddrValuePrintCode,"\n}\n#endif\n");  
-//	AddrValuePrintCode = strext(AddrValuePrintCode,"// *INDENT-ON*\n");  
+	AddrValuePrintCode = strext(AddrValuePrintCode,"\n}\n#endif\n");
+//	AddrValuePrintCode = strext(AddrValuePrintCode,"// *INDENT-ON*\n");
 
 	fprintf(SharedVariableInitializationFile,"%s",AddrValuePrintCode);
-	
-    } 
+
+    }
 
     fclose(SharedVariableAllocationFile);
     fclose(SharedVariableInitializationFile);
@@ -328,7 +328,7 @@ void  Generate_Thread_Local_Variables()
     char CurrentFileName[100];
 
     sprintf(CurrentFileName,"%s/thread_local_variables.h", INTERMEDIATE_GENERATED_C_OUTPUT_PATH);
-    
+
     ThreadLocalVariableHeaderFile = fopen(CurrentFileName,"w");
     assert (ThreadLocalVariableHeaderFile != NULL);
 
@@ -336,7 +336,7 @@ void  Generate_Thread_Local_Variables()
     fprintf(ThreadLocalVariableHeaderFile,"#ifndef _____THREAD_LOCAL_VARIABLES_H_________\n"
        	                                  "#define _____THREAD_LOCAL_VARIABLES_H_________\n\n");
 
-    
+
     fprintf(ThreadLocalVariableHeaderFile,"#include \"tm_interface.h\"\n"
 	                                  "#include <sys/time.h>\n");
 //	                                  "stm_tx_t* TxDesc[%u];\n",TxDefNum);
@@ -347,7 +347,7 @@ void  Generate_Thread_Local_Variables()
 	                                  "   unsigned long AbortNum;\n"
 	                                  "   unsigned long CurrentRetryNum;\n"
 	                                  "   unsigned long MaxRetries;\n"
-	                                  "   struct timeval start_time;\n" 
+	                                  "   struct timeval start_time;\n"
 	                                  "   struct timeval end_time;\n"
 	                                  "} stat_t;\n\n");
 
@@ -358,7 +358,7 @@ void  Generate_Thread_Local_Variables()
 	                                   "stat_t   Statistics;\n"
 	                                   "unsigned WriteValue;\n"
 	                                   "char*    PrintOffset;\n"
-	                                   "unsigned ThreadID;\n" 
+	                                   "unsigned ThreadID;\n"
 	                                   "char*    ThreadName;\n"
                                            "char**   TransactionNames;\n" \
 	   );
@@ -404,12 +404,12 @@ void  Generate_ThreadLocalVariableInitializations()
 
     FILE * ThreadLocalVarInitializationFile;
     char CurrentFileName[100];
- 
+
     sprintf(CurrentFileName,"%s/thread_local_var_init.c", INTERMEDIATE_GENERATED_C_OUTPUT_PATH);
     ThreadLocalVarInitializationFile = fopen(CurrentFileName,"a");
     assert (ThreadLocalVarInitializationFile != NULL);
     fprintf(ThreadLocalVarInitializationFile, "\n"
-	                                      "// Initializing thread local variables (other than random variables).\n"); 
+	                                      "// Initializing thread local variables (other than random variables).\n");
 
     ThreadInfo_t* FirstThreadDef  = &(ThreadDefArray[0]);
     VarExpr*      VarExprList     = FirstThreadDef->VarExprList;
@@ -425,26 +425,26 @@ void  Generate_ThreadLocalVariableInitializations()
 	    bool LocalVariable = ( CurrentVarExpr -> Type == VAR_LOCAL_SIMPLE || CurrentVarExpr -> Type == VAR_LOCAL_SIMPLE_CONSTANT );
 	    if(LocalVariable)
 	    {
-		fprintf(ThreadLocalVarInitializationFile, "ThLocals.%s = %lu;\n", CurrentVarExpr -> Name, CurrentVarExpr -> Value); 
+		fprintf(ThreadLocalVarInitializationFile, "ThLocals.%s = %lu;\n", CurrentVarExpr -> Name, CurrentVarExpr -> Value);
 	    }
 	    bool LocalArray = (  CurrentVarExpr -> Type == VAR_LOCAL_ARRAY || CurrentVarExpr -> Type == VAR_LOCAL_ARRAY_CONSTANT);
 	    if(LocalArray)
 	    {
-		
+
 		unsigned ArrayLowerBound = CurrentVarExpr -> OperandID[0];
 		unsigned ArrayUpperBound = CurrentVarExpr -> OperandID[1];
-		
+
 		unsigned ArraySize = ArrayUpperBound- ArrayLowerBound + 1;
 		Word*    ArrayAddress = (Word*)CurrentVarExpr -> Addr;
 		unsigned ElementNo;
 		for(ElementNo=0; ElementNo< ArraySize; ElementNo++)
-		{		
-		    fprintf(ThreadLocalVarInitializationFile, "ThLocals.%s[%u] = %lu;\n", CurrentVarExpr -> Name, ElementNo, ArrayAddress[ElementNo]); 
+		{
+		    fprintf(ThreadLocalVarInitializationFile, "ThLocals.%s[%u] = %lu;\n", CurrentVarExpr -> Name, ElementNo, ArrayAddress[ElementNo]);
 		}
 	    }
-	}   
+	}
     }
-	
+
     fclose(ThreadLocalVarInitializationFile);
 
     printf("- Generated code initializing thread local variables in thread.\n");
@@ -457,17 +457,17 @@ void Generate_ThreadSeedInitializations()
 
     FILE * ThreadSeedInitializationFile;
     char CurrentFileName[100];
- 
+
     sprintf(CurrentFileName,"%s/thread_local_var_init.c", INTERMEDIATE_GENERATED_C_OUTPUT_PATH);
     ThreadSeedInitializationFile = fopen(CurrentFileName,"w");
     assert (ThreadSeedInitializationFile != NULL);
-    fprintf(ThreadSeedInitializationFile, "// Initializing random variable seeds\n"); 
-    bool ThreadSeedInitializationRequired = FALSE; 
+    fprintf(ThreadSeedInitializationFile, "// Initializing random variable seeds\n");
+    bool ThreadSeedInitializationRequired = FALSE;
 
     char* SeedValuePrintCode=NULL;
     SeedValuePrintCode = strext(SeedValuePrintCode,"if(RandomDebug)\n"
 				                   "{\n"
-	                                            "printf(\"Generating Random variable seeds for Thread %u...\\n\",ID);\n" 
+	                                            "printf(\"Generating Random variable seeds for Thread %u...\\n\",ID);\n"
 	                       );
     char* TempCodeLine = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 
@@ -483,24 +483,24 @@ void Generate_ThreadSeedInitializations()
 	{
 	    fprintf(ThreadSeedInitializationFile,"ThLocals.seed_%s = (unsigned) RAND_R(&CurrentThreadSeed);\n", CurrentVarExpr->Name);
 //	    fprintf(ThreadSeedInitializationFile,"printf(\"seed_%s[%%u] = %%u \\n\",ID, ThLocals.seed_%s);\n", CurrentAddrGen->Name, CurrentAddrGen->Name);
-	    
+
 	    sprintf(TempCodeLine,"printf(\"Seed of %s: %%u\\n\", ThLocals.seed_%s);\n", CurrentVarExpr->Name, CurrentVarExpr->Name);
 	    SeedValuePrintCode = strext(SeedValuePrintCode,TempCodeLine);
 
 	    ThreadSeedInitializationRequired = TRUE;
 
 	}
-	
+
     }
-    
+
 
     // If there is no thread seed to initialize then empty the initialization file
-    if(!ThreadSeedInitializationRequired) 
-    { 
- 	fclose(ThreadSeedInitializationFile); 
- 	ThreadSeedInitializationFile = fopen(CurrentFileName,"w"); 
- 	assert (ThreadSeedInitializationFile != NULL); 
-    } 
+    if(!ThreadSeedInitializationRequired)
+    {
+ 	fclose(ThreadSeedInitializationFile);
+ 	ThreadSeedInitializationFile = fopen(CurrentFileName,"w");
+ 	assert (ThreadSeedInitializationFile != NULL);
+    }
     else
     {
 	SeedValuePrintCode = strext(SeedValuePrintCode,"}\n");
@@ -518,7 +518,7 @@ void GenerateVariableDefsBeforeSwitchStatement()
     char CurrentFileName[100];
 
     sprintf(CurrentFileName,"%s/execute_transaction_variable_defs.c", INTERMEDIATE_GENERATED_C_OUTPUT_PATH);
-    
+
     VarDefBeforeSwitchStatementFile = fopen(CurrentFileName,"w");
     assert (VarDefBeforeSwitchStatementFile != NULL);
 
@@ -552,13 +552,13 @@ void GenerateVariableDefsBeforeSwitchStatement()
     unsigned VarExprNo;
     // Traverse over the VarExprList to find out whether
     // there are any Variables to update
-    
+
 
     for( VarExprNo=0; VarExprNo< VarExprListSize; VarExprNo++)
     {
 	VarExpr* CurrentVarExpr = &(VarExprList[VarExprNo]);
 	bool AssociatedVarExprRequiresUpdate   = ( CurrentVarExpr -> Type == OP_RANDOM_DIST ) ||  ( CurrentVarExpr -> Type == OP_RANDOM_DIST_CONSTANT ) ;
-	if( AssociatedVarExprRequiresUpdate ) 
+	if( AssociatedVarExprRequiresUpdate )
 	{
 	    VarToUpdateExists = TRUE;
 	    break;
@@ -568,7 +568,7 @@ void GenerateVariableDefsBeforeSwitchStatement()
     {
 	fprintf(VarDefBeforeSwitchStatementFile,"unsigned Range;\n");
     }
-    
+
 /*     VarExpr* VarExprList   = FirstThreadDef->VarExprList; */
 /*     // Traverse over all transaction definitions to find out the different */
 /*     // loop iterators. */
@@ -602,7 +602,7 @@ void GenerateVariableDefsBeforeSwitchStatement()
 /* 			break; */
 /* 		    } */
 /* 		} */
-		
+
 /* 		// If loop variable is not in the list add it to the list */
 /* 		if( !IteratorExistInList ) */
 /* 		{ */
@@ -621,7 +621,7 @@ void GenerateVariableDefsBeforeSwitchStatement()
 
     // Starting to write the definition line
 /*     fprintf(VarDefBeforeSwitchStatementFile,"int "); */
-   
+
     // Adding comma seperated list of loop iterator names in the definition.
 /*     unsigned IteratorNum = GetSize_DynamicArray(&LoopIteratorNameList); */
 /*     unsigned IteratorNo; */
@@ -635,18 +635,18 @@ void GenerateVariableDefsBeforeSwitchStatement()
 /* 	    fprintf(VarDefBeforeSwitchStatementFile,"%s,",IteratorVarExpr->Name); */
 /* 	else // if LastIterator */
 /* 	    fprintf(VarDefBeforeSwitchStatementFile,"%s;\n",IteratorVarExpr->Name); */
-	
+
 /*     } */
 
 
     fclose(VarDefBeforeSwitchStatementFile);
-} 
+}
 
 
 void GenerateManagedAdressAccessString(unsigned AddressVarExprID, const VarExpr* VarExprList, unsigned VarExprListSize, char** AddressVarExprString)
 {
     GenerateVarExprString(AddressVarExprID, VarExprList, VarExprListSize, AddressVarExprString);
-    
+
 
     const VarExpr* OperandExpr = &(VarExprList[AddressVarExprID]);
     bool SharedArrayAccess = ( OperandExpr->Type == OP_MANAGED_ARRAY_ACCESS ||  OperandExpr->Type == OP_UNMANAGED_ARRAY_ACCESS  );
@@ -668,9 +668,9 @@ void GenerateManagedAdressAccessString(unsigned AddressVarExprID, const VarExpr*
         unsigned TempStringLength = strlen(TempString);
         // Chopping the chracted from the end
         TempString[TempStringLength-1] = '\0';
-        
+
         //Chopping the first two characters
-        *AddressVarExprString = dupstr( &(TempString[2]) );		
+        *AddressVarExprString = dupstr( &(TempString[2]) );
     }
 
 }
@@ -680,7 +680,7 @@ void MarkBlockTerminations(const TxInfo_t* CurrentTxDef, dyn_arr_t* BlockTermina
 {
 
     unsigned TxOpNum = CurrentTxDef -> TxOpNum[0];
-    unsigned TxOpNo; 
+    unsigned TxOpNo;
     for(TxOpNo=0; TxOpNo< TxOpNum; TxOpNo++)
     {
 	TxOpContainer_t* CurrentTxOpContainer = &(CurrentTxDef -> TxOpList[0][TxOpNo]) ;
@@ -703,9 +703,9 @@ void MarkBlockTerminations(const TxInfo_t* CurrentTxDef, dyn_arr_t* BlockTermina
 		    break;
 		}
 	    }
- 
+
 	    if( !AlreadyInList)
-	    {		
+	    {
 		Extend_DynamicArray(BlockTerminations, sizeof(unsigned));
 		unsigned  LastAddedElementPos = GetSize_DynamicArray(BlockTerminations) - 1;
 		unsigned* AddedElement = GetElement_DynamicArray(BlockTerminations, LastAddedElementPos, sizeof(unsigned));
@@ -728,7 +728,7 @@ void MarkBlockTerminations(const TxInfo_t* CurrentTxDef, dyn_arr_t* BlockTermina
 	    if( BranchBypassingNextTxOp )
 	    {
 		unsigned NewTerminationTxOpPos = TerminationTxOpContainer->NextContainerID[0] -1;
-		
+
 		// NewTerminationTxOpPos  exists already in BlockTerminations?
 		bool AlreadyInList = FALSE;
 		unsigned ElementNum = GetSize_DynamicArray(BlockTerminations);
@@ -742,20 +742,20 @@ void MarkBlockTerminations(const TxInfo_t* CurrentTxDef, dyn_arr_t* BlockTermina
 			break;
 		    }
 		}
-		
+
 		if( !AlreadyInList)
-		{		
+		{
 		    Extend_DynamicArray(BlockTerminations, sizeof(unsigned));
 		    unsigned  LastAddedElementPos = GetSize_DynamicArray(BlockTerminations) - 1;
 		    unsigned* AddedElement = GetElement_DynamicArray(BlockTerminations, LastAddedElementPos, sizeof(unsigned));
 		    *AddedElement = NewTerminationTxOpPos;
 		}
-		
+
 	    }
 	}
 	PreviousTerminationNum = CurrentTerminationNum;
         CurrentTerminationNum = GetSize_DynamicArray(BlockTerminations);
-    }    
+    }
 
 }
 
@@ -769,7 +769,7 @@ void PrepareBlockTerminationCode(dyn_arr_t* BlockTerminations, char** CodeAfterT
     {
 	unsigned* CurrentTerminationPos = GetElement_DynamicArray(BlockTerminations, TerminationNo, sizeof(unsigned));
 	CodeAfterTxOp[*CurrentTerminationPos] = strext(CodeAfterTxOp[*CurrentTerminationPos],"}\n");
-    }    
+    }
 }
 
 
@@ -783,32 +783,32 @@ void PrepareIntermediateBranchCode(TxInfo_t* CurrentTxDef, dyn_arr_t* BlockTermi
 	TxOpContainer_t* BlockTerminatingTxOpContainer = &(CurrentTxDef -> TxOpList[0][*CurrentTerminationPos]) ;
 	unsigned NextTxOpPos = *CurrentTerminationPos+1;
 	bool BranchBypassingNextTxOp = (BlockTerminatingTxOpContainer->NextContainerID[0] > NextTxOpPos );
-     
+
 	if( BranchBypassingNextTxOp )
 	{
 	    TxOpContainer_t* NextTxOpContainer = &(CurrentTxDef -> TxOpList[0][NextTxOpPos]) ;
-	    bool NextContainerIsConditionTxOp  = (NextTxOpContainer -> ConditionExprPos != INVALID_CONDITION_EXPR_POS && !(NextTxOpContainer -> LoopIteratorContainer) );	
-	    if( NextContainerIsConditionTxOp) // Next container contains an "else if" statement 
+	    bool NextContainerIsConditionTxOp  = (NextTxOpContainer -> ConditionExprPos != INVALID_CONDITION_EXPR_POS && !(NextTxOpContainer -> LoopIteratorContainer) );
+	    if( NextContainerIsConditionTxOp) // Next container contains an "else if" statement
 	    {
 		// Prepare the "else " prefix for the "else if" statement (the if part will be printed while the TxOp is processed)
 		CodeBeforeTxOp[NextTxOpPos] = strext(CodeBeforeTxOp[NextTxOpPos],"else ");
 	    }
-	    else // Next container is the first TxOp of an "else" block 
+	    else // Next container is the first TxOp of an "else" block
 	    {
-		// Prepare the code opening an "else" block 
+		// Prepare the code opening an "else" block
 		CodeBeforeTxOp[NextTxOpPos] = strext(CodeBeforeTxOp[NextTxOpPos],"else\n{\n");
 	    }
 
 	}
-	    
-    }    
-    
+
+    }
+
 }
 
 void PrepareVarAssignCode(TxInfo_t* CurrentTxDef, char** CodeAfterTxOp, const  VarExpr* VarExprList, unsigned VarExprListSize)
 {
     unsigned TxOpNum = CurrentTxDef -> TxOpNum[0];
-    unsigned TxOpNo; 
+    unsigned TxOpNo;
     for( TxOpNo=0; TxOpNo< TxOpNum; TxOpNo++)
     {
 	TxOpContainer_t* CurrentTxOpContainer = &(CurrentTxDef -> TxOpList[0][TxOpNo]) ;
@@ -819,18 +819,18 @@ void PrepareVarAssignCode(TxInfo_t* CurrentTxDef, char** CodeAfterTxOp, const  V
 	    for(VarAssignNo=0; VarAssignNo< CurrentTxOpContainer -> VarAssignNum; VarAssignNo++)
 	    {
 		var_assign_t* CurrentVarAssign = &(CurrentTxOpContainer -> VarAssigns[VarAssignNo]);
-		
+
 		char* EvaluatedVarExprString=NULL;
 		GenerateVarExprString(CurrentVarAssign->EvaluatedVarExprID, VarExprList, VarExprListSize, &EvaluatedVarExprString);
-		
+
 		char* AssignedVarExprString=NULL;
 		GenerateVarExprString(CurrentVarAssign->AssignedVarID, VarExprList, VarExprListSize, &AssignedVarExprString);
-		
+
 		CodeAfterTxOp[TxOpNo]=strext(CodeAfterTxOp[TxOpNo],AssignedVarExprString);
 		CodeAfterTxOp[TxOpNo]=strext(CodeAfterTxOp[TxOpNo]," = ");
 		CodeAfterTxOp[TxOpNo]=strext(CodeAfterTxOp[TxOpNo],EvaluatedVarExprString);
 		CodeAfterTxOp[TxOpNo]=strext(CodeAfterTxOp[TxOpNo],";\n");
-		
+
 	    }
 	}
     }
@@ -840,7 +840,7 @@ void PrepareVarAssignCode(TxInfo_t* CurrentTxDef, char** CodeAfterTxOp, const  V
 
  void GenerateRandomVariableUpdateCode(FILE* TransactionsContentFile, const TxInfo_t* CurrentTxDef, const VarExpr* VarExprList, unsigned VarExprListSize)
  {
-     
+
      unsigned VarToUpdateNum = CurrentTxDef -> VarToUpdateNum;
      char*    RandomVariableUpdateCode = NULL;
 
@@ -850,54 +850,54 @@ void PrepareVarAssignCode(TxInfo_t* CurrentTxDef, char** CodeAfterTxOp, const  V
 	 unsigned CurrentVarToUpdateID = CurrentTxDef -> VarListToUpdate[VarToUpdateNo];
 	 char* VarToUpdateString = NULL;
 	 GenerateVarExprString(CurrentVarToUpdateID, VarExprList, VarExprListSize, &VarToUpdateString);
-	 
+
 	 const VarExpr* VarToUpdate = &(VarExprList[CurrentVarToUpdateID ]);
 	 assert(VarToUpdate != NULL);
-	 
-	 
+
+
 	 unsigned LowerLimitVarExprID = VarToUpdate->OperandID[0];
 	 unsigned UpperLimitVarExprID = VarToUpdate->OperandID[1];
-	 
+
 	 char* LowerLimitVarExprString = NULL;
 	 GenerateVarExprString(LowerLimitVarExprID, VarExprList, VarExprListSize, &LowerLimitVarExprString);
-	 
+
 	 char* UpperLimitVarExprString = NULL;
 	 GenerateVarExprString(UpperLimitVarExprID, VarExprList, VarExprListSize, &UpperLimitVarExprString);
-	 
-	 
+
+
 	 char* TempCodeLine = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	 sprintf(TempCodeLine,"Range = %s - %s + 1;\n", UpperLimitVarExprString, LowerLimitVarExprString );
 	 RandomVariableUpdateCode = strext(RandomVariableUpdateCode,TempCodeLine);
-	 
-	 
+
+
 	 // Removing the "ThLocals->" prefix for use in seed variable name
 	 unsigned CharNumToRemove  = strlen("ThLocals->");
-	 char* RandomVariableNameBase = dupstr(&(VarToUpdateString[CharNumToRemove]));		
-	 
+	 char* RandomVariableNameBase = dupstr(&(VarToUpdateString[CharNumToRemove]));
+
 	 sprintf(TempCodeLine," %s = %s + ChooseFromUniformDist( Range, &(ThLocals->seed_%s) );\n ", VarToUpdateString, LowerLimitVarExprString,  RandomVariableNameBase );
 	 RandomVariableUpdateCode = strext(RandomVariableUpdateCode,TempCodeLine);
-	 
+
 /* 	 if( EnableTrace) */
 /* 	 { */
 /* 	     // Code to print the value of seed if a trace is being printed. */
 /* 	     sprintf(TempCodeLine,"if(EnableTrace)\n" */
 /* 		     "    printf(\"%%s[%%u]%s=%%u\\n\", ThLocals->PrintOffset, ThLocals->ThreadID, %s);\n",RandomVariableNameBase, VarToUpdateString); */
 /* 	     RandomVariableUpdateCode = strext(RandomVariableUpdateCode,TempCodeLine); */
-	     
+
 /* 	 } */
-	 
-	 
-	 
+
+
+
 	 free(VarToUpdateString);
 	 free(LowerLimitVarExprString);
 	 free(UpperLimitVarExprString);
 	 free(TempCodeLine);
 	 free(RandomVariableNameBase);
-	 
+
      }
      if( RandomVariableUpdateCode != NULL)
 	 fprintf(TransactionsContentFile,"%s",RandomVariableUpdateCode);
-     
+
  }
 
 
@@ -917,7 +917,7 @@ void  Generate_Transaction_C_Code()
     // Open the file
     char CurrentFileName[100];
     sprintf(CurrentFileName,"%s/transactions.content", INTERMEDIATE_GENERATED_C_OUTPUT_PATH);
-    
+
     FILE* TransactionsContentFile = fopen(CurrentFileName,"w");
     assert (TransactionsContentFile != NULL);
 
@@ -939,7 +939,7 @@ void  Generate_Transaction_C_Code()
 	    CodeBeforeTxOp[TxOpNo] = NULL;
 	    CodeAfterTxOp[TxOpNo]  = NULL;
 	}
-	
+
 
 	Clear_DynamicArray(&BlockTerminations);
 	MarkBlockTerminations(CurrentTxDef, &BlockTerminations);
@@ -966,7 +966,7 @@ void  Generate_Transaction_C_Code()
 	    // Writing code to be printed before CurrentTxOp
 	    if( CodeBeforeTxOp[TxOpNo] != NULL)
 		fprintf(TransactionsContentFile,"%s",CodeBeforeTxOp[TxOpNo]);
-	    
+
 	    TxOpContainer_t* CurrentTxOp = &(CurrentTxDef -> TxOpList[0][TxOpNo]) ;
 	    if ( CurrentTxOp -> TxOperation == READ)
 	    {
@@ -1006,7 +1006,7 @@ void  Generate_Transaction_C_Code()
 		WriteAccessString = strext(WriteAccessString,AddressVarExprString);
 		WriteAccessString = strext(WriteAccessString,")");
 
-		
+
 		char* StoreValueSourceVarExprString = NULL;
 		unsigned StoreValueSourceVariableExprID = CurrentTxOp -> AccessedAddrGenID[0];
 		bool StoreValueSourceVariableSpecified = ( StoreValueSourceVariableExprID < (unsigned) -1 );
@@ -1024,7 +1024,7 @@ void  Generate_Transaction_C_Code()
 		WriteAccessString[WriteAccessStringLength-1] = ',';
 		WriteAccessString = strext(WriteAccessString,StoreValueSourceVarExprString);
 		WriteAccessString = strext(WriteAccessString,")");
-		
+
 		fprintf(TransactionsContentFile,"%s;\n", WriteAccessString);
 		if(!StoreValueSourceVariableSpecified)
 		    fprintf(TransactionsContentFile,"ThLocals->WriteValue++;\n");
@@ -1038,9 +1038,9 @@ void  Generate_Transaction_C_Code()
 		if ( LoopIteratorStartTxOp )
 		{
 		    // Generating the for loop statement
-		    
 
-		    
+
+
 		    // Generating the initialization statement
 		    VarExpr* LoopConditionExpr =  &(VarExprList[ CurrentTxOp -> ConditionExprPos ]);
 		    unsigned LoopInitialValExprID = LoopConditionExpr->OperandID[2];
@@ -1050,7 +1050,7 @@ void  Generate_Transaction_C_Code()
 		    unsigned LoopIteratorID = LoopConditionExpr->OperandID[0];
 		    char* LoopIteratorString = NULL;
 		    GenerateVarExprString(LoopIteratorID, VarExprList, VarExprListSize, &LoopIteratorString);
-			
+
 
 		    char* InitializationStatement = NULL;
 		    InitializationStatement = strext(InitializationStatement,LoopIteratorString);
@@ -1059,7 +1059,7 @@ void  Generate_Transaction_C_Code()
 
 		    free(LoopInitialValExprString);
 		    free(LoopIteratorString);
-		    
+
 		    // Generation Condition Expression
 		    char* ConditionExprString = NULL;
 		    GenerateVarExprString(CurrentTxOp -> ConditionExprPos, VarExprList, VarExprListSize, &ConditionExprString);
@@ -1078,7 +1078,7 @@ void  Generate_Transaction_C_Code()
 		    IncrementStatement = strext(IncrementStatement,AssignedVarExprString);
 		    IncrementStatement = strext(IncrementStatement," = ");
 		    IncrementStatement = strext(IncrementStatement,IncrementString);
-		    
+
 		    free(IncrementString);
 		    free(AssignedVarExprString);
 
@@ -1094,11 +1094,11 @@ void  Generate_Transaction_C_Code()
 		    IfStatement = strext(IfStatement,"if");
 		    IfStatement = strext(IfStatement,ConditionStatement);
 		    IfStatement = strext(IfStatement,"\n{\n");
-		    
+
 		    fprintf(TransactionsContentFile,"%s", IfStatement);
 		}
 	    }
-	    
+
 	    // Writing code to be printed after CurrentTxOp
 	    if( CodeAfterTxOp[TxOpNo] != NULL)
 		fprintf(TransactionsContentFile,"%s",CodeAfterTxOp[TxOpNo]);
@@ -1130,30 +1130,32 @@ void GenerateCodeInitializingGlobalOptions()
     fprintf(SimulationParameterInitializationFile,"TransmitReadOnlyTxHint = %u;\n"
 	                                          "\n"
 	                                          "MainSeed = %u;\n"
+	                                          "MainMax = %u;\n"
 	                                          "RandomDebug = %u;\n"
 	                                          "\n"
 	                                          "WaitForTimeOut = %u;\n"
-	                                          "TimeOutValueSet = %u;\n" 
+	                                          "TimeOutValueSet = %u;\n"
 	                                          "DelayUnit = %u;\n"
 	                                          "TimeOut = %u;\n"
 	                                          "\n"
-	                                          "PrintStats = %u;\n" 
-	                                          "EnableTrace = %u;\n" 
+	                                          "PrintStats = %u;\n"
+	                                          "EnableTrace = %u;\n"
 	                                          "JustGenerateTrace = %u;\n"
 	                                          "EnableTraceFromCommandLine = %u;\n"
 	                                          "\n"
 	                                          "SerialThreadExecution = %u;\n", \
-	    TransmitReadOnlyTxHint,             \
-	    MainSeed,				\
-	    RandomDebug,			\
-	    WaitForTimeOut,			\
+	    TransmitReadOnlyTxHint,		\
+	    MainSeed,					\
+	    MainMax,					\
+	    RandomDebug,				\
+	    WaitForTimeOut,				\
 	    TimeOutValueSet,			\
-	    DelayUnit,				\
-	    TimeOut,				\
-	    PrintStats,				\
-	    EnableTrace,			\
+	    DelayUnit,					\
+	    TimeOut,					\
+	    PrintStats,					\
+	    EnableTrace,				\
 	    JustGenerateTrace,			\
-	    EnableTraceFromCommandLine,		\
+	    EnableTraceFromCommandLine,	\
 	    SerialThreadExecution);
 
     fclose(SimulationParameterInitializationFile);
@@ -1176,12 +1178,12 @@ void Generate_C_CodeForThread(unsigned ThreadID)
     FILE* ThreadContentFile;
 
     sprintf(CurrentFileName,"%s/thread_%u.content", INTERMEDIATE_GENERATED_C_OUTPUT_PATH, ThreadID);
-    
+
     ThreadContentFile = fopen(CurrentFileName,"w");
     assert (ThreadContentFile != NULL);
 
 
-    ThreadInfo_t* CurrentThreadDef = &(ThreadDefArray[ThreadID]); 
+    ThreadInfo_t* CurrentThreadDef = &(ThreadDefArray[ThreadID]);
     int ContainerNo;
     int ContainerNum = (int) CurrentThreadDef -> TxContainerNum ;
 
@@ -1203,9 +1205,9 @@ void Generate_C_CodeForThread(unsigned ThreadID)
 	CodeAfterTransaction[ContainerNo]  = NULL;
     }
 
-    // First pass over Containers (reverse pass). 
-    //    i) Finding out loop beginning and terminations. 
-    //   ii) Finds out the number of multi candidate TxContainers 
+    // First pass over Containers (reverse pass).
+    //    i) Finding out loop beginning and terminations.
+    //   ii) Finds out the number of multi candidate TxContainers
     for(ContainerNo=ContainerNum-1; ContainerNo >= 0; ContainerNo--)
     {
 //	printf("ContainerNo=%d\n",ContainerNo);
@@ -1226,12 +1228,12 @@ void Generate_C_CodeForThread(unsigned ThreadID)
 
 	    // Generate code for beginning of the loop
 	    unsigned LoopStartContainerNo;
-	    if( InfiniteLoopEndContainer ) 
+	    if( InfiniteLoopEndContainer )
 	    {
 		sprintf(DummyString,"for(; ; )\n{\n");
 		LoopStartContainerNo = CurrentTxContainer -> NextContainerID[0];
 	    }
-	    else if( FiniteLoopEndContainer ) 
+	    else if( FiniteLoopEndContainer )
 	    {
 		sprintf(DummyString,"for(RepetitionNo[%u]=0 ; RepetitionNo[%u]< %u ; RepetitionNo[%u]++ )\n{\n",LoopNestinglevel, LoopNestinglevel, CurrentTxContainer -> InitialRepetitionCount, LoopNestinglevel);
 		LoopStartContainerNo = CurrentTxContainer -> NextContainerID[1];
@@ -1240,15 +1242,15 @@ void Generate_C_CodeForThread(unsigned ThreadID)
 
 	    // Store the start node for the current loop so that when reached to the start node the nesting level can be decreased
 	    Extend_DynamicArray(&LoopStartContainers,sizeof(LoopStartContainerNo));
-	    unsigned LoopStartContainerPos = GetSize_DynamicArray(&LoopStartContainers) -1 ; 
-	    unsigned*  CurrentElement =  GetElement_DynamicArray(&LoopStartContainers,LoopStartContainerPos,sizeof(unsigned));  
-	    *CurrentElement = LoopStartContainerNo; 
+	    unsigned LoopStartContainerPos = GetSize_DynamicArray(&LoopStartContainers) -1 ;
+	    unsigned*  CurrentElement =  GetElement_DynamicArray(&LoopStartContainers,LoopStartContainerPos,sizeof(unsigned));
+	    *CurrentElement = LoopStartContainerNo;
 
 	    // Increase Loop nesting level
 	    LoopNestinglevel++;
 	    if (MaxLoopNestingLevel < LoopNestinglevel)
-		MaxLoopNestingLevel = LoopNestinglevel; 
-	}    
+		MaxLoopNestingLevel = LoopNestinglevel;
+	}
 
 
 	// Decrease nesting level, if this container is a loop start that has been recorded beforehand
@@ -1258,7 +1260,7 @@ void Generate_C_CodeForThread(unsigned ThreadID)
 	    while( CheckNextStartContainer)
 	    {
 		unsigned NextLoopStartContainerNum = LoopStartContainers.ArrayElementNum ;
-		unsigned NextLoopStartContainerToRemove = ((unsigned*)(LoopStartContainers.ArrayStartAddress))[NextLoopStartContainerNum-1]; 
+		unsigned NextLoopStartContainerToRemove = ((unsigned*)(LoopStartContainers.ArrayStartAddress))[NextLoopStartContainerNum-1];
 		if( NextLoopStartContainerToRemove == ContainerNo )
 		{
 		    Chop_DynamicArray(&LoopStartContainers);
@@ -1271,18 +1273,18 @@ void Generate_C_CodeForThread(unsigned ThreadID)
 		else
 		    CheckNextStartContainer= FALSE;
 	    }
-	    
+
 	}
 
 	// Finding out the number of multi candidate TxContainers
 	bool CurrentContainerHasMultipleCandidates = (CurrentTxContainer -> CandidateTxNum > 1);
 	if ( CurrentContainerHasMultipleCandidates  )
 	    RequiredTxCandidateListContainerNum++;
-	
-    }    
+
+    }
 
 
-    
+
     sprintf(CurrentFileName,"%s/thread_%u_variable_declarations.c", INTERMEDIATE_GENERATED_C_OUTPUT_PATH, ThreadID);
     FILE* ThreadVariableDeclarationFile = fopen(CurrentFileName,"w");
     assert (ThreadVariableDeclarationFile != NULL);
@@ -1295,8 +1297,8 @@ void Generate_C_CodeForThread(unsigned ThreadID)
 	fprintf(ThreadVariableDeclarationFile,"%s",DummyString);
     }
 
-    // (Conditional) Second pass over Containers (forward pass). 
-    // This pass is only done if there is need for TxCandidateListContainers. 
+    // (Conditional) Second pass over Containers (forward pass).
+    // This pass is only done if there is need for TxCandidateListContainers.
     // If so, the pass will generating the code to initialize those TxCandidateListContainers.
     unsigned TxCandidateListContainerNo=0;
     if(RequiredTxCandidateListContainerNum >0 )
@@ -1339,20 +1341,20 @@ void Generate_C_CodeForThread(unsigned ThreadID)
 		if(TxCandidateListContainerNo == RequiredTxCandidateListContainerNum )
 		    break;
 	    }
-	    
+
 	}
     }
 
     fclose(ThreadVariableDeclarationFile);
 
 
-    
+
     // Third pass over Containers (forward pass). Generating the code for each containers on the output file.
     TxCandidateListContainerNo = 0;
     for(ContainerNo=0; ContainerNo< ContainerNum; ContainerNo++)
     {
 	TxContainer_t* CurrentTxContainer = &(CurrentThreadDef -> TxContainerList[ContainerNo]);
-	
+
 
 
 	if( CodeBeforeTransaction[ContainerNo] != NULL)
@@ -1369,18 +1371,18 @@ void Generate_C_CodeForThread(unsigned ThreadID)
 /* 	    fprintf(ThreadContentFile,"%s",DummyString); */
 /* 	} */
 
-	
+
 /* 	if(EnableTrace) */
 /* 	    fprintf(ThreadContentFile,"PRINT_DELAY_BEFORE_TX(%u);\n", DelayBeforeTransaction); */
 
-	
+
 	bool MultipleCandidateContainer = CurrentTxContainer -> CandidateTxNum > 1;
 	if( !MultipleCandidateContainer)
 	    fprintf(ThreadContentFile,"ExecuteTransaction(%u, ThLocals.TxDesc, &ThLocals);\n", (CurrentTxContainer->TxCandidateList[0]).TxID);
 	else
 	{
 	    fprintf(ThreadContentFile,"ChosenTransactionID = ChooseTransaction( &(CandidateListContainer[%u]) );\n", TxCandidateListContainerNo);
-	    fprintf(ThreadContentFile,"ExecuteTransaction(ChosenTransactionID, ThLocals.TxDesc, &ThLocals);\n");	    
+	    fprintf(ThreadContentFile,"ExecuteTransaction(ChosenTransactionID, ThLocals.TxDesc, &ThLocals);\n");
 	    TxCandidateListContainerNo++;
 	}
 
@@ -1398,7 +1400,7 @@ void Generate_C_CodeForThread(unsigned ThreadID)
     fclose(ThreadContentFile);
 
 
-    // Generating Thread and Transaction Name arrays 
+    // Generating Thread and Transaction Name arrays
     sprintf(CurrentFileName,"%s/thread_and_transaction_names.c", INTERMEDIATE_GENERATED_C_OUTPUT_PATH);
     FILE* ThreadAndTransactionNamesFile = fopen(CurrentFileName,"w");
     assert (ThreadAndTransactionNamesFile != NULL);
@@ -1427,7 +1429,7 @@ void Generate_C_CodeForThread(unsigned ThreadID)
     ThreadInfo_t* FirstThreadDef = &(ThreadDefArray[0]);
     unsigned TxDefNo;
     unsigned TxDefNum = FirstThreadDef -> TxDefNum;
-    ThreadAndTransactionNameDefinitionCode = strext(ThreadAndTransactionNameDefinitionCode,"char* TransactionNames[]={");    
+    ThreadAndTransactionNameDefinitionCode = strext(ThreadAndTransactionNameDefinitionCode,"char* TransactionNames[]={");
     for( TxDefNo=0; TxDefNo< TxDefNum; TxDefNo++)
     {
 	TxInfo_t* CurrentTxDef = &(FirstThreadDef-> TxDefArray[TxDefNo]);
@@ -1571,8 +1573,8 @@ void GenerateVarExprString(unsigned TargetVarExprID, const  VarExpr* VarExprList
 	if(SingleOperandExpr)
 	{
 	    char* OperandString=NULL;
-	    GenerateVarExprString(TargetVarExpr -> OperandID[0], VarExprList, VarExprListSize, &OperandString ); 
-	    
+	    GenerateVarExprString(TargetVarExpr -> OperandID[0], VarExprList, VarExprListSize, &OperandString );
+
 	    bool TransactionaMemOp = (TargetVarExpr -> Type == OP_MEMORY_READ || TargetVarExpr -> Type == OP_MEMORY_WRITE);
 	    if( TransactionaMemOp)
 	    {
@@ -1601,9 +1603,9 @@ void GenerateVarExprString(unsigned TargetVarExprID, const  VarExpr* VarExprList
 		    unsigned TempStringLength = strlen(TempString);
 		    // Chopping the chracted from the end
 		    TempString[TempStringLength-1] = '\0';
-		    
+
 		    //Chopping the first two characters
-		    OperandString = dupstr( &(TempString[2]) );		
+		    OperandString = dupstr( &(TempString[2]) );
 		}
 	    }
 	    else
@@ -1619,11 +1621,11 @@ void GenerateVarExprString(unsigned TargetVarExprID, const  VarExpr* VarExprList
 	{
 
 	    char* FirstOperandString = NULL;
-	    GenerateVarExprString(TargetVarExpr -> OperandID[0], VarExprList, VarExprListSize, &FirstOperandString ); 
+	    GenerateVarExprString(TargetVarExpr -> OperandID[0], VarExprList, VarExprListSize, &FirstOperandString );
 	    assert(FirstOperandString != NULL);
 
 	    char* SecondOperandString = NULL;
-	    GenerateVarExprString(TargetVarExpr -> OperandID[1], VarExprList, VarExprListSize, &SecondOperandString ); 
+	    GenerateVarExprString(TargetVarExpr -> OperandID[1], VarExprList, VarExprListSize, &SecondOperandString );
 	    assert(SecondOperandString != NULL);
 
 
@@ -1649,7 +1651,7 @@ void GenerateVarExprString(unsigned TargetVarExprID, const  VarExpr* VarExprList
 	}
     }
 
-    
+
 }
 
 

@@ -19,14 +19,15 @@ extern "C" {
 #ifndef __cplusplus
 typedef enum {FALSE,TRUE} bool;
 #else
-#define TRUE true    
-#define FALSE false    
+#define TRUE true
+#define FALSE false
 #endif
 
 
-extern bool TransmitReadOnlyTxHint; 
+extern bool TransmitReadOnlyTxHint;
 
 extern unsigned MainSeed;
+extern unsigned MainMax;
 extern bool RandomDebug;
 
 extern bool WaitForTimeOut;

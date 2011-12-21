@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Author(s):
  *   Derin Harmanci <derin.harmanci@unine.ch>
  *
@@ -31,16 +31,16 @@ unsigned*  ThreadSeed;
 
    __thread stm_tx_t* TxDesc=NULL;
    AO_t tx_id_counter =0 ;
-   __thread sigjmp_buf* envPtr; 
+   __thread sigjmp_buf* envPtr;
 
 #elif defined ( SWISS_TM ) || defined ( WSTM )
    __thread stm_tx_t* TxDesc = NULL;
 
-#elif defined ( ENNALS ) // for example for tinySTM_new 
+#elif defined ( ENNALS ) // for example for tinySTM_new
    __thread stm_tx_t* TxDesc = NULL;
    __thread ptst_t* ptst   = NULL;
 
-#else  // for example for tinySTM_new 
+#else  // for example for tinySTM_new
    __thread stm_tx_t* TxDesc=(stm_tx_t*)0x1;
 
 #endif
@@ -52,8 +52,8 @@ void* ThreadStart(void *Parameters)
   thread_input_t* ThreadParameters= (thread_input_t*)Parameters;
   unsigned ID = ThreadParameters-> thread_ID;
 //  unsigned MaxTxNumToExecute = ThreadParameters -> MaxTxNumToExecute;
-  unsigned int CurrentThreadSeed = ThreadParameters->  ThreadSeed ; 
-  
+  unsigned int CurrentThreadSeed = ThreadParameters->  ThreadSeed ;
+
 
   if(ExecuteSchedule)
   {
@@ -67,9 +67,9 @@ void* ThreadStart(void *Parameters)
   }
 
   if(RandomDebug)
-      printf("Generating Random variable seeds for Thread %u...\n",ID); 
+      printf("Generating Random variable seeds for Thread %u...\n",ID);
 
-    unsigned VarExprNum = ThreadDefArray[ID].VarExprNum; 
+    unsigned VarExprNum = ThreadDefArray[ID].VarExprNum;
     unsigned VarExprNo;
     for (VarExprNo=0; VarExprNo< VarExprNum; VarExprNo++)
     {
@@ -81,7 +81,7 @@ void* ThreadStart(void *Parameters)
 	    if(RandomDebug)
 		printf("Seed of %s: %u\n",CurrentVarExpr -> Name, CurrentVarExpr -> OperandID[2]);
 	}
-	    
+
     }
 
 /*    unsigned AddrGenNo; */
@@ -99,7 +99,7 @@ void* ThreadStart(void *Parameters)
   if(RandomDebug)
       printf("Generating TxCandidate seeds for Thread %u...\n",ID); fflush(NULL);
 
-   unsigned TxContainerNum = ThreadDefArray[ID].TxContainerNum; 
+   unsigned TxContainerNum = ThreadDefArray[ID].TxContainerNum;
    unsigned TxContainerNo;
    for(TxContainerNo=0; TxContainerNo< TxContainerNum; TxContainerNo++)
    {
@@ -107,13 +107,13 @@ void* ThreadStart(void *Parameters)
        bool TxContainerIsRandomized = ( CurrentTxContainer -> CandidateTxNum > 1) ;
        if( TxContainerIsRandomized)
        {
-	   CurrentTxContainer -> CandidateSeed = (unsigned) RAND_R(&CurrentThreadSeed);	
+	   CurrentTxContainer -> CandidateSeed = (unsigned) RAND_R(&CurrentThreadSeed);
 	   if(RandomDebug)
 	       printf("%u:%u\n",TxContainerNo, CurrentTxContainer -> CandidateSeed);
        }
    }
 
-   // Preparing the offset if messages are to be  printed on console for this thread 
+   // Preparing the offset if messages are to be  printed on console for this thread
    unsigned short ThreadOffsetlenght = 2*ID+1 ;
    ThreadDefArray[ID].ConsoleDisplayOffset = (char*)malloc(ThreadOffsetlenght*sizeof(char));
    unsigned short TabCounter= ThreadOffsetlenght -1 ;
@@ -128,7 +128,7 @@ void* ThreadStart(void *Parameters)
 
 
 
-   ThreadDefArray[ID].WriteValue = (unsigned) RAND_R(&CurrentThreadSeed); 
+   ThreadDefArray[ID].WriteValue = (unsigned) RAND_R(&CurrentThreadSeed);
 
   if(RandomDebug)
       printf("Initial WriteValue is set to  %u for Thread %u...\n",ThreadDefArray[ID].WriteValue, ID); fflush(NULL);
@@ -149,7 +149,7 @@ void ExecuteThread(unsigned ThreadNo)
     unsigned TxContainerNum = ThreadDefArray[ThreadNo].TxContainerNum;
     TxContainer_t* CurrentTxContainerList = ThreadDefArray[ThreadNo].TxContainerList;
 
-    gettimeofday(&(ThreadDefArray[ThreadNo].start_time), NULL); 
+    gettimeofday(&(ThreadDefArray[ThreadNo].start_time), NULL);
 
     TM_INIT_THREAD(TxDesc);
 
@@ -162,7 +162,7 @@ void ExecuteThread(unsigned ThreadNo)
      {
 	 TxContainer_t* CurrentTxContainer = &(CurrentTxContainerList[CurrentTxContainerID]);
 	 unsigned SelectedTxID = ChooseTransaction( CurrentTxContainer,ThreadNo) ;
-	 
+
 
 	 // TM_PARAM passed to ExecuteTransaction
 //	 bool TransactionCompleted = ExecuteTransaction(NULL, &(ThreadDefArray[ThreadNo]), SelectedTxID);
@@ -170,14 +170,14 @@ void ExecuteThread(unsigned ThreadNo)
   	   bool Success = ExecuteTransaction(TxDesc, &(ThreadDefArray[ThreadNo]), SelectedTxID);
 	   if( !Success)
  	     ThreadDefArray[ThreadNo].UnfinishedTxNum++;
-	 #else  
-	   ExecuteTransaction(TxDesc, &(ThreadDefArray[ThreadNo]), SelectedTxID); 
+	 #else
+	   ExecuteTransaction(TxDesc, &(ThreadDefArray[ThreadNo]), SelectedTxID);
          #endif
 
-	 
+
 	 if( TerminateRequestedBySignal )
 	     break;
-    
+
 	 bool Branch = FALSE;
 	 bool IsBranchingElement = (CurrentTxContainer->InitialRepetitionCount > 0 && !(CurrentTxContainer->LoopStartNode) );
 //	 printf("IsBranchingElement= %u\t",IsBranchingElement);
@@ -190,14 +190,14 @@ void ExecuteThread(unsigned ThreadNo)
  	     if(!Branch)
  		 CurrentTxContainer -> RepetitionCount = CurrentTxContainer -> InitialRepetitionCount;
 	 }
- 
+
 	 CurrentTxContainerID = CurrentTxContainer -> NextContainerID[Branch];
-     }    
+     }
 
   if(ExecuteSchedule)
       barrier_cross(ThreadDefArray[ThreadNo].SchedulerBarrier);
 
-  gettimeofday(&(ThreadDefArray[ThreadNo].end_time), NULL); 
+  gettimeofday(&(ThreadDefArray[ThreadNo].end_time), NULL);
 
 
   TM_EXIT_THREAD(TxDesc);
@@ -210,17 +210,17 @@ void ExecuteThread(unsigned ThreadNo)
 
 bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsigned CurrentTxID)
 {
-     TxInfo_t* CurrentTx = &(CurrentThreadInfo -> TxDefArray[CurrentTxID]); 
+     TxInfo_t* CurrentTx = &(CurrentThreadInfo -> TxDefArray[CurrentTxID]);
 //     printf("Transaction %s: ",CurrentTx->Name);
-    
+
      TxOpContainer_t* CurrentTxOpContainerList = CurrentTx -> TxOpList[0];
-     unsigned TxOpContainerNum  = CurrentTx -> TxOpNum[0]; 
-   
+     unsigned TxOpContainerNum  = CurrentTx -> TxOpNum[0];
+
 
      VarExpr* VarExprList     = ThreadDefArray[CurrentThreadInfo->ID].VarExprList ;
      unsigned VarExprListSize = ThreadDefArray[CurrentThreadInfo->ID].VarExprNum;
 
-     
+
      // Traverse the VarListToUpdate to mark the (random) variables that requires update
      // The marked variables would update themselves when they are accessed.
      unsigned VarToUpdateNum = CurrentTx -> VarToUpdateNum;
@@ -230,25 +230,25 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 	 unsigned CurrentVarToUpdateID = CurrentTx -> VarListToUpdate[VarToUpdateNo];
 	 VarExpr* VarToUpdate = &(VarExprList[CurrentVarToUpdateID ]);
 	 assert(VarToUpdate != NULL);
-	 
+
 	 assert( (VarToUpdate -> Type == OP_RANDOM_DIST) || (VarToUpdate -> Type == OP_RANDOM_DIST_CONSTANT) );
 	 VarToUpdate -> Operation = 1; // Operation field is set to non-zero to mark the need for update.
      }
 
 
-      int* ReadOnlyTx = NULL; 
-      if( TransmitReadOnlyTxHint ) 
- 	 ReadOnlyTx =  &(CurrentTx -> ReadOnly); 
+      int* ReadOnlyTx = NULL;
+      if( TransmitReadOnlyTxHint )
+ 	 ReadOnlyTx =  &(CurrentTx -> ReadOnly);
 
       #if defined(STATISTICS_TEST) && defined(MATCH_STM_ABORT_NUM)
-         #warning "Code storing initial abort num effective" 
-         unsigned long InitialAbortNumOfThread; 
-         STM_GET_PARAMETER(TxDesc, "nb_aborts", &(InitialAbortNumOfThread) ); 
-      #endif	 
+         #warning "Code storing initial abort num effective"
+         unsigned long InitialAbortNumOfThread;
+         STM_GET_PARAMETER(TxDesc, "nb_aborts", &(InitialAbortNumOfThread) );
+      #endif
 
       CurrentTx -> CurrentRetryNum = (unsigned long) -1;
 
-      START_TX(TxDesc, ReadOnlyTx);
+      START_TX(TxDesc, *ReadOnlyTx);
       CurrentTx -> CurrentRetryNum++;
       if( CurrentTx -> CurrentRetryNum > 0)
       {
@@ -276,26 +276,26 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 	      fflush(NULL);
 	  }
       }
-      
+
       if(EnableTrace)
       {
 	  printf("\n%s[%s:%s] S\n", CurrentThreadInfo->ConsoleDisplayOffset, CurrentThreadInfo ->Name, CurrentTx->Name);
 	  fflush(NULL);
       }
 
-     
+
      if( TerminateRequestedBySignal )
      {
 
          #if defined(STATISTICS_TEST) && defined(MATCH_STM_ABORT_NUM)
              #warning "Code storing final abort num (due to unexpected thread termination) effective"
- 
+
 	     unsigned long CurrentAbortNumOfThread;
 	     STM_GET_PARAMETER(TxDesc, "nb_aborts", &(CurrentAbortNumOfThread) );
 	     assert(CurrentAbortNumOfThread - InitialAbortNumOfThread  == CurrentTx -> CurrentRetryNum);
 	 #endif
-			
-		
+
+
 	 CurrentTx -> AbortNum = CurrentTx -> AbortNum + CurrentTx -> CurrentRetryNum;
 	 if(CurrentTx -> MaxRetryNum < CurrentTx -> CurrentRetryNum)
 	 {
@@ -305,8 +305,8 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 	 return FALSE; // Function returns without the transaction being completed
      }
 
-     
-     
+
+
      // Check whether Invariants are satisfied (once at the beginning of the transaction)
      if(ExecuteSchedule)
      {
@@ -317,15 +317,15 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 	 {
 	     Invariant* CurrentInvariant = GetElement_DynamicArray(&Dyn_InvariantArray, InvariantNo, sizeof(Invariant)) ;
 	     VarExpr* CurrentInvariantExpr = &(VarExprList[ CurrentInvariant -> VarExprID] );
-	     bool InvariantSatisfied = VAR_EXPR_Evaluate(CurrentInvariantExpr, VarExprList, VarExprListSize); 
+	     bool InvariantSatisfied = VAR_EXPR_Evaluate(CurrentInvariantExpr, VarExprList, VarExprListSize);
 	     if( !InvariantSatisfied )
 	     {
 		 UnsatisfiedInvariantsExist = TRUE;
 		 printf( "Invariant '%s' not satisfied.\n", CurrentInvariant->Name);
-		 
+
 	     }
 	 }
-	 
+
 	 if(UnsatisfiedInvariantsExist)
 	 {
 	     printf("Interruption in Schedule: One or more invariants not satisfied at the\n"
@@ -342,22 +342,22 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 
      unsigned StartTxOpContainerID=0;
      unsigned CurrentTxOpContainerID=StartTxOpContainerID;
-     while( CurrentTxOpContainerID < TxOpContainerNum) 
-     { 
+     while( CurrentTxOpContainerID < TxOpContainerNum)
+     {
 	        TxOpContainer_t* CurrentTxOpContainer = &(CurrentTxOpContainerList[CurrentTxOpContainerID]);
-		
+
 		bool Branch = FALSE;
 		if( CurrentTxOpContainer -> ConditionExprPos != INVALID_CONDITION_EXPR_POS)
 		{
 
 		    VarExpr* ConditionExpr = &(VarExprList[CurrentTxOpContainer -> ConditionExprPos]);
 
-		    if( CurrentTxOpContainer -> LoopIteratorContainer)  
+		    if( CurrentTxOpContainer -> LoopIteratorContainer)
 		    {
 			if( !CurrentTxOpContainer -> LoopExecuting )
 			{
 			    // The loop iterator needs to be initialized
-			    VarExpr* LoopIteratorInitialValExpr = &(VarExprList[ ConditionExpr->OperandID[2] ]); 
+			    VarExpr* LoopIteratorInitialValExpr = &(VarExprList[ ConditionExpr->OperandID[2] ]);
 			    unsigned InitialValue = VAR_EXPR_Evaluate(LoopIteratorInitialValExpr, VarExprList, VarExprListSize);
 
 			    VarExpr* AssignedVar  = &( VarExprList[ConditionExpr->OperandID[0]]);
@@ -369,11 +369,11 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			else
 			{
 			    var_assign_t* CurrentVarAssign = &(CurrentTxOpContainer -> VarAssigns[0]);
-			    
+
 			    VarExpr*  ExprToEvaluate  = &(VarExprList[ CurrentVarAssign->EvaluatedVarExprID ]);
 			    assert(ExprToEvaluate !=NULL);
 			    signed long ValueToAssign = VAR_EXPR_Evaluate(ExprToEvaluate, VarExprList, VarExprListSize);
-			    
+
 			    VarExpr* AssignedVar      = &( VarExprList[ CurrentVarAssign->AssignedVarID ]);
 			    assert(AssignedVar !=NULL);
 			    AssignedVar -> Value = ValueToAssign;
@@ -383,13 +383,13 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 		    }
 
 		    bool ConditionHolds = (bool) VAR_EXPR_Evaluate(ConditionExpr, VarExprList, VarExprListSize);
-		    Branch = !ConditionHolds;		    
+		    Branch = !ConditionHolds;
 
 		    if( Branch && CurrentTxOpContainer -> LoopIteratorContainer)
 			CurrentTxOpContainer -> LoopExecuting = FALSE;
 		}
 
-		
+
 		if( !Branch)
 		{
 		    bool OperationTransactional = FALSE;
@@ -403,14 +403,14 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			unsigned AccessedVarExprID = CurrentTxOpContainer -> AddrOp;
 			VarExpr* AccessedVarExpr = &(VarExprList[ AccessedVarExprID ]);
 			assert(AccessedVarExpr != NULL);
-			
+
 			Word* AccessedAddress = (Word*) VAR_EXPR_Evaluate( AccessedVarExpr, VarExprList, VarExprListSize);
 
 			char* AccessedVariableName;
 			if(EnableTrace)
 			{
 			    // For trace display purposes only
-			    
+
 			    // Since   we   are    in   a   managed   access   the
 			    // AccessedVariableName   starts   from   the   second
 			    // characted  of  AccessedVarExpr->Name.  That is  the
@@ -420,9 +420,9 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			    bool ArrayAccess =  (AccessedVarExpr -> Type == OP_MANAGED_ARRAY_ACCESS);
 			    if( ArrayAccess  )
 			    {
-				VarExpr* ArrayOperandExpr = &(VarExprList[ AccessedVarExpr -> OperandID[0] ]); 
-				// Since we have done gone through the evaluation of AccessedVarExpr above, 
-				// and the Operand is an array access, the variable expression stored 
+				VarExpr* ArrayOperandExpr = &(VarExprList[ AccessedVarExpr -> OperandID[0] ]);
+				// Since we have done gone through the evaluation of AccessedVarExpr above,
+				// and the Operand is an array access, the variable expression stored
 				// the index of the last accessed array element in its Value field
 				sprintf(AccessedVariableName,"%s[%ld]", ArrayOperandExpr->Name, AccessedVarExpr -> Value);
 			    }
@@ -433,7 +433,7 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 
 			Word ReturnedValue = TM_LOAD(TxDesc, AccessedAddress );
 
-			
+
 			if(EnableTrace)
 			{
 			    printf("%s[%s:%s] R(%s,%ld)\n", CurrentThreadInfo->ConsoleDisplayOffset, CurrentThreadInfo ->Name, CurrentTx->Name, AccessedVariableName , ReturnedValue );
@@ -448,7 +448,7 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			{
 			    VarExpr*  VariableStoringReturnedValue = &(VarExprList[ VariableToStoreReturnedValue_ID ]);
 			    VariableStoringReturnedValue -> Value = ReturnedValue;
-			    
+
 			}
 
 			OperationTransactional = TRUE;
@@ -481,7 +481,7 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			if(EnableTrace)
 			{
 			    // For trace display purposes only
-			    
+
 			    // Since   we   are    in   a   managed   access   the
 			    // AccessedVariableName   starts   from   the   second
 			    // characted  of  AccessedVarExpr->Name.  That is  the
@@ -491,9 +491,9 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			    bool ArrayAccess =  (AccessedVarExpr -> Type == OP_MANAGED_ARRAY_ACCESS);
 			    if( ArrayAccess )
 			    {
-				VarExpr* ArrayOperandExpr = &(VarExprList[ AccessedVarExpr -> OperandID[0] ]); 
-				// Since we have done gone through the evaluation of AccessedVarExpr above, 
-				// and the Operand is an array access, the variable expression stored 
+				VarExpr* ArrayOperandExpr = &(VarExprList[ AccessedVarExpr -> OperandID[0] ]);
+				// Since we have done gone through the evaluation of AccessedVarExpr above,
+				// and the Operand is an array access, the variable expression stored
 				// the index of the last accessed array element in its Value field
 				sprintf(AccessedVariableName,"%s[%ld]", ArrayOperandExpr->Name, AccessedVarExpr -> Value);
 			    }
@@ -547,7 +547,7 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			{
 			    Invariant* CurrentInvariant = GetElement_DynamicArray(&Dyn_InvariantArray, InvariantNo, sizeof(Invariant)) ;
 			    VarExpr* CurrentInvariantExpr = &(VarExprList[ CurrentInvariant -> VarExprID] );
-			    bool InvariantSatisfied = VAR_EXPR_Evaluate(CurrentInvariantExpr, VarExprList, VarExprListSize); 
+			    bool InvariantSatisfied = VAR_EXPR_Evaluate(CurrentInvariantExpr, VarExprList, VarExprListSize);
 			    if( !InvariantSatisfied )
 			    {
 				UnsatisfiedInvariantsExist = TRUE;
@@ -555,7 +555,7 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 
 			    }
 			}
-			
+
 			if(UnsatisfiedInvariantsExist)
 			{
 			    printf("Interruption in Schedule: One or more invariants not satisfied in transcation '%s'.\n"
@@ -568,7 +568,7 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			}
 		    }
 
-		    
+
 		    if( !CurrentTxOpContainer -> LoopIteratorContainer )
 		    {
 			// Performing VarAssigns.
@@ -576,12 +576,12 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			for(VarAssignNo=0; VarAssignNo< CurrentTxOpContainer -> VarAssignNum; VarAssignNo++)
 			{
 			    var_assign_t* CurrentVarAssign = &(CurrentTxOpContainer -> VarAssigns[VarAssignNo]);
-			    
+
 			    VarExpr*  ExprToEvaluate  = &( VarExprList[CurrentVarAssign->EvaluatedVarExprID] );
 			    assert(ExprToEvaluate !=NULL);
 			    signed long ValueToAssign = VAR_EXPR_Evaluate( ExprToEvaluate, VarExprList, VarExprListSize);
-			    
-			    VarExpr* AssignedVar      = &( VarExprList[CurrentVarAssign->AssignedVarID] ); 
+
+			    VarExpr* AssignedVar      = &( VarExprList[CurrentVarAssign->AssignedVarID] );
 			    assert(AssignedVar !=NULL);
 
 			    // Should check what kind of variable /variable expression is in AssignedVar
@@ -590,7 +590,7 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			    // If LOCAL VAR  => write into Value fields as done below
 			    // If LOCAL_ARRAY ACCESS => Should call Evaluate to get address and write into it
 			    // If a CONSTANT => Assignment not valid (bit this should be found out during parsing)
-			    bool LocalVariable = (AssignedVar -> Type == VAR_LOCAL_SIMPLE );			    
+			    bool LocalVariable = (AssignedVar -> Type == VAR_LOCAL_SIMPLE );
 			    if( LocalVariable)
 			    {
 				AssignedVar -> Value = ValueToAssign;
@@ -599,7 +599,7 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 			    {
 				// Should  be elaborated  more because  to get
 				// addresses  of  shared  variables or  arrays
-				// requires Evaluation on Managed versions of 
+				// requires Evaluation on Managed versions of
 				// variables/arrays.
 
 /* 				bool ArrayAccess    = (AssignedVar -> Type == OP_UNMANAGED_ARRAY_ACCESS); */
@@ -615,24 +615,24 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 /* 				    assert(0); */
 /* 				} */
 			    }
-			    
+
 			}
 		    }
 		}
-		
+
 		CurrentTxOpContainerID = CurrentTxOpContainer -> NextContainerID[Branch];
 
 		if( TerminateRequestedBySignal )
 		{
                     #if defined(STATISTICS_TEST) && defined(MATCH_STM_ABORT_NUM)
                         #warning "Code storing final abort num (due to unexpected thread termination) effective"
- 
+
  		        unsigned long CurrentAbortNumOfThread;
 			STM_GET_PARAMETER(TxDesc, "nb_aborts", &(CurrentAbortNumOfThread) );
 			assert(CurrentAbortNumOfThread - InitialAbortNumOfThread  == CurrentTx -> CurrentRetryNum);
 		    #endif
-			
-			
+
+
 		    CurrentTx -> AbortNum = CurrentTx -> AbortNum + CurrentTx -> CurrentRetryNum;
 		    if(CurrentTx -> MaxRetryNum < CurrentTx -> CurrentRetryNum)
 		    {
@@ -641,73 +641,62 @@ bool ExecuteTransaction(stm_tx_t* TxDesc, ThreadInfo_t* CurrentThreadInfo, unsig
 
 		    return FALSE; // Function returns without the transaction being completed
 		}
-		
-     } 
 
-     if(EnableTrace)
-     {
-	 printf("%s[%s:%s] Try C\n", CurrentThreadInfo->ConsoleDisplayOffset, CurrentThreadInfo ->Name, CurrentTx->Name);
-	 fflush(NULL);
+     }
+
+     if(EnableTrace) {
+		printf("%s[%s:%s] Try C\n", CurrentThreadInfo->ConsoleDisplayOffset, CurrentThreadInfo ->Name, CurrentTx->Name);
+		fflush(NULL);
      }
 
      COMMIT_TX(TxDesc);
 
-     if(EnableTrace)
-     {
-	 printf("%s[%s:%s] C\n\n", CurrentThreadInfo->ConsoleDisplayOffset, CurrentThreadInfo ->Name, CurrentTx->Name);
-	 fflush(NULL);
+     if(EnableTrace) {
+		printf("%s[%s:%s] C\n\n", CurrentThreadInfo->ConsoleDisplayOffset, CurrentThreadInfo ->Name, CurrentTx->Name);
+		fflush(NULL);
      }
 
 
 
-     if(ExecuteSchedule )
-     {
+     if(ExecuteSchedule ) {
 	 bool UnsatisfiedInvariantsExist = FALSE;
 	 // Validate all invariants
 	 unsigned InvariantNo;
-	 for(InvariantNo=0; InvariantNo< InvariantNum; InvariantNo++)
-	 {
-	     Invariant* CurrentInvariant = GetElement_DynamicArray(&Dyn_InvariantArray, InvariantNo, sizeof(Invariant)) ;
-	     VarExpr* CurrentInvariantExpr = &(VarExprList[ CurrentInvariant -> VarExprID] );
-	     bool InvariantSatisfied = VAR_EXPR_Evaluate(CurrentInvariantExpr, VarExprList, VarExprListSize); 
-	     if( !InvariantSatisfied )
-	     {
-		 UnsatisfiedInvariantsExist = TRUE;
-		 printf( "Invariant '%s' not satisfied.\n", CurrentInvariant->Name);
-		 
-	     }
-	 }
-	 
-	 if(UnsatisfiedInvariantsExist)
-	 {
-	     printf("Interruption in Schedule: One or more invariants not satisfied in transcation '%s'.\n"
-		    "\n\n"
+	 for(InvariantNo=0; InvariantNo< InvariantNum; InvariantNo++) {
+		Invariant* CurrentInvariant = GetElement_DynamicArray(&Dyn_InvariantArray, InvariantNo, sizeof(Invariant)) ;
+		VarExpr* CurrentInvariantExpr = &(VarExprList[ CurrentInvariant -> VarExprID] );
+		bool InvariantSatisfied = VAR_EXPR_Evaluate(CurrentInvariantExpr, VarExprList, VarExprListSize);
+		if( !InvariantSatisfied ) {
+			UnsatisfiedInvariantsExist = TRUE;
+			printf( "Invariant '%s' not satisfied.\n", CurrentInvariant->Name);
+		}
+	}
+
+	if(UnsatisfiedInvariantsExist) {
+		printf("Interruption in Schedule: One or more invariants not satisfied in transcation '%s'.\n"
+			"\n\n"
 		    "-----------------------------------------------------\n"
 		    "                    TEST FAILS                       \n"
 		    "-----------------------------------------------------\n"
 		    "\n", CurrentTx->Name);
-	     exit(1);
-	 }
-     }
+			exit(1);
+		}
+	}
 
+	CurrentTx -> CommitNum++;
+	CurrentTx -> AbortNum = CurrentTx -> AbortNum + CurrentTx -> CurrentRetryNum;
+	if(CurrentTx -> MaxRetryNum < CurrentTx -> CurrentRetryNum) {
+		CurrentTx -> MaxRetryNum = CurrentTx -> CurrentRetryNum;
+	}
 
-     CurrentTx -> CommitNum++;
+	#if defined(STATISTICS_TEST) && defined(MATCH_STM_ABORT_NUM)
+		#warning "Code storing final abort num  effective"
+		unsigned long CurrentAbortNumOfThread;
+		STM_GET_PARAMETER(TxDesc, "nb_aborts", &(CurrentAbortNumOfThread) );
+		assert(CurrentAbortNumOfThread - InitialAbortNumOfThread  == CurrentTx -> CurrentRetryNum);
+	#endif
 
-     CurrentTx -> AbortNum = CurrentTx -> AbortNum + CurrentTx -> CurrentRetryNum;
-     if(CurrentTx -> MaxRetryNum < CurrentTx -> CurrentRetryNum)
-     {
-	 CurrentTx -> MaxRetryNum = CurrentTx -> CurrentRetryNum;
-     }
-
-     #if defined(STATISTICS_TEST) && defined(MATCH_STM_ABORT_NUM)
-        #warning "Code storing final abort num  effective" 
- 
-        unsigned long CurrentAbortNumOfThread; 
-	STM_GET_PARAMETER(TxDesc, "nb_aborts", &(CurrentAbortNumOfThread) ); 
-	assert(CurrentAbortNumOfThread - InitialAbortNumOfThread  == CurrentTx -> CurrentRetryNum);
-     #endif
-  
-     return TRUE;
+	return TRUE;
 }
 
 
@@ -716,24 +705,21 @@ unsigned ChooseTransaction(TxContainer_t* CurrentTxContainer, unsigned ThreadNo)
 // printf("\tTxID: %u",CurrentTxContainer -> TxCandidateList[0].TxID);
     unsigned CandidateNum = CurrentTxContainer -> CandidateTxNum;
 
-    
+
     unsigned SelectedCandidateNo ,
 	     SelectedTxID        ;
     assert(CandidateNum != 0);
-    if(CandidateNum > 1)
-    {
-	assert( CurrentTxContainer -> CandidateSelectionFunc != NULL);
-	SelectedCandidateNo = CurrentTxContainer -> CandidateSelectionFunc(CurrentTxContainer);
-	SelectedTxID        = CurrentTxContainer -> TxCandidateList[SelectedCandidateNo].TxID;
-
+    if(CandidateNum > 1) {
+		assert( CurrentTxContainer -> CandidateSelectionFunc != NULL);
+		SelectedCandidateNo = CurrentTxContainer -> CandidateSelectionFunc(CurrentTxContainer);
+		SelectedTxID        = CurrentTxContainer -> TxCandidateList[SelectedCandidateNo].TxID;
     }
-    else 
-    {
-	SelectedTxID = CurrentTxContainer ->TxCandidateList[0].TxID;
+    else {
+		SelectedTxID = CurrentTxContainer ->TxCandidateList[0].TxID;
     }
 //    printf("\tTxID: %u",SelectedTxID);
 
-       
+
 
 /*     unsigned CandidateNo ; */
 /*     printf("\t\tCandidates={"); */
@@ -754,32 +740,33 @@ void InitializeThreadSeeds(unsigned ThreadNum)
 {
     assert (ThreadNum != 0);
     ThreadSeed = (unsigned *)malloc(ThreadNum*sizeof(unsigned));
-    if(MainSeed == 0)
-    {
-	printf("MainSeed is given zero. Main Seed is taken from the clock.\n");
-	srand((int)time(0));
+    if(MainSeed == 0) {
+		printf("MainSeed is given zero. Main Seed is taken from the clock.\n");
+		srand((int)time(0));
     }
     else
 	SRAND(MainSeed);
-    
+
+    if(MainMax == 0) {
+		printf("MainMax is given zero. 10 will be added to MainMax.\n");
+		MainMax=10;
+    }
+
     unsigned ThreadNo;
     for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
 	ThreadSeed[ThreadNo] = RAND();
 
-    if(RandomDebug)
-    {
-	printf("MainSeed=%u\n",MainSeed);
-	printf("ListOfThreadSeeds={");
-	for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
-	{ 
-	    printf("%u",ThreadSeed[ThreadNo]); 
-	    if(ThreadNo < ThreadNum -1)
-		printf(",");
-	    else
-		printf("}\n"); 
-	} 
+	if(RandomDebug) {
+		printf("MainSeed=%u\n",MainSeed);
+		printf("ListOfThreadSeeds={");
+		for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++){
+			printf("%u",ThreadSeed[ThreadNo]);
+			if(ThreadNo < ThreadNum -1)
+				printf(",");
+			else
+				printf("}\n");
+		}
     }
-
 }
 
 

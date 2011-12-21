@@ -24,6 +24,11 @@ void InitializeThreadSeeds (unsigned ThreadNum)
   else
     SRAND (MainSeed);
 
+  if (MainMax == 0)
+  {
+    printf ("MainMax is ZERO. I'll add 10 now.\n");
+    MainMax = 10;
+  }
 
   unsigned ThreadNo;
   for (ThreadNo = 0; ThreadNo < ThreadNum; ThreadNo++)

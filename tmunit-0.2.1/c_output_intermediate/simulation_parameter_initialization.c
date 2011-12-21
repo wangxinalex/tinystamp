@@ -1,6 +1,7 @@
 TransmitReadOnlyTxHint = 0;
 
 MainSeed = 1;
+MainMax = 10;
 RandomDebug = 0;
 
 WaitForTimeOut = 0;

@@ -17,7 +17,7 @@ int PrintHelpMessage() {
 	   "        Print this message\n"
 	   "  -p, --print-stats <int>\n"
 	   "        Enables/disables the printing of statistiscs\n"
-           "        (0=disable, 1=enable)\n"
+       "        (0=disable, 1=enable)\n"
 	   "  -s, --seed <int>\n"
 	   "        Random Number Generator Seed (0=time-based, default=%d)\n"
 	   "  -v, --verbose\n"
@@ -27,6 +27,8 @@ int PrintHelpMessage() {
 	   "        as well as the transactional reads/writes together with the\n"
 	   "        memory addresses accessed by those reads/writes and the values\n"
 	   "        read/written by those transactional operations.\n"
+	   "  -m, --max\n"
+	   "        Max amount of threads.\n"
 	   "\n"
 	   "        If you would like to generate a trace where the accessed\n"
 	   "        address values of transactional reads/writes are replaced by\n"
@@ -83,18 +85,19 @@ int ProcessCommandLineArguments(int argc, char*  argv[]) {
 		{"print-stats",               required_argument, NULL, 'p'},
 		{"seed",                      required_argument, NULL, 's'},
 		{"verbose",                   no_argument,       NULL, 'v'},
+		{"max",						  required_argument, NULL, 'm'},
 		{NULL, 0, NULL, 0}
 	};
 
-	int i,c,duration,seed;
+	int i,c,duration,seed,max;
 	int ObligatoryArgumentStartPos;
-	bool OptArgIsBoolean ;
+	bool OptArgIsBoolean;
 	bool OptArgIsZero;
-	bool OptArgIsOne ;
+	bool OptArgIsOne;
 
 	while(1) {
 		i = 0;
-		c = getopt_long(argc, argv, "hd:p:s:v", long_options, &i);
+		c = getopt_long(argc, argv, "hd:p:s:m:v", long_options, &i);
 
 		if(c == -1) {
 			break;
@@ -158,6 +161,20 @@ int ProcessCommandLineArguments(int argc, char*  argv[]) {
 				MainSeed=seed;
 				break;
 
+			case 'm':
+				max=atoi(optarg);
+				if(max == 0) {
+					bool optargIsZeroString = (strcmp(optarg,"0") == 0);
+					if( !optargIsZeroString ){
+						// If we are here it means that a string which does not correspond to an integer value is encountered
+						printf("benchrun: Unexpected string '%s'.\n"
+								"          Expecting integer argument for -m (--max) option instead.\n",optarg);
+						PrintHowToGetHelp();
+						exit(1);
+					}
+				}
+				MainMax=max;
+				break;
 			case 'v':
 				EnableTrace=TRUE;
 				break;

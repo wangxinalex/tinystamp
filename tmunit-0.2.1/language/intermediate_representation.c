@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Author(s):
  *   Derin Harmanci <derin.harmanci@unine.ch>
  *
@@ -208,12 +208,11 @@ bool CheckAndSetSimulationParameter(const char* VariableName, unsigned Value)
 
 
     bool RandomSeedValue= (strcmp(VariableName,"RandomSeed") == 0);
-    if(RandomSeedValue )
-    {
-	MainSeed=Value;
-	if( VerboseParserOutput )
-	    printf("MainSeed (the main random seed) is set to %u.\n",MainSeed);
-	IsSimulationParameter = TRUE;
+    if(RandomSeedValue ) {
+		MainSeed=Value;
+		if( VerboseParserOutput )
+			printf("MainSeed (the main random seed) is set to %u.\n",MainSeed);
+		IsSimulationParameter = TRUE;
     }
 
 
@@ -248,20 +247,20 @@ bool CheckAndSetSimulationParameter(const char* VariableName, unsigned Value)
 
            Finds the variable expression given with the name SearchedVarExprName
            inside the Dyn_VariableExpressionArray list.
-	   
+
 	   Preconditions:
 	       Assumes that SearchedVarExprName is not NULL.
-	       
+
 	       If FoundVarExpr is NULL then nothing will be returned
 	       through this parameter. If not  the address of the new allocated
 	       variable expression is written inside the pointer.
 
-	   Return Value: 
+	   Return Value:
                The position of the of found variable expression in
 	       Dyn_VariableExpressionArray  list. If the variable expression
-	       is not found, it returns the size of the Dyn_VariableExpressionArray 
-               list (which should be larger than any other possible return values). 
-	       
+	       is not found, it returns the size of the Dyn_VariableExpressionArray
+               list (which should be larger than any other possible return values).
+
 	       Also as a return value the address of the found variable expr is written
 	       inside the FoundVarExpr pointer parameter. If the expression is not found
 	       the content of FoundVarExpr is set to NULL.
@@ -272,7 +271,7 @@ unsigned FindVarExpr(const char* SearchedVarExprName, VarExpr** FoundVarExpr)
     unsigned VarExprListSize = Dyn_VariableExpressionArray.ArrayElementNum;
     unsigned FoundPos = VAR_EXPR_FindPos( SearchedVarExprName, VarExprList, VarExprListSize);
     bool VariableNotDefined = (FoundPos == VarExprListSize) ;
-    
+
     if( FoundVarExpr != NULL)
     {
 	if(VariableNotDefined)
@@ -287,22 +286,22 @@ unsigned FindVarExpr(const char* SearchedVarExprName, VarExpr** FoundVarExpr)
 
 /*! /func  AllocVarExpr
 
-           Allocates a new Variable Expression (VarExpr struct) to the end of 
+           Allocates a new Variable Expression (VarExpr struct) to the end of
            Dyn_VariableExpressionArray list.
 
 	   Preconditions:
 	       Assumes (and  does not check  it) that the  variable expression
                does not exist in the Dyn_VariableExpressionArray list.
-	       
+
 	       Assumes that SearchedVarExprName is not null.
-	       
+
 	       If AllocatedTargetVarExpr is NULL then nothing will be returned
 	       through this parameter. If not  the address of the new allocated
 	       variable expression is written inside the pointer.
 
-	   Return Value: 
+	   Return Value:
                The position of the of the allocated variable expression in
-	       Dyn_VariableExpressionArray  list. 
+	       Dyn_VariableExpressionArray  list.
  */
 unsigned AllocVarExpr(const char* SearchedVarExprName, VarExpr** AllocatedTargetVarExpr )
 {
@@ -330,16 +329,16 @@ unsigned AllocVarExpr(const char* SearchedVarExprName, VarExpr** AllocatedTarget
 
 	   Preconditions:
 	       Assumes that SearchedVarExprName is not null.
-	       
+
 	       If FoundVarExpr  is NULL then nothing will  be returned through
 	       this parameter.  But this  parameter is passed to the functions
 	       that  are called  inside  (which behave  similarly).If not  the
 	       address  of  the  found/new  allocated variable  expression  is
 	       written inside the pointer.
 
-	   Return Value: 
+	   Return Value:
                The position of the of the allocated variable expression in
-	       Dyn_VariableExpressionArray  list. 
+	       Dyn_VariableExpressionArray  list.
  */
 unsigned FindOrAllocVarExpr(const char* SearchedVarExprName, VarExpr** FoundVarExpr)
 {
@@ -375,19 +374,19 @@ signed long EvaluateVarExpr(VarExpr* TargetVarExpr)
 
 unsigned ResolveOperationType(const char* OperationString)
 {
-	
+
     bool PlusOperation = (strcmp(OperationString,"+") == 0);
     if(PlusOperation)
 	return PLUS;
-    
+
     bool MinusOperation = (strcmp(OperationString,"-") == 0);
     if( MinusOperation)
 	return MINUS;
-    
+
     bool MultiplyOperation = (strcmp(OperationString,"*") == 0);
     if( MultiplyOperation)
 	return MULTIPLY;
-    
+
     bool DivideOperation = (strcmp(OperationString,"/") == 0);
     if( DivideOperation)
 	return DIVIDE;
@@ -396,7 +395,7 @@ unsigned ResolveOperationType(const char* OperationString)
     bool EqualOperation = (strcmp(OperationString,"==") == 0);
     if(EqualOperation)
 	return EQUAL;
-    
+
     bool NotEqualOperation = (strcmp(OperationString,"!=") == 0);
     if(NotEqualOperation)
 	return NOT_EQUAL;
@@ -412,7 +411,7 @@ unsigned ResolveOperationType(const char* OperationString)
     bool SmallerEqualOperation = (strcmp(OperationString,"<=") == 0);
     if(SmallerEqualOperation)
 	return SMALLER_EQUAL;
-    
+
     bool GreaterEqualOperation = (strcmp(OperationString,">=") == 0);
     if(GreaterEqualOperation)
 	return GREATER_EQUAL;
@@ -434,47 +433,47 @@ unsigned ResolveOperationType(const char* OperationString)
 }
 
 
-void AddSharedVariableToVarExprList(const char* VarExprString, const char* ValueToAssignString) 
+void AddSharedVariableToVarExprList(const char* VarExprString, const char* ValueToAssignString)
 {
-    
+
     VarExpr* CurrentVarExpr;
     FindVarExpr(VarExprString,&CurrentVarExpr);
     bool VariableAlreadyExist = (CurrentVarExpr != NULL);
     if( !VariableAlreadyExist)
     {
 	void* SharedVarAddr = (void *)malloc(sizeof(Word));
-	
+
 	// Since we are generating a shared array expression we generate two copies, one for managed and one for unmanaged accesses.
 	// Creating Unmanaged copy
 	Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	
+
 	VAR_EXPR_Initialize(CurrentVarExpr);
 	CurrentVarExpr -> Name = dupstr(VarExprString);
 	CurrentVarExpr -> Type = VAR_SHARED_UNMANAGED;
 	CurrentVarExpr -> Addr = SharedVarAddr;
 	VAR_EXPR_Print(CurrentVarExpr);
-	
+
 	Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
-	
+
 	LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	
+
 	// Creating Managed copy
 	unsigned ManagedVersionNameLength = strlen("&") + strlen(VarExprString) + 1 ;
 	char* ManagedVersionName = malloc(ManagedVersionNameLength*sizeof(char));
 	sprintf(ManagedVersionName,"&%s",VarExprString);
-	
+
 	VAR_EXPR_Initialize(CurrentVarExpr);
 	CurrentVarExpr -> Name = dupstr(ManagedVersionName);
 	CurrentVarExpr -> Type = VAR_SHARED_MANAGED;
 	CurrentVarExpr -> Addr = SharedVarAddr;
-	
+
     }
     *((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi(ValueToAssignString);
     VAR_EXPR_Print(CurrentVarExpr);
- 
+
     return;
 }
 
@@ -488,10 +487,10 @@ void AddLocalVariableToVarExprList(const char* VarExprString, const char* ValueT
 	Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	
+
 	VAR_EXPR_Initialize(CurrentVarExpr);
 	CurrentVarExpr -> Name = dupstr(VarExprString);
-	
+
 	// Are all characters (after the underscore) capital letters?
 	unsigned CharNum = strlen(VarExprString);
 	unsigned CharNo;
@@ -510,11 +509,11 @@ void AddLocalVariableToVarExprList(const char* VarExprString, const char* ValueT
 	    CurrentVarExpr -> Type = VAR_LOCAL_SIMPLE_CONSTANT;
 	else
 	    CurrentVarExpr -> Type = VAR_LOCAL_SIMPLE;
-	
+
     }
     CurrentVarExpr -> Value = (unsigned)atoi(ValueToAssignString);
     VAR_EXPR_Print(CurrentVarExpr);
-    
+
     return;
 }
 
@@ -527,7 +526,7 @@ unsigned GetMemAccessOpAddressParameter(const char* AddressParamString)
     unsigned InputVarExprID = FindVarExpr(AddressParamString,&InputVarExpr);
     if( InputVarExpr == NULL )
     {
-	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ErrorMessage,"CAN NOT DEFINE the SHARED VARIABLE (or expression) '%s' inside a memory access operation.\n"
 		  "Only local variables can be defined at the first point where they are first used\n"
 		  "(however, local variables can not be defined in memory access operations).\n"
@@ -536,10 +535,10 @@ unsigned GetMemAccessOpAddressParameter(const char* AddressParamString)
 	  free(ErrorMessage);
 	  exit(1);
     }
-    
+
     bool NotSupportedVariableExpression = FALSE; ;
     bool NotSimpleSharedAccess = (InputVarExpr -> Type > VAR_SHARED_ARRAY_CONSTANT );
-    if( NotSimpleSharedAccess ) 
+    if( NotSimpleSharedAccess )
     {
 	  bool ArrayAccess =  (InputVarExpr -> Type == OP_UNMANAGED_ARRAY_ACCESS);
 	  if( ArrayAccess )
@@ -547,16 +546,16 @@ unsigned GetMemAccessOpAddressParameter(const char* AddressParamString)
 	      VarExpr* ArrayOperand = GetVarExprPtr(InputVarExpr -> OperandID[0]);
 	      bool SharedArrayAccess = (ArrayOperand -> Type <= VAR_SHARED_ARRAY_CONSTANT ) ;
 	      if( !SharedArrayAccess)
-		  NotSupportedVariableExpression = TRUE;			  
+		  NotSupportedVariableExpression = TRUE;
 	  }
 	  else
 	      NotSupportedVariableExpression = TRUE;
-	  
+
     }
 
     if( NotSupportedVariableExpression )
     {
-	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ErrorMessage,"Variable Expression '%s' is not an access to a standalone\n"
 		  "shared variable/array. The expression is either a local variable/array\n"
 		  "access or any kind of complex variable expression (e.g., with arithmetic,\n"
@@ -564,17 +563,17 @@ unsigned GetMemAccessOpAddressParameter(const char* AddressParamString)
 		  "not allowed in managed (transactional) accesses .\n",AddressParamString);
 	  yyerror(ErrorMessage);
 	  free(ErrorMessage);
-	  
+
 	  exit(1);
     }
-    
+
     unsigned ActualAccessedVarExprNameLength = strlen("&") + strlen(AddressParamString) + 1;
     char*    ActualAccessedVarExprName = malloc(ActualAccessedVarExprNameLength * sizeof(char));
     sprintf(ActualAccessedVarExprName,"&%s",AddressParamString);
 
     InputVarExprID = FindVarExpr(ActualAccessedVarExprName,&InputVarExpr);
     assert(InputVarExpr != NULL);
-    
+
     return InputVarExprID;
 }
 
@@ -587,31 +586,31 @@ unsigned GetReadAccessTargetParameter(const char* AddressParamString)
     unsigned InputVarExprID = FindVarExpr(AddressParamString,&InputVarExpr);
     if( InputVarExpr == NULL )
     {
-	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ErrorMessage,"UNDEFINED  '%s'. TMUNIT does not currently support the \n"
 		  "use of undefined variables/variable expression as the target value to\n"
 		  "store the result of managed Read operation. Please define '%s'\n"
 		  "in 'Definitions' section.\n" ,AddressParamString, AddressParamString);
 	  yyerror(ErrorMessage);
 	  free(ErrorMessage);
-	  
+
 	  exit(1);
-	
+
     }
 
     bool LocalAccess  = (InputVarExpr -> Type >= VAR_LOCAL_SIMPLE && InputVarExpr -> Type <= VAR_LOCAL_ARRAY_CONSTANT );
     if( !LocalAccess )
     {
-	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ErrorMessage,"Variable Expression '%s' is not an local variable/array.\n"
 		  "Such a variable expression is not allowed as the target value to store\n"
                   "the result of managed Read operation.\n",AddressParamString);
 	  yyerror(ErrorMessage);
 	  free(ErrorMessage);
-	  
+
 	  exit(1);
     }
-    
+
     return InputVarExprID;
 }
 
@@ -623,16 +622,16 @@ unsigned GetWriteAccessTargetParameter(const char* AddressParamString)
     unsigned InputVarExprID = FindVarExpr(AddressParamString,&InputVarExpr);
     if( InputVarExpr == NULL )
     {
-	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ErrorMessage,"UNDEFINED  '%s'. TMUNIT does not currently support the \n"
-		  "use of undefined variables/variable expression as the source of the \n" 
+		  "use of undefined variables/variable expression as the source of the \n"
 		  "value to store by  a managed Write operation. Please define '%s'\n"
 		  "in 'Definitions' section.\n" ,AddressParamString, AddressParamString);
 	  yyerror(ErrorMessage);
 	  free(ErrorMessage);
-	  
+
 	  exit(1);
-	
+
     }
 
     return InputVarExprID;
@@ -718,7 +717,7 @@ void Construct_Variable(const char* VariableName, VariableType Type, const char*
 	perror("ERROR: In Construct_Variable(): UNKNOWN Variable Type Encountered. Terminating...\n");
 	assert(0);
     }
-    
+
     Variable* NewVariable= (Variable*)malloc(sizeof(Variable));
     NewVariablePtr -> Name  = dupstr(VariableName);
     NewVariablePtr -> Value = dupstr(ValueString);

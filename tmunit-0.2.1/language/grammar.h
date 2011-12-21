@@ -108,7 +108,7 @@ typedef union YYSTYPE
    char*     string;
    struct TxBlockListReturnStruct* TxBlockListReturn;
    struct EvaluatedVariableExpressionStruct* EvaluatedVarExpr;
-   struct RangeInfoStruct*   RangeInfo;     
+   struct RangeInfoStruct*   RangeInfo;
    struct VariableExpressionStruct*   VarExprPtr;
    struct ConditionReturnStruct*  ConditionReturn;
    struct VariableReturnStruct*   VariableReturn;

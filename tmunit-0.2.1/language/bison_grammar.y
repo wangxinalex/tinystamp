@@ -1,7 +1,7 @@
 %{
 
 /*
- * 
+ *
  * Author(s):
  *   Derin Harmanci <derin.harmanci@unine.ch>
  *
@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "syntax_error.h" 
+#include "syntax_error.h"
 #include "syntax_debug.h"
 #include "general.h"
 #include "simulation_parameters.h"
@@ -59,7 +59,7 @@ struct TxBlockListReturnStruct
 };
 
 
-struct ExpressionReturnStruct 
+struct ExpressionReturnStruct
 {
     char* string;
     short int  Token;
@@ -117,7 +117,7 @@ struct VariableReturnStruct
    char*     string;
    struct TxBlockListReturnStruct* TxBlockListReturn;
    struct EvaluatedVariableExpressionStruct* EvaluatedVarExpr;
-   struct RangeInfoStruct*   RangeInfo;     
+   struct RangeInfoStruct*   RangeInfo;
    struct VariableExpressionStruct*   VarExprPtr;
    struct ConditionReturnStruct*  ConditionReturn;
    struct VariableReturnStruct*   VariableReturn;
@@ -126,17 +126,17 @@ struct VariableReturnStruct
 
 
 %token <string> SEMICOLON EOF_TOKEN
-%token <string> PROPERTIES_HEADER  DEFINITIONS_HEADER  TRANSACTIONS_HEADER THREADS_HEADER SCHEDULES_HEADER INVARIANTS_HEADER 
+%token <string> PROPERTIES_HEADER  DEFINITIONS_HEADER  TRANSACTIONS_HEADER THREADS_HEADER SCHEDULES_HEADER INVARIANTS_HEADER
 %token <string> VALUE_ASSIGN  DEFINITION_ASSIGN
-%token <string> READ_ACCESS_OP WRITE_ACCESS_OP  DELAY_OP ABORT_OP MEM_ALLOC_OP MEM_FREE_OP MEM_BARRIER_OP JUMP_OP  
+%token <string> READ_ACCESS_OP WRITE_ACCESS_OP  DELAY_OP ABORT_OP MEM_ALLOC_OP MEM_FREE_OP MEM_BARRIER_OP JUMP_OP
 
-%token <string> OPEN_BRACKETS CLOSE_BRACKETS  OPEN_PARANTHESES CLOSE_PARANTHESES COMMA  BAR 
-%token <string> OPEN_CURLY_BRACKETS CLOSE_CURLY_BRACKETS LOOP_START  CONDITION_START RANGE_SEPERATOR       
-%token <string> LABEL NAME ARRAY_NAME NAME_ALL_CAPITALS LOCAL_VARIABLE_NAME LOCAL_ARRAY_NAME NUMBER FLOAT_NUMBER  COLON PERCENTAGE 
+%token <string> OPEN_BRACKETS CLOSE_BRACKETS  OPEN_PARANTHESES CLOSE_PARANTHESES COMMA  BAR
+%token <string> OPEN_CURLY_BRACKETS CLOSE_CURLY_BRACKETS LOOP_START  CONDITION_START RANGE_SEPERATOR
+%token <string> LABEL NAME ARRAY_NAME NAME_ALL_CAPITALS LOCAL_VARIABLE_NAME LOCAL_ARRAY_NAME NUMBER FLOAT_NUMBER  COLON PERCENTAGE
  // ARRAY_NAME is a NAME followed by a "["
-%token <string> NO_ABORT_INVARIANT_TOKEN 
+%token <string> NO_ABORT_INVARIANT_TOKEN
 
-%token <string> EQUAL NOT_EQUAL GREATER_EQUAL SMALLER_EQUAL GREATER_THAN  SMALLER_THAN 
+%token <string> EQUAL NOT_EQUAL GREATER_EQUAL SMALLER_EQUAL GREATER_THAN  SMALLER_THAN
 
 
 %token <string> VAR_EXPR_TEST_SECT_HEADER  VAR_EXPR_EVAL
@@ -149,7 +149,7 @@ struct VariableReturnStruct
 %left AND OR
 %left NOT
 
-%type <string> Config Section  
+%type <string> Config Section
 %type <string> PropertiesSection  DefinitionsSection  TransactionsSection ThreadsSection SchedulesSection InvariantsSection
 %type <string> PropertyDefList PropertyDef
 %type <string> VariableDefList VariableDef ArrayInit  Delay
@@ -157,36 +157,36 @@ struct VariableReturnStruct
 %type <string> TxSpecElement TxOp  TxLoopDef  TxConditionalDef ConditionalTxSpec ConditionalTxSpecElement DefaulfConditionTxSpecElement VarAssigns    Jump
 %type <string> MemAccessOp  AbortOp  MemAllocOp  MemBarrierOp
 %type <string> ConditionalExpression SimpleConditionalExpression  ComplexConditionalExpression ComplexConditionalExpressionElement ComplexConditionalUnit
- 
+
 %type <string> AdditiveArithmeticOp MultiplicativeArithmeticOp  RelationalOp  UnaryBooleanOp BooleanOp
-%type <string> VarAssignList VarAssignment 
-%type <string> Constant FixedValue  RandomizedRange Value   DescriptionName Scope 
+%type <string> VarAssignList VarAssignment
+%type <string> Constant FixedValue  RandomizedRange Value   DescriptionName Scope
 %type <string> ThreadDefList ThreadDef ThreadType
-%type <string> BoundedRepetitionTxBlockListElement UnboundedRepetitionTxBlockListElement 
-%type <string> TxChoiceList TxChoiceListElement 
+%type <string> BoundedRepetitionTxBlockListElement UnboundedRepetitionTxBlockListElement
+%type <string> TxChoiceList TxChoiceListElement
 %type <string> ScheduleDefList ScheduleDef ScheduleSpec TxPortion
 %type <string> InvariantDefList InvariantDef
 
 %type <string> VarExprTestSection VarExprTestDefList VarExprTestDef
-%type <string> VariableExpression VariableExpressionElement MultiplicativeVariableExpressionElementAccess MultiplicativeFactor ManagedMemAccess 
+%type <string> VariableExpression VariableExpressionElement MultiplicativeVariableExpressionElementAccess MultiplicativeFactor ManagedMemAccess
 %type <RangeInfo> Range LoopRange
 
 %type <string> __defaultCondTxSpecElement_act_1
 
 %type <TxBlockListReturn>  TxBlockList TxBlockListElement
 %type <VarExprPtr> ArrayDef
-%type <ConditionReturn> Condition   LoopCondition  
+%type <ConditionReturn> Condition   LoopCondition
 %type <VariableReturn>  ArrayAccess Variable
 
-%% 
+%%
 
-Config : 
-    Section 
-    | Section Config 
+Config :
+    Section
+    | Section Config
     ;
 
-Section:  
-    PropertiesSection  |   DefinitionsSection  |  TransactionsSection  
+Section:
+    PropertiesSection  |   DefinitionsSection  |  TransactionsSection
     | ThreadsSection | SchedulesSection | InvariantsSection | VarExprTestSection
     ;
 
@@ -194,7 +194,7 @@ Section:
 VarExprTestSection:
 VAR_EXPR_TEST_SECT_HEADER _varExprTestSectstart_act  VarExprTestDefList
    {
-       TM_EXIT_THREAD(TxDesc); 
+       TM_EXIT_THREAD(TxDesc);
        TM_EXIT(TxDesc);
    }
    ;
@@ -231,7 +231,7 @@ VarExprTestDef:
 	  VarExpr* ArrayVarExpr = $1;
 	  int ArrayElementNum = (int) (ArrayVarExpr -> OperandID[1] - ArrayVarExpr -> OperandID[0] +1) ;
 	  assert(ArrayElementNum > 0);
-	  
+
 	  int  ElementNo;
 	  for( ElementNo=0; ElementNo < ArrayElementNum; ElementNo ++)
 	  {
@@ -239,8 +239,8 @@ VarExprTestDef:
 	  }
 
 	  REPORT_READ_INPUT("'%s' is assigned to all elements of array '%s'\n",$3, ArrayVarExpr->Name);
-      } 
-   | ARRAY_NAME VariableExpression CLOSE_BRACKETS VALUE_ASSIGN Value  
+      }
+   | ARRAY_NAME VariableExpression CLOSE_BRACKETS VALUE_ASSIGN Value
     {
 	  // Chopping last character (character '[') of array name
 	  char*    ActualArrayName = dupstr($1);
@@ -253,18 +253,18 @@ VarExprTestDef:
 	  bool ArrayExists = (ArrayVarExpr != NULL);
 	  if( !ArrayExists)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Can NOT SET element of UNKNOWN ARRAY  '%s'. Terminating...\n", ActualArrayName);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      exit(1);
 	  }
-	  
+
 	  VarExpr* ElementVarExpr;
 	  FindVarExpr($2,&ElementVarExpr);
 	  if(ElementVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", $2);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -288,10 +288,10 @@ VarExprTestDef:
 
 	  // The following can be done with an Evaluation on the managed version of ArrayVarExpr
 	  ((Word*)(ArrayVarExpr -> Addr))[ElementIndexToAccess] = atoi($5);
-	  
-	  
+
+
     }
-   | LOCAL_ARRAY_NAME VariableExpression CLOSE_BRACKETS VALUE_ASSIGN Value  
+   | LOCAL_ARRAY_NAME VariableExpression CLOSE_BRACKETS VALUE_ASSIGN Value
     {
 	  // Chopping last character (character '[') of array name
 	  char*    ActualArrayName = dupstr($1);
@@ -304,18 +304,18 @@ VarExprTestDef:
 	  bool ArrayExists = (ArrayVarExpr != NULL);
 	  if( !ArrayExists)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Can NOT SET element of UNKNOWN ARRAY  '%s'. Terminating...\n", ActualArrayName);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      exit(1);
 	  }
-	  
+
 	  VarExpr* ElementVarExpr;
 	  FindVarExpr($2,&ElementVarExpr);
 	  if(ElementVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", $2);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -338,8 +338,8 @@ VarExprTestDef:
 	  signed long ElementIndexToAccess = ElementNoToAccess - ArrayLowerLimit;
 
 	  ((Word*)(ArrayVarExpr -> Addr))[ElementIndexToAccess] = atoi($5);
-	  
-	  
+
+
     }
    | Constant VALUE_ASSIGN FixedValue
     {
@@ -350,30 +350,30 @@ VarExprTestDef:
 	FindVarExpr($1,&CurrentVarExpr);
 	bool LocalVariableAlreadyExist = (CurrentVarExpr != NULL);
 	if( !LocalVariableAlreadyExist)
-	{    
+	{
 	    Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	    unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	    CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
 
 	    VAR_EXPR_Initialize(CurrentVarExpr);
-	    CurrentVarExpr -> Name = dupstr($1); 
+	    CurrentVarExpr -> Name = dupstr($1);
 	    CurrentVarExpr -> Type = VAR_SHARED_CONSTANT_UNMANAGED;
 	    CurrentVarExpr -> Addr = SharedVarAddr;
 
 	    Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	    LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	    CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	    
+
 	    unsigned ManagedVersionNameLength = strlen("&") + strlen($1) + 1 ;
 	    char* ManagedVersionName = malloc(ManagedVersionNameLength*sizeof(char));
 	    sprintf(ManagedVersionName,"&%s",$1);
 
 	    VAR_EXPR_Initialize(CurrentVarExpr);
-	    CurrentVarExpr -> Name = dupstr(ManagedVersionName); 
+	    CurrentVarExpr -> Name = dupstr(ManagedVersionName);
 	    CurrentVarExpr -> Type = VAR_SHARED_CONSTANT_MANAGED;
 	    CurrentVarExpr -> Addr = SharedVarAddr;
 	}
-	*((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi($3); 
+	*((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi($3);
 	if(VerboseParserOutput)
 	    VAR_EXPR_Print(CurrentVarExpr);
 
@@ -392,8 +392,8 @@ VarExprTestDef:
        VarExpr* EvaluatedVarExpr;
        FindVarExpr($3, &EvaluatedVarExpr);
        assert(EvaluatedVarExpr != NULL);
-       
-       START_TX(TxDesc,NULL);
+
+       START_TX(TxDesc,0);
        signed long AccessedVarExprValue = EvaluateVarExpr(EvaluatedVarExpr);
        printf("Value evaluated for '%s'= %ld\n", $3 , AccessedVarExprValue);
        COMMIT_TX(TxDesc);
@@ -403,23 +403,23 @@ VarExprTestDef:
    ;
 
 
-PropertiesSection:  
-   PROPERTIES_HEADER  __prop_sec_act_1  PropertyDefList 
+PropertiesSection:
+   PROPERTIES_HEADER  __prop_sec_act_1  PropertyDefList
    {
    };
 
 
        __prop_sec_act_1:  /* empty */
-       { 
+       {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     PROPERTIES Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        };
 
 
-PropertyDefList: 
-    PropertyDef SEMICOLON 
-    | PropertyDefList PropertyDef SEMICOLON 
+PropertyDefList:
+    PropertyDef SEMICOLON
+    | PropertyDefList PropertyDef SEMICOLON
     ;
 
 PropertyDef:
@@ -433,36 +433,36 @@ PropertyDef:
      ;
 
 
-DefinitionsSection: 
-    DEFINITIONS_HEADER  __def_sec_act_1  VariableDefList 
+DefinitionsSection:
+    DEFINITIONS_HEADER  __def_sec_act_1  VariableDefList
     {
     };
-     
+
 
        __def_sec_act_1:  /* empty */
-       { 
+       {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     DEFINITIONS Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        };
 
 
 
-VariableDefList  : 
-     VariableDef SEMICOLON 
+VariableDefList  :
+     VariableDef SEMICOLON
      | ArrayInit SEMICOLON
-     | VariableDefList VariableDef SEMICOLON      
-     | VariableDefList ArrayInit SEMICOLON      
+     | VariableDefList VariableDef SEMICOLON
+     | VariableDefList ArrayInit SEMICOLON
      ;
 
 
 ArrayInit:
-     ArrayDef VALUE_ASSIGN Value 
+     ArrayDef VALUE_ASSIGN Value
       {
 	  VarExpr* ArrayVarExpr = $1;
 	  int ArrayElementNum = (int) (ArrayVarExpr -> OperandID[1] - ArrayVarExpr -> OperandID[0] +1) ;
 	  assert(ArrayElementNum > 0);
-	  
+
 	  int  ElementNo;
 	  for( ElementNo=0; ElementNo < ArrayElementNum; ElementNo ++)
 	  {
@@ -470,13 +470,13 @@ ArrayInit:
 	  }
 
 	  REPORT_READ_INPUT("'%s' is assigned to all elements of array '%s'\n",$3, ArrayVarExpr->Name);
-      } 
+      }
     ;
 
 
 
 ArrayDef:
-     ARRAY_NAME Range CLOSE_BRACKETS 
+     ARRAY_NAME Range CLOSE_BRACKETS
       {
 	  // Chopping last character (character '[') of array name
 	  char*    ActualArrayName = dupstr($1);
@@ -484,7 +484,7 @@ ArrayDef:
 	  ActualArrayName[LastCharPos]='\0';
 
 //	  ALLOC_AND_RETURN_STRING("%s",ActualArrayName);
-	  
+
 	  REPORT_READ_INPUT("\tSHARED Array '%s' with elements in range: '%s'\n",ActualArrayName, $2->string);
 	  FREE_RULE_STRINGS(3);
 
@@ -494,7 +494,7 @@ ArrayDef:
 	  {
 	      AllocVarExpr(ActualArrayName, &ArrayVarExpr );
 	  }
-	  
+
 	  // Are all characters capital letters?
 	  unsigned CharNum = strlen(ActualArrayName);
 	  unsigned CharNo;
@@ -518,8 +518,8 @@ ArrayDef:
 	  assert( ArrayLowerBoundVarExpr != NULL);
 	  VarExpr* ArrayUpperBoundVarExpr  = GetVarExprPtr($2 -> MaxValExpressionID);
 	  assert( ArrayUpperBoundVarExpr != NULL);
-	  
-	  
+
+
 
 	  ArrayVarExpr -> OperandID[0] = EvaluateVarExpr(ArrayLowerBoundVarExpr);
 	  ArrayVarExpr -> OperandID[1] = EvaluateVarExpr(ArrayUpperBoundVarExpr);
@@ -535,8 +535,8 @@ ArrayDef:
 	  $$ = ArrayVarExpr;
 
 	  free(ActualArrayName);
-      } 
-     | LOCAL_ARRAY_NAME Range CLOSE_BRACKETS 
+      }
+     | LOCAL_ARRAY_NAME Range CLOSE_BRACKETS
       {
 	  // Chopping last character (character '[') of array name
 	  char*    ActualArrayName = dupstr($1);
@@ -544,7 +544,7 @@ ArrayDef:
 	  ActualArrayName[LastCharPos]='\0';
 
 //	  ALLOC_AND_RETURN_STRING("%s",ActualArrayName);
-	  
+
 	  REPORT_READ_INPUT("\tLOCAL Array '%s' with elements in range: '%s'\n",$1, $2->string);
 	  FREE_RULE_STRINGS(3);
 
@@ -554,7 +554,7 @@ ArrayDef:
 	  {
 	      AllocVarExpr(ActualArrayName, &ArrayVarExpr );
 	  }
-	  
+
 	  // Are all characters capital letters?
 	  unsigned CharNum = strlen(ActualArrayName);
 	  unsigned CharNo;
@@ -578,8 +578,8 @@ ArrayDef:
 	  assert( ArrayLowerBoundVarExpr != NULL);
 	  VarExpr* ArrayUpperBoundVarExpr  = GetVarExprPtr($2 -> MaxValExpressionID);
 	  assert( ArrayUpperBoundVarExpr != NULL);
-	  
-	  
+
+
 
 	  ArrayVarExpr -> OperandID[0] = EvaluateVarExpr(ArrayLowerBoundVarExpr);
 	  ArrayVarExpr -> OperandID[1] = EvaluateVarExpr(ArrayUpperBoundVarExpr);
@@ -595,24 +595,24 @@ ArrayDef:
 	  $$ = ArrayVarExpr;
 
 	  free(ActualArrayName);
-      } 
+      }
      ;
-        
-  
-VariableDef: 
+
+
+VariableDef:
    LOCAL_VARIABLE_NAME VALUE_ASSIGN FixedValue
     {
 	VarExpr* CurrentVarExpr;
 	FindVarExpr($1,&CurrentVarExpr);
 	bool LocalVariableAlreadyExist = (CurrentVarExpr != NULL);
 	if( !LocalVariableAlreadyExist)
-	{    
+	{
 	    Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	    unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	    CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
 
 	    VAR_EXPR_Initialize(CurrentVarExpr);
-	    CurrentVarExpr -> Name = dupstr($1); 
+	    CurrentVarExpr -> Name = dupstr($1);
 
 	    // Are all characters (after the underscore) capital letters?
 	    unsigned CharNum = strlen($1);
@@ -632,136 +632,136 @@ VariableDef:
 		CurrentVarExpr -> Type = VAR_LOCAL_SIMPLE_CONSTANT;
 	    else
 		CurrentVarExpr -> Type = VAR_LOCAL_SIMPLE;
-	    
+
 	}
-	CurrentVarExpr -> Value = (unsigned)atoi($3); 
+	CurrentVarExpr -> Value = (unsigned)atoi($3);
 	if(VerboseParserOutput)
 	    VAR_EXPR_Print(CurrentVarExpr);
 
 	FREE_RULE_STRINGS(3);
 
     }
-    | NAME VALUE_ASSIGN Value 
+    | NAME VALUE_ASSIGN Value
        {
 
 	   VarExpr* CurrentVarExpr;
 	   FindVarExpr($1,&CurrentVarExpr);
 	   bool VariableAlreadyExist = (CurrentVarExpr != NULL);
 	   if( !VariableAlreadyExist)
-	   {    
+	   {
 	       void* SharedVarAddr = (void *)malloc(sizeof(Word));
-	       
+
 	       // Since we are generating a shared array expression we generate two copies, one for managed and one for unmanaged accesses.
 	       // Creating Unmanaged copy
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	       unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	       
+
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr($1); 
+	       CurrentVarExpr -> Name = dupstr($1);
 	       CurrentVarExpr -> Type = VAR_SHARED_UNMANAGED;
 	       CurrentVarExpr -> Addr = SharedVarAddr;
 	       if(VerboseParserOutput)
 		   VAR_EXPR_Print(CurrentVarExpr);
-	       
+
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
-	       
+
 	       LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	       
+
 	       // Creating Managed copy
 	       unsigned ManagedVersionNameLength = strlen("&") + strlen($1) + 1 ;
 	       char* ManagedVersionName = malloc(ManagedVersionNameLength*sizeof(char));
 	       sprintf(ManagedVersionName,"&%s",$1);
-	       
+
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr(ManagedVersionName); 
+	       CurrentVarExpr -> Name = dupstr(ManagedVersionName);
 	       CurrentVarExpr -> Type = VAR_SHARED_MANAGED;
 	       CurrentVarExpr -> Addr = SharedVarAddr;
-	       
+
 	   }
-	   *((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi($3); 
+	   *((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi($3);
 	   if(VerboseParserOutput)
 	       VAR_EXPR_Print(CurrentVarExpr);
-	   
+
 	   REPORT_READ_INPUT("'%s' is assigned to '%s'\n", $3, $1);
 	   FREE_RULE_STRINGS(3);
        };
-     | Constant VALUE_ASSIGN Value 
+     | Constant VALUE_ASSIGN Value
        {
 	   void* SharedVarAddr = (void *)malloc(sizeof(Word));
-	   
-	   
+
+
 	   VarExpr* CurrentVarExpr;
 	   FindVarExpr($1,&CurrentVarExpr);
 	   bool LocalVariableAlreadyExist = (CurrentVarExpr != NULL);
 	   if( !LocalVariableAlreadyExist)
-	   {    
+	   {
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	       unsigned LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	       
+
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr($1); 
+	       CurrentVarExpr -> Name = dupstr($1);
 	       CurrentVarExpr -> Type = VAR_SHARED_CONSTANT_UNMANAGED;
 	       CurrentVarExpr -> Addr = SharedVarAddr;
-	       
+
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	       LastElementPos = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, LastElementPos, sizeof(VarExpr));
-	       
+
 	       unsigned ManagedVersionNameLength = strlen("&") + strlen($1) + 1 ;
 	       char* ManagedVersionName = malloc(ManagedVersionNameLength*sizeof(char));
 	       sprintf(ManagedVersionName,"&%s",$1);
-	       
+
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr(ManagedVersionName); 
+	       CurrentVarExpr -> Name = dupstr(ManagedVersionName);
 	       CurrentVarExpr -> Type = VAR_SHARED_CONSTANT_MANAGED;
 	       CurrentVarExpr -> Addr = SharedVarAddr;
 	   }
-	   *((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi($3); 
+	   *((Word*)(CurrentVarExpr -> Addr)) = (Word)atoi($3);
 	   if(VerboseParserOutput)
 	       VAR_EXPR_Print(CurrentVarExpr);
-	   
+
 	   REPORT_READ_INPUT("'%s' is assigned to '%s'\n", $3, $1);
 	   FREE_RULE_STRINGS(3);
        };
-     | Scope  LOCAL_VARIABLE_NAME VALUE_ASSIGN Value 
+     | Scope  LOCAL_VARIABLE_NAME VALUE_ASSIGN Value
        {
 	   REPORT_READ_INPUT("'%s' is assigned to '%s:%s'\n", $4, $1,$2);
 	   FREE_RULE_STRINGS(4);
        };
-     | ARRAY_NAME VariableExpression CLOSE_BRACKETS VALUE_ASSIGN Value  
+     | ARRAY_NAME VariableExpression CLOSE_BRACKETS VALUE_ASSIGN Value
        {
 	   // Chopping last character (character '[') of array name
 	   char*    ActualArrayName = dupstr($1);
 	   unsigned LastCharPos     = strlen(ActualArrayName)-1;
 	   ActualArrayName[LastCharPos]='\0';
-	   
+
 	   // Checking array's existence
 	   VarExpr* ArrayVarExpr;
 	   FindVarExpr(ActualArrayName,&ArrayVarExpr);
 	   bool ArrayExists = (ArrayVarExpr != NULL);
 	   if( !ArrayExists)
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT SET element of UNKNOWN ARRAY  '%s'. Terminating...\n", ActualArrayName);
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
+
 	   VarExpr* ElementVarExpr;
 	   FindVarExpr($2,&ElementVarExpr);
 	   if(ElementVarExpr == NULL)
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", $2);
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
+
 	   signed long ElementNoToAccess = EvaluateVarExpr(ElementVarExpr);
 	   unsigned ArrayLowerLimit = ArrayVarExpr -> OperandID[0];
 	   unsigned ArrayUpperLimit = ArrayVarExpr -> OperandID[1];
@@ -776,43 +776,43 @@ VariableDef:
 	       assert(0);
 	   }
 	   signed long ElementIndexToAccess = ElementNoToAccess - ArrayLowerLimit;
-	   
+
 	   // The following can be done with an Evaluation on the managed version of ArrayVarExpr
 	   ((Word*)(ArrayVarExpr -> Addr))[ElementIndexToAccess] = atoi($5);
-	   
-	   
+
+
        };
-    | LOCAL_ARRAY_NAME VariableExpression CLOSE_BRACKETS VALUE_ASSIGN Value  
+    | LOCAL_ARRAY_NAME VariableExpression CLOSE_BRACKETS VALUE_ASSIGN Value
        {
 	   // Chopping last character (character '[') of array name
 	   char*    ActualArrayName = dupstr($1);
 	   unsigned LastCharPos     = strlen(ActualArrayName)-1;
 	   ActualArrayName[LastCharPos]='\0';
-	   
+
 	   // Checking array's existence
 	   VarExpr* ArrayVarExpr;
 	   FindVarExpr(ActualArrayName,&ArrayVarExpr);
 	   bool ArrayExists = (ArrayVarExpr != NULL);
 	   if( !ArrayExists)
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT SET element of UNKNOWN ARRAY  '%s'. Terminating...\n", ActualArrayName);
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
+
 	   VarExpr* ElementVarExpr;
 	   FindVarExpr($2,&ElementVarExpr);
 	   if(ElementVarExpr == NULL)
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", $2);
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
+
 	   signed long ElementNoToAccess = EvaluateVarExpr(ElementVarExpr);
 	   unsigned ArrayLowerLimit = ArrayVarExpr -> OperandID[0];
 	   unsigned ArrayUpperLimit = ArrayVarExpr -> OperandID[1];
@@ -827,13 +827,13 @@ VariableDef:
 	       assert(0);
 	   }
 	   signed long ElementIndexToAccess = ElementNoToAccess - ArrayLowerLimit;
-	   
+
 	   ((Word*)(ArrayVarExpr -> Addr))[ElementIndexToAccess] = atoi($5);
-	   
-	   
+
+
        };
-     | Scope ArrayAccess VALUE_ASSIGN Value 
-       { 
+     | Scope ArrayAccess VALUE_ASSIGN Value
+       {
 	   REPORT_READ_INPUT("'%s' is assigned to '%s:%s'\n", $4, $1, $2->string);
 	   FREE_RULE_STRINGS(4);
        };
@@ -843,14 +843,14 @@ VariableDef:
 	   unsigned CurrentVarExprID = FindVarExpr($1,&CurrentVarExpr);
 	   bool LocalVariableAlreadyExist = (CurrentVarExpr != NULL);
 	   if( !LocalVariableAlreadyExist)
-	   {    
+	   {
 	       Extend_DynamicArray(&Dyn_VariableExpressionArray,sizeof(VarExpr));
 	       CurrentVarExprID = GetSize_DynamicArray(&Dyn_VariableExpressionArray)-1;
 	       CurrentVarExpr = GetElement_DynamicArray(&Dyn_VariableExpressionArray, CurrentVarExprID, sizeof(VarExpr));
 
 	       VAR_EXPR_Initialize(CurrentVarExpr);
-	       CurrentVarExpr -> Name = dupstr($1); 
-	       
+	       CurrentVarExpr -> Name = dupstr($1);
+
 	       // Are all characters (after the underscore) capital letters?
 	       unsigned CharNum = strlen($1);
 	       unsigned CharNo;
@@ -869,18 +869,18 @@ VariableDef:
 		   CurrentVarExpr -> Type = OP_RANDOM_DIST_CONSTANT;
 	       else
 		   CurrentVarExpr -> Type = OP_RANDOM_DIST;
-	       
+
 	   }
 	   else if( CurrentVarExpr -> Type == OP_RANDOM_DIST_CONSTANT )
 	   {
-	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	       char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	       sprintf(ErrorMessage,"Can NOT assign new value to CONSTANT LOCAL VARIABLE '%s'. Terminating...\n", $1);
 	       yyerror(ErrorMessage);
 	       free(ErrorMessage);
 	       exit(1);
 	   }
-	   
-	   
+
+
 	   // Operand Map for random variables:
 	   //   OperandID[0]: MinValExpressionID
 	   //   OperandID[1]: MaxValExpressionID
@@ -888,7 +888,7 @@ VariableDef:
 	   //   OperandID[3]: Increment between values in the range
 	   //   OperandID[4]: Random distribution function pointer
            // OperandID[3] and OperandID[4] are not yet used.
-	   
+
 	   struct RangeInfoStruct* ParsedRangeInfo = $4;
 	   CurrentVarExpr -> Operation    = 1; // Operation is set to non-zero for the variable to initially have a random value.
 	   CurrentVarExpr -> OperandID[0] = ParsedRangeInfo -> MinValExpressionID ;
@@ -902,7 +902,7 @@ VariableDef:
 
 
 	   FREE_RULE_STRINGS(5);
-	   
+
        }
 
      ;
@@ -910,9 +910,9 @@ VariableDef:
 
 
 
-          
-TransactionsSection: 
-     TRANSACTIONS_HEADER __tx_sec_act_1 TxDefList 
+
+TransactionsSection:
+     TRANSACTIONS_HEADER __tx_sec_act_1 TxDefList
      {
 
 	 TxDefNum = GetSize_DynamicArray(&Dyn_TxDefArray);
@@ -928,15 +928,15 @@ TransactionsSection:
 	     TxDefArray[TxDefNo].Name = dupstr(CurrentTxDef ->  Name);
 
 	     TxDefArray[TxDefNo].TxDefOptionNum = CurrentTxDefOptionNum;
-	     TxDefArray[TxDefNo].TxOpNum  =  (unsigned*)malloc( CurrentTxDefOptionNum*sizeof(unsigned) ); 
+	     TxDefArray[TxDefNo].TxOpNum  =  (unsigned*)malloc( CurrentTxDefOptionNum*sizeof(unsigned) );
 	     TxDefArray[TxDefNo].TxOpList    =  (TxOpContainer_t**) malloc( CurrentTxDefOptionNum*sizeof(TxOpContainer_t*) ) ;
-	     TxDefArray[TxDefNo].VarToUpdateNum  = CurrentTxDef -> VarToUpdateNum; 
+	     TxDefArray[TxDefNo].VarToUpdateNum  = CurrentTxDef -> VarToUpdateNum;
 	     unsigned SizeOfVarToUpdateListInMemory = CurrentTxDef -> VarToUpdateNum * sizeof(unsigned);
 	     TxDefArray[TxDefNo].VarListToUpdate = (unsigned*) malloc(SizeOfVarToUpdateListInMemory);
 	     memcpy(TxDefArray[TxDefNo].VarListToUpdate, CurrentTxDef ->VarListToUpdate, SizeOfVarToUpdateListInMemory);
 
-		     
-	     // We do not need the OptionConditionID list. It is just filled 
+
+	     // We do not need the OptionConditionID list. It is just filled
 	     // in for the copying of the data structure works correctly.
 	     unsigned CopySizeInMemory = CurrentTxDefOptionNum*sizeof(int);
 	     TxDefArray[TxDefNo].OptionConditionID     = (int*) malloc(CopySizeInMemory);
@@ -948,7 +948,7 @@ TransactionsSection:
 
 
 	     // We do not need any OptionNo. It is put here as a constant for backwards compatibility.
-	     unsigned OptionNo=0;	   
+	     unsigned OptionNo=0;
 	     unsigned TxOpListSizeInMemory = (CurrentTxDef -> TxOpNum[OptionNo])*sizeof(TxOpContainer_t);
 	     TxDefArray[TxDefNo].TxOpList[OptionNo] = (TxOpContainer_t*)malloc(TxOpListSizeInMemory);
 	     memcpy(TxDefArray[TxDefNo].TxOpList[OptionNo], CurrentTxDef ->TxOpList[OptionNo], TxOpListSizeInMemory);
@@ -960,14 +960,14 @@ TransactionsSection:
 	     free(CurrentTxDef ->  Name);
 	 }
 	 Free_DynamicArray(&Dyn_TxDefArray);
-	 
-	 
-     }  
+
+
+     }
      ;
 
 
        __tx_sec_act_1:  /* empty */
-       { 
+       {
 
 #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
 	   InitializeTempThreadStructuresUsedInParsing();
@@ -979,16 +979,16 @@ TransactionsSection:
 
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     TRANSACTIONS Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        };
 
 
-TxDefList: 
-     TxDef SEMICOLON 
-     | TxDefList TxDef SEMICOLON 
+TxDefList:
+     TxDef SEMICOLON
+     | TxDefList TxDef SEMICOLON
      ;
 
-TxDef: 
+TxDef:
      DescriptionName  __tx_sec_act_2    DEFINITION_ASSIGN TxSpec
        {
 
@@ -1011,35 +1011,35 @@ TxDef:
 	   unsigned TxOpNo;
 	   for(TxOpNo=0; TxOpNo< AddedElement -> TxOpNum[0] ; TxOpNo++)
 	   {
-	       TxOpContainer_t* SourceTxOpContainer = (TxOpContainer_t*)GetElement_DynamicArray(&CurrentTxOpList,TxOpNo,sizeof(TxOpContainer_t)); 
-	       TxOpContainer_t* TargetTxOpContainer = &(AddedElement -> TxOpList[0][TxOpNo]); 
+	       TxOpContainer_t* SourceTxOpContainer = (TxOpContainer_t*)GetElement_DynamicArray(&CurrentTxOpList,TxOpNo,sizeof(TxOpContainer_t));
+	       TxOpContainer_t* TargetTxOpContainer = &(AddedElement -> TxOpList[0][TxOpNo]);
 	       TX_OP_CONTAINER_Copy(SourceTxOpContainer, TargetTxOpContainer);
 	   }
 
 
-	   bool TransactionReadOnly = TRUE; 
+	   bool TransactionReadOnly = TRUE;
 	   AddedElement -> InherentDelay = 0;
-	   unsigned TxOpNum = AddedElement -> TxOpNum[0]; 
+	   unsigned TxOpNum = AddedElement -> TxOpNum[0];
 	   for(TxOpNo=0; TxOpNo< TxOpNum; TxOpNo++)
 	   {
 	       TxOpContainer_t* CurrentTxOpContainer = &(AddedElement -> TxOpList[0][TxOpNo]);
-	       
+
 	       if(TransactionReadOnly )
 	       {
-		   bool CurrentTxOpIsAWrite = (CurrentTxOpContainer -> TxOperation == WRITE); 
+		   bool CurrentTxOpIsAWrite = (CurrentTxOpContainer -> TxOperation == WRITE);
 		   if(CurrentTxOpIsAWrite )
 		   {
 		       TransactionReadOnly = FALSE;
-		       // if the inherent delay is also calculated in the same as this then remove this break 
-		       break; 
+		       // if the inherent delay is also calculated in the same as this then remove this break
+		       break;
 		   }
 	       }
-	       
+
 /* 	       CurrentTxInfo -> InherentDelay +=  CurrentTxOpContainer -> PrecedingDelay; */
 /* 	       bool LastTxOp = (TxOpNo == TxOpNum -1); */
 /* 	       if( LastTxOp ) */
 /* 		   CurrentTxInfo -> InherentDelay +=  CurrentTxOpContainer -> DelayBeforeCommit; */
-	       
+
 	   }
 	   AddedElement -> ReadOnly = TransactionReadOnly;
 	   Clear_DynamicArray(&CurrentTxOpList);
@@ -1060,7 +1060,7 @@ TxDef:
 	       AddedScheduleThreadInfo -> Name = SchedThreadName;
 
 	       // There is only one transaction per thread
-	       AddedScheduleThreadInfo -> TxContainerNum = 1;     
+	       AddedScheduleThreadInfo -> TxContainerNum = 1;
 	       AddedScheduleThreadInfo -> TxContainerList = (TxContainer_t*)malloc(sizeof(TxContainer_t));
 	       (AddedScheduleThreadInfo -> TxContainerList)-> CandidateTxNum = 1;
 	       (AddedScheduleThreadInfo -> TxContainerList)-> TxCandidateList = (TxCandidate_t*)malloc(sizeof(TxCandidate_t));
@@ -1077,11 +1077,11 @@ TxDef:
 	       (AddedScheduleThreadInfo -> TxContainerList)-> LoopStartNode = FALSE   ;
 
 	       AddedScheduleThreadInfo -> TxDefNum = 1;
-	       AddedScheduleThreadInfo -> TxDefArray = (TxInfo_t*) malloc(sizeof(TxInfo_t)); 
+	       AddedScheduleThreadInfo -> TxDefArray = (TxInfo_t*) malloc(sizeof(TxInfo_t));
 	       TX_INFO_Copy(AddedElement, AddedScheduleThreadInfo -> TxDefArray);
 
 	       ScheduleThreadNum++;
-	   }     
+	   }
 
 #endif
 
@@ -1097,11 +1097,11 @@ TxDef:
 	 Clear_DynamicArray(&Dyn_VarExprToUpdateList);
 	 TxDefElementNo=0;
 	 TxOpNo=0;
-       } 
+       }
 
 
-// Had to use right recursion 
-TxSpec: 
+// Had to use right recursion
+TxSpec:
      TxSpecElement
       {
 	  if ($1 != NULL)
@@ -1109,7 +1109,7 @@ TxSpec:
 	      REPORT_READ_INPUT("Ele[%u]: %s\n",TxDefElementNo,$1);
 	      TxDefElementNo++;
 	  }
-      } 
+      }
 
      | TxSpec COMMA TxSpecElement
        {
@@ -1120,38 +1120,38 @@ TxSpec:
 	   }
        };
 
-TxSpecElement:  
-     TxOp 
+TxSpecElement:
+     TxOp
        {
 	   ALLOC_AND_RETURN_STRING("OpNo[%u]:%s",TxOpNo,$1);
 	   FREE_RULE_STRINGS(1);
 	   TxOpNo++;
        };
-     | TxLoopDef 
+     | TxLoopDef
        {
 	   ALLOC_AND_RETURN_STRING("%s",$1);
 //	   $$=NULL;
 	   FREE_RULE_STRINGS(1);
        };
-     | TxConditionalDef 
+     | TxConditionalDef
        {
 	   ALLOC_AND_RETURN_STRING("%s",$1);
 	   FREE_RULE_STRINGS(1);
        };
-     | VarAssigns 
+     | VarAssigns
        {
 
 	   unsigned TxOpListSize  = GetSize_DynamicArray(&CurrentTxOpList);
 	   bool     TxOpListEmpty = (TxOpListSize == 0);
 	   TxOpContainer_t* TxOpContainerToAttach = NULL;
-	   
+
 	   if( TxOpListEmpty  )
 	   {
 	       // Generate New TxOp and set TxOpContainerToAttach with its pointer
 	       TxOpInfo_t  CurrentOpInfo;
 	       CurrentOpInfo.Delay = 0 ;
 	       CurrentOpInfo.Op    = INVALID ;
-	  
+
 	       GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 
 	       // We set the pointer of the first element of CurrentTxOpList to TxOpContainerToAttach
@@ -1164,14 +1164,14 @@ TxSpecElement:
 	   }
 
 	   TxOpContainerToAttach -> VarAssignNum = GetSize_DynamicArray(&Dyn_VarAssignList);
-	   TxOpContainerToAttach -> VarAssigns   = MakeStaticCopy_DynamicArray(&Dyn_VarAssignList, sizeof(var_assign_t)); 
-	   
+	   TxOpContainerToAttach -> VarAssigns   = MakeStaticCopy_DynamicArray(&Dyn_VarAssignList, sizeof(var_assign_t));
+
 	   Clear_DynamicArray(&Dyn_VarAssignList);
 
 	   ALLOC_AND_RETURN_STRING("%s",$1);
 	   FREE_RULE_STRINGS(1);
        };
-     | LABEL    
+     | LABEL
        {
 
           #ifdef NO_TRANSACTION_INTERMEDIATE_REPRESENTATION
@@ -1180,23 +1180,23 @@ TxSpecElement:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = LABEL_OP ;
-	  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 
 		  // Adding  the label name to the last added TxOpContainer
 		  unsigned LastTxOpNo = GetSize_DynamicArray(&CurrentTxOpList) - 1;
 		  TxOpContainer_t* LabelOpContainer = (TxOpContainer_t*) GetElement_DynamicArray(&CurrentTxOpList,LastTxOpNo, sizeof(TxOpContainer_t));
-		     // We would like to stript the @ sign at the beginning of 
-		     // LABEL string so we start copying from the element 1 of 
-		     // $1 instead of its 0th element 
+		     // We would like to stript the @ sign at the beginning of
+		     // LABEL string so we start copying from the element 1 of
+		     // $1 instead of its 0th element
 		  LabelOpContainer -> Label = dupstr(&($1[1]));
 
 
 //		  CurrentDelayVal = 0 ;
-		  
-	      } 
-	   
-	  #endif 
+
+	      }
+
+	  #endif
 
 	   ALLOC_AND_RETURN_STRING("Label %s",$1);
 	   FREE_RULE_STRINGS(1);
@@ -1214,7 +1214,7 @@ TxSpecElement:
      ;
 
 Delay:
-     DELAY_OP VariableExpression CLOSE_PARANTHESES 
+     DELAY_OP VariableExpression CLOSE_PARANTHESES
       {
 	  ALLOC_AND_RETURN_STRING("DELAY determined by the following variable expression:'%s'", $2);
 	  FREE_RULE_STRINGS(3);
@@ -1225,8 +1225,8 @@ TxOp:
      MemAccessOp | AbortOp | MemAllocOp | MemBarrierOp
      ;
 
-MemAccessOp: 
-     READ_ACCESS_OP  VariableExpression CLOSE_PARANTHESES 
+MemAccessOp:
+     READ_ACCESS_OP  VariableExpression CLOSE_PARANTHESES
        {
           #ifdef NO_TRANSACTION_INTERMEDIATE_REPRESENTATION
 	      if ( !ParseOnly )
@@ -1234,29 +1234,29 @@ MemAccessOp:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = READ ;
-		  
+
 //		  CurrentOpInfo.AddrGenIDList[0] = CurrentAssociatedAddrGenIDArray[0];
 //		  CurrentOpInfo.AddrGenIDList[1] = CurrentAssociatedAddrGenIDArray[1];
 
 		  CurrentOpInfo.AddrOp = GetMemAccessOpAddressParameter($2);
 		  CurrentOpInfo.AddrGenIDList[0] = (unsigned) -1;
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
-		  
+
 //		  CurrentDelayVal = 0 ;
-		  
+
 //		  CurrentAssociatedAddrGenIDArray[0] = INVALID_ADDR_GEN_ID;
 //		  CurrentAssociatedAddrGenIDArray[1] = INVALID_ADDR_GEN_ID;
 //		  CurrentAddrOp = INVALID_ADDR_OP;
-	      } 
-	   
-	  #endif 
+	      }
+
+	  #endif
 
 	  ALLOC_AND_RETURN_STRING("READ from address of '%s'", $2);
  	  FREE_RULE_STRINGS(3);
-   
+
        }
-     | READ_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES 
+     | READ_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES
        {
 
           #ifdef NO_TRANSACTION_INTERMEDIATE_REPRESENTATION
@@ -1265,28 +1265,28 @@ MemAccessOp:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = READ ;
-		  
+
 //		  CurrentOpInfo.AddrGenIDList[0] = CurrentAssociatedAddrGenIDArray[0];
 //		  CurrentOpInfo.AddrGenIDList[1] = CurrentAssociatedAddrGenIDArray[1];
 
 		  CurrentOpInfo.AddrOp = GetMemAccessOpAddressParameter($2);
 		  CurrentOpInfo.AddrGenIDList[0] = GetReadAccessTargetParameter($4);
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
-		  
+
 //		  CurrentDelayVal = 0 ;
-		  
+
 //		  CurrentAssociatedAddrGenIDArray[0] = INVALID_ADDR_GEN_ID;
 //		  CurrentAssociatedAddrGenIDArray[1] = INVALID_ADDR_GEN_ID;
 //		  CurrentAddrOp = INVALID_ADDR_OP;
-	      } 
-	   
-	  #endif 
+	      }
+
+	  #endif
 
 	  ALLOC_AND_RETURN_STRING("READ from address of '%s' into '%s'.",$2, $4);
  	  FREE_RULE_STRINGS(5);
        }
-     | WRITE_ACCESS_OP  VariableExpression CLOSE_PARANTHESES 
+     | WRITE_ACCESS_OP  VariableExpression CLOSE_PARANTHESES
        {
 
           #ifdef NO_TRANSACTION_INTERMEDIATE_REPRESENTATION
@@ -1295,27 +1295,27 @@ MemAccessOp:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = WRITE ;
-		  
+
 //		  CurrentOpInfo.AddrGenIDList[0] = CurrentAssociatedAddrGenIDArray[0];
 //		  CurrentOpInfo.AddrGenIDList[1] = CurrentAssociatedAddrGenIDArray[1];
 		  CurrentOpInfo.AddrOp = GetMemAccessOpAddressParameter($2);
 		  CurrentOpInfo.AddrGenIDList[0] = (unsigned) -1;
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 
 //		  CurrentDelayVal = 0 ;
-		  
+
 //		  CurrentAssociatedAddrGenIDArray[0] = INVALID_ADDR_GEN_ID;
 //		  CurrentAssociatedAddrGenIDArray[1] = INVALID_ADDR_GEN_ID;
 //		  CurrentAddrOp = INVALID_ADDR_OP;
-	      } 
-	 #endif 
+	      }
+	 #endif
 
 	  ALLOC_AND_RETURN_STRING("WRITE to address of '%s'.",$2);
  	  FREE_RULE_STRINGS(3);
 
        }
-     | WRITE_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES 
+     | WRITE_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES
        {
 
 
@@ -1325,30 +1325,30 @@ MemAccessOp:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = WRITE ;
-		  
+
 //		  CurrentOpInfo.AddrGenIDList[0] = CurrentAssociatedAddrGenIDArray[0];
 //		  CurrentOpInfo.AddrGenIDList[1] = CurrentAssociatedAddrGenIDArray[1];
 		  CurrentOpInfo.AddrOp = GetMemAccessOpAddressParameter($2);
 		  CurrentOpInfo.AddrGenIDList[0] = GetWriteAccessTargetParameter($4);
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
-		  
+
 //		  CurrentDelayVal = 0 ;
-		  
+
 //		  CurrentAssociatedAddrGenIDArray[0] = INVALID_ADDR_GEN_ID;
 //		  CurrentAssociatedAddrGenIDArray[1] = INVALID_ADDR_GEN_ID;
 //		  CurrentAddrOp = INVALID_ADDR_OP;
-	      } 
+	      }
 	 #endif
-	      
+
 	  ALLOC_AND_RETURN_STRING("WRITE  '%s' to address of '%s'.",$4, $2);
  	  FREE_RULE_STRINGS(5);
        }
      ;
 
 
-AbortOp: 
-     ABORT_OP FixedValue CLOSE_PARANTHESES 
+AbortOp:
+     ABORT_OP FixedValue CLOSE_PARANTHESES
       {
 
           #ifdef NO_TRANSACTION_INTERMEDIATE_REPRESENTATION
@@ -1357,19 +1357,19 @@ AbortOp:
 		  TxOpInfo_t  CurrentOpInfo;
 		  CurrentOpInfo.Delay = 0 ;
 		  CurrentOpInfo.Op    = ABORT ;
-		  
+
 		  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
-		  
-	      } 
+
+	      }
 	 #endif
 
-	  
+
 	  ALLOC_AND_RETURN_STRING("ABORT with probability '%s'",$2);
  	  FREE_RULE_STRINGS(3);
       };
 
-MemAllocOp: 
-     MEM_ALLOC_OP VariableExpression COMMA VariableExpression CLOSE_PARANTHESES 
+MemAllocOp:
+     MEM_ALLOC_OP VariableExpression COMMA VariableExpression CLOSE_PARANTHESES
       {
 	  ALLOC_AND_RETURN_STRING("ALLOCATE MEMORY of size '%s' (start address '%s')",$4, $2);
  	  FREE_RULE_STRINGS(5);
@@ -1381,8 +1381,8 @@ MemAllocOp:
  	  FREE_RULE_STRINGS(3);
       };
 
-MemBarrierOp: 
-     MEM_BARRIER_OP NAME COMMA NAME  CLOSE_PARANTHESES 
+MemBarrierOp:
+     MEM_BARRIER_OP NAME COMMA NAME  CLOSE_PARANTHESES
       {
 
 	  ALLOC_AND_RETURN_STRING("MEMORY BARRIER (Name: '%s', Type: '%s')",$2,$4);
@@ -1390,18 +1390,18 @@ MemBarrierOp:
       };
 
 TxLoopDef:
-     LOOP_START LoopCondition __txLoopDef_act_1 COLON TxSpec  CLOSE_CURLY_BRACKETS 
+     LOOP_START LoopCondition __txLoopDef_act_1 COLON TxSpec  CLOSE_CURLY_BRACKETS
       {
 	  unsigned LoopConditionTxOpPos = $2 -> ConditionTxOpContainerPos  ;
 	  unsigned LoopEndTxOpPos = GetSize_DynamicArray(&CurrentTxOpList) - 1 ;
 	  char* String = dupstr($2->string);
-	  
+
 	  // Make the forward link to the next operation after the loop (Link to jump over the loop)
 	  // LOOP_BACK in following function is named like that due to reuse of previous version of tmunit.
 	  // Actually it corresponds to a BRANCH or a JUMP in the new design.
 	  InsertBranchAmongTxOpContainers(&CurrentTxOpList, LoopConditionTxOpPos, LoopEndTxOpPos+1, LOOP_BACK, 0);
 
-	  // Make the backwards link from last element of the loop to the conditional tx_op_container. 
+	  // Make the backwards link from last element of the loop to the conditional tx_op_container.
 	  // Again NEXT is the reuse of the previous version of tmunit.
 	  InsertBranchAmongTxOpContainers(&CurrentTxOpList, LoopEndTxOpPos, LoopConditionTxOpPos,  NEXT, 0);
 
@@ -1413,20 +1413,20 @@ TxLoopDef:
 
       __txLoopDef_act_1:
         {
-	    // yyvsp[0].string  is the string corresponding to the 
+	    // yyvsp[0].string  is the string corresponding to the
 	    // 'LoopCondition' in the above 'TxLoopDef' rule
 	    REPORT_READ_INPUT("Ele[%u]: LOOP (Looping Condition: '%s')\n",TxDefElementNo, yyvsp[0].ConditionReturn -> string);
 	    TxDefElementNo++;
 	}
 
-LoopCondition:   
-     Condition 
+LoopCondition:
+     Condition
        {
 	   $$ = $1;
 //	   FREE_RULE_STRINGS(1);
        }
 
-     | Variable VALUE_ASSIGN LoopRange  
+     | Variable VALUE_ASSIGN LoopRange
        {
 	   VarExpr* LoopIteratorVarExpr;
 	   unsigned LoopIteratorID = FindVarExpr($1->string, &LoopIteratorVarExpr);
@@ -1437,23 +1437,23 @@ LoopCondition:
 	       LoopIteratorVarExpr -> Type = VAR_LOCAL_SIMPLE;
 	       LoopIteratorVarExpr -> Value = 0;
 	   }
-	   
+
 //	   VarExpr* LowerLimitVarExpr = GetVarExprPtr($3 -> MinValExpressionID);
 //	   LoopIteratorVarExpr -> Value = EvaluateVarExpr(LowerLimitVarExpr);
 
 	   VarExpr* UpperLimitVarExpr = GetVarExprPtr($3 -> MaxValExpressionID);
-	   
-	   unsigned LoopIteratorConditionStringLength = strlen($1->string) + strlen("<=") + strlen(UpperLimitVarExpr->Name) + 1; 	   
+
+	   unsigned LoopIteratorConditionStringLength = strlen($1->string) + strlen("<=") + strlen(UpperLimitVarExpr->Name) + 1;
 	   char* LoopIteratorConditionString = malloc(LoopIteratorConditionStringLength*sizeof(char));
 	   sprintf(LoopIteratorConditionString,"%s<=%s",$1->string,UpperLimitVarExpr->Name);
-	   
+
 	   VarExpr* LoopConditionVarExpr;
 	   unsigned LoopConditionVarExprID = AllocVarExpr(LoopIteratorConditionString, &LoopConditionVarExpr);
 	   LoopConditionVarExpr -> Type = OP_RELATIONAL;
 	   LoopConditionVarExpr -> Operation = SMALLER_EQUAL;
-	   LoopConditionVarExpr -> OperandID[0] = LoopIteratorID;	   
-	   LoopConditionVarExpr -> OperandID[1] = $3 -> MaxValExpressionID;   
-	   LoopConditionVarExpr -> OperandID[2] = $3 -> MinValExpressionID;   
+	   LoopConditionVarExpr -> OperandID[0] = LoopIteratorID;
+	   LoopConditionVarExpr -> OperandID[1] = $3 -> MaxValExpressionID;
+	   LoopConditionVarExpr -> OperandID[2] = $3 -> MinValExpressionID;
 
 	   unsigned IteratorIncementStringLenght = strlen($1->string) + strlen("+") + strlen("9999")+ 1;
 	   char* IteratorIncementString = (char *)malloc(IteratorIncementStringLenght * sizeof(char));
@@ -1463,7 +1463,7 @@ LoopCondition:
 	   char* IncrementValueExprString = (char*) malloc(IncrementValueExprStringLenght*sizeof(char));
 	   sprintf(IncrementValueExprString,"%u", $3->Increment);
 
-	   
+
 	   VarExpr* IncrementValueExpr;
 	   unsigned IncrementValueExprID = FindVarExpr(IncrementValueExprString, &IncrementValueExpr);
 	   if( IncrementValueExpr == NULL)
@@ -1472,8 +1472,8 @@ LoopCondition:
 	       IncrementValueExpr -> Type = VAR_LOCAL_SIMPLE_CONSTANT;
 	       IncrementValueExpr -> Value = $3->Increment;
 	   }
-	   
-	   
+
+
 	   VarExpr* LoopIteratorIncementExpr;
 	   unsigned LoopIteratorIncementExprID = FindVarExpr(IteratorIncementString, &LoopIteratorIncementExpr);
 	   if(LoopIteratorIncementExpr == NULL)
@@ -1484,33 +1484,33 @@ LoopCondition:
 	       LoopIteratorIncementExpr -> OperandID[0] = LoopIteratorID;
 	       LoopIteratorIncementExpr -> OperandID[1] = IncrementValueExprID;
 	   }
-	   
+
 
 	   // Generating a tx_op_container for the above condition.
 	   TxOpInfo_t  CurrentOpInfo;
 	   CurrentOpInfo.Delay = 0 ;
 	   CurrentOpInfo.Op    = INVALID ;
 	   CurrentOpInfo.AddrOp = 0;
-	   
+
 	   GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 	   unsigned LoopConditionTxOpPos = GetSize_DynamicArray(&CurrentTxOpList) - 1 ;
 	   TxOpContainer_t* LoopConditionTxOpContainer = GetElement_DynamicArray(&CurrentTxOpList, LoopConditionTxOpPos, sizeof(TxOpContainer_t) );
 	   LoopConditionTxOpContainer -> ConditionExprPos =  LoopConditionVarExprID;
-	  
-	   LoopConditionTxOpContainer -> LoopIteratorContainer = TRUE; 
+
+	   LoopConditionTxOpContainer -> LoopIteratorContainer = TRUE;
 	   LoopConditionTxOpContainer -> LoopExecuting = FALSE;
 	   LoopConditionTxOpContainer -> VarAssignNum = 1;
 	   LoopConditionTxOpContainer -> VarAssigns = (var_assign_t*)malloc(sizeof(var_assign_t));
 	   (LoopConditionTxOpContainer -> VarAssigns[0]).AssignedVarID = LoopIteratorID;
 	   (LoopConditionTxOpContainer -> VarAssigns[0]).EvaluatedVarExprID = LoopIteratorIncementExprID;
-	  
-	  
+
+
            struct ConditionReturnStruct* ReturnVal = (struct ConditionReturnStruct*)malloc(sizeof(struct ConditionReturnStruct));
 
 	   unsigned ReturnStringSize = strlen($1->string) + strlen($2) + strlen($3->string) +1 ;
 	   char* ReturnString = (char*) malloc(ReturnStringSize * sizeof(char));
 	   sprintf(ReturnString,"'%s%s%s'",$1->string, $2, $3->string);
-	   
+
 	   ReturnVal-> string= ReturnString;
 	   ReturnVal-> ConditionTxOpContainerPos = LoopConditionTxOpPos;
 	   $$ = ReturnVal;
@@ -1518,11 +1518,11 @@ LoopCondition:
 //	   ALLOC_AND_RETURN_STRING("'%s%s%s'",$1->string, $2, $3->string);
 	   FREE_RULE_STRINGS(3);
        }
-	
+
 
      ;
 
-LoopRange: 
+LoopRange:
      OPEN_BRACKETS Range CLOSE_BRACKETS
       {
 	  REPORT_READ_INPUT("\tEncountered Range '%s' in LOOP definition.\n", $2 -> string);
@@ -1531,7 +1531,7 @@ LoopRange:
 	  FREE_RULE_STRINGS(3);
       };
 
-TxConditionalDef: 
+TxConditionalDef:
      CONDITION_START  ConditionalTxSpec CLOSE_CURLY_BRACKETS
       {
 	  unsigned  IfElseBlockSuccessorTxOpContainerPos = GetSize_DynamicArray( &CurrentTxOpList );
@@ -1542,7 +1542,7 @@ TxConditionalDef:
 	  for(TxOpNo =0; TxOpNo< TxOpNum; TxOpNo++)
 	  {
 	      unsigned ConditionTerminatingTxOpPos     = ConditionTerminatingTxOpArray[TxOpNo];
-	      assert(ConditionTerminatingTxOpPos < IfElseBlockSuccessorTxOpContainerPos ); 
+	      assert(ConditionTerminatingTxOpPos < IfElseBlockSuccessorTxOpContainerPos );
 	      InsertBranchAmongTxOpContainers(&CurrentTxOpList, ConditionTerminatingTxOpPos, IfElseBlockSuccessorTxOpContainerPos, NEXT, 0);
 	  }
 
@@ -1566,7 +1566,7 @@ ConditionalTxSpec:
 	  ALLOC_AND_RETURN_STRING("%s\n\t - %s",$1,$3);
 	  FREE_RULE_STRINGS(3);
       };
-     | ConditionalTxSpec BAR DefaulfConditionTxSpecElement  
+     | ConditionalTxSpec BAR DefaulfConditionTxSpecElement
       {
 	  EndOfIfElseBlock = TRUE;
 	  ALLOC_AND_RETURN_STRING("%s\n\t - ELSE",$1);
@@ -1574,20 +1574,20 @@ ConditionalTxSpec:
       };
      ;
 
-ConditionalTxSpecElement: 
-     Condition __conditionalTxSpecElement_act_1 COLON TxSpec  
+ConditionalTxSpecElement:
+     Condition __conditionalTxSpecElement_act_1 COLON TxSpec
       {
 	  struct ConditionReturnStruct* ConditionInfo = $1;
 
 
 	  unsigned ConditionalBlockStartTxOpPos = ConditionInfo-> ConditionTxOpContainerPos;
 	  unsigned ConditionalBlockSuccessorTxOpPos =  GetSize_DynamicArray(&CurrentTxOpList) ;
-	  // The successor block should be at least 1 tx_op_container further 
-	  // than the initial conditional tx_op_container ( a distance of 1  
+	  // The successor block should be at least 1 tx_op_container further
+	  // than the initial conditional tx_op_container ( a distance of 1
           // is  when no tx_op defined in the conditional block)
 	  assert( ConditionalBlockSuccessorTxOpPos - ConditionalBlockStartTxOpPos >= 1);
 
-	  // Make the forward link to the next operation after the condition (either another condition or some TxOp) 
+	  // Make the forward link to the next operation after the condition (either another condition or some TxOp)
 	  // LOOP_BACK in following function is named like that due to reuse of previous version of tmunit.
 	  // Actualy it corresponds to a BRANCH or a JUMP in the new design.
 	  InsertBranchAmongTxOpContainers(&CurrentTxOpList, ConditionalBlockStartTxOpPos, ConditionalBlockSuccessorTxOpPos, LOOP_BACK, 0);
@@ -1596,25 +1596,25 @@ ConditionalTxSpecElement:
 	  Extend_DynamicArray( &ConditionTerminationTxOpList,sizeof(unsigned));
 	  unsigned LastAddedElementPos = GetSize_DynamicArray(&ConditionTerminationTxOpList) - 1;
 	  unsigned * CurrentElement = (unsigned*) GetElement_DynamicArray(&ConditionTerminationTxOpList, LastAddedElementPos , sizeof(unsigned));
-	  *CurrentElement = ConditionalBlockSuccessorTxOpPos -1; 
+	  *CurrentElement = ConditionalBlockSuccessorTxOpPos -1;
 
 	  ALLOC_AND_RETURN_STRING("%s",ConditionInfo-> string);
 	  FREE_RULE_STRINGS(4);
       };
- 
+
         __conditionalTxSpecElement_act_1:
          {
 	     // yyvsp[1].string  indicates the  string returned for the "Condition"  in ConditionalTxSpecElement rule.
 	     REPORT_READ_INPUT("Parsing behaviour for  CONDITION: '%s'\n",yyvsp[1].string);
 
-	     if( EndOfIfElseBlock) 
+	     if( EndOfIfElseBlock)
 	     {
-		 char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+		 char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 		 sprintf(ErrorMessage,"Encountered UNEXPECTED CONDITION BLOCK (with condition '%s') after an ELSE block.", yyvsp[1].string );
 		 yyerror(ErrorMessage);
 		 free(ErrorMessage);
 		 exit(1);
-		 
+
 	     }
 
          }
@@ -1627,32 +1627,32 @@ DefaulfConditionTxSpecElement:
 	     REPORT_READ_INPUT("Parsing behaviour for  CONDITION: 'ELSE'\n");
 	 }
 
-Condition:   
+Condition:
      OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS
       {
 
 	  char* ConditionString = $2;
-	  
+
 	  VarExpr* ConditionVarExpr;
 	  unsigned ConditionVarExprID = FindVarExpr(ConditionString, &ConditionVarExpr);
 	  if( ConditionVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN Conditional Expression '%s' is encountered while constructing conditional transaction block.\n", ConditionString);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      assert(0);
 	  }
-	  
+
 	  TxOpInfo_t  CurrentOpInfo;
 	  CurrentOpInfo.Delay = 0 ;
 	  CurrentOpInfo.Op    = INVALID ;
 	  CurrentOpInfo.AddrOp = 0;
-	  
+
 	  GenerateAndAttachNewContainerForSingleTxOp(&CurrentTxOpList,&CurrentOpInfo) ;
 	  unsigned ConditionTxOpPos = GetSize_DynamicArray(&CurrentTxOpList) - 1 ;
 	  TxOpContainer_t* ConditionTxOpContainer = GetElement_DynamicArray(&CurrentTxOpList, ConditionTxOpPos, sizeof(TxOpContainer_t) );
-	  
+
 	  ConditionTxOpContainer -> ConditionExprPos =  ConditionVarExprID;
 
 	  struct ConditionReturnStruct* ReturnVal = (struct ConditionReturnStruct*)malloc(sizeof(struct ConditionReturnStruct));
@@ -1662,7 +1662,7 @@ Condition:
 	  $$ = ReturnVal;
 
 
-	  
+
 
 //	  ALLOC_AND_RETURN_STRING("%s",$2);
 	  FREE_RULE_STRINGS(3);
@@ -1670,7 +1670,7 @@ Condition:
 
 
 ConditionalExpression:
-     SimpleConditionalExpression 
+     SimpleConditionalExpression
       {
 	  ALLOC_AND_RETURN_STRING("%s",$1);
 	  FREE_RULE_STRINGS(1);
@@ -1679,17 +1679,17 @@ ConditionalExpression:
       {
 	  ALLOC_AND_RETURN_STRING("%s",$1);
 	  FREE_RULE_STRINGS(1);
-      }; 
+      };
 
 SimpleConditionalExpression:
-     VariableExpression  RelationalOp  VariableExpression 
+     VariableExpression  RelationalOp  VariableExpression
      {
 	 // Check the existence of both Variable Expressions (if they exist, record their IDs)
 	 VarExpr* FirstExpr;
 	 unsigned FirstExprID = FindVarExpr($1, &FirstExpr);
 	 if( FirstExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Variable Expression '%s' is encountered in Conditinal Expression. Terminating...\n", $1);
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
@@ -1699,19 +1699,19 @@ SimpleConditionalExpression:
 	 unsigned SecondExprID = FindVarExpr($3, &SecondExpr);
 	 if( SecondExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Variable Expression '%s' is encountered in Conditinal Expression. Terminating...\n", $3);
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
 	     assert(0);
 	 }
-	 
+
 
 
 	 unsigned ConditionalExpressionStringLength = strlen($1) + strlen($2) + strlen($3) +1;
 	 char* ConditionalExpressionString = (char*)malloc(ConditionalExpressionStringLength*sizeof(char));
 	 sprintf(ConditionalExpressionString,"%s%s%s",$1, $2, $3);
-	 
+
 	 VarExpr* ConditionalVarExpr;
 	 FindOrAllocVarExpr(ConditionalExpressionString, &ConditionalVarExpr);
 	 assert(ConditionalVarExpr != NULL);
@@ -1719,9 +1719,9 @@ SimpleConditionalExpression:
 	 ConditionalVarExpr -> Operation = ResolveOperationType($2);
 	 ConditionalVarExpr -> OperandID[0] = FirstExprID;
 	 ConditionalVarExpr -> OperandID[1] = SecondExprID;
-	  
+
 	 $$ = ConditionalExpressionString;
-	 
+
 	 FREE_RULE_STRINGS(3);
 	 REPORT_READ_INPUT("\tEncountered SIMPLE CONDITIONAL EXPRESSION '%s'\n",$$);
      }
@@ -1741,7 +1741,7 @@ ComplexConditionalExpressionElement:
 	 unsigned SimpleCondExprID = FindVarExpr($3, &SimpleCondExpr);
 	 if( SimpleCondExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Simple Conditional Expression '%s' is encountered in Complex Conditional Expression. Terminating...\n", $3);
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
@@ -1751,14 +1751,14 @@ ComplexConditionalExpressionElement:
 	 unsigned ConditionalExpressionStringLength = strlen($1) + strlen($2) + strlen($3) + strlen($4) + 1;
 	 char* ConditionalExpressionString = (char*)malloc(ConditionalExpressionStringLength*sizeof(char));
 	 sprintf(ConditionalExpressionString,"%s%s%s%s",$1, $2, $3, $4);
-	 
+
 	 VarExpr* ConditionalVarExpr;
 	 FindOrAllocVarExpr(ConditionalExpressionString, &ConditionalVarExpr);
 	 assert(ConditionalVarExpr != NULL);
 	 ConditionalVarExpr -> Type = OP_BOOLEAN_UNARY;
 	 ConditionalVarExpr -> Operation = ResolveOperationType($1);
 	 ConditionalVarExpr -> OperandID[0] = SimpleCondExprID;
-	  
+
 	 $$ = ConditionalExpressionString;
 
 	 FREE_RULE_STRINGS(4);
@@ -1776,11 +1776,11 @@ ComplexConditionalUnit:
    | OPEN_PARANTHESES ComplexConditionalExpression CLOSE_PARANTHESES
      {
 	    char* AccessedConditionalString = $2;
-	    unsigned NewStringSize = strlen("(") + strlen(AccessedConditionalString) + strlen(")") +1; 
+	    unsigned NewStringSize = strlen("(") + strlen(AccessedConditionalString) + strlen(")") +1;
 	    char* ReturnString = malloc(NewStringSize*sizeof(char));
 	    sprintf(ReturnString,"(%s)",AccessedConditionalString);
 	    $$ = ReturnString;
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
      }
    | UnaryBooleanOp OPEN_PARANTHESES ComplexConditionalExpression CLOSE_PARANTHESES
      {
@@ -1789,7 +1789,7 @@ ComplexConditionalUnit:
 	 unsigned SimpleCondExprID = FindVarExpr($3, &SimpleCondExpr);
 	 if( SimpleCondExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Complex Conditional Expression '%s' is encountered in Complex Conditional Expression. Terminating...\n", $3);
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
@@ -1799,14 +1799,14 @@ ComplexConditionalUnit:
 	 unsigned ConditionalExpressionStringLength = strlen($1) + strlen($2) + strlen($3) + strlen($4) + 1;
 	 char* ConditionalExpressionString = (char*)malloc(ConditionalExpressionStringLength*sizeof(char));
 	 sprintf(ConditionalExpressionString,"%s%s%s%s",$1, $2, $3, $4);
-	 
+
 	 VarExpr* ConditionalVarExpr;
 	 FindOrAllocVarExpr(ConditionalExpressionString, &ConditionalVarExpr);
 	 assert(ConditionalVarExpr != NULL);
 	 ConditionalVarExpr -> Type = OP_BOOLEAN_UNARY;
 	 ConditionalVarExpr -> Operation = ResolveOperationType($1);
 	 ConditionalVarExpr -> OperandID[0] = SimpleCondExprID;
-	  
+
 	 $$ = ConditionalExpressionString;
 
 	 FREE_RULE_STRINGS(4);
@@ -1821,7 +1821,7 @@ ComplexConditionalExpression:
 	 ALLOC_AND_RETURN_STRING("%s",$1);
 	 FREE_RULE_STRINGS(1);
      }
-   | ComplexConditionalUnit BooleanOp ComplexConditionalUnit 
+   | ComplexConditionalUnit BooleanOp ComplexConditionalUnit
      {
 	 char* FirstExprStr  = $1;
 	 char* SecondExprStr = $3;
@@ -1832,7 +1832,7 @@ ComplexConditionalExpression:
 	 unsigned FirstExprID = FindVarExpr(FirstExprStr, &FirstExpr);
 	 if( FirstExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Complex Conditional Expression '%s' is encountered in a Boolean Expression. Terminating...\n", FirstExprStr);
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
@@ -1842,19 +1842,19 @@ ComplexConditionalExpression:
 	 unsigned SecondExprID = FindVarExpr(SecondExprStr, &SecondExpr);
 	 if( SecondExpr == NULL)
 	 {
-	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(ErrorMessage,"UNKNOWN Complex Conditional Expression '%s' is encountered in a Boolean Expression. Terminating...\n", SecondExprStr);
 	     yyerror(ErrorMessage);
 	     free(ErrorMessage);
 	     assert(0);
 	 }
-	 
+
 
 
 	 unsigned ConditionalExpressionStringLength = strlen(FirstExprStr) + strlen(BooleanOpStr) + strlen(SecondExprStr) +1;
 	 char* ConditionalExpressionString = (char*)malloc(ConditionalExpressionStringLength*sizeof(char));
 	 sprintf(ConditionalExpressionString,"%s%s%s", FirstExprStr, BooleanOpStr, SecondExprStr);
-	 
+
 	 VarExpr* ConditionalVarExpr;
 	 FindOrAllocVarExpr(ConditionalExpressionString, &ConditionalVarExpr);
 	 assert(ConditionalVarExpr != NULL);
@@ -1862,17 +1862,17 @@ ComplexConditionalExpression:
 	 ConditionalVarExpr -> Operation = ResolveOperationType(BooleanOpStr);
 	 ConditionalVarExpr -> OperandID[0] = FirstExprID;
 	 ConditionalVarExpr -> OperandID[1] = SecondExprID;
-	  
+
 	 $$ = ConditionalExpressionString;
 
 	 FREE_RULE_STRINGS(5);
 	 REPORT_READ_INPUT("\tEncountered COMPLEX CONDITIONAL EXPRESSION (with a BINARY boolean op) : '%s'\n",$$);
      }
-     ;        
+     ;
 
 
-   
-VarAssigns: 
+
+VarAssigns:
      OPEN_CURLY_BRACKETS  __varAssigns_act_1 VarAssignList  CLOSE_CURLY_BRACKETS
       {
 	 ALLOC_AND_RETURN_STRING("ASSIGNMENTS:\n%s",$3);
@@ -1885,25 +1885,25 @@ VarAssigns:
 	  ALLOC_AND_RETURN_STRING("Temp");
       }
 
-VarAssignList: 
-     VarAssignment 
-      { 
+VarAssignList:
+     VarAssignment
+      {
 	  ALLOC_AND_RETURN_STRING("%s\n",$1);
 	  FREE_RULE_STRINGS(1);
       }
-	 
-    | VarAssignList COMMA VarAssignment  
-      { 
+
+    | VarAssignList COMMA VarAssignment
+      {
 	  ALLOC_AND_RETURN_STRING("%s%s\n",$1,$3);
 	  FREE_RULE_STRINGS(3);
       }
-	 
+
      ;
 
 
-VarAssignment: 
+VarAssignment:
      Variable VALUE_ASSIGN VariableExpression
-      { 
+      {
 	  VarExpr* AssignedVar;
 	  unsigned AssignedVarExprID = FindVarExpr($1 -> string, &AssignedVar);
 	  if( AssignedVar == NULL)
@@ -1911,10 +1911,10 @@ VarAssignment:
 	      bool NewLocalVariable = ( ($1->string)[0] == '_' );
 	      if( !NewLocalVariable )
 	      {
-		  // Look whether the AssignedVar Name includes scope 
-		  // IF YES just skip 
+		  // Look whether the AssignedVar Name includes scope
+		  // IF YES just skip
 		  // IF NO  do the following
-		  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+		  char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 		  sprintf(ErrorMessage,"UNKNOWN SHARED VARIABLE '%s'.\n"
 			               "Can not define shared variables inside a transaction definition/variable assignment.\n"
 			               "Only local variables can be defined at the point where they are first used.\n"
@@ -1924,7 +1924,7 @@ VarAssignment:
 		  exit(1);
 	      }
 
-	      // Undefined arrays are caught before this point. 
+	      // Undefined arrays are caught before this point.
 /* 	      unsigned VariableNameLastCharPos = strlen($1->string) - 1 ; */
 /* 	      bool NewLocalArrayDefinition =  ($1->string)[VariableNameLastCharPos] == ']'; */
 /* 	      if( NewLocalArrayDefinition) */
@@ -1938,16 +1938,16 @@ VarAssignment:
 /* 		  exit(1); */
 
 /* 	      } */
-	      
+
 	      AssignedVarExprID = AllocVarExpr($1->string, &AssignedVar);
-	      AssignedVar -> Type = VAR_LOCAL_SIMPLE;	      	      
+	      AssignedVar -> Type = VAR_LOCAL_SIMPLE;
 	  }
 
 
-	  // If variable is random and if it has not been encountered 
+	  // If variable is random and if it has not been encountered
 	  // before, it will be added to Dyn_VarExprToUpdateList
 	  ExtendVarExprToUpdate($1->string);
-	  
+
 
 	  bool AssignedVariableConstant = ( AssignedVar -> Type == VAR_SHARED_CONSTANT_UNMANAGED   \
 					                        ||                                 \
@@ -1963,18 +1963,18 @@ VarAssignment:
 	                                  );
 	  if( AssignedVariableConstant )
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"CAN NOT ASSIGN VALUE to CONSTANT VARIABLE '%s'.Terminating...\n", $1 -> string);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      exit(1);
 	  }
 
-	  
+
 	  VarExpr* EvaluatedVarExpr;
 	  unsigned EvaluatedVarExprID = FindVarExpr($3, &EvaluatedVarExpr);
 	  assert( EvaluatedVarExpr != NULL);
-	  
+
 	  Extend_DynamicArray(&Dyn_VarAssignList,sizeof(var_assign_t));
 	  unsigned LastAssignPos = GetSize_DynamicArray(&Dyn_VarAssignList) -1 ;
 	  var_assign_t* CurrentAssign = (var_assign_t*)GetElement_DynamicArray(&Dyn_VarAssignList, LastAssignPos, sizeof(var_assign_t));
@@ -1988,15 +1988,15 @@ VarAssignment:
      ;
 
 
-Jump: 
+Jump:
      JUMP_OP LABEL CLOSE_PARANTHESES
       {
 	  ALLOC_AND_RETURN_STRING("JUMP to '%s'",$2);
 	  FREE_RULE_STRINGS(3);
       };
 
-RelationalOp: 
-     EQUAL 
+RelationalOp:
+     EQUAL
       {
 	  REPORT_READ_INPUT("\tEncountered '==' operation\n");
 	  ALLOC_AND_RETURN_STRING("==");
@@ -2009,21 +2009,21 @@ RelationalOp:
 	  FREE_RULE_STRINGS(1);
       };
 
-     | SMALLER_THAN 
+     | SMALLER_THAN
       {
 	  REPORT_READ_INPUT("\tEncountered '<' operation\n");
 	  ALLOC_AND_RETURN_STRING("<");
 	  FREE_RULE_STRINGS(1);
       };
 
-     | GREATER_THAN 
+     | GREATER_THAN
       {
 	  REPORT_READ_INPUT("\tEncountered '>' operation\n");
 	  ALLOC_AND_RETURN_STRING(">");
 	  FREE_RULE_STRINGS(1);
       };
 
-     | SMALLER_EQUAL 
+     | SMALLER_EQUAL
       {
 	  REPORT_READ_INPUT("\tEncountered '<=' operation\n");
 	  ALLOC_AND_RETURN_STRING("<=");
@@ -2043,15 +2043,15 @@ RelationalOp:
       };
 
 
-BooleanOp:    
-     AND 
+BooleanOp:
+     AND
       {
 	  REPORT_READ_INPUT("\tEncountered LOGICAL AND operation\n");
 	  ALLOC_AND_RETURN_STRING("&&");
 	  FREE_RULE_STRINGS(1);
       };
 
-    | OR  	      
+    | OR
       {
 	  REPORT_READ_INPUT("\tEncountered LOGICAL OR operation\n");
 	  ALLOC_AND_RETURN_STRING("||");
@@ -2060,7 +2060,7 @@ BooleanOp:
 
 
 
-UnaryBooleanOp: 
+UnaryBooleanOp:
      NOT
       {
 	  REPORT_READ_INPUT("\tEncountered LOGICAL NOT operation\n");
@@ -2077,7 +2077,7 @@ Value:
 	  ALLOC_AND_RETURN_STRING("%s",$1);
 	  FREE_RULE_STRINGS(1);
        }
-     | RandomizedRange 
+     | RandomizedRange
        {
 	  REPORT_READ_INPUT("\tEncountered '%s'\n",$1);
 	  ALLOC_AND_RETURN_STRING("%s",$1);
@@ -2086,8 +2086,8 @@ Value:
 
      ;
 
-FixedValue: 
-     NUMBER 
+FixedValue:
+     NUMBER
       {
 	  VarExpr* FixedNumVarExpr;
 	  FindOrAllocVarExpr($1, &FixedNumVarExpr);
@@ -2098,7 +2098,7 @@ FixedValue:
 	  FREE_RULE_STRINGS(1);
       };
 
-Constant: 
+Constant:
      NAME_ALL_CAPITALS
       {
 	  REPORT_READ_INPUT("\tEncountered CONSTANT '%s'\n",$1);
@@ -2119,19 +2119,19 @@ RandomizedRange:
       };
 
 Range:
-     VariableExpression RANGE_SEPERATOR VariableExpression  
+     VariableExpression RANGE_SEPERATOR VariableExpression
        {
-	   
+
 	   struct RangeInfoStruct* ReturnedRangeInfo = (struct RangeInfoStruct*)malloc(sizeof(struct RangeInfoStruct));
 	   VarExpr* DummyVarExpr;
 	   unsigned RangeLimitVarExprID = FindOrAllocVarExpr($1,&DummyVarExpr);
 	   ReturnedRangeInfo -> MinValExpressionID = RangeLimitVarExprID;
 
-	   RangeLimitVarExprID = FindOrAllocVarExpr($3,&DummyVarExpr); 
+	   RangeLimitVarExprID = FindOrAllocVarExpr($3,&DummyVarExpr);
 	   ReturnedRangeInfo -> MaxValExpressionID = RangeLimitVarExprID;
 	   ReturnedRangeInfo -> Increment = 1 ;
 
-	   char* TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	   char* TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	   sprintf(TempString,"'%s' to '%s' (increment 1)",$1, $3);
 	   ReturnedRangeInfo ->string = TempString;
 
@@ -2140,7 +2140,7 @@ Range:
 	   FREE_RULE_STRINGS(3);
 	   REPORT_READ_INPUT("\tEncountered RANGE '%s'\n",$$ -> string);
        }
-     | VariableExpression RANGE_SEPERATOR VariableExpression SEMICOLON VariableExpression  
+     | VariableExpression RANGE_SEPERATOR VariableExpression SEMICOLON VariableExpression
        {
            ALLOC_AND_RETURN_STRING("'%s' to '%s' (increment '%s')", $1, $3 , $5 );
 	   FREE_RULE_STRINGS(5);
@@ -2150,7 +2150,7 @@ Range:
 
 
 Variable:
-     NAME 
+     NAME
        {
 	   VarExpr* VarExprPtr;
 	   FindVarExpr($1, &VarExprPtr);
@@ -2162,11 +2162,11 @@ Variable:
 	   struct VariableReturnStruct* ReturnVal = (struct VariableReturnStruct*)malloc(sizeof(struct VariableReturnStruct));
 	   ReturnVal -> string = dupstr($1);
 	   ReturnVal -> VariableType = SHARED;
-	   
+
 	   $$ = ReturnVal;
 	   FREE_RULE_STRINGS(1);
        };
-     | LOCAL_VARIABLE_NAME 
+     | LOCAL_VARIABLE_NAME
        {
 
 	   VarExpr* VarExprPtr;
@@ -2198,12 +2198,12 @@ Variable:
 	       ReturnVal -> VariableType = LOCAL_CONSTANT;
 	   else
 	       ReturnVal -> VariableType = LOCAL;
-	   
-	   
+
+
 	   $$ = ReturnVal;
 	   FREE_RULE_STRINGS(1);
        };
-     | Constant 
+     | Constant
        {
 	   VarExpr* VarExprPtr;
 	   FindVarExpr($1, &VarExprPtr);
@@ -2215,7 +2215,7 @@ Variable:
 	   struct VariableReturnStruct* ReturnVal = (struct VariableReturnStruct*)malloc(sizeof(struct VariableReturnStruct));
 	   ReturnVal -> string = dupstr($1);
 	   ReturnVal -> VariableType = SHARED_CONSTANT;
-	   
+
 	   $$ = ReturnVal;
 	   FREE_RULE_STRINGS(1);
        };
@@ -2252,19 +2252,19 @@ Variable:
 	   $$ = ReturnVal;
 	   FREE_RULE_STRINGS(3);
        };
-     | ArrayAccess 
+     | ArrayAccess
        {
 	   REPORT_READ_INPUT("\tEncountered ARRAY variable '%s'\n",$1 -> string);
 	   $$ = $1;
 	   FREE_RULE_STRINGS(1);
        };
-     | Scope ArrayAccess 
+     | Scope ArrayAccess
        {
 	   REPORT_READ_INPUT("\tEncountered LOCAL ARRAY variable '%s' in the scope '%s'\n",$2->string,$1);
-	   
+
 	   if( $2->VariableType == SHARED_ARRAY);
 	   {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Scope '%s' encountered before Shared array '%s'.\n"
 		                   "Scopes are only allowed for local variables/arrays.\n", $1 , $2 -> string);
 	      yyerror(ErrorMessage);
@@ -2282,7 +2282,7 @@ Variable:
 	       ReturnVal -> VariableType = SCOPED_LOCAL_CONSTANT_ARRAY;
 	   else if($2 -> VariableType == LOCAL_ARRAY)
 	       ReturnVal -> VariableType = SCOPED_LOCAL_ARRAY;
-	   
+
 	   $$ = ReturnVal;
 
 	   FREE_RULE_STRINGS(3);
@@ -2290,8 +2290,8 @@ Variable:
      ;
 
 
-ArrayAccess: 
-      ARRAY_NAME VariableExpression CLOSE_BRACKETS 
+ArrayAccess:
+      ARRAY_NAME VariableExpression CLOSE_BRACKETS
       {
 
 	  // Chopping last character (character '[') of array name
@@ -2305,9 +2305,9 @@ ArrayAccess:
 	  if( ArrayVarExpr == NULL)
 	  {
 
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN ARRAY '%s' is encountered  in Array Element access.\n"
-		                   "Can not define arrays inside transaction definitions\n" 
+		                   "Can not define arrays inside transaction definitions\n"
  		                   "(can not known size of array in advance).\n"
                                    "Arrays should be defined in the 'Definitions' section\n",ActualArrayName);
 	      yyerror(ErrorMessage);
@@ -2319,7 +2319,7 @@ ArrayAccess:
 	  unsigned IndexVarExprID = FindVarExpr($2, &IndexVarExpr);
 	  if( IndexVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN INDEX expression '%s' is encountered in Array Element access. Terminating...\n", $2);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -2328,18 +2328,18 @@ ArrayAccess:
 
 	  // Since we are generating a shared array expression we generate two copies, one for managed and one for unmanaged accesses.
 	  // Creating Unmanaged copy (if non-existant)
-	  VarExpr* ArrayAccessVarExpr; 
-	  char *ArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  VarExpr* ArrayAccessVarExpr;
+	  char *ArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ArrayAccessString, "%s%s%s", $1, $2, $3);
 	  FindOrAllocVarExpr(ArrayAccessString, &ArrayAccessVarExpr);
 	  assert(ArrayAccessVarExpr != NULL);
 	  ArrayAccessVarExpr -> Type = OP_UNMANAGED_ARRAY_ACCESS;
 	  ArrayAccessVarExpr -> OperandID[0] = ArrayVarExprID;
 	  ArrayAccessVarExpr -> OperandID[1] = IndexVarExprID;
-	  
+
 	  // Creating Managed copy (if non-existant)
-	  VarExpr* ManagedArrayAccessVarExpr; 
-	  char *ManagedArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  VarExpr* ManagedArrayAccessVarExpr;
+	  char *ManagedArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ManagedArrayAccessString, "&%s%s%s", $1, $2, $3);
 	  FindOrAllocVarExpr(ManagedArrayAccessString, &ManagedArrayAccessVarExpr);
 	  assert(ManagedArrayAccessVarExpr != NULL);
@@ -2351,12 +2351,12 @@ ArrayAccess:
 	  struct VariableReturnStruct* ReturnVal = (struct VariableReturnStruct*)malloc(sizeof(struct VariableReturnStruct));
 	  ReturnVal -> string = ArrayAccessString;
 	  ReturnVal -> VariableType = SHARED_ARRAY;
-	  
+
 	  $$ = ReturnVal;
 
 	  FREE_RULE_STRINGS(3);
       };
-      | LOCAL_ARRAY_NAME VariableExpression CLOSE_BRACKETS 
+      | LOCAL_ARRAY_NAME VariableExpression CLOSE_BRACKETS
         {
 	  // Chopping last character (character '[') of array name
 	  char*    ActualArrayName = dupstr($1);
@@ -2368,9 +2368,9 @@ ArrayAccess:
 	  unsigned ArrayVarExprID = FindVarExpr(ActualArrayName, &ArrayVarExpr);
 	  if( ArrayVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN ARRAY '%s' is encountered  in Array Element access.\n"
-		                   "Can not define arrays inside transaction definitions\n" 
+		                   "Can not define arrays inside transaction definitions\n"
  		                   "(can not known size of array in advance).\n"
                                    "Arrays should be defined in the 'Definitions' section\n",ActualArrayName);
 	      yyerror(ErrorMessage);
@@ -2382,7 +2382,7 @@ ArrayAccess:
 	  unsigned IndexVarExprID = FindVarExpr($2, &IndexVarExpr);
 	  if( IndexVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN INDEX expression '%s' is encountered in Array Element access. Terminating...\n", $2);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -2390,15 +2390,15 @@ ArrayAccess:
 	  }
 
 
-	  VarExpr* ArrayAccessVarExpr; 
-	  char *ArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  VarExpr* ArrayAccessVarExpr;
+	  char *ArrayAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ArrayAccessString, "%s%s%s", $1, $2, $3);
 	  FindOrAllocVarExpr(ArrayAccessString, &ArrayAccessVarExpr);
 	  assert(ArrayAccessVarExpr != NULL);
 	  ArrayAccessVarExpr -> Type = OP_UNMANAGED_ARRAY_ACCESS;
 	  ArrayAccessVarExpr -> OperandID[0] = ArrayVarExprID;
 	  ArrayAccessVarExpr -> OperandID[1] = IndexVarExprID;
-	  
+
 
 	  struct VariableReturnStruct* ReturnVal = (struct VariableReturnStruct*)malloc(sizeof(struct VariableReturnStruct));
 	  ReturnVal -> string = ArrayAccessString;
@@ -2422,7 +2422,7 @@ ArrayAccess:
 	       ReturnVal -> VariableType = LOCAL_CONSTANT_ARRAY;
 	   else
 	       ReturnVal -> VariableType = LOCAL_ARRAY;
-	  
+
 	  $$ = ReturnVal;
 
 	  FREE_RULE_STRINGS(3);
@@ -2431,24 +2431,24 @@ ArrayAccess:
 
 
 ManagedMemAccess:
-     READ_ACCESS_OP  VariableExpression CLOSE_PARANTHESES 
+     READ_ACCESS_OP  VariableExpression CLOSE_PARANTHESES
       {
 
 	  VarExpr* InputVarExpr;
 	  FindVarExpr($2, &InputVarExpr);
 	  if( InputVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"UNKNOWN VARIABLE EXPRESSION '%s' is encountered in STM_LOAD access. Terminating...\n",$2);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
 	      assert(0);
 	  }
-	  
+
 	  bool NotSupportedVariableExpression  = (InputVarExpr -> Type > VAR_SHARED_ARRAY_CONSTANT ) && (InputVarExpr -> Type != OP_UNMANAGED_ARRAY_ACCESS);
 	  if( NotSupportedVariableExpression )
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage,"Variable Expression '%s' is not an access to a standalone shared variable/array.\n"
 		                   "Other kind of variable expression are not allowed in managed accesses.\n",$2);
 	      yyerror(ErrorMessage);
@@ -2456,7 +2456,7 @@ ManagedMemAccess:
 
 	      exit(1);
 	  }
-	  
+
 
 	  // Chopping last character (character '[') of array name
 	  unsigned ActualAccessedVarExprNameLength = strlen("&") + strlen($1) + 1;
@@ -2467,7 +2467,7 @@ ManagedMemAccess:
 	  unsigned ActualVarExprID = FindVarExpr(ActualAccessedVarExprName, &AccessedVarExpr);
 	  if( AccessedVarExpr == NULL)
 	  {
-	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	      char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	      sprintf(ErrorMessage, "MANAGED COPY of Variable Expression '%s' can NOT be FOUND. Terminating...\n",$2);
 	      yyerror(ErrorMessage);
 	      free(ErrorMessage);
@@ -2475,30 +2475,30 @@ ManagedMemAccess:
 	  }
 
 
-	  VarExpr* ManagedAccessVarExpr; 
-	  char *ManagedAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	  VarExpr* ManagedAccessVarExpr;
+	  char *ManagedAccessString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	  sprintf(ManagedAccessString, "%s%s%s", $1, $2, $3);
 	  FindOrAllocVarExpr(ManagedAccessString, &ManagedAccessVarExpr);
 	  assert(ManagedAccessVarExpr != NULL);
 	  ManagedAccessVarExpr -> Type = OP_MEMORY_READ;
 	  ManagedAccessVarExpr -> OperandID[0] = ActualVarExprID;
-	  
+
 	  $$ = ManagedAccessString;
 	  FREE_RULE_STRINGS(3);
-	  
+
       }
-     | WRITE_ACCESS_OP  VariableExpression CLOSE_PARANTHESES 
+     | WRITE_ACCESS_OP  VariableExpression CLOSE_PARANTHESES
       {
 	   yyerror("STM_STORE is not allowed in variable/relational/boolean expression evaluation.\n");
 	   exit(1);
-	  
+
       }
-     | READ_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES 
+     | READ_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES
        {
 	   yyerror("The STM_LOAD with explicit value return is not permitted in variable/relational/boolean expression evaluation.\n");
 	   exit(1);
        }
-     | WRITE_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES 
+     | WRITE_ACCESS_OP VariableExpression COMMA VariableExpression  CLOSE_PARANTHESES
        {
 	   yyerror("STM_STORE is not allowed in variable/relational/boolean expression evaluation.\n");
 	   exit(1);
@@ -2507,12 +2507,12 @@ ManagedMemAccess:
 
 
 VariableExpressionElement:
-     Value 
+     Value
        {
 	    ALLOC_AND_RETURN_STRING("%s",$1);
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
        }
-     | Variable 
+     | Variable
        {
 /* 	    struct EvaluatedVariableExpressionStruct* AccessedVarExpr = $1; */
 
@@ -2520,16 +2520,16 @@ VariableExpressionElement:
 /* 	    ReturnVal->string = dupstr(AccessedVarExpr -> string); */
 /* 	    ReturnVal->Value  = AccessedVarExpr ->Value; */
 /* 	    $$ = ReturnVal ;	     */
-	   
-	   
+
+
 	    ALLOC_AND_RETURN_STRING("%s",$1 -> string);
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
        }
      | ManagedMemAccess
       {
 	    ALLOC_AND_RETURN_STRING("%s",$1);
-	    FREE_RULE_STRINGS(1); 
-	  
+	    FREE_RULE_STRINGS(1);
+
       }
 
      ;
@@ -2547,7 +2547,7 @@ MultiplicativeVariableExpressionElementAccess:
 /* 	    ReturnVal->Value  = AccessedVarExpr ->Value; */
 /* 	    $$ = ReturnVal ;	     */
 	    ALLOC_AND_RETURN_STRING("%s",$1);
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
 
         }
        | MINUS MultiplicativeFactor
@@ -2562,7 +2562,7 @@ MultiplicativeVariableExpressionElementAccess:
 
 	    VarExpr* CurrentVarExpr;
 	    FindVarExpr(NewExpressionString, &CurrentVarExpr);
-	    
+
 	    bool Found= (CurrentVarExpr != NULL);
 	    if( !Found )
 	    {  // If variable expr found, we allocate it.
@@ -2570,10 +2570,10 @@ MultiplicativeVariableExpressionElementAccess:
 
 		// We need to construct the VarExpr structure
 		CurrentVarExpr -> Type = OP_ARITH;
-		
+
 
 		// Since we came until this  point the Both of the operands of
-                // the Variable expression should be already in the 
+                // the Variable expression should be already in the
                 // Dyn_VariableExpressionArray
 		VarExpr* FirstOperand;
 		unsigned FirstOperandID = FindVarExpr("-1", &FirstOperand);
@@ -2600,8 +2600,8 @@ MultiplicativeVariableExpressionElementAccess:
 		CurrentVarExpr -> OperandID[0] = FirstOperandID;
 		CurrentVarExpr -> OperandID[1] = SecondOperandID;
 		CurrentVarExpr -> Operation    = MULTIPLY;
-		
-	    
+
+
 	    }
 
 /* 	    unsigned long  EvaluatedValue = EvaluateVarExpr(CurrentVarExpr); */
@@ -2610,8 +2610,8 @@ MultiplicativeVariableExpressionElementAccess:
 /* 	    ReturnVal->Value  =  EvaluatedValue;  */
 /* 	    $$ = ReturnVal ;	   */
 	    $$ = NewExpressionString;
-	    FREE_RULE_STRINGS(1); 
-	     
+	    FREE_RULE_STRINGS(1);
+
          }
        | MultiplicativeVariableExpressionElementAccess MultiplicativeArithmeticOp MultiplicativeFactor
          {
@@ -2623,7 +2623,7 @@ MultiplicativeVariableExpressionElementAccess:
 
 	    VarExpr* CurrentVarExpr;
 	    FindVarExpr(NewExpressionString, &CurrentVarExpr);
-	    
+
 	    bool Found= (CurrentVarExpr != NULL);
 	    if( !Found )
 	    {  // If variable expr found, we allocate it.
@@ -2631,10 +2631,10 @@ MultiplicativeVariableExpressionElementAccess:
 
 		// We need to construct the VarExpr structure
 		CurrentVarExpr -> Type = OP_ARITH;
-		
+
 
 		// Since we came until this  point the Both of the operands of
-                // the Variable expression should be already in the 
+                // the Variable expression should be already in the
                 // Dyn_VariableExpressionArray
 		VarExpr* FirstOperand;
 		unsigned FirstOperandID = FindVarExpr(FirstAccessedVarExprString, &FirstOperand);
@@ -2646,8 +2646,8 @@ MultiplicativeVariableExpressionElementAccess:
 		CurrentVarExpr -> OperandID[0] = FirstOperandID;
 		CurrentVarExpr -> OperandID[1] = SecondOperandID;
 		CurrentVarExpr -> Operation    = ResolveOperationType($2);
-		
-	    
+
+
 	    }
 
 
@@ -2657,12 +2657,12 @@ MultiplicativeVariableExpressionElementAccess:
 /* 	    ReturnVal->Value  = EvaluatedValue; */
 /* 	    $$ = ReturnVal ;	     */
 	    $$ = NewExpressionString;
-	    FREE_RULE_STRINGS(3); 
+	    FREE_RULE_STRINGS(3);
 
-         } 
+         }
        ;
 
-MultiplicativeFactor: 
+MultiplicativeFactor:
        VariableExpressionElement
         {
 /* 	    struct EvaluatedVariableExpressionStruct* AccessedVarExpr = $1; */
@@ -2672,7 +2672,7 @@ MultiplicativeFactor:
 /* 	    ReturnVal->Value  = AccessedVarExpr ->Value; */
 /* 	    $$ = ReturnVal ;	     */
 	    ALLOC_AND_RETURN_STRING("%s",$1);
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
 
         }
        | OPEN_PARANTHESES VariableExpression CLOSE_PARANTHESES
@@ -2681,19 +2681,19 @@ MultiplicativeFactor:
 
 /* 	    struct EvaluatedVariableExpressionStruct* ReturnVal = malloc(sizeof(struct EvaluatedVariableExpressionStruct)); */
 	    char* AccessedVarExprString = $2;
-	    unsigned NewStringSize = strlen("(") + strlen(AccessedVarExprString) + strlen(")") +1; 
+	    unsigned NewStringSize = strlen("(") + strlen(AccessedVarExprString) + strlen(")") +1;
 	    char* ReturnString = malloc(NewStringSize*sizeof(char));
 	    sprintf(ReturnString,"(%s)",AccessedVarExprString);
 /* 	    ReturnVal->Value  = AccessedVarExpr ->Value; */
 /* 	    $$ = ReturnVal ;	     */
 	    $$ = ReturnString;
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
 	 }
        ;
 
 VariableExpression:
      MultiplicativeVariableExpressionElementAccess
-        { 
+        {
 /* VariableExpression:  */
 /*      VariableExpressionElement */
 /*         {  */
@@ -2725,11 +2725,11 @@ VariableExpression:
 /* 	    $$ = ReturnVal ;	     */
 	    REPORT_READ_INPUT("\tEncountered VARIABLE EXPRESSION '%s'\n",$1);
 	    ALLOC_AND_RETURN_STRING("%s",$1);
-	    FREE_RULE_STRINGS(1); 
+	    FREE_RULE_STRINGS(1);
 
-        }; 
-     | VariableExpression  AdditiveArithmeticOp MultiplicativeVariableExpressionElementAccess 
-        { 
+        };
+     | VariableExpression  AdditiveArithmeticOp MultiplicativeVariableExpressionElementAccess
+        {
 	    char* FirstAccessedVarExprString = $1;
 	    char*  SecondAccessedVarExprString = $3;
 
@@ -2738,7 +2738,7 @@ VariableExpression:
 
 	    VarExpr* CurrentVarExpr;
 	    FindVarExpr(NewExpressionString, &CurrentVarExpr);
-	    
+
 	    bool Found= (CurrentVarExpr != NULL);
 	    if( !Found )
 	    {  // If variable expr found, we allocate it.
@@ -2746,10 +2746,10 @@ VariableExpression:
 
 		// We need to construct the VarExpr structure
 		CurrentVarExpr -> Type = OP_ARITH;
-		
+
 
 		// Since we came until this  point the Both of the operands of
-                // the Variable expression should be already in the 
+                // the Variable expression should be already in the
                 // Dyn_VariableExpressionArray
 		VarExpr* FirstOperand;
 		unsigned FirstOperandID = FindVarExpr(FirstAccessedVarExprString, &FirstOperand);
@@ -2761,8 +2761,8 @@ VariableExpression:
 		CurrentVarExpr -> OperandID[0] = FirstOperandID;
 		CurrentVarExpr -> OperandID[1] = SecondOperandID;
 		CurrentVarExpr -> Operation    = ResolveOperationType($2);
-		
-	    
+
+
 	    }
 /* 	    unsigned long  EvaluatedValue = EvaluateVarExpr(CurrentVarExpr); */
 /* 	    struct EvaluatedVariableExpressionStruct* ReturnVal = malloc(sizeof(struct EvaluatedVariableExpressionStruct)); */
@@ -2771,7 +2771,7 @@ VariableExpression:
 /* 	    $$ = ReturnVal ;	     */
 	    $$ = NewExpressionString;
 	    REPORT_READ_INPUT("\tEncountered VARIABLE EXPRESSION '%s'\n",NewExpressionString);
-	    FREE_RULE_STRINGS(3); 
+	    FREE_RULE_STRINGS(3);
 /*      | OPEN_PARANTHESES VariableExpression  ArithmeticOp VariableExpressionElementAccess CLOSE_PARANTHESES */
 /*        { */
 /* 	    struct EvaluatedVariableExpressionStruct* AccessedVarExpr = $2; */
@@ -2808,20 +2808,20 @@ VariableExpression:
 /*        }; */
 
 
-        }; 
+        };
      ;
-    
 
 
 
-AdditiveArithmeticOp: 
-     PLUS 
+
+AdditiveArithmeticOp:
+     PLUS
       {
 	  REPORT_READ_INPUT("\tEncountered PLUS operation\n");
 	  ALLOC_AND_RETURN_STRING("+");
 	  FREE_RULE_STRINGS(1);
       };
-     | MINUS 
+     | MINUS
       {
 	  REPORT_READ_INPUT("\tEncountered MINUS operation\n");
 	  ALLOC_AND_RETURN_STRING("-");
@@ -2830,7 +2830,7 @@ AdditiveArithmeticOp:
 
 
 MultiplicativeArithmeticOp:
-     MULTIPLY 
+     MULTIPLY
       {
 	  REPORT_READ_INPUT("\tEncountered MULTIPLY operation (or * sign)\n");
 	  ALLOC_AND_RETURN_STRING("*");
@@ -2847,27 +2847,27 @@ MultiplicativeArithmeticOp:
 
 
 
-ThreadsSection: 
-     THREADS_HEADER __th_sec_act_1 ThreadDefList  
+ThreadsSection:
+     THREADS_HEADER __th_sec_act_1 ThreadDefList
      {
 
      };
 
 
        __th_sec_act_1:  /* empty */
-       { 
+       {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     THREADS Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        };
 
 
-ThreadDefList: 
-     ThreadDef SEMICOLON 
-     | ThreadDefList ThreadDef SEMICOLON 
+ThreadDefList:
+     ThreadDef SEMICOLON
+     | ThreadDefList ThreadDef SEMICOLON
      ;
 
-ThreadDef: 
+ThreadDef:
      ThreadType __threadDef_act_1 DEFINITION_ASSIGN  TxBlockList
        {
 	   FREE_RULE_STRINGS(4);
@@ -2890,9 +2890,9 @@ ThreadDef:
 		 }
 		 Clear_DynamicArray(&Dyn_CurrentThreadDefList);
 		 Clear_DynamicArray(&CurrentTxContainerList);
-		 
+
 		 ThreadTypeNum = 0;
-		 
+
 	     }
            #endif
 
@@ -2904,33 +2904,33 @@ ThreadDef:
 	    TxBlockNo=0;
 
            #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
- 	       CurrentTxContainerNo = 0; 
+ 	       CurrentTxContainerNo = 0;
 	   #endif
 	}
 
-ThreadType: 
-     DescriptionName 
+ThreadType:
+     DescriptionName
        {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
-	      Extend_DynamicArray(&Dyn_CurrentThreadDefList,sizeof(char*)); 
+	      Extend_DynamicArray(&Dyn_CurrentThreadDefList,sizeof(char*));
 	      unsigned LastElementNo = GetSize_DynamicArray(&Dyn_CurrentThreadDefList) - 1 ;
 	      char** CurrentThreadDefListElement = (char**)GetElement_DynamicArray(&Dyn_CurrentThreadDefList, LastElementNo, sizeof(char*));
 	      *CurrentThreadDefListElement = dupstr($1);
 	      ThreadTypeNum++;
-	  #endif     
+	  #endif
 
 	  ALLOC_AND_RETURN_STRING("%s",$1);
 	  FREE_RULE_STRINGS(1);
        }
-     | ThreadType COMMA DescriptionName   
+     | ThreadType COMMA DescriptionName
        {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
-	      Extend_DynamicArray(&Dyn_CurrentThreadDefList,sizeof(char*)); 
+	      Extend_DynamicArray(&Dyn_CurrentThreadDefList,sizeof(char*));
 	      unsigned LastElementNo = GetSize_DynamicArray(&Dyn_CurrentThreadDefList) - 1 ;
 	      char** CurrentThreadDefListElement = (char**)GetElement_DynamicArray(&Dyn_CurrentThreadDefList, LastElementNo, sizeof(char*));
 	      *CurrentThreadDefListElement = dupstr($3);
 	      ThreadTypeNum++;
-	  #endif     
+	  #endif
 
 	  ALLOC_AND_RETURN_STRING("%s,%s",$1,$3);
 	  FREE_RULE_STRINGS(3);
@@ -2945,22 +2945,22 @@ TxBlockList:
 	     // The following assignment is for the purpose of passing the
              // BoundedRepetition field to the return value
 	     $$ = $1;
-	  #endif 
+	  #endif
 
-	     // The following line is only for debugging  
+	     // The following line is only for debugging
 	     // REPORT_READ_INPUT("TxBlockListElement: Bounded:%d, Block:%s",$1 -> BoundedRepetition,$1->string);
 	   REPORT_READ_INPUT("TxBlock[%u]: %s",TxBlockNo,$1->string);
 	   FREE_RULE_STRINGS(1);
 	   TxBlockNo++;
        }
-     | TxBlockList COMMA TxBlockListElement 
+     | TxBlockList COMMA TxBlockListElement
        {
-	   // The following two lines are only for debugging  
+	   // The following two lines are only for debugging
 	   // REPORT_READ_INPUT("TxBlockList: Bounded:%d, Block:%s",$1 -> BoundedRepetition,$1->string);
 	   // REPORT_READ_INPUT("TxBlockListElement: Bounded:%d, Block:%s",$3 -> BoundedRepetition,$3->string);
 
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
-	   if( $1 -> BoundedRepetition == FALSE) 
+	   if( $1 -> BoundedRepetition == FALSE)
 	   {
 	       REPORT_SEMANTIC_ERROR("UNEXPECTED EXECUTABLE ELEMENT (a transaction/ a TxCandidate list / paranthesized block). An infinitely repeating executable element should be the LAST possible executable element in a thread definition!\n");
 	   }
@@ -2970,7 +2970,7 @@ TxBlockList:
              // BoundedRepetition field to the return value
 	     $$ = $3;
 	   }
-	  #endif 
+	  #endif
 
 
 	   REPORT_READ_INPUT("TxBlock[%u]: %s",TxBlockNo,$3->string);
@@ -2985,28 +2985,28 @@ TxBlockListElement:
       {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
              //  ALLOC_AND_RETURN_STRING("%s",$1);
-	     char *TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char *TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(TempString,"%s",$1);
 
 	     struct TxBlockListReturnStruct* NewRetVal =  (struct TxBlockListReturnStruct*) malloc(sizeof(struct TxBlockListReturnStruct));
 	     NewRetVal -> string = TempString;
 	     NewRetVal -> BoundedRepetition = TRUE;
 	     $$ = NewRetVal;
-	  #endif 
+	  #endif
 	  FREE_RULE_STRINGS(1);
       }
     | UnboundedRepetitionTxBlockListElement
       {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
              //  ALLOC_AND_RETURN_STRING("%s",$1);
-	     char *TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	     char *TempString = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 	     sprintf(TempString,"%s",$1);
 
 	     struct TxBlockListReturnStruct* NewRetVal =  (struct TxBlockListReturnStruct*) malloc(sizeof(struct TxBlockListReturnStruct));
 	     NewRetVal -> string = TempString;
 	     NewRetVal -> BoundedRepetition = FALSE;
 	     $$ = NewRetVal;
-	  #endif 
+	  #endif
 
 	  FREE_RULE_STRINGS(1);
       }
@@ -3040,7 +3040,7 @@ BoundedRepetitionTxBlockListElement:
 	      CurrentDelayVal = atoi($1);
 	      DelayOpEncountered = TRUE;
 	  }
-	      
+
 
   	  ALLOC_AND_RETURN_STRING("%s\n",$1);
 	  FREE_RULE_STRINGS(1);
@@ -3049,12 +3049,12 @@ BoundedRepetitionTxBlockListElement:
       {
 
            #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
- 	        if ( !ParseOnly ) 
- 		{ 
- 		    GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal); 
- 		    Clear_DynamicArray(&CurrentTxCandidateList); 
- 		    CurrentTxContainerNo++; 
- 		} 
+ 	        if ( !ParseOnly )
+ 		{
+ 		    GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal);
+ 		    Clear_DynamicArray(&CurrentTxCandidateList);
+ 		    CurrentTxContainerNo++;
+ 		}
             #endif
 
   	  ALLOC_AND_RETURN_STRING("Choice List:\n%s",$2);
@@ -3065,13 +3065,13 @@ BoundedRepetitionTxBlockListElement:
 
            #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
 
- 	        if ( !ParseOnly ) 
- 		{ 
- 		    GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal); 
+ 	        if ( !ParseOnly )
+ 		{
+ 		    GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal);
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo, LOOP_BACK, atoi($4) );
- 		    Clear_DynamicArray(&CurrentTxCandidateList); 
-		    CurrentTxContainerNo++; 
- 		} 
+ 		    Clear_DynamicArray(&CurrentTxCandidateList);
+		    CurrentTxContainerNo++;
+ 		}
             #endif
 
 		ALLOC_AND_RETURN_STRING("%s times repeated Choice List:\n%s",$4,$2);
@@ -3092,7 +3092,7 @@ BoundedRepetitionTxBlockListElement:
 	     {
 		 if( VerboseParserOutput)
 		     printf("Container no at the end of TxBlock= %u \n",CurrentTxContainerNo-1);
-		 if( $3 -> BoundedRepetition == FALSE) 
+		 if( $3 -> BoundedRepetition == FALSE)
 		 {
 		     REPORT_SEMANTIC_ERROR("UNEXPECTED TX BLOCK including an infinitely repeating executable element.\n"
                                            "An infinitely repeating executable element should be the LAST possible executable element in a thread definition!\n");
@@ -3112,7 +3112,7 @@ BoundedRepetitionTxBlockListElement:
 		 if( VerboseParserOutput )
 		     printf("Container no at the end of TxBlock= %u \n",CurrentTxContainerNo-1);
 
-		 if( $3 -> BoundedRepetition == FALSE) 
+		 if( $3 -> BoundedRepetition == FALSE)
 		 {
 		     REPORT_SEMANTIC_ERROR("UNEXPECTED REPEATED TX BLOCK including an infinitely repeating executable element.\n"
                                            "An infinitely repeating executable element should be the LAST possible executable element in a thread definition!\n");
@@ -3149,9 +3149,9 @@ UnboundedRepetitionTxBlockListElement:
 		 GenerateAndAttachNewContainerForSimpleTxBlock($1, &DelayOpEncountered, CurrentDelayVal);
 		 #ifdef COMPILE_FOR_TEST
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo, LOOP_BACK, ITERATION_NUM_OF_INFINITE_LOOPS_FOR_TESTS );
-		 #else   
+		 #else
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo , NEXT, 0);
-		 #endif   
+		 #endif
 		 CurrentTxContainerNo++;
 	     }
           #endif
@@ -3163,17 +3163,17 @@ UnboundedRepetitionTxBlockListElement:
       {
 
            #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
-	      if ( !ParseOnly ) 
-	      { 
-		  GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal); 
+	      if ( !ParseOnly )
+	      {
+		  GenerateAndAttachNewContainerForTxChoiceList(&CurrentTxCandidateList, 1,  &DelayOpEncountered, CurrentDelayVal);
                   #ifdef COMPILE_FOR_TEST
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo, LOOP_BACK, ITERATION_NUM_OF_INFINITE_LOOPS_FOR_TESTS );
-		  #else   
+		  #else
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo, CurrentTxContainerNo , NEXT, 0);
-		  #endif   
- 		  Clear_DynamicArray(&CurrentTxCandidateList); 
-		  CurrentTxContainerNo++; 
- 		} 
+		  #endif
+ 		  Clear_DynamicArray(&CurrentTxCandidateList);
+		  CurrentTxContainerNo++;
+ 		}
             #endif
 
 
@@ -3191,10 +3191,10 @@ UnboundedRepetitionTxBlockListElement:
 
                  #ifdef COMPILE_FOR_TEST
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo-1, TxBlockStartContainerNo, LOOP_BACK, ITERATION_NUM_OF_INFINITE_LOOPS_FOR_TESTS);
-		 #else   
+		 #else
 		    InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo-1, TxBlockStartContainerNo, NEXT, 0);
-		 #endif   
-		 
+		 #endif
+
 	     }
           #endif
 
@@ -3210,9 +3210,9 @@ UnboundedRepetitionTxBlockListElement:
 	    TxBlockStartContainerNo = CurrentTxContainerNo;
 
 	    if ( !ParseOnly && VerboseParserOutput )
-		printf("TxBlock Start encountered at Container No %u .\n",TxBlockStartContainerNo); 
+		printf("TxBlock Start encountered at Container No %u .\n",TxBlockStartContainerNo);
 	   #endif
- 
+
          }
 
 
@@ -3257,7 +3257,7 @@ TxChoiceListElement:
 	  FREE_RULE_STRINGS(1);
       }
      | Scope  FLOAT_NUMBER  PERCENTAGE
-       {  
+       {
 
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
 	      AddNewTxCanidate(&CurrentTxCandidateList, $1, atof($2) );
@@ -3272,29 +3272,29 @@ TxChoiceListElement:
 
 
 
-SchedulesSection: 
-     SCHEDULES_HEADER __sch_sec_act_1  ScheduleDefList 
+SchedulesSection:
+     SCHEDULES_HEADER __sch_sec_act_1  ScheduleDefList
      {
      };
 
        __sch_sec_act_1:  /* empty */
-       { 
+       {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     SCHEDULES Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
 	   ScheduleNo=0;
        };
 
 
-ScheduleDefList: 
-     ScheduleDef SEMICOLON 
-     | ScheduleDefList ScheduleDef SEMICOLON 
+ScheduleDefList:
+     ScheduleDef SEMICOLON
+     | ScheduleDefList ScheduleDef SEMICOLON
      ;
 
-ScheduleDef: 
+ScheduleDef:
      DescriptionName DEFINITION_ASSIGN ScheduleSpec
-      { 
-	  
+      {
+
 	  Extend_DynamicArray(&Dyn_ScheduleList,sizeof(Schedule));
 	  unsigned LastAddedElementPos = GetSize_DynamicArray(&Dyn_ScheduleList) - 1;
 	  Schedule* CurrentSchedule = (Schedule*) GetElement_DynamicArray(&Dyn_ScheduleList, LastAddedElementPos, sizeof(Schedule));
@@ -3304,21 +3304,21 @@ ScheduleDef:
 	  CurrentSchedule -> ScheduleLength = GetSize_DynamicArray(&Dyn_Schedule);
 	  ScheduleNum++;
 	  Clear_DynamicArray(&Dyn_Schedule);
-	      
-	      
+
+
 	  REPORT_READ_INPUT("Sched[%u]: (%s)\n\t%s\n",ScheduleNo,$1,$3);
 	  ScheduleNo++;
       }
      ;
 
 
-ScheduleSpec: 
+ScheduleSpec:
      TxPortion
       {
   	  ALLOC_AND_RETURN_STRING("%s",$1);
 	  FREE_RULE_STRINGS(1);
       }
-     | ScheduleSpec COMMA TxPortion  
+     | ScheduleSpec COMMA TxPortion
       {
   	  ALLOC_AND_RETURN_STRING("%s,%s",$1,$3);
 	  FREE_RULE_STRINGS(3);
@@ -3326,14 +3326,14 @@ ScheduleSpec:
      ;
 
 
-TxPortion: 
+TxPortion:
 DescriptionName
        {
 
 	   Extend_DynamicArray(&Dyn_Schedule,sizeof(ScheduleElement));
 	   unsigned LastAddedElementPos = GetSize_DynamicArray(&Dyn_Schedule) - 1;
 	   ScheduleElement* SchedElement = (ScheduleElement*) GetElement_DynamicArray(&Dyn_Schedule, LastAddedElementPos, sizeof(ScheduleElement));
-	   
+
 	   unsigned FoundTxNo = FindTxByName($1, TxDefArray, TxDefNum);
 	   if(FoundTxNo == TxDefNum )
 	   {
@@ -3351,7 +3351,7 @@ DescriptionName
 	       SchedElement -> VarAssignNum  = 0;
 
 	   }
-	   
+
 	   ALLOC_AND_RETURN_STRING("%s",$1);
 	   FREE_RULE_STRINGS(1);
        }
@@ -3361,7 +3361,7 @@ DescriptionName
 	   Extend_DynamicArray(&Dyn_Schedule,sizeof(ScheduleElement));
 	   unsigned LastAddedElementPos = GetSize_DynamicArray(&Dyn_Schedule) - 1;
 	   ScheduleElement* SchedElement = (ScheduleElement*) GetElement_DynamicArray(&Dyn_Schedule, LastAddedElementPos, sizeof(ScheduleElement));
-	   
+
 	   unsigned FoundTxNo = FindTxByName($1, TxDefArray, TxDefNum);
 	   if(FoundTxNo == TxDefNum )
 	   {
@@ -3371,7 +3371,7 @@ DescriptionName
 	   {
 	       SchedElement->ThreadID = FoundTxNo;
 	       SchedElement->TxID     = 0;
-	       
+
 
 	       char* LabelStringToMatch = &($2[1]);
 	       unsigned TxOpNo;
@@ -3412,11 +3412,11 @@ DescriptionName
 
 	    VarExpr* CurrentAssertionExpr;
 	    unsigned AssertionExprID = FindVarExpr(AssertionExpressionString, &CurrentAssertionExpr);
-	    
+
 	    bool Found= (CurrentAssertionExpr != NULL);
 	    if( !Found )
-	    { 
-		char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	    {
+		char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 		sprintf(ErrorMessage,"UNKNOWN CONDITIONAL EXPRESSION '%s' is encountered in Schedule definition. Terminating...\n",AssertionExpressionString);
 		yyerror(ErrorMessage);
 		free(ErrorMessage);
@@ -3433,7 +3433,7 @@ DescriptionName
 	   SchedElement-> AssertionExprID = AssertionExprID ;
 	   SchedElement -> VarAssignList = NULL;
 	   SchedElement -> VarAssignNum  = 0;
- 
+
 	   SchedElement->ThreadID = 0;
 	   SchedElement->TxID     = 0;
 	   SchedElement-> LabelTxOpContainerNo = 0;
@@ -3447,16 +3447,16 @@ DescriptionName
 	  Extend_DynamicArray(&Dyn_Schedule,sizeof(ScheduleElement));
 	  unsigned LastAddedElementPos = GetSize_DynamicArray(&Dyn_Schedule) - 1;
 	  ScheduleElement* SchedElement = (ScheduleElement*) GetElement_DynamicArray(&Dyn_Schedule, LastAddedElementPos, sizeof(ScheduleElement));
-	  
+
 	  SchedElement -> VarAssignNum  = GetSize_DynamicArray(&Dyn_VarAssignList);
-	  SchedElement -> VarAssignList = MakeStaticCopy_DynamicArray(&Dyn_VarAssignList, sizeof(var_assign_t)); 
+	  SchedElement -> VarAssignList = MakeStaticCopy_DynamicArray(&Dyn_VarAssignList, sizeof(var_assign_t));
 
 	  SchedElement-> Assertion = FALSE;
 	  SchedElement-> AssertionExprID = 0 ;
 	  SchedElement->ThreadID = 0;
 	  SchedElement->TxID     = 0;
 	  SchedElement-> LabelTxOpContainerNo = 0;
-	  
+
 	  Clear_DynamicArray(&Dyn_VarAssignList);
       }
      ;
@@ -3464,35 +3464,35 @@ DescriptionName
 
 
 
-InvariantsSection: 
-     INVARIANTS_HEADER __inv_sec_act_1  InvariantDefList 
+InvariantsSection:
+     INVARIANTS_HEADER __inv_sec_act_1  InvariantDefList
      {
      };
 
 
        __inv_sec_act_1:  /* empty */
-       { 
+       {
 	   REPORT_READ_INPUT("\n\n-----------------------------------------------------------------------------\n"
 			     "     INVARIANTS Section\n"
-			     "-----------------------------------------------------------------------------\n" ); 
+			     "-----------------------------------------------------------------------------\n" );
        };
 
 
 
-InvariantDefList: 
-     InvariantDef SEMICOLON 
+InvariantDefList:
+     InvariantDef SEMICOLON
      {
 	 REPORT_READ_INPUT("Invariant[%u]: %s\n",InvariantNo,$1);
 	 InvariantNo++;
      }
-     | InvariantDefList InvariantDef SEMICOLON 
+     | InvariantDefList InvariantDef SEMICOLON
      {
 	 REPORT_READ_INPUT("Invariant[%u]: %s\n",InvariantNo,$2);
 	 InvariantNo++;
      }
      ;
 
-InvariantDef: 
+InvariantDef:
      OPEN_BRACKETS NO_ABORT_INVARIANT_TOKEN CLOSE_BRACKETS
       {
 	  NoAbortInSchedule = TRUE;
@@ -3503,11 +3503,11 @@ InvariantDef:
 
 	    VarExpr* CurrentInvariantExpr;
 	    unsigned InvariantExprID = FindVarExpr(InvariantExpressionString, &CurrentInvariantExpr);
-	    
+
 	    bool Found= (CurrentInvariantExpr != NULL);
 	    if( !Found )
-	    { 
-		char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE); 
+	    {
+		char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
 		sprintf(ErrorMessage,"UNKNOWN CONDITIONAL EXPRESSION '%s' is encountered in STM_LOAD access. Terminating...\n",InvariantExpressionString);
 		yyerror(ErrorMessage);
 		free(ErrorMessage);
@@ -3518,14 +3518,14 @@ InvariantDef:
 	    unsigned LastAddedInvariantPos = GetSize_DynamicArray(&Dyn_InvariantArray) - 1;
 	    Invariant* CurrentInvariant = GetElement_DynamicArray(&Dyn_InvariantArray, LastAddedInvariantPos, sizeof(Invariant));
 
-	    unsigned CondExprStringLength = strlen($1) +  strlen(InvariantExpressionString) + strlen($3) +1 ;	 
+	    unsigned CondExprStringLength = strlen($1) +  strlen(InvariantExpressionString) + strlen($3) +1 ;
 	    CurrentInvariant -> Name = (char*)malloc(CondExprStringLength*sizeof(char));
 	    sprintf(CurrentInvariant -> Name,"%s%s%s",$1, InvariantExpressionString, $3);
 	    CurrentInvariant -> VarExprID = InvariantExprID;
 
 	    InvariantNum++;
 
-	    
+
 	    $$ = dupstr(CurrentInvariant -> Name);
 
 //	  ALLOC_AND_RETURN_STRING("%s%s%s",$1,$2,$3);

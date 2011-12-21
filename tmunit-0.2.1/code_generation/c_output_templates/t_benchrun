@@ -2,7 +2,7 @@
 
 Parameter=$1
 if [[ $Parameter ]]; then
-  if [ $Parameter = "-h" -o   $Parameter = "--help" ]; then	   
+  if [ $Parameter = "-h" -o   $Parameter = "--help" ]; then
       echo ""
       echo    "----------------------------------------------------"
       echo    "  t_benchrun -- STM Unit Testing & Evaluation Tool  "
@@ -37,7 +37,7 @@ if [[ $Parameter ]]; then
       echo    "execution of 't_benchrun', Do one of the following:"
       echo    ""
       echo    " 1)Indicate explicitly the duration/seed parameter or"
-      echo    "   statistic printing parameter in the configuration" 
+      echo    "   statistic printing parameter in the configuration"
       echo    "   file and regenerate the C code. The parameters of"
       echo    "   the configuration file become the default parameters"
       echo    "   of the generated benchrun executable."
@@ -53,6 +53,10 @@ if [[ $Parameter ]]; then
       echo    "       if you would like the program to initialize the"
       echo    "       random number generator with a value taken from"
       echo    "       the hardware clock."
+      echo    ""
+      echo    "     - 'MainMax' to modify the maximail amount of"
+      echo    "       threads. The # should be unsigned. Set 'MainMax'"
+      echo    "       to zero and it would be 10 again."
       echo    ""
       echo    "     - 'TimeOut' and 'WaitForTimeOut' to set a different"
       echo    "       simulation duration. TimeOut should be an unsigned"
@@ -73,8 +77,8 @@ if [[ $Parameter ]]; then
       echo "   Type $0  -h  to get help"
       echo ""
       exit 1;
-  fi    
-  
+  fi
+
 fi
 
 ./benchrun -v > log
