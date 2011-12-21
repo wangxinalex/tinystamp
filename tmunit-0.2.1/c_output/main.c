@@ -242,7 +242,7 @@ int main(int argc, char*  argv[]) {
 	// Prepare thread functions and parameters to pass them
 	unsigned short  ThreadNo;
 	pthread_t       Thrd[maxThreadNum];
-	thread_input_t  th_input[ThreadNum];
+	thread_input_t  th_input[maxThreadNum];
 	for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
 		th_input[ThreadNo].thread_ID  = ThreadNo;
 		th_input[ThreadNo].ThreadSeed = ThreadSeed[ThreadNo];
@@ -292,7 +292,11 @@ int main(int argc, char*  argv[]) {
 		barrier_init(&barrier, ThreadNum+1);
 
 		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
-			pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[ThreadNo],(void *)&(th_input[ThreadNo]) );
+			#ifdef AUTOREPLACE
+				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[ThreadNo],(void *)&(th_input[ThreadNo]));
+			#else
+				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNo]));
+			#endif
 		}
 
 		barrier_cross(&barrier);

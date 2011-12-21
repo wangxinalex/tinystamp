@@ -6,14 +6,14 @@ DEFAULT_STM = TINY_STM_NEW
 ifdef  STM
    ifeq ($(STM),NO_STM)
 	STM = NO_STM
-   endif	
+   endif
    ifeq ($(STM),TINY_STM_NEW)
 	STM = $(DEFAULT_STM)
 	STM_HOME = $(TINY_STM_0_9_5_HOME)
 	STM_C_INCLUDE = -I$(STM_HOME)/include
 	STM_LIB_INCLUDE = -L$(STM_HOME)/lib
 	STM_LIB_NAME = -lstm
-   endif	
+   endif
    ifeq ($(STM),TINY_ETL)
 	STM = $(DEFAULT_STM)
 	STM_TYPE = TINY_STM_NEW
@@ -21,7 +21,7 @@ ifdef  STM
 	STM_C_INCLUDE =  -D$(STM_TYPE) -I$(STM_HOME)/include
 	STM_LIB_INCLUDE = -L$(STM_HOME)/lib
 	STM_LIB_NAME = -lstm_ETL_64b
-   endif	
+   endif
    ifeq ($(STM),TINY_CTL)
 	STM = $(DEFAULT_STM)
 	STM_TYPE = TINY_STM_NEW
@@ -29,7 +29,7 @@ ifdef  STM
 	STM_C_INCLUDE = -D$(STM_TYPE) -I$(STM_HOME)/include
 	STM_LIB_INCLUDE = -L$(STM_HOME)/lib
 	STM_LIB_NAME = -lstm_CTL_64b
-   endif	
+   endif
    ifeq ($(STM),TINY_WT)
 	STM = $(DEFAULT_STM)
 	STM_TYPE = TINY_STM_NEW
@@ -37,7 +37,7 @@ ifdef  STM
 	STM_C_INCLUDE = -D$(STM_TYPE) -I$(STM_HOME)/include
 	STM_LIB_INCLUDE = -L$(STM_HOME)/lib
 	STM_LIB_NAME = -lstm_WT_64b
-   endif	
+   endif
    ifeq ($(STM),TL2)
 	STM_HOME = $(TL2_HOME)
 	STM_C_INCLUDE = -I$(STM_HOME)
@@ -48,10 +48,10 @@ ifdef  STM
 	STM_HOME = $(SWISS_TM_HOME)
 	CC       = g++
 	override ARCH     := 32b
-	CFLAGS += -D$(STM) -I$(STM_HOME)/src/stm  -I$(STM_HOME)/include  -I$(LIBAO_HOME)/include  -fpermissive 
+	CFLAGS += -D$(STM) -I$(STM_HOME)/src/stm  -I$(STM_HOME)/include  -I$(LIBAO_HOME)/include  -fpermissive
 	STM_LIB_INCLUDE = -L$(STM_HOME)/lib -L$(LIBAO_HOME)/../libatomic_32b/lib
 	STM_LIB_NAME += -lwlpdstm
-   endif	
+   endif
    ifeq ($(STM),RSTM)
 	STM_HOME = $(RSTM_HOME)
 	CC       = g++
@@ -59,7 +59,7 @@ ifdef  STM
 	CFLAGS += -D$(STM)  -I$(STM_HOME) -I$(STM_HOME)/.. -fpermissive
 	STM_LIB_INCLUDE = -L$(STM_HOME)/obj -L$(LIBAO_HOME)/../libatomic_32b/lib
 	STM_LIB_NAME += -lstm
-   endif	
+   endif
 
 else
 	STM = $(DEFAULT_STM)
@@ -79,9 +79,9 @@ ifeq ($(DEFINES),COMPILE_FOR_TEST)
 	CFLAGS += -DCOMPILE_FOR_TEST
 else
 	RNG = system_rng
-	RNG_LIB = 
+	RNG_LIB =
 	RNG_INCLUDE =
-	RNG_LIB_INCLUDE = 
+	RNG_LIB_INCLUDE =
 endif
 
 
@@ -133,7 +133,7 @@ SRC = \
 
 OBJ = $(patsubst %.c,%.o,$(SRC))
 
-benchrun:	$(OBJ)  
+benchrun:	$(OBJ)
 	$(CC) -o $@ $^ $(LFLAGS)
 
 %.o:	%.c $(RNG)
@@ -147,4 +147,4 @@ system_rng:
 
 
 clean:
-	rm -f benchrun *.o 
+	rm -f benchrun *.o

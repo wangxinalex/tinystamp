@@ -1,10 +1,17 @@
 #include "initialization.h"
 
+#define AUTOREPLACE		1
+
 unsigned ThreadNum;
 unsigned maxThreadNum;
 unsigned* ThreadSeed;
 
-ThreadRunFunc ThreadRun[1] = {NULL};
+#ifdef	AUTOREPLACE
+	ThreadRunFunc ThreadRun[1] = {NULL};
+#else
+	ThreadRunFunc ThreadRun[1] = {NULL};
+	//ThreadRunFunc *ThreadRun=malloc(MainMax*sizeof(ThreadRunFunc));
+#endif
 
 void SetThreadNum() {
     ThreadNum = 1;
@@ -42,5 +49,12 @@ void InitializeThreadSeeds(unsigned ThreadNum, unsigned maxThreadNum) {
 }
 
 void InitializeThreadRunFunctions() {
+	#ifdef AUTOREPLACE
     ThreadRun[0] = RunThread_0 ;
+	#else
+		//	int i=0;
+		//	for(i=MainMax; i--;)
+		//		ThreadRun[i] = RunThread_0;
+		ThreadRun[0] = RunThread_0;
+	#endif
 }

@@ -1,10 +1,19 @@
 #include "initialization.h"
 
+// If enabled, it will undo the key changes for dynamic thread management.
+// Mainly the functionality which assigns work to each thread.
+// #define AUTOREPLACE		1
+
 unsigned ThreadNum;
 unsigned maxThreadNum;
 unsigned* ThreadSeed;
 
-ThreadRunFunc ThreadRun[#THREAD_NUM#] = {NULL};
+#ifdef	AUTOREPLACE
+	ThreadRunFunc ThreadRun[#THREAD_NUM#] = {NULL};
+#else
+	ThreadRunFunc ThreadRun[1] = {NULL};
+	//ThreadRunFunc *ThreadRun=malloc(MainMax*sizeof(ThreadRunFunc));
+#endif
 
 void SetThreadNum() {
     ThreadNum = #THREAD_NUM#;
@@ -42,5 +51,12 @@ void InitializeThreadSeeds(unsigned ThreadNum, unsigned maxThreadNum) {
 }
 
 void InitializeThreadRunFunctions() {
-    #SETTING_VALUES_OF_THREAD_RUN_ARRAY#
+	#ifdef AUTOREPLACE
+		#SETTING_VALUES_OF_THREAD_RUN_ARRAY#
+	#else
+		//	int i=0;
+		//	for(i=MainMax; i--;)
+		//		ThreadRun[i] = RunThread_0;
+		ThreadRun[0] = RunThread_0;
+	#endif
 }

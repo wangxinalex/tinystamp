@@ -26,9 +26,6 @@ void SetThreadNum ();
 void InitializeThreadSeeds (unsigned ThreadNum);
 void InitializeThreadRunFunctions ();
 
-
 void *RunThread_0 (void *Parameters);
-
-
 
 #endif

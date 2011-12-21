@@ -49,7 +49,7 @@ extern __thread stm_tx_t *TxDesc;
 			    return NULL; \
                             }
 
-void *RunThread_7 (void *Parameters)
+void *RunThread_4 (void *Parameters)
 {
   thread_input_t *ThreadParameters = (thread_input_t *) Parameters;
   unsigned ID = ThreadParameters->thread_ID;
@@ -57,6 +57,9 @@ void *RunThread_7 (void *Parameters)
 
   char *ThreadNames[] = { "P_1", "P_2", "P_3", "P_4", "P_5", "P_6", "P_7", "P_8" };
   char *TransactionNames[] = { "T_transfer", "T_balance" };
+
+
+
 
   ThLocalVarCollection ThLocals;
   ThLocals.ThreadID = ID;
@@ -96,7 +99,7 @@ void *RunThread_7 (void *Parameters)
   ThLocals.PrintOffset = NULL;
   if (EnableTrace)
   {
-    unsigned short CurrentOffsetSize = 2 * 7 + 1;
+    unsigned short CurrentOffsetSize = 2 * 4 + 1;
     ThLocals.PrintOffset = (char *) malloc (CurrentOffsetSize * sizeof (char));
 
     unsigned short TabCounter = CurrentOffsetSize - 1;
