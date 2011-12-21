@@ -10,9 +10,10 @@ void SetThreadNum() {
     ThreadNum = #THREAD_NUM#;
 }
 
-void InitializeThreadSeeds(unsigned ThreadNum) {
+void InitializeThreadSeeds(unsigned ThreadNum, unsigned maxThreadNum) {
     assert (ThreadNum != 0);
-    ThreadSeed = (unsigned *)malloc(ThreadNum*sizeof(unsigned));
+    assert (maxThreadNum != 0);
+    ThreadSeed = (unsigned *)malloc(maxThreadNum*sizeof(unsigned));
     if (MainSeed == 0) {
 		printf("MainSeed is ZERO.\n");
 		SRAND((int)time(0));
@@ -26,14 +27,14 @@ void InitializeThreadSeeds(unsigned ThreadNum) {
     }
 
     unsigned ThreadNo;
-    for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++)
-	ThreadSeed[ThreadNo] = RAND();
+    for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++)
+		ThreadSeed[ThreadNo] = RAND();
 
     printf("MainSeed=%u\n",MainSeed);
     printf("ListOfThreadSeeds={");
-    for(ThreadNo=0; ThreadNo< ThreadNum; ThreadNo++) {
+    for(ThreadNo=0; ThreadNo < maxThreadNum; ThreadNo++) {
 		printf("%u",ThreadSeed[ThreadNo]);
-		if(ThreadNo < ThreadNum -1)
+		if(ThreadNo < maxThreadNum -1)
 			printf(",");
 		else
 			printf("}\n");

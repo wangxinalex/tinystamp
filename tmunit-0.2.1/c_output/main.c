@@ -233,16 +233,17 @@ int main(int argc, char*  argv[]) {
 	maxThreadNum=MainMax;
 	InitializeSharedVariables();
 
-	InitializeThreadSeeds(ThreadNum);
-	PrintEffectiveSimulationParameters();
-
 	printf("maxThreadNum = %u\n",maxThreadNum);
+	assert(maxThreadNum >= ThreadNum);
+
+	InitializeThreadSeeds(ThreadNum,maxThreadNum);
+	PrintEffectiveSimulationParameters();
 
 	// Prepare thread functions and parameters to pass them
 	unsigned short  ThreadNo;
-	pthread_t       Thrd[ThreadNum];
+	pthread_t       Thrd[maxThreadNum];
 	thread_input_t  th_input[ThreadNum];
-	for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+	for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
 		th_input[ThreadNo].thread_ID  = ThreadNo;
 		th_input[ThreadNo].ThreadSeed = ThreadSeed[ThreadNo];
     }

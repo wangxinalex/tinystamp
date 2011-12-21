@@ -23,7 +23,7 @@ extern unsigned* ThreadSeed;
 typedef void* (*ThreadRunFunc)(void *Parameters);
 
 void SetThreadNum();
-void InitializeThreadSeeds(unsigned ThreadNum);
+void InitializeThreadSeeds(unsigned ThreadNum, unsigned maxThreadNum);
 void InitializeThreadRunFunctions();
 
 
