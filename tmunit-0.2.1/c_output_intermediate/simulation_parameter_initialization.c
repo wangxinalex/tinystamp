@@ -1,15 +1,15 @@
-TransmitReadOnlyTxHint = 1;
+TransmitReadOnlyTxHint = 0;
 
 MainSeed = 1;
 MainMax = 10;
 RandomDebug = 0;
 
-WaitForTimeOut = 1;
-TimeOutValueSet = 1;
+WaitForTimeOut = 0;
+TimeOutValueSet = 0;
 DelayUnit = 1000000;
-TimeOut = 100000;
+TimeOut = 0;
 
-PrintStats = 1;
+PrintStats = 0;
 EnableTrace = 0;
 JustGenerateTrace = 0;
 EnableTraceFromCommandLine = 0;

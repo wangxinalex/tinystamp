@@ -1,4 +1,3 @@
 // Allocating memory for shared variables and arrays.
-
-a_array_size = 8192;
-a = (Word*)malloc(a_array_size*sizeof(Word));
+x = (Word*)malloc(sizeof(Word));
+y = (Word*)malloc(sizeof(Word));

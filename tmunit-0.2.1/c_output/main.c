@@ -1,6 +1,6 @@
+//	------------------	include	------------------
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <pthread.h>
 #include <signal.h>
 #include "barrier.h"
@@ -11,24 +11,28 @@
 #include <atomic_ops.h>
 #include "tm_interface.h"
 
-// Variables rquired for tm interfaces, can be moved to another file
-#if defined ( TL2 )
-
-    __thread stm_tx_t* TxDesc=NULL;
-    AO_t tx_id_counter =0 ;
-    __thread sigjmp_buf* envPtr;
-
-#else  // for example fpr tinySTM_new
-
-   __thread stm_tx_t* TxDesc=(stm_tx_t*)0x1;
-
-#endif
-
-
 // Probably only needed by benchrun parameters. Can be moved to initialization.h
 #include "simulation_parameters.h"
 
+//	------------------	ifdefs	------------------
+// Variables rquired for tm interfaces, can be moved to another file
+#if defined ( TL2 )
+	__thread stm_tx_t* TxDesc=NULL;
+	AO_t tx_id_counter =0 ;
+	__thread sigjmp_buf* envPtr;
+#else  // for example fpr tinySTM_new
+	__thread stm_tx_t* TxDesc=(stm_tx_t*)0x1;
+#endif
 
+//	------------------	const values	------------------
+#define SLEEP_PERIOD_SIZE 100 // miliseconds
+
+//	------------------	declaring methods	------------------
+void ajust_amount_of_threads(double sleepInSeconds);
+void mySleep(long miliseconds);
+void startNewThread();
+
+//	------------------	extern variables	------------------
 extern unsigned *ThreadSeed;
 extern unsigned ThreadNum ;
 extern unsigned maxThreadNum;
@@ -117,18 +121,18 @@ void PrintDevelopperTestWarning()
 // *INDENT-ON*
 
 int InitializeSimulationParameters() {
-TransmitReadOnlyTxHint = 1;
+TransmitReadOnlyTxHint = 0;
 
 MainSeed = 1;
 MainMax = 10;
 RandomDebug = 0;
 
-WaitForTimeOut = 1;
-TimeOutValueSet = 1;
+WaitForTimeOut = 0;
+TimeOutValueSet = 0;
 DelayUnit = 1000000;
-TimeOut = 100000;
+TimeOut = 0;
 
-PrintStats = 1;
+PrintStats = 0;
 EnableTrace = 0;
 JustGenerateTrace = 0;
 EnableTraceFromCommandLine = 0;
@@ -199,21 +203,18 @@ void PrintEffectiveSimulationParameters() {
 
 void InitializeSharedVariables() {
 // Allocating memory for shared variables and arrays.
-
-a_array_size = 8192;
-a = (Word*)malloc(a_array_size*sizeof(Word));
+x = (Word*)malloc(sizeof(Word));
+y = (Word*)malloc(sizeof(Word));
 
 // Initializing shared variables and arrays.
-unsigned ElementNo;
-for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
-a[ElementNo] = 0;
-
+*x = 10;
+*y = 20;
 
 #ifdef ENABLE_TRACE_CODE
 if ( EnableTrace )
 {
-for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
-printf("Address of a[%u] : %p\n",ElementNo, &(a[ElementNo]) );
+printf("Address of x : %p\n",x );
+printf("Address of y : %p\n",y );
 
 }
 #endif
@@ -310,16 +311,22 @@ int main(int argc, char*  argv[]) {
 			time_out.tv_sec = TimeOut/1000000;
 			time_out.tv_nsec = (long)((TimeOut%1000000)*1000);
 
-			printf("TimeOut=%u, time_out= (%ld,%ld)\n",TimeOut, time_out.tv_sec,time_out.tv_nsec);
+			double secondsOfSleep=((double)TimeOut/(double)1000000);
+			printf("TimeOut=%u,=%f sec, time_out= (%ld,%ld)\n",TimeOut, secondsOfSleep, time_out.tv_sec,time_out.tv_nsec);
 
-			while( nanosleep(&time_out,&left_time_out) == -1) {
-				if(TerminateRequestedBySignal)
-					break;
-				printf("left_time_out= (%ld,%ld)\n", left_time_out.tv_sec,left_time_out.tv_nsec);
+			#ifdef	AUTOREPLACE
+				while(nanosleep(&time_out,&left_time_out) == -1) {
+					if(TerminateRequestedBySignal)
+						break;
+					printf("left_time_out= (%ld,%ld)\n", left_time_out.tv_sec,left_time_out.tv_nsec);
 
-				time_out.tv_sec  = left_time_out.tv_sec;
-				time_out.tv_nsec = left_time_out.tv_nsec;
-			}
+					time_out.tv_sec  = left_time_out.tv_sec;
+					time_out.tv_nsec = left_time_out.tv_nsec;
+				}
+			#else
+//				nanosleep(&time_out,&left_time_out);
+				ajust_amount_of_threads(secondsOfSleep);
+			#endif
 
 			// *INDENT-OFF*
 			AO_store_full(&TerminateRequestedBySignal, TRUE);
@@ -330,14 +337,14 @@ int main(int argc, char*  argv[]) {
 			// *INDENT-ON*
 		}
 
-			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
-				pthread_join(Thrd[ThreadNo],NULL);
+		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
+			pthread_join(Thrd[ThreadNo],NULL);
 
-			printf("Shutting STM engine down...\n");
-			TM_EXIT(0);
+		printf("Shutting STM engine down...\n");
+		TM_EXIT(0);
 
-			if (PrintStats) {
-				PrintStatistics();
+		if (PrintStats) {
+			PrintStatistics();
 			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
 				free(Statistics[ThreadNo]);
 			free(Statistics);
@@ -347,4 +354,39 @@ int main(int argc, char*  argv[]) {
 		#endif
 	}
 	return 0;
+}
+
+void ajust_amount_of_threads(double sleepInSeconds) {
+	long milisecondsLeft=sleepInSeconds*1000;
+	while(milisecondsLeft > SLEEP_PERIOD_SIZE) {
+		mySleep(SLEEP_PERIOD_SIZE);
+		milisecondsLeft-=SLEEP_PERIOD_SIZE;
+	}
+	mySleep(milisecondsLeft);
+}
+
+// todo: use or remove
+/*static void runMoreThreads(long moreThreads) {
+    long i;
+    for (i=thread_getNumThread()+moreThreads; i--!=thread_getNumThread();) {
+        if(!clients[i])
+            clients[i] = initializeOneClient(managerPtr, i);
+    }
+    thread_startup_noBarriers(moreThreads, 1);
+}*/
+
+void startNewThread() {
+	if (ThreadNum < maxThreadNum) {
+		pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNo]));
+		++ThreadNum;
+	}
+}
+
+void mySleep(long miliseconds) {
+    struct timespec waitingTime={0};
+    waitingTime.tv_sec=(int)(miliseconds/1000);
+    waitingTime.tv_nsec=(miliseconds%1000)*1000000;
+    nanosleep(&waitingTime, NULL);
+//    while(nanosleep(&waitingTime, &waitingTime)==-1)
+//        continue;
 }
