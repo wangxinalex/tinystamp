@@ -3,7 +3,7 @@
 
 typedef unsigned long Word;
 
-extern Word* x;
-extern Word* y;
+extern Word* a;
+extern unsigned  a_array_size;
 
 #endif

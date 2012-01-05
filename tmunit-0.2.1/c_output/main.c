@@ -14,6 +14,10 @@
 // Probably only needed by benchrun parameters. Can be moved to initialization.h
 #include "simulation_parameters.h"
 
+#include "shared_var_definitions.h"
+#include "thread_local_variables.h"
+#include "thread_local_variables.h"  // For stat_t structure definition
+
 //	------------------	ifdefs	------------------
 // Variables rquired for tm interfaces, can be moved to another file
 #if defined ( TL2 )
@@ -38,11 +42,11 @@ extern unsigned ThreadNum ;
 extern unsigned maxThreadNum;
 extern ThreadRunFunc ThreadRun[];
 
-#include "shared_var_definitions.h"
-#include "thread_local_variables.h"
-
-#include "thread_local_variables.h"  // For stat_t structure definition
+//	------------------ other variables	------------------
 stat_t** Statistics;
+static unsigned short	ThreadNo;
+static pthread_t*		Thrd;
+static thread_input_t*	th_input;
 
 // *INDENT-OFF*
 void PrintStatistics() {
@@ -59,7 +63,6 @@ void PrintStatistics() {
 		struct timeval   end_time = Statistics[ThreadNo] -> end_time   ;
 
 		long long duration = (end_time.tv_sec * 1000000 + end_time.tv_usec) - (start_time.tv_sec * 1000000 + start_time.tv_usec) ;
-//	    long long duration = 987654 + 1000000*ThreadNo;
 		long time_rest;
 		long duration_s    = (long)(duration/1000000) ;  time_rest = (long)(duration%1000000);
 		long duration_ms   = time_rest/1000 ;            time_rest = time_rest%1000;
@@ -78,21 +81,21 @@ void PrintStatistics() {
 		if( GlobalMaxRetries< ThreadMaxRetries )
 			GlobalMaxRetries = ThreadMaxRetries;
 
-		AggregateCommitNum = AggregateCommitNum + Statistics[ThreadNo]->CommitNum ;
-		AggregateAbortNum  = AggregateAbortNum  + Statistics[ThreadNo]->AbortNum  ;
+		AggregateCommitNum = AggregateCommitNum + Statistics[ThreadNo]->CommitNum;
+		AggregateAbortNum  = AggregateAbortNum  + Statistics[ThreadNo]->AbortNum;
 	}
 
 	printf("Aggregate Statistics:\n\n");
 
-	TxCommitRate = (double)((double)(AggregateCommitNum)/execution_duration_s)	;
-	TxAbortRate  = (double)((double)(AggregateAbortNum)/execution_duration_s)	;
+	TxCommitRate = (double)((double)(AggregateCommitNum)/execution_duration_s);
+	TxAbortRate  = (double)((double)(AggregateAbortNum)/execution_duration_s);
 
-	printf("\tTotal Commit Num  = %lu\n"
-		"\tTotal Abort  Num  = %lu\n"
-		"\tExection Duration = %lf\n"
-		"\tGlobal Commit/s   = %lf\n"
-		"\tGlobal Abort/s    = %lf\n"
-		"\tGlobal MaxRetries = %lu\n\n\n",AggregateCommitNum,AggregateAbortNum,execution_duration_s,TxCommitRate,TxAbortRate,GlobalMaxRetries);
+	printf(	"\tTotal Commit Num  = %lu\n"
+			"\tTotal Abort  Num  = %lu\n"
+			"\tExection Duration = %lf\n"
+			"\tGlobal Commit/s   = %lf\n"
+			"\tGlobal Abort/s    = %lf\n"
+			"\tGlobal MaxRetries = %lu\n\n\n",AggregateCommitNum,AggregateAbortNum,execution_duration_s,TxCommitRate,TxAbortRate,GlobalMaxRetries);
 }
 
 void PrintDevelopperTestWarning()
@@ -121,18 +124,18 @@ void PrintDevelopperTestWarning()
 // *INDENT-ON*
 
 int InitializeSimulationParameters() {
-TransmitReadOnlyTxHint = 0;
+TransmitReadOnlyTxHint = 1;
 
 MainSeed = 1;
 MainMax = 10;
 RandomDebug = 0;
 
-WaitForTimeOut = 0;
-TimeOutValueSet = 0;
+WaitForTimeOut = 1;
+TimeOutValueSet = 1;
 DelayUnit = 1000000;
-TimeOut = 0;
+TimeOut = 100000;
 
-PrintStats = 0;
+PrintStats = 1;
 EnableTrace = 0;
 JustGenerateTrace = 0;
 EnableTraceFromCommandLine = 0;
@@ -203,18 +206,21 @@ void PrintEffectiveSimulationParameters() {
 
 void InitializeSharedVariables() {
 // Allocating memory for shared variables and arrays.
-x = (Word*)malloc(sizeof(Word));
-y = (Word*)malloc(sizeof(Word));
+
+a_array_size = 8192;
+a = (Word*)malloc(a_array_size*sizeof(Word));
 
 // Initializing shared variables and arrays.
-*x = 10;
-*y = 20;
+unsigned ElementNo;
+for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
+a[ElementNo] = 0;
+
 
 #ifdef ENABLE_TRACE_CODE
 if ( EnableTrace )
 {
-printf("Address of x : %p\n",x );
-printf("Address of y : %p\n",y );
+for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
+printf("Address of a[%u] : %p\n",ElementNo, &(a[ElementNo]) );
 
 }
 #endif
@@ -244,9 +250,8 @@ int main(int argc, char*  argv[]) {
 	PrintEffectiveSimulationParameters();
 
 	// Prepare thread functions and parameters to pass them
-	unsigned short  ThreadNo;
-	pthread_t       Thrd[maxThreadNum];
-	thread_input_t  th_input[maxThreadNum];
+	Thrd=(pthread_t*)malloc(sizeof(pthread_t)*maxThreadNum);
+	th_input=(thread_input_t*)malloc(sizeof(thread_input_t)*maxThreadNum);
 	for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
 		th_input[ThreadNo].thread_ID  = ThreadNo;
 		th_input[ThreadNo].ThreadSeed = ThreadSeed[ThreadNo];
@@ -291,7 +296,7 @@ int main(int argc, char*  argv[]) {
 		printf("Initializing STM...\n");
 		TM_INIT(0);
 
-		// Start threads (threads will execute their main functionality after all
+		// Start threads (threads will execute the main functionality after all
 		// threads are generated, this is provided by the barrier)
 		barrier_init(&barrier, ThreadNum+1);
 
@@ -353,6 +358,7 @@ int main(int argc, char*  argv[]) {
 			PrintDevelopperTestWarning();
 		#endif
 	}
+	free(Thrd);
 	return 0;
 }
 
