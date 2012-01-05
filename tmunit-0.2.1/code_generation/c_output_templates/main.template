@@ -273,14 +273,15 @@ int main(int argc, char*  argv[]) {
 		barrier_cross(&barrier);
 
 		if( WaitForTimeOut ) {
-				struct timespec time_out;
-				struct timespec left_time_out;
-				time_out.tv_sec = TimeOut/1000000;
-				time_out.tv_nsec = (long)((TimeOut%1000000)*1000);
+			struct timespec time_out;
+			struct timespec left_time_out;
+			time_out.tv_sec = TimeOut/1000000;
+			time_out.tv_nsec = (long)((TimeOut%1000000)*1000);
 
-				printf("TimeOut=%u, time_out= (%ld,%ld)\n",TimeOut, time_out.tv_sec,time_out.tv_nsec);
+			printf("TimeOut=%u, time_out= (%ld,%ld)\n",TimeOut, time_out.tv_sec,time_out.tv_nsec);
 
-				while( nanosleep(&time_out,&left_time_out) == -1) {
+			#ifdef	AUTOREPLACE
+				while(nanosleep(&time_out,&left_time_out) == -1) {
 					if(TerminateRequestedBySignal)
 						break;
 					printf("left_time_out= (%ld,%ld)\n", left_time_out.tv_sec,left_time_out.tv_nsec);
@@ -288,24 +289,27 @@ int main(int argc, char*  argv[]) {
 					time_out.tv_sec  = left_time_out.tv_sec;
 					time_out.tv_nsec = left_time_out.tv_nsec;
 				}
+			#else
+
+			#endif
 
 			// *INDENT-OFF*
-				AO_store_full(&TerminateRequestedBySignal, TRUE);
-				printf("\n"
+			AO_store_full(&TerminateRequestedBySignal, TRUE);
+			printf("\n"
 						"--------------------------\n"
 						"EXECUTION TIMEOUT REACHED.\n"
 						"--------------------------\n");
 			// *INDENT-ON*
-			}
+		}
 
-			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
-				pthread_join(Thrd[ThreadNo],NULL);
+		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
+			pthread_join(Thrd[ThreadNo],NULL);
 
-			printf("Shutting STM engine down...\n");
-			TM_EXIT(0);
+		printf("Shutting STM engine down...\n");
+		TM_EXIT(0);
 
-			if (PrintStats) {
-				PrintStatistics();
+		if (PrintStats) {
+			PrintStatistics();
 			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
 				free(Statistics[ThreadNo]);
 			free(Statistics);

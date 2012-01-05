@@ -117,18 +117,18 @@ void PrintDevelopperTestWarning()
 // *INDENT-ON*
 
 int InitializeSimulationParameters() {
-TransmitReadOnlyTxHint = 0;
+TransmitReadOnlyTxHint = 1;
 
 MainSeed = 1;
 MainMax = 10;
 RandomDebug = 0;
 
-WaitForTimeOut = 0;
-TimeOutValueSet = 0;
+WaitForTimeOut = 1;
+TimeOutValueSet = 1;
 DelayUnit = 1000000;
-TimeOut = 0;
+TimeOut = 100000;
 
-PrintStats = 0;
+PrintStats = 1;
 EnableTrace = 0;
 JustGenerateTrace = 0;
 EnableTraceFromCommandLine = 0;
@@ -199,18 +199,21 @@ void PrintEffectiveSimulationParameters() {
 
 void InitializeSharedVariables() {
 // Allocating memory for shared variables and arrays.
-x = (Word*)malloc(sizeof(Word));
-y = (Word*)malloc(sizeof(Word));
+
+a_array_size = 8192;
+a = (Word*)malloc(a_array_size*sizeof(Word));
 
 // Initializing shared variables and arrays.
-*x = 10;
-*y = 20;
+unsigned ElementNo;
+for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
+a[ElementNo] = 0;
+
 
 #ifdef ENABLE_TRACE_CODE
 if ( EnableTrace )
 {
-printf("Address of x : %p\n",x );
-printf("Address of y : %p\n",y );
+for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
+printf("Address of a[%u] : %p\n",ElementNo, &(a[ElementNo]) );
 
 }
 #endif
@@ -302,30 +305,30 @@ int main(int argc, char*  argv[]) {
 		barrier_cross(&barrier);
 
 		if( WaitForTimeOut ) {
-				struct timespec time_out;
-				struct timespec left_time_out;
-				time_out.tv_sec = TimeOut/1000000;
-				time_out.tv_nsec = (long)((TimeOut%1000000)*1000);
+			struct timespec time_out;
+			struct timespec left_time_out;
+			time_out.tv_sec = TimeOut/1000000;
+			time_out.tv_nsec = (long)((TimeOut%1000000)*1000);
 
-				printf("TimeOut=%u, time_out= (%ld,%ld)\n",TimeOut, time_out.tv_sec,time_out.tv_nsec);
+			printf("TimeOut=%u, time_out= (%ld,%ld)\n",TimeOut, time_out.tv_sec,time_out.tv_nsec);
 
-				while( nanosleep(&time_out,&left_time_out) == -1) {
-					if(TerminateRequestedBySignal)
-						break;
-					printf("left_time_out= (%ld,%ld)\n", left_time_out.tv_sec,left_time_out.tv_nsec);
+			while( nanosleep(&time_out,&left_time_out) == -1) {
+				if(TerminateRequestedBySignal)
+					break;
+				printf("left_time_out= (%ld,%ld)\n", left_time_out.tv_sec,left_time_out.tv_nsec);
 
-					time_out.tv_sec  = left_time_out.tv_sec;
-					time_out.tv_nsec = left_time_out.tv_nsec;
-				}
+				time_out.tv_sec  = left_time_out.tv_sec;
+				time_out.tv_nsec = left_time_out.tv_nsec;
+			}
 
 			// *INDENT-OFF*
-				AO_store_full(&TerminateRequestedBySignal, TRUE);
-				printf("\n"
+			AO_store_full(&TerminateRequestedBySignal, TRUE);
+			printf("\n"
 						"--------------------------\n"
 						"EXECUTION TIMEOUT REACHED.\n"
 						"--------------------------\n");
 			// *INDENT-ON*
-			}
+		}
 
 			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
 				pthread_join(Thrd[ThreadNo],NULL);

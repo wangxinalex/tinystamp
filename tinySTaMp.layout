@@ -29,13 +29,22 @@
 		<Cursor position="13792" topLine="412" />
 	</File>
 	<File name="tinySTM/src/stm.c" open="0" top="0" tabpos="3">
-		<Cursor position="93429" topLine="2991" />
+		<Cursor position="93788" topLine="3012" />
 	</File>
 	<File name="tmunit-0.2.1/README" open="0" top="0" tabpos="0">
 		<Cursor position="2591" topLine="129" />
 	</File>
 	<File name="tmunit-0.2.1/c_output/cli.c" open="0" top="0" tabpos="0">
-		<Cursor position="319" topLine="0" />
+		<Cursor position="5556" topLine="138" />
+	</File>
+	<File name="tmunit-0.2.1/c_output/initialization.c" open="0" top="0" tabpos="0">
+		<Cursor position="1413" topLine="42" />
+	</File>
+	<File name="tmunit-0.2.1/c_output/initialization.h" open="0" top="0" tabpos="0">
+		<Cursor position="950" topLine="17" />
+	</File>
+	<File name="tmunit-0.2.1/c_output/main.c" open="0" top="0" tabpos="0">
+		<Cursor position="4754" topLine="114" />
 	</File>
 	<File name="tmunit-0.2.1/c_output/transactions.c" open="0" top="0" tabpos="0">
 		<Cursor position="148" topLine="0" />
@@ -44,10 +53,10 @@
 		<Cursor position="1706" topLine="17" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_scripts/post_patmap" open="0" top="0" tabpos="0">
-		<Cursor position="3925" topLine="104" />
+		<Cursor position="10098" topLine="266" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/Makefile" open="0" top="0" tabpos="0">
-		<Cursor position="0" topLine="110" />
+		<Cursor position="32" topLine="0" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/barrier.c" open="0" top="0" tabpos="0">
 		<Cursor position="0" topLine="6" />
@@ -55,20 +64,26 @@
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/barrier.h" open="0" top="0" tabpos="0">
 		<Cursor position="322" topLine="0" />
 	</File>
-	<File name="tmunit-0.2.1/code_generation/c_output_templates/cli.c" open="1" top="1" tabpos="0">
-		<Cursor position="5634" topLine="138" />
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/cli.c" open="0" top="0" tabpos="0">
+		<Cursor position="5604" topLine="148" />
 	</File>
-	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.c.template" open="0" top="0" tabpos="0">
-		<Cursor position="257" topLine="18" />
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.c.template" open="1" top="1" tabpos="2">
+		<Cursor position="279" topLine="9" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.h.template" open="0" top="0" tabpos="0">
-		<Cursor position="592" topLine="6" />
+		<Cursor position="661" topLine="10" />
 	</File>
-	<File name="tmunit-0.2.1/code_generation/c_output_templates/main.template" open="0" top="0" tabpos="0">
-		<Cursor position="7420" topLine="261" />
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/main.template" open="1" top="0" tabpos="1">
+		<Cursor position="7742" topLine="0" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/simulation_parameters.c" open="0" top="0" tabpos="0">
+		<Cursor position="68" topLine="0" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/simulation_parameters.h" open="0" top="0" tabpos="0">
+		<Cursor position="421" topLine="16" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/t_benchrun" open="0" top="0" tabpos="0">
-		<Cursor position="0" topLine="1" />
+		<Cursor position="2363" topLine="39" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/thread.template" open="0" top="0" tabpos="0">
 		<Cursor position="642" topLine="87" />
@@ -82,17 +97,68 @@
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/transactions.template" open="0" top="0" tabpos="0">
 		<Cursor position="148" topLine="0" />
 	</File>
+	<File name="tmunit-0.2.1/code_generation/generate_files.c" open="0" top="0" tabpos="0">
+		<Cursor position="42939" topLine="1134" />
+	</File>
 	<File name="tmunit-0.2.1/execution/thread.c" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="8318" topLine="238" />
+	</File>
+	<File name="tmunit-0.2.1/execution/thread.h" open="0" top="0" tabpos="0">
+		<Cursor position="675" topLine="14" />
 	</File>
 	<File name="tmunit-0.2.1/execution/tinySTM_new.h" open="0" top="0" tabpos="0">
 		<Cursor position="1432" topLine="21" />
 	</File>
 	<File name="tmunit-0.2.1/execution/tmunit.c" open="0" top="0" tabpos="2">
-		<Cursor position="11215" topLine="293" />
+		<Cursor position="7269" topLine="199" />
+	</File>
+	<File name="tmunit-0.2.1/execution/user_interface_console.c" open="0" top="0" tabpos="0">
+		<Cursor position="3686" topLine="139" />
+	</File>
+	<File name="tmunit-0.2.1/language/bison_grammar.y" open="0" top="0" tabpos="0">
+		<Cursor position="12438" topLine="383" />
+	</File>
+	<File name="tmunit-0.2.1/language/bison_grammar.y_bck" open="0" top="0" tabpos="0">
+		<Cursor position="7408" topLine="383" />
+	</File>
+	<File name="tmunit-0.2.1/language/intermediate_representation.c" open="0" top="0" tabpos="0">
+		<Cursor position="5934" topLine="202" />
+	</File>
+	<File name="tmunit-0.2.1/language/simulation_parameters.c" open="0" top="0" tabpos="0">
+		<Cursor position="1006" topLine="27" />
 	</File>
 	<File name="tmunit-0.2.1/language/simulation_parameters.h" open="0" top="0" tabpos="0">
-		<Cursor position="0" topLine="25" />
+		<Cursor position="1192" topLine="30" />
+	</File>
+	<File name="tmunit-0.2.1/test/development_tests/c_generation/tx_file_generation_1/reference.log" open="0" top="0" tabpos="0">
+		<Cursor position="4434" topLine="46" />
+	</File>
+	<File name="tmunit-0.2.1/test/development_tests/c_generation/tx_file_generation_1/reference_c_output/cli.c" open="0" top="0" tabpos="0">
+		<Cursor position="5657" topLine="153" />
+	</File>
+	<File name="tmunit-0.2.1/test/development_tests/c_generation/tx_file_generation_1/reference_c_output/initialization.c" open="0" top="0" tabpos="0">
+		<Cursor position="846" topLine="27" />
+	</File>
+	<File name="tmunit-0.2.1/test/development_tests/c_generation/tx_file_generation_1/reference_c_output/main.c" open="0" top="0" tabpos="0">
+		<Cursor position="8813" topLine="279" />
+	</File>
+	<File name="tmunit-0.2.1/test/development_tests/c_generation/tx_file_generation_2/reference.log" open="0" top="0" tabpos="0">
+		<Cursor position="6718" topLine="119" />
+	</File>
+	<File name="tmunit-0.2.1/test/listings_in_paper/bank-bench/generate_c/reference.log" open="0" top="0" tabpos="0">
+		<Cursor position="12176" topLine="137" />
+	</File>
+	<File name="tmunit-0.2.1/test/listings_in_paper/bank-bench/generate_c/reference_c_output/initialization.c" open="0" top="0" tabpos="0">
+		<Cursor position="1056" topLine="34" />
+	</File>
+	<File name="tmunit-0.2.1/test/listings_in_paper/bank-bench/generate_c/reference_c_output/initialization.h" open="0" top="0" tabpos="0">
+		<Cursor position="966" topLine="17" />
+	</File>
+	<File name="tmunit-0.2.1/test/listings_in_paper/bank-bench/generate_c/reference_c_output/thread_7.c" open="0" top="0" tabpos="0">
+		<Cursor position="2286" topLine="50" />
+	</File>
+	<File name="tmunit-0.2.1/test/listings_in_paper/intset/serial/replicate_th_1/generate_c/reference.log" open="0" top="0" tabpos="0">
+		<Cursor position="5540" topLine="59" />
 	</File>
 	<File name="tmunit-0.2.1/test/listings_in_paper/intset/serial/replicate_th_1/generate_c/reference_c_output/cli.c" open="0" top="0" tabpos="0">
 		<Cursor position="48" topLine="178" />

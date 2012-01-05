@@ -2,7 +2,7 @@ Properties:
   RandomSeed = 1;           
   ReadOnlyHint = 1;         
   WaitForTimeOut = 1;
-  Timeout = 1000000;   
+  Timeout = 100000;   
 
 
 Definitions:						 

@@ -55,8 +55,8 @@ void *RunThread_0 (void *Parameters)
   unsigned ID = ThreadParameters->thread_ID;
   unsigned int CurrentThreadSeed = ThreadParameters->ThreadSeed;
 
-  char *ThreadNames[] = { "Th1" };
-  char *TransactionNames[] = { "T1", "T2" };
+  char *ThreadNames[] = { "P_1", "P_2", "P_3", "P_4", "P_5", "P_6", "P_7", "P_8" };
+  char *TransactionNames[] = { "T_transfer", "T_balance" };
 
 
 
@@ -70,13 +70,23 @@ void *RunThread_0 (void *Parameters)
   ThLocals.ThreadName = ThreadNames[ID];
   ThLocals.TransactionNames = TransactionNames;
 
+// Initializing random variable seeds
+  ThLocals.seed__SRC = (unsigned) RAND_R (&CurrentThreadSeed);
+  ThLocals.seed__DST = (unsigned) RAND_R (&CurrentThreadSeed);
+  if (RandomDebug)
+  {
+    printf ("Generating Random variable seeds for Thread %u...\n", ID);
+    printf ("Seed of _SRC: %u\n", ThLocals.seed__SRC);
+    printf ("Seed of _DST: %u\n", ThLocals.seed__DST);
+  }
 
 // Initializing thread local variables (other than random variables).
-  ThLocals._a = 0;
-  ThLocals._b = 0;
+  ThLocals._NB = 8192;
+  ThLocals._k = 0;
 
 
 // Definition and initialization of thread local variables.
+  unsigned RepetitionNo[1];
 
 
   ThLocals.WriteValue = (unsigned) RAND_R (&CurrentThreadSeed);
@@ -110,12 +120,12 @@ void *RunThread_0 (void *Parameters)
 
   gettimeofday (&(ThLocals.Statistics.start_time), NULL);
 
-  ExecuteTransaction (0, ThLocals.TxDesc, &ThLocals);
-  if (TerminateRequestedBySignal)
-    TERMINATE_THREAD;
-  ExecuteTransaction (1, ThLocals.TxDesc, &ThLocals);
-  if (TerminateRequestedBySignal)
-    TERMINATE_THREAD;
+  for (;;)
+  {
+    ExecuteTransaction (1, ThLocals.TxDesc, &ThLocals);
+    if (TerminateRequestedBySignal)
+      TERMINATE_THREAD;
+  }
 
   TERMINATE_THREAD;
 

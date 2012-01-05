@@ -1,12 +1,14 @@
 // Initializing shared variables and arrays.
-*x = 10;
-*y = 20;
+unsigned ElementNo;
+for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
+a[ElementNo] = 0;
+
 
 #ifdef ENABLE_TRACE_CODE
 if ( EnableTrace )
 {
-printf("Address of x : %p\n",x );
-printf("Address of y : %p\n",y );
+for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
+printf("Address of a[%u] : %p\n",ElementNo, &(a[ElementNo]) );
 
 }
 #endif

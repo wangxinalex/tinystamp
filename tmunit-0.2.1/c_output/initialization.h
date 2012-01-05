@@ -28,6 +28,13 @@ void InitializeThreadRunFunctions ();
 
 
 void *RunThread_0 (void *Parameters);
+void *RunThread_1 (void *Parameters);
+void *RunThread_2 (void *Parameters);
+void *RunThread_3 (void *Parameters);
+void *RunThread_4 (void *Parameters);
+void *RunThread_5 (void *Parameters);
+void *RunThread_6 (void *Parameters);
+void *RunThread_7 (void *Parameters);
 
 
 
