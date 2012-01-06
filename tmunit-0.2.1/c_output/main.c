@@ -291,7 +291,7 @@ int main(int argc, char*  argv[]) {
     }
     else {
 		if (PrintStats) {
-			Statistics = (stat_t**) malloc(ThreadNum*sizeof(stat_t*));
+			Statistics = (stat_t**) malloc(maxThreadNum*sizeof(stat_t*));
 		}
 		else
 			Statistics = NULL;
@@ -362,6 +362,9 @@ int main(int argc, char*  argv[]) {
 				free(Statistics[ThreadNo]);
 			free(Statistics);
 		}
+
+		printf("\nDebug: was here5"); fflush(stdout);
+
 		#ifdef COMPILE_FOR_TEST
 			PrintDevelopperTestWarning();
 		#endif
@@ -376,7 +379,7 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 	while(milisecondsLeft > SLEEP_PERIOD_SIZE) {
 		mySleep(SLEEP_PERIOD_SIZE);
 		milisecondsLeft-=SLEEP_PERIOD_SIZE;
-//		startNewThread();
+		startNewThread();
 	}
 	mySleep(milisecondsLeft);
 }
