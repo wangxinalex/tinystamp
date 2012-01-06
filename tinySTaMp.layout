@@ -10,8 +10,8 @@
 	<File name="stamp-0.9.10/intruder/detector.c" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="3">
-		<Cursor position="38154" topLine="983" />
+	<File name="stamp-0.9.10/lib/thread.c" open="0" top="0" tabpos="3">
+		<Cursor position="40284" topLine="1072" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="0">
 		<Cursor position="7698" topLine="180" />
@@ -53,7 +53,7 @@
 		<Cursor position="950" topLine="17" />
 	</File>
 	<File name="tmunit-0.2.1/c_output/main.c" open="0" top="0" tabpos="0">
-		<Cursor position="8778" topLine="234" />
+		<Cursor position="8778" topLine="321" />
 	</File>
 	<File name="tmunit-0.2.1/c_output/transactions.c" open="0" top="0" tabpos="0">
 		<Cursor position="148" topLine="0" />
@@ -82,8 +82,8 @@
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.h.template" open="0" top="0" tabpos="0">
 		<Cursor position="661" topLine="10" />
 	</File>
-	<File name="tmunit-0.2.1/code_generation/c_output_templates/main.template" open="1" top="0" tabpos="2">
-		<Cursor position="9947" topLine="281" />
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/main.template" open="1" top="1" tabpos="2">
+		<Cursor position="11980" topLine="328" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/simulation_parameters.c" open="0" top="0" tabpos="0">
 		<Cursor position="68" topLine="0" />

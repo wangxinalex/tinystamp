@@ -355,8 +355,8 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 void startNewThread() {
 	if (ThreadNum < maxThreadNum) {
 		pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
-		++ThreadNum;
 		printf("started thread nr: %u\n",ThreadNum);
+		++ThreadNum;
 	}
 }
 
