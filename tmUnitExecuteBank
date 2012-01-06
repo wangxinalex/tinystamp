@@ -3,6 +3,6 @@ cd tmunit-0.2.1
 cd c_output
 make clean
 make
-./benchrun -p 1 -d 2000000 -m 11
+./benchrun -p 1 -d 20000000 -m 11
 cd ../..
 

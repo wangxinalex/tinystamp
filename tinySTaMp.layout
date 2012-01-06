@@ -10,8 +10,8 @@
 	<File name="stamp-0.9.10/intruder/detector.c" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.c" open="0" top="0" tabpos="0">
-		<Cursor position="17501" topLine="512" />
+	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="3">
+		<Cursor position="38154" topLine="983" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="0">
 		<Cursor position="7698" topLine="180" />
@@ -19,8 +19,11 @@
 	<File name="stamp-0.9.10/lib/tm.h" open="0" top="0" tabpos="0">
 		<Cursor position="18034" topLine="470" />
 	</File>
-	<File name="stamp-0.9.10/vacation/vacation.c" open="0" top="0" tabpos="0">
-		<Cursor position="19310" topLine="577" />
+	<File name="stamp-0.9.10/vacation/reservation.h" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="222" />
+	</File>
+	<File name="stamp-0.9.10/vacation/vacation.c" open="1" top="0" tabpos="1">
+		<Cursor position="15540" topLine="599" />
 	</File>
 	<File name="tinySTM/abi/abi.c" open="0" top="0" tabpos="0">
 		<Cursor position="6331" topLine="229" />
@@ -50,7 +53,7 @@
 		<Cursor position="950" topLine="17" />
 	</File>
 	<File name="tmunit-0.2.1/c_output/main.c" open="0" top="0" tabpos="0">
-		<Cursor position="4754" topLine="114" />
+		<Cursor position="8778" topLine="234" />
 	</File>
 	<File name="tmunit-0.2.1/c_output/transactions.c" open="0" top="0" tabpos="0">
 		<Cursor position="148" topLine="0" />
@@ -73,14 +76,14 @@
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/cli.c" open="0" top="0" tabpos="0">
 		<Cursor position="5604" topLine="148" />
 	</File>
-	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.c.template" open="1" top="0" tabpos="2">
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.c.template" open="0" top="0" tabpos="2">
 		<Cursor position="1499" topLine="38" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.h.template" open="0" top="0" tabpos="0">
 		<Cursor position="661" topLine="10" />
 	</File>
-	<File name="tmunit-0.2.1/code_generation/c_output_templates/main.template" open="1" top="1" tabpos="1">
-		<Cursor position="11149" topLine="314" />
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/main.template" open="1" top="0" tabpos="2">
+		<Cursor position="9947" topLine="281" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/simulation_parameters.c" open="0" top="0" tabpos="0">
 		<Cursor position="68" topLine="0" />

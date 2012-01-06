@@ -1,0 +1,8 @@
+cd tmunit-0.2.1
+./tmunit -g test/listings_in_paper/bank-bench/bank-bench.cfg
+cd c_output
+make clean
+make
+./benchrun -p 1 -d 20000000 -m 11
+cd ../..
+

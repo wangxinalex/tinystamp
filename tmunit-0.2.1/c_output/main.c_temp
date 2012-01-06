@@ -29,7 +29,8 @@ __thread stm_tx_t *TxDesc = (stm_tx_t *) 0x1;
 #endif
 
 //      ------------------      const values    ------------------
-#define SLEEP_PERIOD_SIZE 100	// miliseconds
+#define SLEEP_PERIOD_SIZE			100	// miliseconds
+#define REDUCE_STARTING_THREADNUM	ThreadNum/=2
 
 //      ------------------      declaring methods       ------------------
 void ajust_amount_of_threads (double sleepInSeconds);
@@ -44,7 +45,6 @@ extern ThreadRunFunc ThreadRun[];
 
 //      ------------------ other variables      ------------------
 stat_t **Statistics;
-static unsigned short ThreadNo;
 static pthread_t *Thrd;
 static thread_input_t *th_input;
 
@@ -249,6 +249,7 @@ int main (int argc, char *argv[])
 
   printf ("maxThreadNum = %u\n", maxThreadNum);
   assert (maxThreadNum >= ThreadNum);
+  REDUCE_STARTING_THREADNUM;
 
   InitializeThreadSeeds (ThreadNum, maxThreadNum);
   PrintEffectiveSimulationParameters ();
@@ -256,6 +257,7 @@ int main (int argc, char *argv[])
   // Prepare thread functions and parameters to pass them
   Thrd = (pthread_t *) malloc (sizeof (pthread_t) * maxThreadNum);
   th_input = (thread_input_t *) malloc (sizeof (thread_input_t) * maxThreadNum);
+  unsigned ThreadNo;
   for (ThreadNo = 0; ThreadNo < maxThreadNum; ThreadNo++)
   {
     th_input[ThreadNo].thread_ID = ThreadNo;
@@ -279,7 +281,7 @@ int main (int argc, char *argv[])
 #endif
     TM_INIT (0);
 
-    unsigned ThreadNo;
+    //unsigned ThreadNo;
     for (ThreadNo = 0; ThreadNo < ThreadNum; ThreadNo++)
     {
       ThreadRun[ThreadNo] ((void *) &(th_input[ThreadNo]));
@@ -352,13 +354,22 @@ int main (int argc, char *argv[])
 						"EXECUTION TIMEOUT REACHED.\n"
 						"--------------------------\n");
 			// *INDENT-ON*
+      printf ("\nDebug: was here1");
     }
+    printf ("\nDebug: was here2");
+    fflush (stdout);
 
     for (ThreadNo = 0; ThreadNo < ThreadNum; ThreadNo++)
       pthread_join (Thrd[ThreadNo], NULL);
 
+    printf ("\nDebug: was here3");
+    fflush (stdout);
+
     printf ("Shutting STM engine down...\n");
     TM_EXIT (0);
+
+    printf ("\nDebug: was here4");
+    fflush (stdout);
 
     if (PrintStats)
     {
@@ -372,6 +383,7 @@ int main (int argc, char *argv[])
 #endif
   }
   free (Thrd);
+  free (th_input);
   return 0;
 }
 
@@ -382,26 +394,18 @@ void ajust_amount_of_threads (double sleepInSeconds)
   {
     mySleep (SLEEP_PERIOD_SIZE);
     milisecondsLeft -= SLEEP_PERIOD_SIZE;
+//              startNewThread();
   }
   mySleep (milisecondsLeft);
 }
-
-// todo: use or remove
-/*static void runMoreThreads(long moreThreads) {
-    long i;
-    for (i=thread_getNumThread()+moreThreads; i--!=thread_getNumThread();) {
-        if(!clients[i])
-            clients[i] = initializeOneClient(managerPtr, i);
-    }
-    thread_startup_noBarriers(moreThreads, 1);
-}*/
 
 void startNewThread ()
 {
   if (ThreadNum < maxThreadNum)
   {
-    pthread_create (&(Thrd[ThreadNo]), NULL, ThreadRun[0], (void *) &(th_input[ThreadNo]));
+    pthread_create (&(Thrd[ThreadNum]), NULL, ThreadRun[0], (void *) &(th_input[ThreadNum]));
     ++ThreadNum;
+    printf ("started thread nr: %u\n", ThreadNum);
   }
 }
 

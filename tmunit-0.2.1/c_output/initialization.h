@@ -35,6 +35,9 @@ void *RunThread_4 (void *Parameters);
 void *RunThread_5 (void *Parameters);
 void *RunThread_6 (void *Parameters);
 void *RunThread_7 (void *Parameters);
+void *RunThread_8 (void *Parameters);
+void *RunThread_9 (void *Parameters);
+void *RunThread_10 (void *Parameters);
 
 
 
