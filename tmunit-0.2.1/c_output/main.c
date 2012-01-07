@@ -30,7 +30,7 @@
 
 //	------------------	const values	------------------
 #define SLEEP_PERIOD_SIZE			100 // miliseconds
-#define REDUCE_STARTING_THREADNUM	ThreadNum/=2
+#define REDUCE_STARTING_THREADNUM	ThreadNum/=4
 
 //	------------------	declaring methods	------------------
 void ajust_amount_of_threads(double sleepInSeconds);

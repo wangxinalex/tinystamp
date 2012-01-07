@@ -9,14 +9,14 @@ unsigned maxThreadNum;
 unsigned* ThreadSeed;
 
 #ifdef	AUTOREPLACE
-	ThreadRunFunc ThreadRun[11] = {NULL};
+	ThreadRunFunc ThreadRun[12] = {NULL};
 #else
 	ThreadRunFunc ThreadRun[1] = {NULL};
 	//ThreadRunFunc *ThreadRun=malloc(MainMax*sizeof(ThreadRunFunc));
 #endif
 
 void SetThreadNum() {
-    ThreadNum = 11;
+    ThreadNum = 12;
 }
 
 void InitializeThreadSeeds(unsigned ThreadNum, unsigned maxThreadNum) {
@@ -63,6 +63,7 @@ void InitializeThreadRunFunctions() {
     ThreadRun[8] = RunThread_8 ;
     ThreadRun[9] = RunThread_9 ;
     ThreadRun[10] = RunThread_10 ;
+    ThreadRun[11] = RunThread_11 ;
 	#else
 		//	int i=0;
 		//	for(i=MainMax; i--;)
