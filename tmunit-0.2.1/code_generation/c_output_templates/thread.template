@@ -16,7 +16,7 @@ extern stat_t** Statistics;
                                       {                     \
   			                    printf("%s[%u]D(%u)-,\n", ThLocals.PrintOffset, ID, Delay); \
                                             fflush(NULL);   \
-}                     
+}
 
 
 // Variables rquired for tm interfaces, can be moved to another file
@@ -24,9 +24,9 @@ extern stat_t** Statistics;
 
     extern __thread stm_tx_t* TxDesc;
     extern AO_t tx_id_counter;
-    extern __thread sigjmp_buf* envPtr; 
+    extern __thread sigjmp_buf* envPtr;
 
-#else  // for example fpr tinySTM_new 
+#else  // for example fpr tinySTM_new
 
     extern __thread stm_tx_t* TxDesc;
 
@@ -53,7 +53,7 @@ void* RunThread_#THREAD_NO#(void *Parameters)
 {
   thread_input_t* ThreadParameters= (thread_input_t*)Parameters;
   unsigned ID = ThreadParameters-> thread_ID;
-  unsigned int CurrentThreadSeed = ThreadParameters->  ThreadSeed ; 
+  unsigned int CurrentThreadSeed = ThreadParameters->  ThreadSeed ;
 
   #THREAD_AND_TRANSACTION_NAMES#
 
@@ -78,38 +78,38 @@ void* RunThread_#THREAD_NO#(void *Parameters)
    ThLocals.WriteValue = (unsigned) RAND_R (&CurrentThreadSeed);
    if(RandomDebug)
    {
-       printf("Initial WriteValue is set to  %u for Thread %u...\n",ThLocals.WriteValue, ID); 
+       printf("Initial WriteValue is set to  %u for Thread %u...\n",ThLocals.WriteValue, ID);
        fflush(NULL);
-   } 
+   }
 
    ThLocals.PrintOffset = NULL;
    if(EnableTrace)
    {
-     unsigned short CurrentOffsetSize = 2*#THREAD_NO#+1 ; 
-     ThLocals.PrintOffset = (char*)malloc(CurrentOffsetSize*sizeof(char)); 
+     unsigned short CurrentOffsetSize = 2*#THREAD_NO#+1 ;
+     ThLocals.PrintOffset = (char*)malloc(CurrentOffsetSize*sizeof(char));
 
-     unsigned short TabCounter= CurrentOffsetSize -1 ; 
-     char* CurrentChar = ThLocals.PrintOffset; 
-     while(TabCounter >0) 
-     { 
-     	*CurrentChar = '\t'; 
-     	CurrentChar ++; 
-     	TabCounter --; 
-     } 
-     CurrentChar = '\0'; 
+     unsigned short TabCounter= CurrentOffsetSize -1 ;
+     char* CurrentChar = ThLocals.PrintOffset;
+     while(TabCounter >0)
+     {
+     	*CurrentChar = '\t';
+     	CurrentChar ++;
+     	TabCounter --;
+     }
+     CurrentChar = '\0';
    }
 
 
-   TM_INIT_THREAD(ThLocals.TxDesc);
-   printf("Starting thread %u...\n",ID);
-   barrier_cross(&barrier);
+	TM_INIT_THREAD(ThLocals.TxDesc);
+	printf("Starting thread %u...\n",ID);
+	if(ThreadParameters->useBarrier)
+		barrier_cross(&barrier);
 
-   gettimeofday(&(ThLocals.Statistics.start_time), NULL); 
+	gettimeofday(&(ThLocals.Statistics.start_time), NULL);
 
-   #THREAD_FUNC#   
+	#THREAD_FUNC#
 
-   TERMINATE_THREAD;
-   
+	TERMINATE_THREAD;
 }
 
-#undef TERMINATE_THREAD    
+#undef TERMINATE_THREAD

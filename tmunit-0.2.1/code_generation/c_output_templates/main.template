@@ -30,7 +30,7 @@
 
 //	------------------	const values	------------------
 #define SLEEP_PERIOD_SIZE			100 // miliseconds
-#define REDUCE_STARTING_THREADNUM	ThreadNum/=4
+#define REDUCE_STARTING_THREADNUM	ThreadNum/=2
 
 //	------------------	declaring methods	------------------
 void ajust_amount_of_threads(double sleepInSeconds);
@@ -225,6 +225,7 @@ int main(int argc, char*  argv[]) {
 	for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
 		th_input[ThreadNo].thread_ID  = ThreadNo;
 		th_input[ThreadNo].ThreadSeed = ThreadSeed[ThreadNo];
+		th_input[ThreadNo].useBarrier = (ThreadNo < ThreadNum);
     }
     InitializeThreadRunFunctions();
 
@@ -244,7 +245,7 @@ int main(int argc, char*  argv[]) {
 		TM_INIT(0);
 
         //unsigned ThreadNo;
-		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+		for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
 			ThreadRun[ThreadNo]((void *)&(th_input[ThreadNo]));
 		}
 
