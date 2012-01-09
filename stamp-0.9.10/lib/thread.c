@@ -306,9 +306,9 @@ void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long maxNumClie
     long i;
     for (i=maxNumClient/64+1;--i;) {
         global_iFinished[i]=0xffffffffffffffff;
-        global_kill[i]=0;
+        global_kill[i]=(long)0;
     }
-    global_kill[0]=0;
+    global_kill[0]=(long)0;
     global_iFinished[0]=0xfffffffffffffffe;
 
     int posixMemalignError=posix_memalign((void**)&global_amountOfCommitsDone, 64, CACHE_LINE_SIZE*global_maxNumClient);

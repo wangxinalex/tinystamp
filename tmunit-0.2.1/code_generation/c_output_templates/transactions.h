@@ -11,9 +11,12 @@
 #include "simulation_parameters.h"
 
 int i_got_killed(unsigned id);
+volatile long*    global_kill;           // array of flabbits to kill threads
+static volatile long*    global_iFinished;      // array of flagbits where threads can say: IFinished
+
 unsigned ChooseFromUniformDist(unsigned CandidateNum, unsigned* Seed);
 void ExecuteTransaction(unsigned TransactionID, stm_tx_t* TxDesc, ThLocalVarCollection* ThLocals);
-volatile long*    global_kill;           // array of flabbits to kill threads
+void initThreadControlVariables();
 
 #if !(defined (RSTM) || defined (SWISS_TM))
 

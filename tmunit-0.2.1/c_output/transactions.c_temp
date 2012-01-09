@@ -1,5 +1,7 @@
 #include "transactions.h"
 
+extern unsigned maxThreadNum;
+
 int i_got_killed (unsigned id)
 {
   long myThreadId = id;
@@ -7,6 +9,25 @@ int i_got_killed (unsigned id)
   //       return 1;
   //   return 0;
   return 0;
+}
+
+void initThreadControlVariables ()
+{
+  int memAllocErrorPosix;
+  assert (sizeof (long) == 8);
+  memAllocErrorPosix = posix_memalign ((void **) &global_iFinished, 64, 8 * (maxThreadNum / 64 + 1));	// from http://pubs.opengroup.org/onlinepubs/000095399/functions/posix_memalign.html
+  assert (global_iFinished);
+  assert (!memAllocErrorPosix);
+  memAllocErrorPosix = posix_memalign ((void **) &global_kill, 64, 8 * (maxThreadNum / 64 + 1));	// from http://pubs.opengroup.org/onlinepubs/000095399/functions/posix_memalign.html
+  assert (!memAllocErrorPosix);
+  long i;
+  for (i = maxThreadNum / 64 + 1; --i;)
+  {
+    global_iFinished[i] = 0xffffffffffffffff;
+    global_kill[i] = (long) 0;
+  }
+  global_kill[0] = (long) 0;
+  global_iFinished[0] = 0xfffffffffffffffe;
 }
 
 void ExecuteTransaction (unsigned TransactionID, stm_tx_t * TxDescr, ThLocalVarCollection * ThLocals)
