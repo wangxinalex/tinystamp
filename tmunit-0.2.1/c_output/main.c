@@ -383,16 +383,23 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 		mySleep(SLEEP_PERIOD_SIZE);
 		milisecondsLeft-=SLEEP_PERIOD_SIZE;
 		startNewThread();
+		killLastCreatedThread();
+		startNewThread();
 	}
 	mySleep(milisecondsLeft);
 }
 
 void startNewThread() {
 	if (ThreadNum < maxThreadNum) {
+		flagThreadAsRunning(ThreadNum);
 		pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
 		printf("started thread nr: %u\n",ThreadNum);
 		++ThreadNum;
 	}
+}
+
+void killLastCreatedThread() {
+	killThreadNr(ThreadNum-1);
 }
 
 void mySleep(long miliseconds) {

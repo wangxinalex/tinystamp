@@ -32,6 +32,10 @@ void freeThreadControlVariables() {
     free((void*) global_kill);
 }
 
+void flagThreadToBeKilled(long threadNr) {
+	global_kill[threadNr/64]=global_kill[threadNr/64]|(((long)1)<<(threadNr%64));
+}
+
 void waitForThreadAndRestore(long threadNr) {
     while(global_iFinished[threadNr/64]&(((long)1)<<(threadNr%64))) {}
     global_kill[threadNr/64]=global_kill[threadNr/64]^(((long)1)<<(threadNr%64));

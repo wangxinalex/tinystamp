@@ -22,6 +22,7 @@ void waitForThreadAndRestore(long threadNr);
 void killThreadNr(long threadNr);
 int every_thread_finished();
 void flagThreadAsRunning(unsigned threadID);
+void flagThreadToBeKilled(long threadNr);
 
 #if !(defined (RSTM) || defined (SWISS_TM))
 
