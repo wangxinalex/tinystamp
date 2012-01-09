@@ -12,11 +12,17 @@
 
 int i_got_killed(unsigned id);
 volatile long*    global_kill;           // array of flabbits to kill threads
-static volatile long*    global_iFinished;      // array of flagbits where threads can say: IFinished
+volatile long*    global_iFinished;      // array of flagbits where threads can say: IFinished
 
 unsigned ChooseFromUniformDist(unsigned CandidateNum, unsigned* Seed);
 void ExecuteTransaction(unsigned TransactionID, stm_tx_t* TxDesc, ThLocalVarCollection* ThLocals);
 void initThreadControlVariables();
+void freeThreadControlVariables();
+void waitForThreadAndRestore(long threadNr);
+void killThreadNr(long threadNr);
+int every_thread_finished();
+void flagThreadAsRunning(unsigned threadID);
+void flagThreadToBeKilled(long threadNr);
 
 #if !(defined (RSTM) || defined (SWISS_TM))
 

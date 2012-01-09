@@ -246,7 +246,7 @@ int main (int argc, char *argv[])
   SetThreadNum ();
   maxThreadNum = MainMax;
   InitializeSharedVariables ();
-  void initThreadControlVariables ();
+  initThreadControlVariables ();
 
   printf ("maxThreadNum = %u\n", maxThreadNum);
   assert (maxThreadNum >= ThreadNum);
@@ -317,6 +317,7 @@ int main (int argc, char *argv[])
 #ifdef AUTOREPLACE
       pthread_create (&(Thrd[ThreadNo]), NULL, ThreadRun[ThreadNo], (void *) &(th_input[ThreadNo]));
 #else
+      flagThreadAsRunning (ThreadNo);
       pthread_create (&(Thrd[ThreadNo]), NULL, ThreadRun[0], (void *) &(th_input[ThreadNo]));
 #endif
     }
@@ -389,6 +390,7 @@ int main (int argc, char *argv[])
   }
   free (Thrd);
   free (th_input);
+  freeThreadControlVariables ();
   return 0;
 }
 
