@@ -1166,14 +1166,9 @@ void GenerateCodeInitializingGlobalOptions()
 }
 
 
-
-
-void Generate_C_CodeForThread(unsigned ThreadID)
-{
-
-    char DummyString[1000];
+void Generate_C_CodeForThread(unsigned ThreadID) {
+	char DummyString[1000];
     char CurrentFileName[100];
-
 
     FILE* ThreadContentFile;
 
