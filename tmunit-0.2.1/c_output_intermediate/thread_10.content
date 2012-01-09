@@ -1,6 +1,6 @@
 for(; ; )
 {
 ExecuteTransaction(0, ThLocals.TxDesc, &ThLocals);
-if(TerminateRequestedBySignal)
-   TERMINATE_THREAD;
+if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
+	TERMINATE_THREAD;
 }

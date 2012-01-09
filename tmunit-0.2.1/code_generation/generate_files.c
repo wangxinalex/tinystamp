@@ -1374,18 +1374,16 @@ void Generate_C_CodeForThread(unsigned ThreadID) {
 	bool MultipleCandidateContainer = CurrentTxContainer -> CandidateTxNum > 1;
 	if( !MultipleCandidateContainer)
 	    fprintf(ThreadContentFile,"ExecuteTransaction(%u, ThLocals.TxDesc, &ThLocals);\n", (CurrentTxContainer->TxCandidateList[0]).TxID);
-	else
-	{
+	else {
 	    fprintf(ThreadContentFile,"ChosenTransactionID = ChooseTransaction( &(CandidateListContainer[%u]) );\n", TxCandidateListContainerNo);
 	    fprintf(ThreadContentFile,"ExecuteTransaction(ChosenTransactionID, ThLocals.TxDesc, &ThLocals);\n");
 	    TxCandidateListContainerNo++;
 	}
 
-	fprintf(ThreadContentFile,"if(TerminateRequestedBySignal)\n"
-		                  "   TERMINATE_THREAD;\n");
+	fprintf(ThreadContentFile,	"if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))\n"
+								"	TERMINATE_THREAD;\n");
 
-	if( CodeAfterTransaction[ContainerNo] != NULL)
-	{
+	if( CodeAfterTransaction[ContainerNo] != NULL) {
 	    fprintf(ThreadContentFile,"%s",CodeAfterTransaction[ContainerNo]);
 	}
 

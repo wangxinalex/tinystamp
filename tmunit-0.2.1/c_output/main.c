@@ -276,7 +276,6 @@ int main(int argc, char*  argv[]) {
 		#endif
 		TM_INIT(0);
 
-        //unsigned ThreadNo;
 		for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
 			ThreadRun[ThreadNo]((void *)&(th_input[ThreadNo]));
 		}
@@ -401,3 +400,5 @@ void mySleep(long miliseconds) {
 //    while(nanosleep(&waitingTime, &waitingTime)==-1)
 //        continue;
 }
+
+

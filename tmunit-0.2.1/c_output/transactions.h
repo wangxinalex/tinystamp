@@ -10,8 +10,10 @@
 #include "thread_local_variables.h"
 #include "simulation_parameters.h"
 
+int i_got_killed(unsigned id);
 unsigned ChooseFromUniformDist(unsigned CandidateNum, unsigned* Seed);
 void ExecuteTransaction(unsigned TransactionID, stm_tx_t* TxDesc, ThLocalVarCollection* ThLocals);
+volatile long*    global_kill;           // array of flabbits to kill threads
 
 #if !(defined (RSTM) || defined (SWISS_TM))
 

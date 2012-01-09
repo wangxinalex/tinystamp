@@ -1,5 +1,13 @@
 #include "transactions.h"
 
+int i_got_killed(unsigned id) {
+ 	long myThreadId=id;
+ //   if(global_kill[myThreadId/64]&(((long)1)<<(myThreadId%64)))
+ //       return 1;
+ //   return 0;
+	return 0;
+}
+
 void ExecuteTransaction(unsigned TransactionID, stm_tx_t* TxDescr, ThLocalVarCollection* ThLocals) {
     Word ValueRead;
     sigjmp_buf *_e;

@@ -9,13 +9,13 @@ typedef enum  {UNIFORM,
 typedef struct  TransactionCandidateStruct
 {
     unsigned  TxID       ;
-    float     Percentage ;  
+    float     Percentage ;
 } TxCandidate_t;
 
 
 typedef struct TxCandidateListContainerStruct
 {
-    TxCandidate_t* TxCandidateList; 
+    TxCandidate_t* TxCandidateList;
     unsigned  CandidateNum ;
     unsigned  Seed;
     DistributionType Distribution;

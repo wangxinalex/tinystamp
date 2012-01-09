@@ -38,7 +38,7 @@ extern __thread stm_tx_t *TxDesc;
 								return NULL;														\
 							}
 
-void *RunThread_11 (void *Parameters)
+void *RunThread_4 (void *Parameters)
 {
   thread_input_t *ThreadParameters = (thread_input_t *) Parameters;
   unsigned ID = ThreadParameters->thread_ID;
@@ -83,7 +83,7 @@ void *RunThread_11 (void *Parameters)
   ThLocals.PrintOffset = NULL;
   if (EnableTrace)
   {
-    unsigned short CurrentOffsetSize = 2 * 11 + 1;
+    unsigned short CurrentOffsetSize = 2 * 4 + 1;
     ThLocals.PrintOffset = (char *) malloc (CurrentOffsetSize * sizeof (char));
 
     unsigned short TabCounter = CurrentOffsetSize - 1;
