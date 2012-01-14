@@ -99,7 +99,7 @@ static volatile long     global_workLeftToDo=0;  // name says everything
 static long* global_amountOfCommitsDone;
 
 static unsigned long ** global_abortsCounters=0;
-static unsigned long * global_abortsEndValues=0;
+static unsigned long * global_abortsValues=0;
 
 static void threadWait (void* argPtr) {
     long threadId = *(long*)argPtr;
@@ -125,11 +125,9 @@ static void threadWaitNoBarrier (void* argPtr) {
     global_abortsCounters[threadId]=stm_get_stats_position("nb_aborts");
     global_myThreadID=threadId;
     global_funcPtr(global_argPtr);
-	global_abortsEndValues[threadId]=*(global_abortsCounters[threadId]);
     global_abortsCounters[threadId]=0;
     TM_THREAD_EXIT();
 }
-
 
 static void threadWaitNoBarrierWorkPices(void* argPtr) {
     long threadId = *(long*)argPtr;
@@ -142,7 +140,6 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
         if(global_kill[threadId/64]&(((long)1)<<(threadId%64)))
             break;
     }
-	global_abortsEndValues[threadId]=*(global_abortsCounters[threadId]);
     global_abortsCounters[threadId]=0;
     TM_THREAD_EXIT();
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
@@ -335,10 +332,10 @@ void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long maxNumClie
     assert(global_threads);
 
     global_abortsCounters = (unsigned long **) malloc( global_maxNumClient * sizeof(unsigned long *));
-    global_abortsEndValues = (unsigned long *) malloc( global_maxNumClient * sizeof(unsigned long));
+    global_abortsValues = (unsigned long *) malloc( global_maxNumClient * sizeof(unsigned long));
     for(i=global_maxNumClient; i--;) {
         global_abortsCounters[i]=0;
-        global_abortsEndValues[i]=0;
+        global_abortsValues[i]=0;
     }
 }
 
@@ -364,7 +361,7 @@ void thread_shutdown () {
     free((void*) global_kill);
     free((void*) global_amountOfCommitsDone);
     free(global_abortsCounters);
-    free(global_abortsEndValues);
+    free(global_abortsValues);
 }
 
 void thread_shutdown_noBarriers() {
@@ -475,10 +472,6 @@ unsigned long** getGlobal_abortsCounters() {
     return global_abortsCounters;
 }
 
-unsigned long* getGlobal_abortsEndValues() {
-	return global_abortsEndValues;
-}
-
 //long getGlobalMaxNumClient() {
 //	return global_maxNumClient;
 //}
@@ -488,9 +481,7 @@ unsigned long* getGlobal_abortsEndValues() {
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_00
     long sumOfAllCommitsEver;
-    long abortsBeforeSleep;
-    long abortsAfterSleep;
-    long abortsDiff;
+	unsigned long abortsDiff;
 #endif
 #ifdef USE_ALGO_01
     long doneCounter=0;
@@ -531,9 +522,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     srand ( time(NULL) );
     int randomNumber=0;
     long lastNumThread=0;
-    long abortsBeforeSleep;
-    long abortsAfterSleep;
-    long abortsDiff;
+    unsigned long abortsDiff;
 #endif // USE_ALGO_07
     long milisecondsOfSleep=250;
     int lastDone=0;
@@ -546,13 +535,12 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     while (!every_thread_finished()) {
 #ifdef USE_ALGO_00 // just for plotting graph purposes
         increaseAmountOfThreads(global_maxNumClient, ptr2runMoreThreads);
-        abortsBeforeSleep=getTotalAmountOfAborts();
+		getAmountOfAborts2init();
         sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
         mySleep(milisecondsOfSleep);
-        abortsAfterSleep=getTotalAmountOfAborts();
+        abortsDiff=getAmountOfAborts2();
         sumOfAllCommitsEver=getTotalAmountOfCommits();
         commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
-        abortsDiff=abortsAfterSleep-abortsBeforeSleep;
         printf("running with %ld threads and got %ld commits and %ld aborts\n", global_numThread-1, commitsDuringLastSleep, abortsDiff);
 #endif // USE_ALGO_00
 #ifdef USE_ALGO_01
@@ -560,7 +548,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         mySleep(milisecondsOfSleep);
         sumOfAllCommitsEver=getTotalAmountOfCommits();
         commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
-        double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
+        double percentOfBest=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
         if(commitsDuringLastSleep>cdlsOld && lastDone==1) { // if you increased last time and it got better, increase again
             if(doneCounter>5) {  // if you increased 6 times and it got better 6 times, increase 11 at the time. if not yet 6, just increase again
                 int j;
@@ -987,11 +975,10 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #endif // USE_ALGO_06
 #ifdef USE_ALGO_07              // yet another copy of algo 6
         sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
-        abortsBeforeSleep=getTotalAmountOfAborts();
+		getAmountOfAborts2init();
         mySleep(milisecondsOfSleep);
         sumOfAllCommitsEver=getTotalAmountOfCommits();
-        abortsAfterSleep=getTotalAmountOfAborts();
-        abortsDiff=abortsAfterSleep-abortsBeforeSleep;
+        abortsDiff=getAmountOfAborts2();
         commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
         lastNumThread=global_numThread;
         double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
@@ -1036,7 +1023,8 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             lastDone=0;
             lastAction=0;
         }
-        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever. #commits: %ld #aborts: %ld\n",lastNumThread-1, percentOfBestEver, commitsDuringLastSleep, abortsDiff);
+        // commits and aborts are only counted during sleep
+        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever. #commits: %ld #aborts: %l \n",lastNumThread-1, percentOfBestEver, commitsDuringLastSleep, abortsDiff);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -1121,9 +1109,33 @@ long getTotalAmountOfCommits() {
 unsigned long getTotalAmountOfAborts() {
     unsigned long total=0;
     int i;
-    for (i=global_maxNumClient; i-->0;) {
+    for (i=global_numThread; i-->0;) {
+//    for (i=global_maxNumClient; i-->0;) {
         if(global_abortsCounters[i])
             total+=*(global_abortsCounters[i]);
+//		else
+//			printf("error\n");
+//			total+=global_abortsEndValues[i];
+    }
+    return total;
+}
+
+void getAmountOfAborts2init() {
+    int i;
+    for (i=global_numThread; i-->0;) {
+        if(global_abortsCounters[i])
+            global_abortsValues[i]+=*(global_abortsCounters[i]);
+		else
+			global_abortsValues[i]=0;
+    }
+}
+
+unsigned long getAmountOfAborts2() {
+    unsigned long total=0;
+    int i;
+    for (i=global_numThread; i-->0;) {
+        if(global_abortsCounters[i] && global_abortsValues[i])
+            total+=*(global_abortsCounters[i])-global_abortsValues[i];
     }
     return total;
 }

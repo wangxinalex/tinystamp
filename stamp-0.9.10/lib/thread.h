@@ -265,6 +265,10 @@ long getTotalAmountOfCommits();
 
 unsigned long getTotalAmountOfAborts();
 
+unsigned long getAmountOfAborts2();
+
+void getAmountOfAborts2init();
+
 void mySleep(long miliseconds);
 
 void increaseAmountOfThreadsByOne(void (*ptr2runMoreThreads)(long));
@@ -282,8 +286,6 @@ void waitForThreadAndRestore(long threadNr);
 long* getMyCommitCounter();
 
 unsigned long** getGlobal_abortsCounters();
-
-unsigned long* getGlobal_abortsEndValues();
 
 #ifdef __cplusplus
 }
