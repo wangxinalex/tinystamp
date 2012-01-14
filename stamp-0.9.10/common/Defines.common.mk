@@ -7,9 +7,9 @@
 
 CC       := gcc
 CFLAGS   += -Wall -pthread
-CFLAGS   += -O0
+CFLAGS   += -O3
 CFLAGS   += -ggdb3
-#CFLAGS   += -DNDEBUG
+CFLAGS   += -DNDEBUG
 CFLAGS   += -DOTHERTHREADBARRIER
 CFLAGS   += -DDYNAMC_THREAD_MANAGEMENT
 CFLAGS   += -march=native

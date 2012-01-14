@@ -12,9 +12,9 @@ UNIFDEF ?= unifdef
 # Debug/optimization flags
 # Default config is optimization
 ifeq ($(CFG),debug)
-  CFLAGS += -g
+  CFLAGS += -O3 -DNDEBUG -march=native -pipe
 else
-  CFLAGS += -O3 -DNDEBUG
+  CFLAGS += -O3 -DNDEBUG -march=native -pipe
 endif
 
 TM = stm

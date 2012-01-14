@@ -399,7 +399,9 @@ void startNewThread() {
 }
 
 void killLastCreatedThread() {
-	killThreadNr(ThreadNum-1);
+	if(ThreadNum>1) {
+		killThreadNr(ThreadNum-1);
+	}
 }
 
 void mySleep(long miliseconds) {

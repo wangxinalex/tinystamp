@@ -124,7 +124,7 @@ static void threadWaitNoBarrier (void* argPtr) {
     global_abortsCounters[threadId]=stm_get_stats_position("nb_aborts");
     global_myThreadID=threadId;
     global_funcPtr(global_argPtr);
-    global_abortsCounters[threadId]=0;
+//    global_abortsCounters[threadId]=0;
     TM_THREAD_EXIT();
 }
 
@@ -468,7 +468,7 @@ unsigned long** getGlobal_abortsCounters() {
     return global_abortsCounters;
 }
 
-#define USE_ALGO_06 6
+#define USE_ALGO_07 7
 
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_00
@@ -510,6 +510,16 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     long abortsAfterSleep;
     long abortsDiff;
 #endif // USE_ALGO_06
+#ifdef USE_ALGO_07
+    long level=16;
+    long sumOfAllCommitsEver;
+    srand ( time(NULL) );
+    int randomNumber=0;
+    long lastNumThread=0;
+    long abortsBeforeSleep;
+    long abortsAfterSleep;
+    long abortsDiff;
+#endif // USE_ALGO_07
     long milisecondsOfSleep=250;
     int lastDone=0;
     int lastAction=0;
@@ -960,6 +970,78 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             cdlsOld*=2;
         }
 #endif // USE_ALGO_06
+#ifdef USE_ALGO_07              // yet another copy of algo 6
+        sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
+        abortsBeforeSleep=getTotalAmountOfAborts();
+        mySleep(milisecondsOfSleep);
+        sumOfAllCommitsEver=getTotalAmountOfCommits();
+        abortsAfterSleep=getTotalAmountOfAborts();
+        abortsDiff=abortsAfterSleep-abortsBeforeSleep;
+        commitsDuringLastSleep=sumOfAllCommitsEver-sumOfAllCommitsEverLastTime;
+        lastNumThread=global_numThread;
+        double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
+        if(commitsDuringLastSleep>cdlsOld && lastDone>0) { // if you increased last time and it got better, increase again
+            increaseAmountOfThreads(level, ptr2runMoreThreads);
+            lastDone=level;
+            lastAction=1;
+        }
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone>0) { // if you increased last time and it got worse, decrease
+            decreaseAmountOfThreads(level);
+            lastDone=-level;
+            lastAction=-1;
+            if((level-1))
+                level/=2;
+        }
+        else if((commitsDuringLastSleep>cdlsOld) && lastDone<0) { // if you decreased and got better, decrease one more time
+            decreaseAmountOfThreads(level);
+            lastDone=-level;
+            lastAction=-1;
+        }
+        else if((commitsDuringLastSleep<cdlsOld) && lastDone<0) { // if you decreased and it got worse, increase again
+            increaseAmountOfThreads(level, ptr2runMoreThreads);
+            lastDone=level;
+            lastAction=1;
+            if((level-1))
+                level/=2;
+        }
+        else if(lastDone==0) {
+            randomNumber=rand()%2;
+            if(randomNumber) {
+                increaseAmountOfThreads(level, ptr2runMoreThreads);
+                lastDone=level;
+                lastAction=1;
+            }
+            else {
+                decreaseAmountOfThreads(level);
+                lastDone=-level;
+                lastAction=-1;
+            }
+        }
+        else {
+            lastDone=0;
+            lastAction=0;
+        }
+        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever. #commits: %ld #aborts: %ld\n",lastNumThread-1, percentOfBestEver, commitsDuringLastSleep, abortsDiff);
+        fflush(stdout);
+
+        if(commitsDuringLastSleep>bestcdlsEver) {
+            bestcdlsEver=commitsDuringLastSleep;
+            bestcdlsEverReachedAt=global_numThread;
+            printf("new bestcdlsEver record of %ld\n",commitsDuringLastSleep);
+        }
+        cdlsOld=commitsDuringLastSleep;
+
+        if(commitsDuringLastSleep>220000) {
+            milisecondsOfSleep/=2;
+            bestcdlsEver/=2;
+            cdlsOld/=2;
+        }
+        else if(commitsDuringLastSleep<22000 && milisecondsOfSleep<2000) {
+            milisecondsOfSleep*=2;
+            bestcdlsEver*=2;
+            cdlsOld*=2;
+        }
+#endif // USE_ALGO_07
     }
 }
 

@@ -10,20 +10,38 @@
 	<File name="stamp-0.9.10/intruder/detector.c" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.c" open="0" top="0" tabpos="3">
-		<Cursor position="40284" topLine="1072" />
+	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="0">
+		<Cursor position="6584" topLine="186" />
+	</File>
+	<File name="stamp-0.9.10/labyrinth/labyrinth.c" open="0" top="0" tabpos="0">
+		<Cursor position="10228" topLine="282" />
+	</File>
+	<File name="stamp-0.9.10/labyrinth/router.c" open="0" top="0" tabpos="0">
+		<Cursor position="13143" topLine="375" />
+	</File>
+	<File name="stamp-0.9.10/lib/globals.h" open="0" top="0" tabpos="0">
+		<Cursor position="164" topLine="0" />
+	</File>
+	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="0">
+		<Cursor position="27631" topLine="731" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="0">
-		<Cursor position="7698" topLine="180" />
+		<Cursor position="3021" topLine="134" />
 	</File>
 	<File name="stamp-0.9.10/lib/tm.h" open="0" top="0" tabpos="0">
 		<Cursor position="18034" topLine="470" />
 	</File>
+	<File name="stamp-0.9.10/ssca2/computeGraph.c" open="0" top="0" tabpos="0">
+		<Cursor position="2904" topLine="58" />
+	</File>
+	<File name="stamp-0.9.10/vacation/client.c" open="0" top="0" tabpos="0">
+		<Cursor position="11689" topLine="139" />
+	</File>
 	<File name="stamp-0.9.10/vacation/reservation.h" open="0" top="0" tabpos="0">
 		<Cursor position="0" topLine="222" />
 	</File>
-	<File name="stamp-0.9.10/vacation/vacation.c" open="1" top="0" tabpos="1">
-		<Cursor position="15540" topLine="599" />
+	<File name="stamp-0.9.10/vacation/vacation.c" open="0" top="0" tabpos="1">
+		<Cursor position="19250" topLine="583" />
 	</File>
 	<File name="tinySTM/abi/abi.c" open="0" top="0" tabpos="0">
 		<Cursor position="6331" topLine="229" />
@@ -40,6 +58,9 @@
 	<File name="tinySTM/src/stm.c" open="0" top="0" tabpos="3">
 		<Cursor position="93788" topLine="3012" />
 	</File>
+	<File name="tinySTM/test/intset/intset.c" open="0" top="0" tabpos="0">
+		<Cursor position="30128" topLine="1263" />
+	</File>
 	<File name="tmunit-0.2.1/README" open="0" top="0" tabpos="0">
 		<Cursor position="2591" topLine="129" />
 	</File>
@@ -53,10 +74,13 @@
 		<Cursor position="950" topLine="17" />
 	</File>
 	<File name="tmunit-0.2.1/c_output/main.c" open="0" top="0" tabpos="0">
-		<Cursor position="8778" topLine="321" />
+		<Cursor position="8387" topLine="211" />
+	</File>
+	<File name="tmunit-0.2.1/c_output/thread_0.c" open="0" top="0" tabpos="0">
+		<Cursor position="1904" topLine="38" />
 	</File>
 	<File name="tmunit-0.2.1/c_output/transactions.c" open="0" top="0" tabpos="0">
-		<Cursor position="148" topLine="0" />
+		<Cursor position="367" topLine="0" />
 	</File>
 	<File name="tmunit-0.2.1/c_output/transactions.h" open="0" top="0" tabpos="0">
 		<Cursor position="1706" topLine="17" />
@@ -79,35 +103,38 @@
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.c.template" open="0" top="0" tabpos="4">
 		<Cursor position="1499" topLine="34" />
 	</File>
-	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.h.template" open="1" top="0" tabpos="3">
-		<Cursor position="469" topLine="6" />
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/initialization.h.template" open="0" top="0" tabpos="3">
+		<Cursor position="489" topLine="6" />
 	</File>
-	<File name="tmunit-0.2.1/code_generation/c_output_templates/main.template" open="1" top="1" tabpos="2">
-		<Cursor position="8681" topLine="211" />
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/main.template" open="0" top="0" tabpos="2">
+		<Cursor position="12428" topLine="357" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/simulation_parameters.c" open="0" top="0" tabpos="0">
-		<Cursor position="68" topLine="0" />
+		<Cursor position="329" topLine="4" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/simulation_parameters.h" open="0" top="0" tabpos="0">
-		<Cursor position="421" topLine="16" />
+		<Cursor position="766" topLine="34" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/t_benchrun" open="0" top="0" tabpos="0">
 		<Cursor position="2363" topLine="39" />
 	</File>
-	<File name="tmunit-0.2.1/code_generation/c_output_templates/thread.template" open="1" top="0" tabpos="4">
-		<Cursor position="3318" topLine="87" />
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/thread.template" open="0" top="0" tabpos="4">
+		<Cursor position="1906" topLine="35" />
+	</File>
+	<File name="tmunit-0.2.1/code_generation/c_output_templates/threads.c" open="0" top="0" tabpos="0">
+		<Cursor position="66" topLine="0" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/threads.h" open="0" top="0" tabpos="0">
-		<Cursor position="25" topLine="0" />
+		<Cursor position="549" topLine="5" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/transactions.h" open="0" top="0" tabpos="0">
-		<Cursor position="2945" topLine="46" />
+		<Cursor position="947" topLine="4" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/c_output_templates/transactions.template" open="0" top="0" tabpos="0">
-		<Cursor position="148" topLine="0" />
+		<Cursor position="1939" topLine="37" />
 	</File>
 	<File name="tmunit-0.2.1/code_generation/generate_files.c" open="0" top="0" tabpos="0">
-		<Cursor position="42939" topLine="1134" />
+		<Cursor position="52939" topLine="1372" />
 	</File>
 	<File name="tmunit-0.2.1/execution/thread.c" open="0" top="0" tabpos="1">
 		<Cursor position="8318" topLine="238" />
@@ -183,6 +210,9 @@
 	</File>
 	<File name="tmunit-0.2.1/test/listings_in_paper/intset/serial/replicate_th_1/generate_c/reference_c_output/thread_0.c" open="0" top="0" tabpos="0">
 		<Cursor position="1961" topLine="85" />
+	</File>
+	<File name="tmunit-0.2.1/test/listings_in_paper/intset/serial/replicate_th_1/generate_c/reference_c_output/transactions.c" open="0" top="0" tabpos="0">
+		<Cursor position="131" topLine="0" />
 	</File>
 	<File name="wbws/tinySTM-1.0.3/include/stm.h" open="0" top="0" tabpos="2">
 		<Cursor position="13789" topLine="409" />

@@ -93,8 +93,8 @@ DEFINES += -DIRREVOCABLE_ENABLED
 # from disabling them.
 ########################################################################
 
-# DEFINES += -DINTERNAL_STATS
-DEFINES += -UINTERNAL_STATS
+DEFINES += -DINTERNAL_STATS
+# DEFINES += -UINTERNAL_STATS
 
 ########################################################################
 # Ensure that the global clock does not share the same cache line than
@@ -244,7 +244,7 @@ endif
 # DEFINES += -DLOCK_SHIFT_EXTRA=2
 # DEFINES += -DMIN_BACKOFF=0x04UL
 # DEFINES += -DMAX_BACKOFF=0x80000000UL
-# DEFINES += -DVR_THRESHOLD_DEFAULT=3
+DEFINES += -DVR_THRESHOLD_DEFAULT=-1
 
 ########################################################################
 # Do not modify anything below this point!

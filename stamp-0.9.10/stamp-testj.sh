@@ -9,7 +9,7 @@ else
     exit
 fi
 
-prefix="ctlsA01"
+prefix="etlsMp"
 
 export STM_STATS="y"
 
