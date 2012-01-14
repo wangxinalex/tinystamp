@@ -99,6 +99,7 @@ static volatile long     global_workLeftToDo=0;  // name says everything
 static long* global_amountOfCommitsDone;
 
 static unsigned long ** global_abortsCounters=0;
+static unsigned long * global_abortsEndValues=0;
 
 static void threadWait (void* argPtr) {
     long threadId = *(long*)argPtr;
@@ -124,7 +125,8 @@ static void threadWaitNoBarrier (void* argPtr) {
     global_abortsCounters[threadId]=stm_get_stats_position("nb_aborts");
     global_myThreadID=threadId;
     global_funcPtr(global_argPtr);
-//    global_abortsCounters[threadId]=0;
+	global_abortsEndValues[threadId]=*(global_abortsCounters[threadId]);
+    global_abortsCounters[threadId]=0;
     TM_THREAD_EXIT();
 }
 
@@ -140,6 +142,7 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
         if(global_kill[threadId/64]&(((long)1)<<(threadId%64)))
             break;
     }
+	global_abortsEndValues[threadId]=*(global_abortsCounters[threadId]);
     global_abortsCounters[threadId]=0;
     TM_THREAD_EXIT();
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
@@ -331,9 +334,12 @@ void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long maxNumClie
     global_threads = (THREAD_T*)malloc(global_maxNumClient * sizeof(THREAD_T));
     assert(global_threads);
 
-    global_abortsCounters = (unsigned long **) malloc(global_maxNumClient * sizeof(unsigned long *));
-    for(i=global_maxNumClient; i--;)
+    global_abortsCounters = (unsigned long **) malloc( global_maxNumClient * sizeof(unsigned long *));
+    global_abortsEndValues = (unsigned long *) malloc( global_maxNumClient * sizeof(unsigned long));
+    for(i=global_maxNumClient; i--;) {
         global_abortsCounters[i]=0;
+        global_abortsEndValues[i]=0;
+    }
 }
 
 void thread_shutdown () {
@@ -358,6 +364,7 @@ void thread_shutdown () {
     free((void*) global_kill);
     free((void*) global_amountOfCommitsDone);
     free(global_abortsCounters);
+    free(global_abortsEndValues);
 }
 
 void thread_shutdown_noBarriers() {
@@ -467,6 +474,14 @@ long* getMyCommitCounter() {
 unsigned long** getGlobal_abortsCounters() {
     return global_abortsCounters;
 }
+
+unsigned long* getGlobal_abortsEndValues() {
+	return global_abortsEndValues;
+}
+
+//long getGlobalMaxNumClient() {
+//	return global_maxNumClient;
+//}
 
 #define USE_ALGO_07 7
 

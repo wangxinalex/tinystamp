@@ -185,6 +185,7 @@ void processPackets (void* argPtr) {
     long threadId = thread_getId();
     myCommitCounter=getMyCommitCounter();
     unsigned long ** globalAbortsCounter = getGlobal_abortsCounters();
+    unsigned long * globalAbortsEndValues = getGlobal_abortsEndValues();
     globalAbortsCounter[threadId]=stm_get_stats_position("nb_aborts");
 
     stream_t*   streamPtr    = ((arg_t*)argPtr)->streamPtr;
@@ -251,6 +252,7 @@ void processPackets (void* argPtr) {
     }
 
     PDETECTOR_FREE(detectorPtr);
+    globalAbortsEndValues[threadId]=*(globalAbortsCounter[threadId]);
     globalAbortsCounter[threadId]=0;
     TM_THREAD_EXIT();
 }

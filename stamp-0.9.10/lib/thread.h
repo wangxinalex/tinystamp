@@ -283,6 +283,8 @@ long* getMyCommitCounter();
 
 unsigned long** getGlobal_abortsCounters();
 
+unsigned long* getGlobal_abortsEndValues();
+
 #ifdef __cplusplus
 }
 #endif
