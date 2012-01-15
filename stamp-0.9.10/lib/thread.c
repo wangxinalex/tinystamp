@@ -125,7 +125,7 @@ static void threadWaitNoBarrier (void* argPtr) {
     global_abortsCounters[threadId]=stm_get_stats_position("nb_aborts");
     global_myThreadID=threadId;
     global_funcPtr(global_argPtr);
-    global_abortsCounters[threadId]=0;
+    global_abortsCounters[threadId]=(unsigned long)0;
     TM_THREAD_EXIT();
 }
 
@@ -134,13 +134,13 @@ static void threadWaitNoBarrierWorkPices(void* argPtr) {
     THREAD_LOCAL_SET(global_threadId, (long)threadId);
     TM_THREAD_ENTER();
     global_myThreadID=threadId;
-    global_abortsCounters[threadId]=stm_get_stats_position("nb_aborts");
+    global_abortsCounters[threadId]=(unsigned long*)stm_get_stats_position("nb_aborts");
     while(((long)ATOMIC_FETCH_DEC_FULL(&global_workLeftToDo))>0) {
         global_funcPtr(global_argPtr);
         if(global_kill[threadId/64]&(((long)1)<<(threadId%64)))
             break;
     }
-    global_abortsCounters[threadId]=0;
+    global_abortsCounters[threadId]=(unsigned long)0;
     TM_THREAD_EXIT();
     __sync_and_and_fetch(&(global_iFinished[threadId/64]),~(((long)1)<<(threadId%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
 }
@@ -331,11 +331,11 @@ void thread_prepare_start(void (*funcPtr) (void*), void* argPtr, long maxNumClie
     global_threads = (THREAD_T*)malloc(global_maxNumClient * sizeof(THREAD_T));
     assert(global_threads);
 
-    global_abortsCounters = (unsigned long **) malloc( global_maxNumClient * sizeof(unsigned long *));
+    global_abortsCounters = (unsigned long **) malloc( global_maxNumClient * sizeof(unsigned long*));
     global_abortsValues = (unsigned long *) malloc( global_maxNumClient * sizeof(unsigned long));
     for(i=global_maxNumClient; i--;) {
-        global_abortsCounters[i]=0;
-        global_abortsValues[i]=0;
+        global_abortsCounters[i]=(unsigned long)0;
+        global_abortsValues[i]=(unsigned long)0;
     }
 }
 
@@ -1024,7 +1024,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             lastAction=0;
         }
         // commits and aborts are only counted during sleep
-        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever. #commits: %ld #aborts: %l \n",lastNumThread-1, percentOfBestEver, commitsDuringLastSleep, abortsDiff);
+        printf("Was running with %ld threads and got %f / 100 commits, compared to best ever. #commits: %ld #aborts:\t %lu \n",lastNumThread-1, percentOfBestEver, commitsDuringLastSleep, abortsDiff);
         fflush(stdout);
 
         if(commitsDuringLastSleep>bestcdlsEver) {
@@ -1124,18 +1124,27 @@ void getAmountOfAborts2init() {
     int i;
     for (i=global_numThread; i-->0;) {
         if(global_abortsCounters[i])
-            global_abortsValues[i]+=*(global_abortsCounters[i]);
+            global_abortsValues[i]=*(global_abortsCounters[i]);
 		else
-			global_abortsValues[i]=0;
+			global_abortsValues[i]=(unsigned long)0;
     }
 }
 
 unsigned long getAmountOfAborts2() {
-    unsigned long total=0;
+    unsigned long total=(unsigned long)0;
     int i;
     for (i=global_numThread; i-->0;) {
-        if(global_abortsCounters[i] && global_abortsValues[i])
-            total+=*(global_abortsCounters[i])-global_abortsValues[i];
+        if(global_abortsCounters[i] && (global_abortsValues[i]!=(unsigned long)0)) {
+/*			total+=*(global_abortsCounters[i]);
+			total+=(*(global_abortsCounters[i]) - global_abortsValues[i]);
+            if(*(global_abortsCounters[i]) > (unsigned long)844674407302783)
+				printf("it happend here %lu \t %d \n",*(global_abortsCounters[i]),i);
+            if((global_abortsValues[i]) > (unsigned long)844674407302782)
+				printf("it happend here2 %lu \t %d \n",global_abortsValues[i],i);
+			if(global_abortsValues[i]<0)
+				printf("it happend here3 %lu \t %d \n",global_abortsValues[i],i);*/
+			total+= *(global_abortsCounters[i]) - (global_abortsValues[i]);
+        }
     }
     return total;
 }

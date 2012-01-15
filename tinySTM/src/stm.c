@@ -42,7 +42,7 @@
 /* Number of hybrid tx aborts before to switch to pure software transaction */
 # define ASF_ABORT_THRESHOLD             (16)
 /* Force lock shift to 0, otherwise a large area will be locked */
-# ifdef LOCK_SHIFT_EXTRA 
+# ifdef LOCK_SHIFT_EXTRA
 #  warning LOCK_SHIFT_EXTRA is ignored with HYBRID_ASF
 #  undef LOCK_SHIFT_EXTRA
 # endif /* LOCK_SHIFT_EXTRA */
@@ -209,7 +209,7 @@ enum {                                  /* Transaction status */
 # define UPDATE_STATUS(s, v)            ((s) = (v))
 # define GET_STATUS(s)                  ((s))
 #endif /* CM != CM_MODULAR */
-#define IS_ACTIVE(s)                    ((GET_STATUS(s) & 0x01) == TX_ACTIVE) 
+#define IS_ACTIVE(s)                    ((GET_STATUS(s) & 0x01) == TX_ACTIVE)
 
 typedef struct r_entry {                /* Read set entry */
   stm_word_t version;                   /* Version read */
@@ -593,7 +593,7 @@ int cm_timestamp(struct stm_tx *me, struct stm_tx *other, int conflict)
 }
 
 /*
- * Transaction with more work done has priority. 
+ * Transaction with more work done has priority.
  */
 int cm_karma(struct stm_tx *me, struct stm_tx *other, int conflict)
 {
@@ -950,7 +950,7 @@ static inline void stm_allocate_ws_entries(stm_tx_t *tx, int extend)
         nws[j].next = nws + (ows[j].next - ows);
     }
     for (j = 0; j < tx->w_set.nb_entries; j++) {
-      if (ows[j].lock == GET_LOCK(ows[j].addr)) 
+      if (ows[j].lock == GET_LOCK(ows[j].addr))
         ATOMIC_STORE_REL(ows[j].lock, LOCK_SET_ADDR_WRITE((stm_word_t)&nws[j]));
     }
     tx->w_set.entries = nws;
@@ -1359,7 +1359,7 @@ static inline void stm_rollback(stm_tx_t *tx, int reason)
     tx->nesting = 0;
     return;
   }
-    
+
   /* Reset field to restart transaction */
   stm_prepare(tx);
 
@@ -2591,7 +2591,7 @@ int stm_commit(TXPARAM)
     return 0;
   }
 # endif /* ! IRREVOCABLE_IMPROVED */
-#endif /* IRREVOCABLE_ENABLED */ 
+#endif /* IRREVOCABLE_ENABLED */
   /* Get commit timestamp (may exceed VERSION_MAX by up to MAX_THREADS) */
   t = FETCH_INC_CLOCK + 1;
 #ifdef IRREVOCABLE_ENABLED
@@ -2838,7 +2838,7 @@ stm_tx_attr_t *stm_get_attributes(TXPARAM)
  * Get transaction attributes from a specifc transaction.
  */
 stm_tx_attr_t *stm_get_attributes_tx(struct stm_tx *tx)
-{ 
+{
   return &tx->attr;
 }
 
@@ -3151,7 +3151,7 @@ int stm_register(void (*on_thread_init)(TXPARAMS void *arg),
 #if 0
 void stm_release(TXPARAMS volatile stm_word_t *addr)
 {
-// TODO to test 
+// TODO to test
   w_entry_t *w;
   volatile stm_word_t *lock;
 #if DESIGN == WRITE_THROUGH
@@ -3515,7 +3515,7 @@ void hytm_store2(TXPARAMS volatile stm_word_t *addr, stm_word_t value, stm_word_
   hytm_store(TXARGS addr, (asf_lock_load64((long unsigned int *)addr) & ~mask) | (value & mask));
 }
 
-int hytm_commit(TXPARAM) 
+int hytm_commit(TXPARAM)
 {
   stm_word_t t;
   w_entry_t *w;
@@ -3534,7 +3534,7 @@ int hytm_commit(TXPARAM)
 #endif /* IRREVOCABLE_ENABLED */
 
   t = FETCH_INC_CLOCK + 1;
-  
+
   /* Set new timestamp in locks */
   w = tx->w_set.entries;
   for (i = tx->w_set.nb_entries; i > 0; i--, w++) {
@@ -3551,7 +3551,7 @@ commit_end:
 
   /* TODO statistics */
 #ifdef INTERNAL_STATS
-  
+
 #endif
   return 1;
 }
@@ -3576,12 +3576,12 @@ sigjmp_buf *hytm_start(TXPARAMS stm_tx_attr_t *attr)
 
 hytm_restart:
   /* All registers are lost when ASF aborts, thus we discard registers */
-  asm volatile (ASF_SPECULATE 
+  asm volatile (ASF_SPECULATE
                 :"=a" (err)
                 :
                 :"memory","rbp","rbx","rcx","rdx","rsi","rdi",
                  "r8", "r9","r10","r11","r12","r13","r14","r15" );
- 
+
   tx = stm_get_tx();
   if (unlikely(asf_status_code(err) != 0)) {
     /* Set status to ABORTED */
@@ -3611,14 +3611,14 @@ hytm_restart:
           stm_set_irrevocable(TXARGS -1);
           UPDATE_STATUS(tx->status, TX_IRREVOCABLE);
           siglongjmp(tx->env, 0x02); /* ABI 0x02 = runUninstrumented */
-        } 
+        }
 #else /* ! defined(TM_DTMC) */
         /* Non-tm compiler and GCC doesn't have path without instrumentation. */
         tx->software = 1;
 #endif /* ! defined(TM_DTMC) */
 #endif /* IRREVOCABLE_ENABLED */
       } else {
-        if (tx->retries > ASF_ABORT_THRESHOLD) { 
+        if (tx->retries > ASF_ABORT_THRESHOLD) {
           tx->software = 1;
         }
       }
@@ -3645,7 +3645,7 @@ hytm_restart:
       goto hytm_restart;
     }
   }
- 
+
   /* Reset write set */
   tx->w_set.nb_entries = 0;
 
@@ -3656,7 +3656,7 @@ hytm_restart:
 #else /* ! defined(TM_DTMC) */
     siglongjmp(tx->env, 0x09); /* ABI 0x09 = runInstrumented + restoreLiveVariable */
 #endif /* ! defined(TM_DTMC) */
-  } 
+  }
 
   return &tx->env;
 }

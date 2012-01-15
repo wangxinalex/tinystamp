@@ -10,8 +10,8 @@
 	<File name="stamp-0.9.10/intruder/detector.c" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="0">
-		<Cursor position="6584" topLine="186" />
+	<File name="stamp-0.9.10/intruder/intruder.c" open="1" top="0" tabpos="2">
+		<Cursor position="7621" topLine="223" />
 	</File>
 	<File name="stamp-0.9.10/labyrinth/labyrinth.c" open="0" top="0" tabpos="0">
 		<Cursor position="10228" topLine="282" />
@@ -22,11 +22,11 @@
 	<File name="stamp-0.9.10/lib/globals.h" open="0" top="0" tabpos="0">
 		<Cursor position="164" topLine="0" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="0">
-		<Cursor position="27631" topLine="731" />
+	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="1">
+		<Cursor position="39235" topLine="1012" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="0">
-		<Cursor position="3021" topLine="134" />
+	<File name="stamp-0.9.10/lib/thread.h" open="1" top="0" tabpos="3">
+		<Cursor position="10326" topLine="268" />
 	</File>
 	<File name="stamp-0.9.10/lib/tm.h" open="0" top="0" tabpos="0">
 		<Cursor position="18034" topLine="470" />
