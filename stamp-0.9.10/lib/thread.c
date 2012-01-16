@@ -1000,7 +1000,7 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         }
         else if(lastDone==0) {
             randomNumber=rand()%2;
-            if(global_numThread==1)
+            if(global_numThread==2) // one working thread running, additional to the main thread
 				randomNumber=1;
             if(randomNumber) {
                 lastDone=increaseAmountOfThreads(level, ptr2runMoreThreads);
