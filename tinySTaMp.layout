@@ -2,7 +2,7 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
 	<File name="stamp-0.9.10-tinySTM-1.0.0/tm.h" open="0" top="0" tabpos="0">
-		<Cursor position="16857" topLine="452" />
+		<Cursor position="17174" topLine="460" />
 	</File>
 	<File name="stamp-0.9.10/intruder/decoder.c" open="0" top="0" tabpos="2">
 		<Cursor position="11420" topLine="339" />
@@ -10,8 +10,8 @@
 	<File name="stamp-0.9.10/intruder/detector.c" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="stamp-0.9.10/intruder/intruder.c" open="1" top="0" tabpos="2">
-		<Cursor position="7621" topLine="223" />
+	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="2">
+		<Cursor position="11510" topLine="354" />
 	</File>
 	<File name="stamp-0.9.10/labyrinth/labyrinth.c" open="0" top="0" tabpos="0">
 		<Cursor position="10228" topLine="282" />
@@ -22,10 +22,10 @@
 	<File name="stamp-0.9.10/lib/globals.h" open="0" top="0" tabpos="0">
 		<Cursor position="164" topLine="0" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="1">
-		<Cursor position="39235" topLine="1012" />
+	<File name="stamp-0.9.10/lib/thread.c" open="0" top="0" tabpos="1">
+		<Cursor position="9715" topLine="254" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.h" open="1" top="0" tabpos="3">
+	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="3">
 		<Cursor position="10326" topLine="268" />
 	</File>
 	<File name="stamp-0.9.10/lib/tm.h" open="0" top="0" tabpos="0">
@@ -56,7 +56,7 @@
 		<Cursor position="13792" topLine="412" />
 	</File>
 	<File name="tinySTM/src/stm.c" open="0" top="0" tabpos="3">
-		<Cursor position="93788" topLine="3012" />
+		<Cursor position="75857" topLine="2357" />
 	</File>
 	<File name="tinySTM/test/intset/intset.c" open="0" top="0" tabpos="0">
 		<Cursor position="30128" topLine="1263" />
@@ -216,5 +216,8 @@
 	</File>
 	<File name="wbws/tinySTM-1.0.3/include/stm.h" open="0" top="0" tabpos="2">
 		<Cursor position="13789" topLine="409" />
+	</File>
+	<File name="wbws/tinySTM-1.0.3/src/stm.c" open="0" top="0" tabpos="0">
+		<Cursor position="9731" topLine="263" />
 	</File>
 </CodeBlocks_layout_file>

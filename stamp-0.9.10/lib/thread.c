@@ -983,45 +983,34 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
         lastNumThread=global_numThread;
         double percentOfBestEver=((double)commitsDuringLastSleep)/((double)bestcdlsEver)*((double)100);
         if(commitsDuringLastSleep>cdlsOld && lastDone>0) { // if you increased last time and it got better, increase again
-            increaseAmountOfThreads(level, ptr2runMoreThreads);
-            lastDone=level;
-            lastAction=1;
+            lastDone = increaseAmountOfThreads(level, ptr2runMoreThreads);
         }
         else if((commitsDuringLastSleep<cdlsOld) && lastDone>0) { // if you increased last time and it got worse, decrease
-            decreaseAmountOfThreads(level);
-            lastDone=-level;
-            lastAction=-1;
+            lastDone=decreaseAmountOfThreads(level);
             if((level-1))
                 level/=2;
         }
         else if((commitsDuringLastSleep>cdlsOld) && lastDone<0) { // if you decreased and got better, decrease one more time
-            decreaseAmountOfThreads(level);
-            lastDone=-level;
-            lastAction=-1;
+            lastDone=decreaseAmountOfThreads(level);
         }
         else if((commitsDuringLastSleep<cdlsOld) && lastDone<0) { // if you decreased and it got worse, increase again
-            increaseAmountOfThreads(level, ptr2runMoreThreads);
-            lastDone=level;
-            lastAction=1;
+            lastDone=increaseAmountOfThreads(level, ptr2runMoreThreads);
             if((level-1))
                 level/=2;
         }
         else if(lastDone==0) {
             randomNumber=rand()%2;
+            if(global_numThread==1)
+				randomNumber=1;
             if(randomNumber) {
-                increaseAmountOfThreads(level, ptr2runMoreThreads);
-                lastDone=level;
-                lastAction=1;
+                lastDone=increaseAmountOfThreads(level, ptr2runMoreThreads);
             }
             else {
-                decreaseAmountOfThreads(level);
-                lastDone=-level;
-                lastAction=-1;
+                lastDone=decreaseAmountOfThreads(level);
             }
         }
         else {
             lastDone=0;
-            lastAction=0;
         }
         // commits and aborts are only counted during sleep
         printf("Was running with %ld threads and got %f / 100 commits, compared to best ever. #commits: %ld #aborts:\t %lu \n",lastNumThread-1, percentOfBestEver, commitsDuringLastSleep, abortsDiff);
@@ -1048,16 +1037,20 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     }
 }
 
-void increaseAmountOfThreadsByOne(void (*ptr2runMoreThreads)(long)) {
+int increaseAmountOfThreadsByOne(void (*ptr2runMoreThreads)(long)) {
     if(global_numThread < global_maxNumClient) {
         (*ptr2runMoreThreads)(1);
+        return 1;
     }
+    return 0;
 }
 
-void increaseAmountOfThreads(long amountOfNewThreads,void (*ptr2runMoreThreads)(long)) {
+int increaseAmountOfThreads(long amountOfNewThreads,void (*ptr2runMoreThreads)(long)) {
+    int success=0;
     int j=0;
     for (j=amountOfNewThreads+1; --j;)
-        increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+        success+=increaseAmountOfThreadsByOne(ptr2runMoreThreads);
+	return success;
 }
 
 void decreaseAmountOfThreadsByOne() {
@@ -1066,7 +1059,7 @@ void decreaseAmountOfThreadsByOne() {
     }
 }
 
-void decreaseAmountOfThreads(long amountOfDeletingThreads) {
+int decreaseAmountOfThreads(long amountOfDeletingThreads) {
     assert(global_numThread<global_maxNumClient+1);
     long k;
     long copyOfGlobalNumThread=global_numThread;
@@ -1074,10 +1067,12 @@ void decreaseAmountOfThreads(long amountOfDeletingThreads) {
         flagThreadToBeKilled(global_numThread-1);
         --global_numThread;
     }
+    int returnValue= global_numThread - copyOfGlobalNumThread;
     for (k=amountOfDeletingThreads+1; (copyOfGlobalNumThread>2) && (--k);) {
         waitForThreadAndRestore(copyOfGlobalNumThread-1);
         --copyOfGlobalNumThread;
     }
+    return returnValue;
 }
 
 void flagThreadToBeKilled(long threadNr) {
