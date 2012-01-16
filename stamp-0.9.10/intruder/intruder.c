@@ -92,6 +92,7 @@ enum param_types {
     PARAM_NUM    = (unsigned char)'n',
     PARAM_SEED   = (unsigned char)'s',
     PARAM_THREAD = (unsigned char)'t',
+    PARAM_INITIAL= (unsigned char)'i',
 };
 
 enum param_defaults {
@@ -100,6 +101,7 @@ enum param_defaults {
     PARAM_DEFAULT_NUM    = 1 << 20,
     PARAM_DEFAULT_SEED   = 1,
     PARAM_DEFAULT_THREAD = 1,
+    PARAM_DEFAULT_INITIAL= 4,
 };
 
 long global_params[256] = { /* 256 = ascii limit */
@@ -108,6 +110,7 @@ long global_params[256] = { /* 256 = ascii limit */
     [PARAM_NUM]    = PARAM_DEFAULT_NUM,
     [PARAM_SEED]   = PARAM_DEFAULT_SEED,
     [PARAM_THREAD] = PARAM_DEFAULT_THREAD,
+    [PARAM_INITIAL]= PARAM_DEFAULT_INITIAL,
 };
 
 typedef struct arg {
@@ -128,14 +131,14 @@ displayUsage (const char* appName)
 {
     printf("Usage: %s [options]\n", appName);
     puts("\nOptions:                            (defaults)\n");
-    printf("    a <UINT>   Percent [a]ttack     (%i)\n", PARAM_DEFAULT_ATTACK);
-    printf("    l <UINT>   Max data [l]ength    (%i)\n", PARAM_DEFAULT_LENGTH);
-    printf("    n <UINT>   [n]umber of flows    (%i)\n", PARAM_DEFAULT_NUM);
-    printf("    s <UINT>   Random [s]eed        (%i)\n", PARAM_DEFAULT_SEED);
-    printf("    t <UINT>   Number of [t]hreads  (%i)\n", PARAM_DEFAULT_THREAD);
+    printf("   a <UINT>   Percent [a]ttack             (%i)\n", PARAM_DEFAULT_ATTACK);
+    printf("   l <UINT>   Max data [l]ength            (%i)\n", PARAM_DEFAULT_LENGTH);
+    printf("   n <UINT>   [n]umber of flows            (%i)\n", PARAM_DEFAULT_NUM);
+    printf("   s <UINT>   Random [s]eed                (%i)\n", PARAM_DEFAULT_SEED);
+    printf("   t <UINT>   Number of [t]hreads          (%i)\n", PARAM_DEFAULT_THREAD);
+    printf("   i <UINT>   Number of [i]nitial threads  (%i)\n", PARAM_DEFAULT_INITIAL);
     exit(1);
 }
-
 
 /* =============================================================================
  * parseArgs
@@ -149,13 +152,14 @@ parseArgs (long argc, char* const argv[])
 
     opterr = 0;
 
-    while ((opt = getopt(argc, argv, "a:l:n:s:t:")) != -1) {
+    while ((opt = getopt(argc, argv, "a:l:n:s:t:i:")) != -1) {
         switch (opt) {
             case 'a':
             case 'l':
             case 'n':
             case 's':
             case 't':
+            case 'i':
                 global_params[(unsigned char)opt] = atol(optarg);
                 break;
             case '?':
@@ -378,14 +382,29 @@ MAIN(argc, argv) {
     parseArgs(argc, (char** const)argv);
     long maxAmountOfClients = global_params[PARAM_THREAD]+1;
 #ifdef DYNAMC_THREAD_MANAGEMENT
-    long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * (maxAmountOfClients-1);
-    if(initNumThreads<1)
-        initNumThreads=1;
-#else
-    long initNumThreads = maxAmountOfClients-1;
-    if(initNumThreads<1) {
-        printf("ERROR: 3942\nI need at least one worker thread.");
+	long initNumThreads = global_params[PARAM_INITIAL];
+	if(initNumThreads<1) {
+        printf("ERROR: 3942\nI need at least one worker thread.\ngoodbye\n");
         exit(3942);
+    }
+    else if(initNumThreads>global_params[PARAM_THREAD]) {
+        printf("ERROR: 3943\nI need less initial threads than the maximal amount of threads.\ngoodbye\n");
+        exit(3943);
+    }
+
+//    long initNumThreads = PORTION_OF_THREADS_TO_START_RIGHT_AT_THE_BEGINNING * (maxAmountOfClients-1);
+//    if(initNumThreads<1)
+//        initNumThreads=1;
+#else
+	long initNumThreads = global_params[PARAM_INITIAL];
+//    long initNumThreads = maxAmountOfClients-1;
+    if(initNumThreads<1) {
+        printf("ERROR: 3942\nI need at least one worker thread.\ngoodbye\n");
+        exit(3942);
+    }
+    else if(initNumThreads>global_params[PARAM_THREAD]) {
+        printf("ERROR: 3943\nI need less initial threads than the maximal amount of threads.\ngoodbye\n");
+        exit(3943);
     }
 #endif
     SIM_GET_NUM_CPU(maxAmountOfClients);
@@ -408,6 +427,8 @@ MAIN(argc, argv) {
                                      randomSeed,
                                      maxDataLength);
     printf("Num attack      = %li\n", numAttack);
+    printf("max # threads = %li\n", global_params[PARAM_THREAD]);
+    printf("initial # threads = %li\n", global_params[PARAM_INITIAL]);
     decoder_t* decoderPtr = decoder_alloc();
     assert(decoderPtr);
     vector_t** errorVectors = (vector_t**)malloc(maxAmountOfClients * sizeof(vector_t*));
