@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
+	<File name="doc/main.tex" open="0" top="0" tabpos="0">
+		<Cursor position="2668" topLine="40" />
+	</File>
+	<File name="doc/main.tex.backup" open="0" top="0" tabpos="0">
+		<Cursor position="1267" topLine="18" />
+	</File>
+	<File name="doc/main.tex~" open="0" top="0" tabpos="0">
+		<Cursor position="2668" topLine="40" />
+	</File>
 	<File name="stamp-0.9.10-tinySTM-1.0.0/tm.h" open="0" top="0" tabpos="0">
 		<Cursor position="17174" topLine="460" />
 	</File>
@@ -10,8 +19,8 @@
 	<File name="stamp-0.9.10/intruder/detector.c" open="0" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="stamp-0.9.10/intruder/intruder.c" open="0" top="0" tabpos="2">
-		<Cursor position="11510" topLine="354" />
+	<File name="stamp-0.9.10/intruder/intruder.c" open="1" top="0" tabpos="1">
+		<Cursor position="13204" topLine="385" />
 	</File>
 	<File name="stamp-0.9.10/labyrinth/labyrinth.c" open="0" top="0" tabpos="0">
 		<Cursor position="10228" topLine="282" />
@@ -22,11 +31,11 @@
 	<File name="stamp-0.9.10/lib/globals.h" open="0" top="0" tabpos="0">
 		<Cursor position="164" topLine="0" />
 	</File>
-	<File name="stamp-0.9.10/lib/thread.c" open="0" top="0" tabpos="1">
-		<Cursor position="9715" topLine="254" />
+	<File name="stamp-0.9.10/lib/thread.c" open="1" top="1" tabpos="2">
+		<Cursor position="38465" topLine="969" />
 	</File>
 	<File name="stamp-0.9.10/lib/thread.h" open="0" top="0" tabpos="3">
-		<Cursor position="10326" topLine="268" />
+		<Cursor position="10160" topLine="265" />
 	</File>
 	<File name="stamp-0.9.10/lib/tm.h" open="0" top="0" tabpos="0">
 		<Cursor position="18034" topLine="470" />
@@ -43,6 +52,12 @@
 	<File name="stamp-0.9.10/vacation/vacation.c" open="0" top="0" tabpos="1">
 		<Cursor position="19250" topLine="583" />
 	</File>
+	<File name="tinySTM/Makefile" open="0" top="0" tabpos="0">
+		<Cursor position="10937" topLine="250" />
+	</File>
+	<File name="tinySTM/abi/Makefile.common" open="0" top="0" tabpos="0">
+		<Cursor position="675" topLine="6" />
+	</File>
 	<File name="tinySTM/abi/abi.c" open="0" top="0" tabpos="0">
 		<Cursor position="6331" topLine="229" />
 	</File>
@@ -56,7 +71,7 @@
 		<Cursor position="13792" topLine="412" />
 	</File>
 	<File name="tinySTM/src/stm.c" open="0" top="0" tabpos="3">
-		<Cursor position="75857" topLine="2357" />
+		<Cursor position="34827" topLine="969" />
 	</File>
 	<File name="tinySTM/test/intset/intset.c" open="0" top="0" tabpos="0">
 		<Cursor position="30128" topLine="1263" />

@@ -532,9 +532,11 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
     long bestcdlsEverReachedAt=2;
     long commitsDuringLastSleep;
     long sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
+#ifdef USE_ALGO_00
+	increaseAmountOfThreads(global_maxNumClient, ptr2runMoreThreads);
+#endif // USE_ALGO_00
     while (!every_thread_finished()) {
 #ifdef USE_ALGO_00 // just for plotting graph purposes
-        increaseAmountOfThreads(global_maxNumClient, ptr2runMoreThreads);
 		getAmountOfAborts2init();
         sumOfAllCommitsEverLastTime=getTotalAmountOfCommits();
         mySleep(milisecondsOfSleep);
