@@ -1032,11 +1032,13 @@ void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
             milisecondsOfSleep/=2;
             bestcdlsEver/=2;
             cdlsOld/=2;
+            printf("sleep time halved\n");
         }
         else if(commitsDuringLastSleep<22000 && milisecondsOfSleep<2000) {
             milisecondsOfSleep*=2;
             bestcdlsEver*=2;
             cdlsOld*=2;
+			printf("sleep time doubled\n");
         }
 #endif // USE_ALGO_07
     }

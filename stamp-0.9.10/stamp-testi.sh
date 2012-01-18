@@ -9,7 +9,7 @@ else
     exit
 fi
 
-prefix="etlsMp"
+prefix="etlsMpi"
 
 export STM_STATS="y"
 
@@ -32,7 +32,7 @@ else
 ######   STAMP REAL BENCHMARKS   ######
 bayes="./bayes/bayes -v32 -r4096 -n10 -p40 -i2 -e8 -s1 -t"
 genome="./genome/genome -g16384 -s64 -n16777216 -t"
-intruder="./intruder/intruder -a10 -l256 -n524288 -s1 -i" 
+intruder="./intruder/intruder -a10 -l256 -n524288 -s1 -t100 -i" 
 kmeanslow="./kmeans/kmeans -m40 -n40 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p"
 kmeanshigh="./kmeans/kmeans -m15 -n15 -t0.00001 -i kmeans/inputs/random-n65536-d32-c16.txt -p"
 labyrinth="./labyrinth/labyrinth -i labyrinth/inputs/random-x1024-y1024-z11-n1024.txt -t"
