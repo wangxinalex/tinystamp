@@ -28,7 +28,6 @@ extern __thread stm_tx_t *TxDesc;
 								gettimeofday(&(ThLocals.Statistics.end_time), NULL);				\
 								TM_EXIT_THREAD(ThLocals.TxDesc);                     				\
 								if (PrintStats && !SerialThreadExecution){							\
-									Statistics[ID] = malloc(sizeof(stat_t));						\
 									Statistics[ID]-> CommitNum = ThLocals.Statistics.CommitNum;		\
 									Statistics[ID]-> AbortNum   = ThLocals.Statistics.AbortNum;		\
 									Statistics[ID]-> MaxRetries = ThLocals.Statistics.MaxRetries;	\
@@ -45,10 +44,13 @@ void *RunThread_7 (void *Parameters)
   unsigned ID = ThreadParameters->thread_ID;
   unsigned int CurrentThreadSeed = ThreadParameters->ThreadSeed;
 
+  Statistics[ID] = malloc (sizeof (stat_t));
+
   char *ThreadNames[] = { "P_1", "P_2", "P_3", "P_4", "P_5", "P_6", "P_7", "P_8", "P_9", "P_10", "P_11", "P_12" };
   char *TransactionNames[] = { "T_transfer", "T_balance" };
 
   ThLocalVarCollection ThLocals;
+  Statistics[ID]->locals = &ThLocals;
   ThLocals.ThreadID = ID;
   ThLocals.TxDesc = NULL;
   ThLocals.Statistics.CommitNum = 0;

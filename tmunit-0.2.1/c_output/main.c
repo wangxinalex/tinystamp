@@ -423,9 +423,10 @@ unsigned long agregCommits() {
 	for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
 	//	sum += Statistics[ThreadNo]->CommitNum;
 //		sum = Statistics[1]->CommitNum;
-		if (Statistics && Statistics[ThreadNo] && Statistics[ThreadNo]->CommitNum) {
-			sum += Statistics[ThreadNo]->CommitNum;
-		}
+//		if (Statistics && Statistics[ThreadNo] && Statistics[ThreadNo]->CommitNum) {
+//			sum += Statistics[ThreadNo]->CommitNum;
+//		}
+		sum+=(((ThLocalVarCollection*)(Statistics[ThreadNo]->locals))->Statistics).CommitNum;
 	}
 	return sum;
 }
