@@ -48,6 +48,7 @@ extern ThreadRunFunc ThreadRun[];
 stat_t** Statistics;
 static pthread_t*		Thrd;
 static thread_input_t*	th_input;
+void* ready;
 
 // *INDENT-OFF*
 void PrintStatistics() {
@@ -354,8 +355,8 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 		startNewThread();
 		killLastCreatedThread();
 		startNewThread();
-		unsigned long h=agregCommits();
-		printf("agregCommits=%u\n",h);
+//		unsigned long h=agregCommits();
+		printf("agregCommits=%u\n",agregCommits());
 	}
 	mySleep(milisecondsLeft);
 }
@@ -363,8 +364,11 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 void startNewThread() {
 	if (ThreadNum < maxThreadNum) {
 		flagThreadAsRunning(ThreadNum);
+		ready=1;
 		pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
 //		while(Statistics[ThreadNum]==0 && Statistics[ThreadNum]->locals==0) {};
+		while(ready) {printf("hey, I am looping. And you?\n");};
+//		while(ready) {};
 		printf("started thread nr: %u\n",ThreadNum);
 		++ThreadNum;
 	}

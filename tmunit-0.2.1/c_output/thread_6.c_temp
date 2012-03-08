@@ -9,6 +9,7 @@
 
 #include "thread_local_variables.h"	// For stat_t structure definition
 extern stat_t **Statistics;
+extern void *ready;
 
 #define PRINT_DELAY_BEFORE_TX(Delay)	if( EnableTrace ) {												\
 											printf("%s[%u]D(%u)-,\n", ThLocals.PrintOffset, ID, Delay);	\
@@ -34,6 +35,7 @@ extern __thread stm_tx_t *TxDesc;
 									Statistics[ID]-> start_time = ThLocals.Statistics.start_time;	\
 									Statistics[ID]-> end_time   = ThLocals.Statistics.end_time;		\
 								}																	\
+								Statistics[ID]->locals=0; \
 								__sync_and_and_fetch(&(global_iFinished[ThLocals.ThreadID/64]),~(((long)1)<<(ThLocals.ThreadID%64)));	\
 								return NULL;														\
 							}
@@ -58,6 +60,8 @@ void *RunThread_6 (void *Parameters)
   ThLocals.Statistics.MaxRetries = 0;
   ThLocals.ThreadName = ThreadNames[ID];
   ThLocals.TransactionNames = TransactionNames;
+
+  ready = 0;
 
 // Initializing random variable seeds
   ThLocals.seed__SRC = (unsigned) RAND_R (&CurrentThreadSeed);
