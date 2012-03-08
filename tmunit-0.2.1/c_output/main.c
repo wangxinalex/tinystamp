@@ -396,6 +396,7 @@ void startNewThread() {
 	if (ThreadNum < maxThreadNum) {
 		flagThreadAsRunning(ThreadNum);
 		pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
+//		while(Statistics[ThreadNum]==0 && Statistics[ThreadNum]->locals==0) {};
 		printf("started thread nr: %u\n",ThreadNum);
 		++ThreadNum;
 	}
@@ -421,11 +422,6 @@ unsigned long agregCommits() {
 	unsigned long sum = 0;
     unsigned ThreadNo;
 	for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
-	//	sum += Statistics[ThreadNo]->CommitNum;
-//		sum = Statistics[1]->CommitNum;
-//		if (Statistics && Statistics[ThreadNo] && Statistics[ThreadNo]->CommitNum) {
-//			sum += Statistics[ThreadNo]->CommitNum;
-//		}
 		sum+=(((ThLocalVarCollection*)(Statistics[ThreadNo]->locals))->Statistics).CommitNum;
 	}
 	return sum;

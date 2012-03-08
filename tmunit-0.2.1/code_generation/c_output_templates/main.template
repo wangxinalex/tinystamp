@@ -364,6 +364,7 @@ void startNewThread() {
 	if (ThreadNum < maxThreadNum) {
 		flagThreadAsRunning(ThreadNum);
 		pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
+//		while(Statistics[ThreadNum]==0 && Statistics[ThreadNum]->locals==0) {};
 		printf("started thread nr: %u\n",ThreadNum);
 		++ThreadNum;
 	}
