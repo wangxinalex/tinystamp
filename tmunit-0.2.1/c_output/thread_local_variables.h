@@ -11,6 +11,7 @@ typedef struct StatisticsStruct
    unsigned long MaxRetries;
    struct timeval start_time;
    struct timeval end_time;
+   void *locals;
 } stat_t;
 
 typedef struct ThLocalVarCollectionStruct {

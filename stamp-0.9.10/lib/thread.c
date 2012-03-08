@@ -476,7 +476,7 @@ unsigned long** getGlobal_abortsCounters() {
 //	return global_maxNumClient;
 //}
 
-#define USE_ALGO_07 7
+#define USE_ALGO_00 0
 
 void ajust_amount_of_threads( void (*ptr2runMoreThreads)(long)) {
 #ifdef USE_ALGO_00

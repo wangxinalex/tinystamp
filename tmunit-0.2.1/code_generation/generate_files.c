@@ -349,6 +349,7 @@ void  Generate_Thread_Local_Variables()
 	                                  "   unsigned long MaxRetries;\n"
 	                                  "   struct timeval start_time;\n"
 	                                  "   struct timeval end_time;\n"
+									  "   void *locals;\n"
 	                                  "} stat_t;\n\n");
 
 //    fprintf(ThreadLocalVariableHeaderFile,"stat_t Statistics[%u];\n",ThreadDefNum);

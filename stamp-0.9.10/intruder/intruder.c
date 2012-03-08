@@ -101,7 +101,7 @@ enum param_defaults {
     PARAM_DEFAULT_NUM    = 1 << 20,
     PARAM_DEFAULT_SEED   = 1,
     PARAM_DEFAULT_THREAD = 100,
-    PARAM_DEFAULT_INITIAL= 4,
+    PARAM_DEFAULT_INITIAL= 1,
 };
 
 long global_params[256] = { /* 256 = ascii limit */

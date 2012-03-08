@@ -9,7 +9,7 @@ else
     exit
 fi
 
-prefix="etlsMp"
+prefix="etlsSAT"
 
 export STM_STATS="y"
 
@@ -43,7 +43,7 @@ vacationveryhigh="./vacation/vacation -n8 -q60 -u90 -r10485760 -t41943040 -c"
 yada="./yada/yada -a15 -i yada/inputs/ttimeu1000000.2 -t"
 fi
 
-for threads in {1..55}
+for threads in {1..56}
 #for threads in 96
 do
 

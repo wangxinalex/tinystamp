@@ -36,6 +36,7 @@
 void ajust_amount_of_threads(double sleepInSeconds);
 void mySleep(long miliseconds);
 void startNewThread();
+unsigned long agregCommits();
 
 //	------------------	extern variables	------------------
 extern unsigned *ThreadSeed;
@@ -365,7 +366,7 @@ int main(int argc, char*  argv[]) {
 			free(Statistics);
 		}
 
-		printf("\nDebug: was here5"); fflush(stdout);
+		printf("\nDebug: Successfully finished.\nHave a nice day.\nMarry christmas, a happy new year, nice easter-, summer-, fall- and spring-holidays\n"); fflush(stdout);
 
 		#ifdef COMPILE_FOR_TEST
 			PrintDevelopperTestWarning();
@@ -385,6 +386,8 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 		startNewThread();
 		killLastCreatedThread();
 		startNewThread();
+		unsigned long h=agregCommits();
+		printf("agregCommits=%u\n",h);
 	}
 	mySleep(milisecondsLeft);
 }
@@ -401,6 +404,7 @@ void startNewThread() {
 void killLastCreatedThread() {
 	if(ThreadNum>1) {
 		killThreadNr(ThreadNum-1);
+		printf("killed thread nr:  %u\n",ThreadNum);
 	}
 }
 
@@ -411,6 +415,19 @@ void mySleep(long miliseconds) {
     nanosleep(&waitingTime, NULL);
 //    while(nanosleep(&waitingTime, &waitingTime)==-1)
 //        continue;
+}
+
+unsigned long agregCommits() {
+	unsigned long sum = 0;
+    unsigned ThreadNo;
+	for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+	//	sum += Statistics[ThreadNo]->CommitNum;
+//		sum = Statistics[1]->CommitNum;
+		if (Statistics && Statistics[ThreadNo] && Statistics[ThreadNo]->CommitNum) {
+			sum += Statistics[ThreadNo]->CommitNum;
+		}
+	}
+	return sum;
 }
 
 
