@@ -48,7 +48,7 @@ extern ThreadRunFunc ThreadRun[];
 stat_t** Statistics;
 static pthread_t*		Thrd;
 static thread_input_t*	th_input;
-void* ready;
+volatile int ready;
 
 // *INDENT-OFF*
 void PrintStatistics() {
@@ -348,15 +348,45 @@ int main(int argc, char*  argv[]) {
 }
 
 void ajust_amount_of_threads(double sleepInSeconds) {
+	long commitsDuringLastPeriod=0;
+	int lastDone=0;
 	long milisecondsLeft=sleepInSeconds*1000;
 	while(milisecondsLeft > SLEEP_PERIOD_SIZE) {
+		long commitsDuringThisPeriod=agregCommits();
 		mySleep(SLEEP_PERIOD_SIZE);
+		commitsDuringThisPeriod = agregCommits() - commitsDuringThisPeriod;
 		milisecondsLeft-=SLEEP_PERIOD_SIZE;
-		startNewThread();
-		killLastCreatedThread();
-		startNewThread();
-//		unsigned long h=agregCommits();
-		printf("agregCommits=%u\n",agregCommits());
+
+		printf("Was running with %ld threads and got %ld commits.\n", ThreadNum, commitsDuringThisPeriod);
+
+		if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone > 0){
+			startNewThread();
+			lastDone=1;
+		}
+		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone > 0) {
+			killLastCreatedThread();
+			lastDone=-1;
+		}
+		else if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone < 0) {
+			killLastCreatedThread();
+			lastDone=-1;
+		}
+		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone < 0) {
+			startNewThread();
+			lastDone=1;
+		}
+		else if(lastDone == 0) {
+			if(ThreadNum<2) {
+				startNewThread();
+			}
+			else {
+				int randomnumber = rand()%2;
+				startNewThread();
+			}
+		}
+
+
+		commitsDuringLastPeriod = commitsDuringThisPeriod;
 	}
 	mySleep(milisecondsLeft);
 }
@@ -367,8 +397,8 @@ void startNewThread() {
 		ready=1;
 		pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
 //		while(Statistics[ThreadNum]==0 && Statistics[ThreadNum]->locals==0) {};
-		while(ready) {printf("hey, I am looping. And you?\n");};
-//		while(ready) {};
+//		while(ready) {printf("hey, I am looping. And you?\n");};
+		while(ready) {};
 		printf("started thread nr: %u\n",ThreadNum);
 		++ThreadNum;
 	}

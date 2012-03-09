@@ -9,7 +9,7 @@
 
 #include "thread_local_variables.h"	// For stat_t structure definition
 extern stat_t **Statistics;
-extern void *ready;
+volatile extern int ready;
 
 #define PRINT_DELAY_BEFORE_TX(Delay)	if( EnableTrace ) {												\
 											printf("%s[%u]D(%u)-,\n", ThLocals.PrintOffset, ID, Delay);	\
