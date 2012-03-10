@@ -37,11 +37,12 @@ void ajust_amount_of_threads(double sleepInSeconds);
 void mySleep(long miliseconds);
 void startNewThread();
 unsigned long agregCommits();
+void killLastCreatedThread();
 
 //	------------------	extern variables	------------------
 extern unsigned *ThreadSeed;
-extern unsigned ThreadNum;
-extern unsigned maxThreadNum;
+extern unsigned ThreadNum;  // amount of threads. (min. 1)
+extern unsigned maxThreadNum; // max amount of threads
 extern ThreadRunFunc ThreadRun[];
 
 //	------------------ other variables	------------------
@@ -276,9 +277,12 @@ int main(int argc, char*  argv[]) {
 		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
 			#ifdef AUTOREPLACE
 				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[ThreadNo],(void *)&(th_input[ThreadNo]));
+//				printf("autoreplace defined\n");
 			#else
-				flagThreadAsRunning(ThreadNo);
-				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNo]));
+//				flagThreadAsRunning(ThreadNo);
+//				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNo]));
+//				printf("autoreplace not defined");
+				startNewThread();
 			#endif
 		}
 
@@ -349,6 +353,7 @@ int main(int argc, char*  argv[]) {
 
 void ajust_amount_of_threads(double sleepInSeconds) {
 	long commitsDuringLastPeriod=0;
+	int level=1;
 	int lastDone=0;
 	long milisecondsLeft=sleepInSeconds*1000;
 	while(milisecondsLeft > SLEEP_PERIOD_SIZE) {
@@ -366,6 +371,9 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone > 0) {
 			killLastCreatedThread();
 			lastDone=-1;
+			if(level>1) {
+				level=level/2;
+			}
 		}
 		else if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone < 0) {
 			killLastCreatedThread();
@@ -374,14 +382,25 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone < 0) {
 			startNewThread();
 			lastDone=1;
+			if(level>1) {
+				level=level/2;
+			}
 		}
 		else if(lastDone == 0) {
 			if(ThreadNum<2) {
 				startNewThread();
+				if(level>1) {
+					level=level/2;
+				}
 			}
 			else {
 				int randomnumber = rand()%2;
-				startNewThread();
+				if (randomnumber) {
+					killLastCreatedThread();
+				}
+				else {
+					startNewThread();
+				}
 			}
 		}
 
@@ -397,16 +416,16 @@ void startNewThread() {
 		ready=1;
 		pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
 //		while(Statistics[ThreadNum]==0 && Statistics[ThreadNum]->locals==0) {};
-//		while(ready) {printf("hey, I am looping. And you?\n");};
-		while(ready) {};
-		printf("started thread nr: %u\n",ThreadNum);
+		while(ready) {printf("hey, I am looping. And you?\n");};
+//		while(ready) {};
 		++ThreadNum;
+		printf("started thread nr: %u\n",ThreadNum);
 	}
 }
 
 void killLastCreatedThread() {
 	if(ThreadNum>1) {
-		killThreadNr(ThreadNum-1);
+		killThreadNr((long)(ThreadNum-(long)1));
 		printf("killed thread nr:  %u\n",ThreadNum);
 	}
 }

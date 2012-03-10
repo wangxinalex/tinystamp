@@ -45,7 +45,7 @@ void waitForThreadAndRestore(long threadNr) {
 void killThreadNr(long threadNr) {
     assert(threadNr<global_maxNumClient);
     global_kill[threadNr/64]=global_kill[threadNr/64]|(((long)1)<<(threadNr%64));
-    while(global_iFinished[threadNr/64]&(((long)1)<<(threadNr%64))) {}//{printf("\ni am looping inside killThreadNr_whileLoop");}
+    while(global_iFinished[threadNr/64]&(((long)1)<<(threadNr%64))) {printf("\ni am looping inside killThreadNr_whileLoop %X, waiting for nr. %ld",global_iFinished[0], threadNr);  }
     global_kill[threadNr/64]=global_kill[threadNr/64]^(((long)1)<<(threadNr%64));
 //    THREAD_JOIN(global_threads[threadNr]); // it's strange, but with join it won't work
 	--ThreadNum;
