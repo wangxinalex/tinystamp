@@ -105,11 +105,13 @@ void *RunThread_3 (void *Parameters)
   }
 
   TM_INIT_THREAD (ThLocals.TxDesc);
-  printf ("Starting thread %u...\n", ID);
-  if (ThreadParameters->useBarrier)
-    barrier_cross (&barrier);
+  printf ("Starting thread %u...\n", (ID + 1));
+//      if(ThreadParameters->useBarrier)
+//              barrier_cross(&barrier);
 
   gettimeofday (&(ThLocals.Statistics.start_time), NULL);
+
+  printf ("Threads started. I am %u.\n", (ID + 1));
 
   for (;;)
   {
@@ -119,6 +121,7 @@ void *RunThread_3 (void *Parameters)
   }
 
   TERMINATE_THREAD;
+  printf ("Thread %u terminated.\n", (ID + 1));
 }
 
 #undef TERMINATE_THREAD

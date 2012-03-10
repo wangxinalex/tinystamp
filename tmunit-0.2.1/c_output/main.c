@@ -311,14 +311,14 @@ int main(int argc, char*  argv[]) {
 				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[ThreadNo],(void *)&(th_input[ThreadNo]));
 //				printf("autoreplace defined\n");
 			#else
-//				flagThreadAsRunning(ThreadNo);
-//				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNo]));
+				flagThreadAsRunning(ThreadNo);
+				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNo]));
 //				printf("autoreplace not defined");
-				startNewThread();
+//				startNewThread();
 			#endif
 		}
 
-		barrier_cross(&barrier);
+//		barrier_cross(&barrier);
 
 		if( WaitForTimeOut ) {
 			struct timespec time_out;
@@ -448,10 +448,13 @@ void startNewThread() {
 		ready=1;
 		pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
 //		while(Statistics[ThreadNum]==0 && Statistics[ThreadNum]->locals==0) {};
-		while(ready) {printf("hey, I am looping. And you?\n");};
+		while(ready) {printf("hey, I am looping. And you?\n"); fflush(stdout);};
 //		while(ready) {};
 		++ThreadNum;
-		printf("started thread nr: %u\n",ThreadNum);
+		printf("started thread nr: %u\nThreadNum: %ld\nmaxThreadNum: %ld",ThreadNum,ThreadNum,maxThreadNum);
+	}
+	else {
+		printf("maxalreadyreached\nThreadNum: %ld\nmaxThreadNum: %ld\n",ThreadNum,maxThreadNum);
 	}
 }
 
