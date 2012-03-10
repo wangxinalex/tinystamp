@@ -328,7 +328,12 @@ int main (int argc, char *argv[])
 #endif
     }
 
-//              barrier_cross(&barrier);
+    barrier_cross (&barrier);
+
+    for (ThreadNo = 0; ThreadNo < maxThreadNum; ThreadNo++)
+    {
+      th_input[ThreadNo].useBarrier = 0;
+    }
 
     if (WaitForTimeOut)
     {

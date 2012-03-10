@@ -102,8 +102,8 @@ unsigned RepetitionNo[1];
 
 	TM_INIT_THREAD(ThLocals.TxDesc);
 	printf("Starting thread %u...\n",(ID+1));
-//	if(ThreadParameters->useBarrier)
-//		barrier_cross(&barrier);
+	if(ThreadParameters->useBarrier)
+		barrier_cross(&barrier);
 
 	gettimeofday(&(ThLocals.Statistics.start_time), NULL);
 
