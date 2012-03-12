@@ -40,6 +40,8 @@ unsigned long agregCommits();
 int killLastCreatedThread();
 int startSomeThreads(int level);
 int killSomeThreads(int level);
+int killSomeThreads2(int level);
+int startSomeThreads2(int level);
 
 //	------------------	extern variables	------------------
 extern unsigned *ThreadSeed;
@@ -406,13 +408,13 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 			lastDone=startSomeThreads(level);
 		}
 		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone > 0) {
-			lastDone=killSomeThreads(level);
+			lastDone=killSomeThreads2(level);
 			if(level>1) {
 				level=level/2;
 			}
 		}
 		else if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone < 0) {
-			lastDone=killSomeThreads(level);
+			lastDone=killSomeThreads2(level);
 		}
 		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone < 0) {
 			lastDone=startSomeThreads(level);
@@ -428,12 +430,12 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 				}
 			}
 			else if(ThreadNum==maxThreadNum) {
-				lastDone=killSomeThreads(level);
+				lastDone=killSomeThreads2(level);
 			}
 			else {
 				int randomnumber = rand()%2;
 				if (randomnumber) {
-					lastDone=killSomeThreads(level);
+					lastDone=killSomeThreads2(level);
 				}
 				else {
 					lastDone=startSomeThreads(level);
@@ -474,6 +476,12 @@ int startSomeThreads(int level) {
 	return sum;
 }
 
+int startSomeThreads2(int level) {
+	int i;
+	int sum=0;
+	return sum;
+}
+
 int killLastCreatedThread() {
 	if(ThreadNum>1) {
 		killThreadNr((long)(ThreadNum-(long)1));
@@ -490,6 +498,10 @@ int killSomeThreads(int level) {
 		sum+=killLastCreatedThread();
 	}
 	return sum;
+}
+
+int killSomeThreads2(int level) {
+	return killSomeThreadsInTransactions(level);
 }
 
 void mySleep(long miliseconds) {
