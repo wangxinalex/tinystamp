@@ -101,13 +101,13 @@ unsigned RepetitionNo[1];
 	}
 
 	TM_INIT_THREAD(ThLocals.TxDesc);
-	printf("Starting thread %u...\n",(ID+1));
+//	printf("Starting thread %u...\n",(ID+1));
 	if(ThreadParameters->useBarrier)
 		barrier_cross(&barrier);
 
 	gettimeofday(&(ThLocals.Statistics.start_time), NULL);
 
-	printf("Threads started. I am %u.\n",(ID+1));
+//	printf("Threads started. I am %u.\n",(ID+1));
 
 for(; ; )
 {
@@ -117,7 +117,7 @@ if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
 }
 
 	TERMINATE_THREAD;
-	printf("Thread %u terminated.\n",(ID+1));
+//	printf("Thread %u terminated.\n",(ID+1));
 }
 
 #undef TERMINATE_THREAD
