@@ -51,8 +51,10 @@ extern ThreadRunFunc ThreadRun[];
 
 //      ------------------ other variables      ------------------
 stat_t **Statistics;
-static pthread_t *Thrd;
-static thread_input_t *th_input;
+//static pthread_t*             Thrd;
+pthread_t *Thrd;
+//static thread_input_t*        th_input;
+thread_input_t *th_input;
 volatile int ready;
 
 // *INDENT-OFF*
@@ -426,7 +428,7 @@ void ajust_amount_of_threads (double sleepInSeconds)
 
     if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone > 0)
     {
-      lastDone = startSomeThreads (level);
+      lastDone = startSomeThreads2 (level);
     }
     else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone > 0)
     {
@@ -442,7 +444,7 @@ void ajust_amount_of_threads (double sleepInSeconds)
     }
     else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone < 0)
     {
-      lastDone = startSomeThreads (level);
+      lastDone = startSomeThreads2 (level);
       if (level > 1)
       {
 	level = level / 2;
@@ -452,7 +454,7 @@ void ajust_amount_of_threads (double sleepInSeconds)
     {
       if (ThreadNum < 2)
       {
-	lastDone = startSomeThreads (level);
+	lastDone = startSomeThreads2 (level);
 	if (level > 1)
 	{
 	  level = level / 2;
@@ -471,7 +473,7 @@ void ajust_amount_of_threads (double sleepInSeconds)
 	}
 	else
 	{
-	  lastDone = startSomeThreads (level);
+	  lastDone = startSomeThreads2 (level);
 	}
       }
     }
@@ -518,9 +520,7 @@ int startSomeThreads (int level)
 
 int startSomeThreads2 (int level)
 {
-  int i;
-  int sum = 0;
-  return sum;
+  return startSomeThreadsInTransactionsTemplate (level);
 }
 
 int killLastCreatedThread ()

@@ -51,8 +51,10 @@ extern ThreadRunFunc ThreadRun[];
 
 //	------------------ other variables	------------------
 stat_t** Statistics;
-static pthread_t*		Thrd;
-static thread_input_t*	th_input;
+//static pthread_t*		Thrd;
+pthread_t*	Thrd;
+//static thread_input_t*	th_input;
+thread_input_t* th_input;
 volatile int ready;
 
 // *INDENT-OFF*
@@ -405,7 +407,7 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 		printf("Was running with %ld threads and got %ld commits.\n", ThreadNum, commitsDuringThisPeriod);
 
 		if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone > 0){
-			lastDone=startSomeThreads(level);
+			lastDone=startSomeThreads2(level);
 		}
 		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone > 0) {
 			lastDone=killSomeThreads2(level);
@@ -417,14 +419,14 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 			lastDone=killSomeThreads2(level);
 		}
 		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone < 0) {
-			lastDone=startSomeThreads(level);
+			lastDone=startSomeThreads2(level);
 			if(level>1) {
 				level=level/2;
 			}
 		}
 		else if(lastDone == 0) {
 			if(ThreadNum<2) {
-				lastDone=startSomeThreads(level);
+				lastDone=startSomeThreads2(level);
 				if(level>1) {
 					level=level/2;
 				}
@@ -438,7 +440,7 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 					lastDone=killSomeThreads2(level);
 				}
 				else {
-					lastDone=startSomeThreads(level);
+					lastDone=startSomeThreads2(level);
 				}
 			}
 		}
@@ -477,9 +479,7 @@ int startSomeThreads(int level) {
 }
 
 int startSomeThreads2(int level) {
-	int i;
-	int sum=0;
-	return sum;
+	return startSomeThreadsInTransactionsTemplate(level);
 }
 
 int killLastCreatedThread() {

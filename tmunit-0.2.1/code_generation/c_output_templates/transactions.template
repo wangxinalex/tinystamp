@@ -2,6 +2,9 @@
 
 extern unsigned maxThreadNum;
 extern unsigned ThreadNum;
+extern pthread_t* Thrd;
+extern ThreadRunFunc ThreadRun[];
+extern thread_input_t* th_input;
 
 int i_got_killed(unsigned id) {
  	long myThreadId=id;
@@ -14,22 +17,27 @@ void initThreadControlVariables() {
     int memAllocErrorPosix;
     assert(sizeof(long)==8);
     memAllocErrorPosix=posix_memalign((void**)&global_iFinished, 64, 8*(maxThreadNum/64+1));  // from http://pubs.opengroup.org/onlinepubs/000095399/functions/posix_memalign.html
+	memAllocErrorPosix=posix_memalign((void**)&ready2, 64, 8*(maxThreadNum/64+1));  // from http://pubs.opengroup.org/onlinepubs/000095399/functions/posix_memalign.html
     assert(global_iFinished);
+	assert(ready2);
     assert(!memAllocErrorPosix);
     memAllocErrorPosix=posix_memalign((void**)&global_kill, 64, 8*(maxThreadNum/64+1));  // from http://pubs.opengroup.org/onlinepubs/000095399/functions/posix_memalign.html
     assert(!memAllocErrorPosix);
     long i;
     for (i=maxThreadNum/64+1;--i;) {
         global_iFinished[i]=0xffffffffffffffff;
+		ready2[i]=0xffffffffffffffff;
         global_kill[i]=(long)0;
     }
     global_kill[0]=(long)0;
     global_iFinished[0]=0xfffffffffffffffe;
+	ready2[0]=0xffffffffffffffff;
 }
 
 void freeThreadControlVariables() {
     free((void*) global_iFinished);
     free((void*) global_kill);
+	free((void*) ready2);
 }
 
 void flagThreadToBeKilled(long threadNr) {
@@ -88,6 +96,23 @@ int every_thread_finished() {
 
 void flagThreadAsRunning(unsigned threadID) {
 	__sync_or_and_fetch(&(global_iFinished[threadID/64]),(((long)1)<<(threadID%64))); // from http://gcc.gnu.org/onlinedocs/gcc/Atomic-Builtins.html
+}
+
+int startSomeThreadsInTransactionsTemplate(int level) {
+    int i;
+    int sum=0;
+    for(i=0; i<level; ++i) {
+        if(ThreadNum<maxThreadNum) {
+            pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
+            ++ThreadNum;
+            ++sum;
+        }
+    }
+	for(i=0; i<sum; ++i) {
+		while(ready2[(((ThreadNum)-sum)+i)/64]&(((long)1)<<(long)((long)(((ThreadNum)-sum)+i)%(long)64))) {};
+	    __sync_or_and_fetch(&(ready2[(((ThreadNum)-sum)+i)/64]),(((long)1)<<((((ThreadNum)-sum)+i)%64)));
+	}
+	return sum;
 }
 
 void ExecuteTransaction(unsigned TransactionID, stm_tx_t* TxDescr, ThLocalVarCollection* ThLocals) {

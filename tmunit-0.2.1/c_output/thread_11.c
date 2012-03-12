@@ -61,6 +61,7 @@ char* TransactionNames[]={"T_transfer","T_balance"};
 	ThLocals.TransactionNames = TransactionNames;
 	
 	ready=0;
+    __sync_and_and_fetch(&(ready2[ThLocals.ThreadID/64]),~(((long)1)<<(ThLocals.ThreadID%64))); 
 
 // Initializing random variable seeds
 ThLocals.seed__SRC = (unsigned) RAND_R(&CurrentThreadSeed);
