@@ -2,9 +2,9 @@
 
 extern unsigned maxThreadNum;
 extern unsigned ThreadNum;
-extern pthread_t* Thrd;
-extern ThreadRunFunc ThreadRun[];
-extern thread_input_t* th_input;
+extern volatile pthread_t* Thrd;
+extern volatile ThreadRunFunc ThreadRun[];
+extern volatile thread_input_t* th_input;
 
 int i_got_killed(unsigned id) {
  	long myThreadId=id;
@@ -103,6 +103,7 @@ int startSomeThreadsInTransactionsTemplate(int level) {
     int sum=0;
     for(i=0; i<level; ++i) {
         if(ThreadNum<maxThreadNum) {
+			flagThreadAsRunning(ThreadNum);
             pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
             ++ThreadNum;
             ++sum;
@@ -114,6 +115,23 @@ int startSomeThreadsInTransactionsTemplate(int level) {
 	}
 	return sum;
 }
+
+int startSomeThreads3inTransactions(int level) {
+    int i;
+    int sum=0;
+    for(i=0; i<level; ++i) {
+        if(ThreadNum<maxThreadNum) {
+			sstih();
+            ++sum;
+		}
+	}
+	for(i=0; i<sum; ++i) {
+		while(ready2[(((ThreadNum)-sum)+i)/64]&(((long)1)<<(long)((long)(((ThreadNum)-sum)+i)%(long)64))) {};
+		__sync_or_and_fetch(&(ready2[(((ThreadNum)-sum)+i)/64]),(((long)1)<<((((ThreadNum)-sum)+i)%64)));
+	}
+	return sum;
+}
+
 
 void ExecuteTransaction(unsigned TransactionID, stm_tx_t* TxDescr, ThLocalVarCollection* ThLocals) {
     Word ValueRead;

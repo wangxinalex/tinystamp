@@ -23,6 +23,7 @@ void waitForThreadAndRestore(long threadNr);
 void killThreadNr(long threadNr);
 int killSomeThreadsInTransactions(int level);
 int startSomeThreadsInTransactionsTemplate(int level);
+int startSomeThreads3inTransactions(int level);
 int every_thread_finished();
 void flagThreadAsRunning(unsigned threadID);
 void flagThreadToBeKilled(long threadNr);

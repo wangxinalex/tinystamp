@@ -42,12 +42,16 @@ int startSomeThreads(int level);
 int killSomeThreads(int level);
 int killSomeThreads2(int level);
 int startSomeThreads2(int level);
+int startSomeThreads3(int level);
+int startSomeThreads4(int level);
+void sstih();
 
 //	------------------	extern variables	------------------
 extern unsigned *ThreadSeed;
 extern unsigned ThreadNum;  // amount of threads. (min. 1)
 extern unsigned maxThreadNum; // max amount of threads
 extern ThreadRunFunc ThreadRun[];
+extern volatile long* ready2;
 
 //	------------------ other variables	------------------
 stat_t** Statistics;
@@ -407,7 +411,7 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 		printf("Was running with %ld threads and got %ld commits.\n", ThreadNum, commitsDuringThisPeriod);
 
 		if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone > 0){
-			lastDone=startSomeThreads2(level);
+			lastDone=startSomeThreads4(level);
 		}
 		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone > 0) {
 			lastDone=killSomeThreads2(level);
@@ -419,14 +423,14 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 			lastDone=killSomeThreads2(level);
 		}
 		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone < 0) {
-			lastDone=startSomeThreads2(level);
+			lastDone=startSomeThreads4(level);
 			if(level>1) {
 				level=level/2;
 			}
 		}
 		else if(lastDone == 0) {
 			if(ThreadNum<2) {
-				lastDone=startSomeThreads2(level);
+				lastDone=startSomeThreads4(level);
 				if(level>1) {
 					level=level/2;
 				}
@@ -440,7 +444,7 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 					lastDone=killSomeThreads2(level);
 				}
 				else {
-					lastDone=startSomeThreads2(level);
+					lastDone=startSomeThreads4(level);
 				}
 			}
 		}
@@ -469,6 +473,15 @@ int startNewThread() {
 	}
 }
 
+int startSomeThreads3(int level) {
+	return startSomeThreads3inTransactions(level);
+}
+
+void sstih() {
+     flagThreadAsRunning(ThreadNum);
+     pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
+}
+
 int startSomeThreads(int level) {
 	int i;
 	int sum=0;
@@ -477,6 +490,34 @@ int startSomeThreads(int level) {
 	}
 	return sum;
 }
+
+int startSomeThreads4(int level) {
+    int i;
+    int sum=0;
+    for(i=0; i<level; ++i) {
+//		printf("ap=%d\t",ThreadNum);
+	    if (ThreadNum < maxThreadNum) {
+	        flagThreadAsRunning(ThreadNum);
+//	        ready=1;
+			__sync_or_and_fetch(&(ready2[ThreadNum/64]),(((long)1)<<(ThreadNum%64)));
+	        pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
+//	        while(ready) {};
+//	        while(ready2[ThreadNum/64]&(((long)1)<<(long)((long)(ThreadNum)%(long)64))) {};
+//			__sync_or_and_fetch(&(ready2[ThreadNum/64]),(((long)1)<<(ThreadNum%64)));
+	        ++ThreadNum;
+	        sum+=1;
+	    }
+    }
+//	printf("\n");
+	for(i=0; i<sum; ++i){
+//		printf("bp=%d\t",ThreadNum-sum+i);
+        while(ready2[(ThreadNum-sum+i)/64]&(((long)1)<<(long)((long)((ThreadNum-sum+i))%(long)64))) {};
+        __sync_or_and_fetch(&(ready2[(ThreadNum-sum+i)/64]),(((long)1)<<((ThreadNum-sum+i)%64)));
+	}
+//	printf("\n");
+    return sum;
+}
+
 
 int startSomeThreads2(int level) {
 	return startSomeThreadsInTransactionsTemplate(level);

@@ -37,6 +37,8 @@ volatile extern int ready;
 								}																	\
 								Statistics[ID]->locals=0; \
 								__sync_and_and_fetch(&(global_iFinished[ThLocals.ThreadID/64]),~(((long)1)<<(ThLocals.ThreadID%64)));	\
+							    printf("Thread %u terminated.\n",(ID+1));			\
+							    fflush(stdout);										\
 								return NULL;														\
 							}
 
@@ -118,7 +120,6 @@ if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
 }
 
 	TERMINATE_THREAD;
-//	printf("Thread %u terminated.\n",(ID+1));
 }
 
 #undef TERMINATE_THREAD

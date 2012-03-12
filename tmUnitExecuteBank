@@ -5,6 +5,6 @@ make
 cd c_output
 make clean
 make
-./benchrun -p 1 -d 5500000 -m 120
+./benchrun -p 1 -d 100000000 -m 12
 cd ../..
 
