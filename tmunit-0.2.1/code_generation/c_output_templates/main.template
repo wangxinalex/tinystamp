@@ -35,9 +35,11 @@
 //	------------------	declaring methods	------------------
 void ajust_amount_of_threads(double sleepInSeconds);
 void mySleep(long miliseconds);
-void startNewThread();
+int startNewThread();
 unsigned long agregCommits();
-void killLastCreatedThread();
+int killLastCreatedThread();
+int startSomeThreads(int level);
+int killSomeThreads(int level);
 
 //	------------------	extern variables	------------------
 extern unsigned *ThreadSeed;
@@ -414,7 +416,7 @@ void ajust_amount_of_threads(double sleepInSeconds) {
 	mySleep(milisecondsLeft);
 }
 
-void startNewThread() {
+int startNewThread() {
 	if (ThreadNum < maxThreadNum) {
 		flagThreadAsRunning(ThreadNum);
 		ready=1;
@@ -424,17 +426,39 @@ void startNewThread() {
 //		while(ready) {};
 		++ThreadNum;
 		printf("started thread nr: %u\nThreadNum: %ld\nmaxThreadNum: %ld",ThreadNum,ThreadNum,maxThreadNum);
+		return 1;
 	}
 	else {
 		printf("maxalreadyreached\nThreadNum: %ld\nmaxThreadNum: %ld\n",ThreadNum,maxThreadNum);
+		return 0;
 	}
 }
 
-void killLastCreatedThread() {
+int startSomeThreads(int level) {
+	int i;
+	int sum=0;
+	for(i=0; i<level; ++i) {
+		sum+=startNewThread();
+	}
+	return sum;
+}
+
+int killLastCreatedThread() {
 	if(ThreadNum>1) {
 		killThreadNr((long)(ThreadNum-(long)1));
 		printf("killed thread nr:  %u\n",ThreadNum);
+		return -1;
 	}
+	return 0;
+}
+
+int killSomeThreads(int level) {
+	int i;
+	int sum=0;
+	for(i=0; i<level; ++i) {
+		sum+=killLastCreatedThread();
+	}
+	return sum;
 }
 
 void mySleep(long miliseconds) {
