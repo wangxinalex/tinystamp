@@ -37,8 +37,6 @@ extern __thread stm_tx_t *TxDesc;
 								}																	\
 								Statistics[ID]->locals=0; \
 								__sync_and_and_fetch(&(global_iFinished[ThLocals.ThreadID/64]),~(((long)1)<<(ThLocals.ThreadID%64)));	\
-							    printf("Thread %u terminated.\n",(ID+1));			\
-							    fflush(stdout);										\
 								return NULL;														\
 							}
 
@@ -50,8 +48,8 @@ void *RunThread_0 (void *Parameters)
 
   Statistics[ID] = malloc (sizeof (stat_t));
 
-  char *ThreadNames[] = { "P_1", "P_2", "P_3", "P_4", "P_5", "P_6", "P_7", "P_8", "P_9", "P_10", "P_11", "P_12" };
-  char *TransactionNames[] = { "T_transfer", "T_balance" };
+  char *ThreadNames[] = { "P_1" };
+  char *TransactionNames[] = { "T_1", "T_2" };
 
   ThLocalVarCollection ThLocals;
   Statistics[ID]->locals = &ThLocals;
@@ -66,18 +64,10 @@ void *RunThread_0 (void *Parameters)
   ready = 0;
   __sync_and_and_fetch (&(ready2[ThLocals.ThreadID / 64]), ~(((long) 1) << (ThLocals.ThreadID % 64)));
 
-// Initializing random variable seeds
-  ThLocals.seed__SRC = (unsigned) RAND_R (&CurrentThreadSeed);
-  ThLocals.seed__DST = (unsigned) RAND_R (&CurrentThreadSeed);
-  if (RandomDebug)
-  {
-    printf ("Generating Random variable seeds for Thread %u...\n", ID);
-    printf ("Seed of _SRC: %u\n", ThLocals.seed__SRC);
-    printf ("Seed of _DST: %u\n", ThLocals.seed__DST);
-  }
 
 // Initializing thread local variables (other than random variables).
-  ThLocals._NB = 8192;
+  ThLocals._NA = 10000;
+  ThLocals._NB = 960;
   ThLocals._k = 0;
 
 // Definition and initialization of thread local variables.
@@ -118,7 +108,7 @@ void *RunThread_0 (void *Parameters)
 
   for (;;)
   {
-    ExecuteTransaction (1, ThLocals.TxDesc, &ThLocals);
+    ExecuteTransaction (0, ThLocals.TxDesc, &ThLocals);
     if (TerminateRequestedBySignal || i_got_killed (ThLocals.ThreadID))
       TERMINATE_THREAD;
   }

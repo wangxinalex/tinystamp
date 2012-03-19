@@ -1,0 +1,10 @@
+cd tmunit-0.2.1
+make clean
+make
+./tmunit -g ../ex24.cfg
+cd c_output
+make clean
+make
+./benchrun -p 1 -d 100000000 -m 18
+cd ../..
+

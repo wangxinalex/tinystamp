@@ -1,0 +1,31 @@
+Properties:
+  RandomSeed = 1;           
+  ReadOnlyHint = 1;         
+  WaitForTimeOut = 1;
+  Timeout = 100000;   
+
+Definitions:				
+  _NA = 8000;
+  _NB = 100;    					 
+  a[1.._NA]=0;						 
+  _SRCA= <1.._NA>;
+  _DSTA= <1.._NA>;
+  _SRCB= <1.._NB>;						 
+  _DSTB= <1.._NB>;						 
+
+Transactions:			                         
+  T_1:= R(a[_SRCA]),R(a[_DSTA]),W(a[_SRCA]),W(a[_DSTA]);  
+  T_2:= R(a[_SRCB]),R(a[_DSTB]),R(a[_SRCB]),R(a[_DSTB]),W(a[_SRCB]),W(a[_DSTB]),R(a[_SRCB]),R(a[_DSTB]),W(a[_SRCB]),W(a[_DSTB]);
+
+
+
+
+
+Threads:       	  	     	     			 
+  P_1 := (T_1)40000000,(T_2)40000000,(T_1)40000000,(T_2)40000000,(T_1)40000000,(T_2)40000000;	
+
+
+
+
+
+

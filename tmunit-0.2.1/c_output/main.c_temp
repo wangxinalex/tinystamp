@@ -222,20 +222,23 @@ void InitializeSharedVariables ()
 {
 // Allocating memory for shared variables and arrays.
 
-  a_array_size = 8192;
+  a_array_size = 10000;
   a = (Word *) malloc (a_array_size * sizeof (Word));
+  counter = (Word *) malloc (sizeof (Word));
 
 // Initializing shared variables and arrays.
   unsigned ElementNo;
   for (ElementNo = 0; ElementNo < a_array_size; ElementNo++)
     a[ElementNo] = 0;
 
+  *counter = 0;
 
 #ifdef ENABLE_TRACE_CODE
   if (EnableTrace)
   {
     for (ElementNo = 0; ElementNo < a_array_size; ElementNo++)
       printf ("Address of a[%u] : %p\n", ElementNo, &(a[ElementNo]));
+    printf ("Address of counter : %p\n", counter);
 
   }
 #endif
