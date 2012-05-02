@@ -1194,6 +1194,7 @@ void Generate_C_CodeForThread(unsigned ThreadID) {
     unsigned RequiredTxCandidateListContainerNum = 0;
 
 
+
     // Initializing the strings that come before and after a transaction
     for(ContainerNo=0; ContainerNo< ContainerNum; ContainerNo++)
     {
@@ -1210,7 +1211,7 @@ void Generate_C_CodeForThread(unsigned ThreadID) {
 	TxContainer_t* CurrentTxContainer = &(CurrentThreadDef -> TxContainerList[ContainerNo]);
 
 	// Find out whether the current node is a loop end node
-	bool FiniteLoopEndContainer   =  ( CurrentTxContainer -> InitialRepetitionCount > 0 );
+	bool FiniteLoopEndContainer   =  ( CurrentTxContainer -> InitialRepetitionCount > 0 || CurrentTxContainer -> LoopEndNodeWithVarExpr);
 	bool InfiniteLoopEndContainer =  ( CurrentTxContainer -> NextContainerID[0] < ContainerNo+1 );
 	bool LoopEndContainer = ( FiniteLoopEndContainer || InfiniteLoopEndContainer );
 
@@ -1231,7 +1232,27 @@ void Generate_C_CodeForThread(unsigned ThreadID) {
 	    }
 	    else if( FiniteLoopEndContainer )
 	    {
-		sprintf(DummyString,"for(RepetitionNo[%u]=0 ; RepetitionNo[%u]< %u ; RepetitionNo[%u]++ )\n{\n",LoopNestinglevel, LoopNestinglevel, CurrentTxContainer -> InitialRepetitionCount, LoopNestinglevel);
+
+	        //HARMANCI: CODE ADDED/MODIFIED FOR VARIABLE EXPR WITHIN THREAD DEF		
+		char* LoopLimitExprString = NULL;
+		if(CurrentTxContainer ->LoopEndNodeWithVarExpr )
+		{
+		    ThreadInfo_t* FirstThreadDef = &(ThreadDefArray[0]);
+		    VarExpr*      VarExprList     = FirstThreadDef->VarExprList;
+		    unsigned      VarExprListSize = FirstThreadDef->VarExprNum ;
+
+		    GenerateVarExprString(CurrentTxContainer -> LoopLimitExprPos, VarExprList, VarExprListSize, &LoopLimitExprString);
+		}
+		else
+		{
+		    int MaxIntegerValueCharNum = 100;
+		    LoopLimitExprString = (char *)malloc(sizeof(char)*MaxIntegerValueCharNum);
+		    sprintf (LoopLimitExprString, "%u", CurrentTxContainer -> InitialRepetitionCount);
+		}    
+		
+		sprintf(DummyString,"for(RepetitionNo[%u]=0 ; RepetitionNo[%u]< %s ; RepetitionNo[%u]++ )\n{\n",LoopNestinglevel, LoopNestinglevel, LoopLimitExprString , LoopNestinglevel);
+		// END OF CODE ADDED/MODIFIED FOR VARIABLE EXPR WITHIN THREAD DEF		
+
 		LoopStartContainerNo = CurrentTxContainer -> NextContainerID[1];
 	    }
 	    CodeBeforeTransaction[LoopStartContainerNo] = strext(CodeBeforeTransaction[ContainerNo],DummyString);

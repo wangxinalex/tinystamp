@@ -1,6 +1,14 @@
-Terminals unused in grammar
+Terminals which are not used
 
    EOF_TOKEN
+
+
+Rules never reduced
+
+  165 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES FixedValue
+
+
+State 366 conflicts: 3 reduce/reduce
 
 
 Grammar
@@ -248,7 +256,7 @@ Grammar
   163                                    | SMALLER_THAN TxChoiceList GREATER_THAN Variable
   164                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES
   165                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES FixedValue
-  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES Variable
+  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES VariableExpression
 
   167 UnboundedRepetitionTxBlockListElement: DescriptionName MULTIPLY
   168                                      | SMALLER_THAN TxChoiceList GREATER_THAN MULTIPLY
@@ -481,7 +489,7 @@ RandomizedRange (116)
 Range (117)
     on left: 119 120, on right: 34 35 43 76 118
 Variable (118)
-    on left: 121 122 123 124 125 126, on right: 75 100 134 163 166
+    on left: 121 122 123 124 125 126, on right: 75 100 134 163
 ArrayAccess (119)
     on left: 127 128, on right: 42 125 126
 ManagedMemAccess (120)
@@ -494,7 +502,7 @@ MultiplicativeFactor (123)
     on left: 139 140, on right: 136 137 138
 VariableExpression (124)
     on left: 141 142, on right: 17 18 20 40 41 59 64 65 66 67 69 70
-    88 100 119 120 127 128 129 130 131 132 140 142
+    88 100 119 120 127 128 129 130 131 132 140 142 166
 AdditiveArithmeticOp (125)
     on left: 143 144, on right: 142
 MultiplicativeArithmeticOp (126)
@@ -3439,7 +3447,7 @@ state 246
 
   164 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES
   165                                    | OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES FixedValue
-  166                                    | OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES Variable
+  166                                    | OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES VariableExpression
   169 UnboundedRepetitionTxBlockListElement: OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES MULTIPLY
 
     $default  reduce using rule 170 (__txBlockStart_act)
@@ -3964,7 +3972,7 @@ state 291
 
   164 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES
   165                                    | OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES FixedValue
-  166                                    | OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES Variable
+  166                                    | OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES VariableExpression
   169 UnboundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES MULTIPLY
 
     DELAY_OP           shift, and go to state 225
@@ -4343,7 +4351,7 @@ state 327
   156 TxBlockList: TxBlockList . COMMA TxBlockListElement
   164 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES
   165                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES FixedValue
-  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES Variable
+  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES VariableExpression
   169 UnboundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES MULTIPLY
 
     CLOSE_PARANTHESES  shift, and go to state 348
@@ -4664,25 +4672,37 @@ state 348
 
   164 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES .
   165                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES . FixedValue
-  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES . Variable
+  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES . VariableExpression
   169 UnboundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES . MULTIPLY
 
+    READ_ACCESS_OP       shift, and go to state 70
+    WRITE_ACCESS_OP      shift, and go to state 71
+    OPEN_PARANTHESES     shift, and go to state 72
     NAME                 shift, and go to state 73
     ARRAY_NAME           shift, and go to state 74
     NAME_ALL_CAPITALS    shift, and go to state 31
     LOCAL_VARIABLE_NAME  shift, and go to state 75
     LOCAL_ARRAY_NAME     shift, and go to state 76
     NUMBER               shift, and go to state 77
+    SMALLER_THAN         shift, and go to state 78
+    MINUS                shift, and go to state 79
     MULTIPLY             shift, and go to state 365
 
     $default  reduce using rule 164 (BoundedRepetitionTxBlockListElement)
 
-    FixedValue       go to state 366
-    Constant         go to state 82
-    DescriptionName  go to state 39
-    Variable         go to state 367
-    ArrayAccess      go to state 86
-    Scope            go to state 92
+    Value                                          go to state 80
+    FixedValue                                     go to state 366
+    Constant                                       go to state 82
+    DescriptionName                                go to state 39
+    RandomizedRange                                go to state 83
+    Variable                                       go to state 85
+    ArrayAccess                                    go to state 86
+    ManagedMemAccess                               go to state 87
+    VariableExpressionElement                      go to state 88
+    MultiplicativeVariableExpressionElementAccess  go to state 89
+    MultiplicativeFactor                           go to state 90
+    VariableExpression                             go to state 367
+    Scope                                          go to state 92
 
 
 state 349
@@ -4820,16 +4840,29 @@ state 365
 
 state 366
 
+  112 Value: FixedValue .
   165 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES FixedValue .
 
-    $default  reduce using rule 165 (BoundedRepetitionTxBlockListElement)
+    SEMICOLON          reduce using rule 112 (Value)
+    SEMICOLON          [reduce using rule 165 (BoundedRepetitionTxBlockListElement)]
+    CLOSE_PARANTHESES  reduce using rule 112 (Value)
+    CLOSE_PARANTHESES  [reduce using rule 165 (BoundedRepetitionTxBlockListElement)]
+    COMMA              reduce using rule 112 (Value)
+    COMMA              [reduce using rule 165 (BoundedRepetitionTxBlockListElement)]
+    $default           reduce using rule 112 (Value)
 
 
 state 367
 
-  166 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES Variable .
+  142 VariableExpression: VariableExpression . AdditiveArithmeticOp MultiplicativeVariableExpressionElementAccess
+  166 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES VariableExpression .
+
+    PLUS   shift, and go to state 153
+    MINUS  shift, and go to state 154
 
     $default  reduce using rule 166 (BoundedRepetitionTxBlockListElement)
+
+    AdditiveArithmeticOp  go to state 155
 
 
 state 368

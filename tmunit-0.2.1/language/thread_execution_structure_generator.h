@@ -70,6 +70,12 @@ void barrier_cross(barrier_t *b);
      typedef struct TransactionContainerStruct
      {
          //    TxCandidate_t* ListOfTxCandidates;
+
+	 //HARMANCI: CODE ADDED FOR VARIABLE EXPR WITHIN THREAD DEF
+	 bool           LoopEndNodeWithVarExpr;
+	 unsigned       LoopLimitExprPos;
+	 // END OF CODE ADDED FOR VARIABLE EXPR WITHIN THREAD DEF
+
 	 TxCandidate_t* TxCandidateList;
 	 unsigned       CandidateTxNum;
 	 
@@ -204,6 +210,7 @@ unsigned FindThreadByName(const char* SearchedThreadName, const ThreadInfo_t* Th
 void InsertTxContainerToThread(dyn_arr_t* CurrentTxContainerList, const dyn_arr_t* CurrentTxCandidateList, ConnectionInfo_t* ConnectionInfo, unsigned ConnectionNum, unsigned* PrecedingDelayPair);
 void InsertTxCandidateListInContainer(const dyn_arr_t* CurrentTxCandidateList, TxContainer_t* CurrentTxContainer);
 void InsertBranchAmongTxContainers(dyn_arr_t* CurrentTxContainerList, unsigned FromContainerPos,unsigned ToContainerPos,Branch_t BranchType, int IterationNum);
+void InsertVarExprBranchAmongTxContainers(dyn_arr_t* CurrentTxContainerList, unsigned FromContainerPos,unsigned ToContainerPos,Branch_t BranchType, int LoopLimitExprPos);
 void MakeTxContainerDefault(TxContainer_t* TargetContainer);
 
 

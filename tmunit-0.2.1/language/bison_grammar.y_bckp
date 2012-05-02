@@ -3128,6 +3128,15 @@ BoundedRepetitionTxBlockListElement:
   	  REPORT_READ_INPUT("End of  %s times repeated TxBlockList\n",$5);
 	  FREE_RULE_STRINGS(5);
       }
+     | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES Variable
+      {
+          #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
+          #endif
+
+
+  	  REPORT_READ_INPUT("End of  %s times repeated TxBlockList\n", $5 ->string);
+	  FREE_RULE_STRINGS(5);
+      }
      | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES VariableExpression
       {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
@@ -3144,18 +3153,18 @@ BoundedRepetitionTxBlockListElement:
 
 
 		 VarExpr* ElementVarExpr;
-		 unsigned LoopLimitExprID = FindVarExpr($5,&ElementVarExpr);
+		 FindVarExpr($2,&ElementVarExpr);
 		 if(ElementVarExpr == NULL)
 		 {
 		     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
-		     sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", $5);
+		     sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", $2);
 		     yyerror(ErrorMessage);
 		     free(ErrorMessage);
 		     exit(1);
 		 }
 
-		 InsertVarExprBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo-1, TxBlockStartContainerNo, LOOP_BACK, LoopLimitExprID);
-
+		 signed long IterationNum = EvaluateVarExpr(ElementVarExpr);
+		 InsertBranchAmongTxContainers(&CurrentTxContainerList, CurrentTxContainerNo-1, TxBlockStartContainerNo, LOOP_BACK, IterationNum);
 
 	     }
 
@@ -3164,7 +3173,7 @@ BoundedRepetitionTxBlockListElement:
           #endif
 
 
-  	  REPORT_READ_INPUT("End of  %s times repeated TxBlockList\n", $3 ->string);
+  	  REPORT_READ_INPUT("End of  %s times repeated TxBlockList\n", $5 ->string);
 	  FREE_RULE_STRINGS(5);
       }
      ;

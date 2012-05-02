@@ -441,6 +441,11 @@ unsigned AddNewContainerToThread(dyn_arr_t* TargetTxContainerList)
 
 void MakeTxContainerDefault(TxContainer_t* TargetContainer)
 {
+    //HARMANCI: CODE ADDED FOR VARIABLE EXPR WITHIN THREAD DEF
+    TargetContainer -> LoopEndNodeWithVarExpr = FALSE;
+    TargetContainer -> LoopLimitExprPos       = 0 ;       
+    // END OF CODE ADDED FOR VARIABLE EXPR WITHIN THREAD DEF
+
     TargetContainer -> TxCandidateList          = NULL; 
     TargetContainer -> CandidateTxNum           = 0;
     TargetContainer -> InitialRepetitionCount   = 0;
@@ -467,6 +472,19 @@ void InsertBranchAmongTxContainers(dyn_arr_t* CurrentTxContainerList, unsigned F
 	printf("NextContainerID[0]= %u\n",FromContainer -> NextContainerID[0]);
 }
 
+
+//HARMANCI: FUNCTION ADDED FOR VARIABLE EXPR WITHIN THREAD DEF
+void InsertVarExprBranchAmongTxContainers(dyn_arr_t* CurrentTxContainerList, unsigned FromContainerPos,unsigned ToContainerPos,Branch_t BranchType, int LoopLimitExprPos)
+{
+    TxContainer_t* FromContainer = &(((TxContainer_t*)(CurrentTxContainerList -> ArrayStartAddress))[FromContainerPos]) ;
+    FromContainer -> NextContainerID[BranchType] = ToContainerPos;
+    FromContainer -> LoopEndNodeWithVarExpr = TRUE;
+    FromContainer -> LoopLimitExprPos       = LoopLimitExprPos;
+    FromContainer -> LoopStartNode          = FALSE;
+
+    if(VerboseParserOutput)
+	printf("NextContainerID[0]= %u\n",FromContainer -> NextContainerID[0]);
+}
 
 
 
