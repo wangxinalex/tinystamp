@@ -1,0 +1,21 @@
+Properties:
+  RandomSeed = 1;           // use random seed for RNG
+  ReadOnlyHint = 1;         // tag read-only transactions
+  WaitForTimeOut = 1;
+  Timeout = 100000;   
+
+Definitions:				// variables and constants
+  NW = 3;
+  _nw = 0;
+  _NA = 4;
+  a[1.._NA]=0;						 // memory range for accounts
+
+Transactions:			                         // specification of transactions
+  T_NW:= R(NW,_nw),W(NW,_nw-1);							
+  T_1:= W(a[1],_nw);  
+  
+//  T_1 := {# _k=[1.._NB]: R(a[_k]),W(a[_k])};
+
+Threads:       	  	     	     			 // specification of threads
+  P_1 := T_NW,(T_1)_nw,T_NW,(T_1)_nw;	
+

@@ -3,8 +3,8 @@
 
 typedef unsigned long Word;
 
+extern Word* NW;
 extern Word* a;
 extern unsigned  a_array_size;
-extern Word* counter;
 
 #endif

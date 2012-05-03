@@ -1,6 +1,18 @@
-for(; ; )
-{
 ExecuteTransaction(0, ThLocals.TxDesc, &ThLocals);
+if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
+	TERMINATE_THREAD;
+for(RepetitionNo[0]=0 ; RepetitionNo[0]< (ThLocals._nw + 1) ; RepetitionNo[0]++ )
+{
+ExecuteTransaction(1, ThLocals.TxDesc, &ThLocals);
+if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
+	TERMINATE_THREAD;
+}
+ExecuteTransaction(0, ThLocals.TxDesc, &ThLocals);
+if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
+	TERMINATE_THREAD;
+for(RepetitionNo[0]=0 ; RepetitionNo[0]< ThLocals._nw ; RepetitionNo[0]++ )
+{
+ExecuteTransaction(1, ThLocals.TxDesc, &ThLocals);
 if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
 	TERMINATE_THREAD;
 }

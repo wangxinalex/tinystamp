@@ -138,27 +138,20 @@ void ExecuteTransaction(unsigned TransactionID, stm_tx_t* TxDescr, ThLocalVarCol
     sigjmp_buf *_e;
 //	stm_tx_attr_t _a;
 
-int _ro;
 
     (ThLocals->Statistics).CurrentRetryNum = (unsigned long) -1;
     switch ( TransactionID ) {
 
 case 0:
 TX_START;
-for( ThLocals->_k = 1; (ThLocals->_k <= ThLocals->_NB); ThLocals->_k = (ThLocals->_k + 1) )
-{
-TM_READ(&(a[ThLocals->_k]));
-TM_WRITE(&(a[ThLocals->_k]),ThLocals->WriteValue);
-ThLocals->WriteValue++;
-}
+TM_READ(&NW);
+ThLocals->_nw = ValueRead;
+TM_WRITE(&NW,(ThLocals->_nw - 1));
 TX_COMMIT;
 break;
 case 1:
-TX_START_RO;
-if((*counter) > 10000)
-{
-(*counter) = ((*counter) + 1);
-}
+TX_START;
+TM_WRITE(&(a[1]),ThLocals->_nw);
 TX_COMMIT;
 break;
 

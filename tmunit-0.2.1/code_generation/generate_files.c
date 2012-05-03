@@ -1241,7 +1241,7 @@ void Generate_C_CodeForThread(unsigned ThreadID) {
 		    VarExpr*      VarExprList     = FirstThreadDef->VarExprList;
 		    unsigned      VarExprListSize = FirstThreadDef->VarExprNum ;
 
-		    GenerateVarExprString(CurrentTxContainer -> LoopLimitExprPos, VarExprList, VarExprListSize, &LoopLimitExprString);
+		    GenerateVarExprStringForThread(CurrentTxContainer -> LoopLimitExprPos, VarExprList, VarExprListSize, &LoopLimitExprString);
 		}
 		else
 		{
@@ -1641,6 +1641,136 @@ void GenerateVarExprString(unsigned TargetVarExprID, const  VarExpr* VarExprList
 
 	    char* SecondOperandString = NULL;
 	    GenerateVarExprString(TargetVarExpr -> OperandID[1], VarExprList, VarExprListSize, &SecondOperandString );
+	    assert(SecondOperandString != NULL);
+
+
+	    bool ArrayAccess = ( TargetVarExpr -> Type == OP_UNMANAGED_ARRAY_ACCESS || TargetVarExpr -> Type == OP_MANAGED_ARRAY_ACCESS);
+	    if(ArrayAccess)
+	    {
+		*ExpressionString = strext(*ExpressionString, FirstOperandString);
+		*ExpressionString = strext(*ExpressionString, "[");
+		*ExpressionString = strext(*ExpressionString, SecondOperandString);
+		*ExpressionString = strext(*ExpressionString, "]");
+	    }
+	    else
+	    {
+		char* OperationString = GenerateOperationString( TargetVarExpr ->Operation);
+
+		*ExpressionString = strext(*ExpressionString,"(");
+		*ExpressionString = strext(*ExpressionString, FirstOperandString);
+		*ExpressionString = strext(*ExpressionString, OperationString);
+		*ExpressionString = strext(*ExpressionString, SecondOperandString);
+		*ExpressionString = strext(*ExpressionString,")");
+
+	    }
+	}
+    }
+
+
+}
+
+
+
+void GenerateVarExprStringForThread(unsigned TargetVarExprID, const  VarExpr* VarExprList, unsigned VarExprListSize, char** ExpressionString)
+{
+    assert( VarExprList != NULL);
+    const VarExpr* TargetVarExpr = &(VarExprList[TargetVarExprID]);
+    bool IsLeafVarExpr = ( TargetVarExpr -> Type <= VAR_LOCAL_ARRAY_CONSTANT  \
+                                                ||                            \
+                           TargetVarExpr -> Type == OP_RANDOM_DIST            \
+			                        ||                            \
+			   TargetVarExpr -> Type ==OP_RANDOM_DIST_CONSTANT    \
+	                 );
+    if ( IsLeafVarExpr)
+    {
+	// Next line is the reason for limitation NO 4: Random variables can be only local (and not shared).
+	bool ThreadLocalVariable = (TargetVarExpr -> Type >= VAR_LOCAL_SIMPLE && TargetVarExpr -> Type <= VAR_LOCAL_ARRAY_CONSTANT) \
+	                                                                      ||                                                    \
+                          	    (TargetVarExpr -> Type == OP_RANDOM_DIST  || TargetVarExpr -> Type ==OP_RANDOM_DIST_CONSTANT) ;
+	if(ThreadLocalVariable)
+	{
+	    bool ConstantValue  = IsConsantValue(TargetVarExpr);
+	    if(!ConstantValue)
+		*ExpressionString = strext(*ExpressionString, "ThLocals.");
+	}
+	bool SharedVariable = (TargetVarExpr -> Type <= VAR_SHARED_CONSTANT_MANAGED);
+	if( SharedVariable )
+	{
+	    *ExpressionString = strext(*ExpressionString, "(*");
+
+	    bool ManagedSharedVariable = (TargetVarExpr -> Type == VAR_SHARED_MANAGED);
+	    if(ManagedSharedVariable)
+	    {
+		// We Chop the & character which is at the beginning when we generate the ExpressionString
+		*ExpressionString = strext(*ExpressionString, &((TargetVarExpr -> Name)[1]));
+	    }
+	    else
+		*ExpressionString = strext(*ExpressionString, TargetVarExpr -> Name);
+
+	    *ExpressionString = strext(*ExpressionString, ")");
+	}
+	else
+	    *ExpressionString = strext(*ExpressionString, TargetVarExpr -> Name);
+    }
+    else
+    {
+	bool SingleOperandExpr = (TargetVarExpr -> Type >=  OP_ARITH_UNARY &&  TargetVarExpr -> Type <=  OP_MEMORY_WRITE);
+	if(SingleOperandExpr)
+	{
+	    char* OperandString=NULL;
+	    GenerateVarExprStringForThread(TargetVarExpr -> OperandID[0], VarExprList, VarExprListSize, &OperandString );
+
+	    bool TransactionaMemOp = (TargetVarExpr -> Type == OP_MEMORY_READ || TargetVarExpr -> Type == OP_MEMORY_WRITE);
+	    if( TransactionaMemOp)
+	    {
+		if(TargetVarExpr -> Type == OP_MEMORY_READ)
+		    *ExpressionString = strext(*ExpressionString,TRANSACTIONAL_MEM_READ);
+		else if(TargetVarExpr -> Type == OP_MEMORY_WRITE)
+		    *ExpressionString = strext(*ExpressionString,TRANSACTIONAL_MEM_WRITE);
+
+		const VarExpr* OperandExpr = &(VarExprList[TargetVarExpr -> OperandID[0]]);
+		bool SharedArrayAccess = ( OperandExpr->Type == OP_MANAGED_ARRAY_ACCESS ||  OperandExpr->Type == OP_UNMANAGED_ARRAY_ACCESS  );
+		if(SharedArrayAccess)
+		{
+		    char* TempString = NULL;
+		    TempString = strext(TempString,"&(");
+		    TempString = strext(TempString,OperandString);
+		    TempString = strext(TempString,")");
+		    free(OperandString);
+		    OperandString = TempString;
+
+		}
+		else  // The operand should be a simple shared variable
+		{
+		    // Chopping the "(*" from the beginning and the ")" from the end
+		    char* TempString = dupstr(OperandString);
+		    free(OperandString);
+		    unsigned TempStringLength = strlen(TempString);
+		    // Chopping the chracted from the end
+		    TempString[TempStringLength-1] = '\0';
+
+		    //Chopping the first two characters
+		    OperandString = dupstr( &(TempString[2]) );
+		}
+	    }
+	    else
+	    {
+		char* OperationString = GenerateOperationString( TargetVarExpr ->Operation);
+		*ExpressionString = strext(*ExpressionString, OperationString);
+	    }
+	    *ExpressionString = strext(*ExpressionString,"(");
+	    *ExpressionString = strext(*ExpressionString,OperandString);
+	    *ExpressionString = strext(*ExpressionString,")");
+	}
+	else // Two operand Expr
+	{
+
+	    char* FirstOperandString = NULL;
+	    GenerateVarExprStringForThread(TargetVarExpr -> OperandID[0], VarExprList, VarExprListSize, &FirstOperandString );
+	    assert(FirstOperandString != NULL);
+
+	    char* SecondOperandString = NULL;
+	    GenerateVarExprStringForThread(TargetVarExpr -> OperandID[1], VarExprList, VarExprListSize, &SecondOperandString );
 	    assert(SecondOperandString != NULL);
 
 

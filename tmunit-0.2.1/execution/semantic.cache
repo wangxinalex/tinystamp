@@ -9,6 +9,12 @@
     :pointmax 1771
     :unmatched-syntax 'nil
     )
+   (semanticdb-table "thread.c"
+    :major-mode 'c-mode
+    :tags '(("thread.h" include nil nil [556 575]) ("barrier" variable (:type ("barrier_t" type (:type "class") nil nil)) nil [577 626]) ("termination_barrier" variable (:type ("barrier_t" type (:type "class") nil nil)) nil [577 626]) ("TerminateRequestedBySignal" variable (:type "unsigned long") nil [628 669]) ("ThreadSeed" variable (:pointer 1 :type "unsigned int") nil [670 692]) ("TxDesc" variable (:pointer 1 :default-value "NULL;" :type ("stm_tx_t" type (:type "class") nil nil)) nil [798 820]) ("tx_id_counter" variable (:default-value "0" :type ("AO_t" type (:type "class") nil nil)) nil [824 847]) ("envPtr" variable (:pointer 1 :type ("sigjmp_buf" type (:type "class") nil nil)) nil [860 879]) ("TxDesc" variable (:pointer 1 :default-value "NULL;" :type ("stm_tx_t" type (:type "class") nil nil)) nil [940 964]) ("TxDesc" variable (:pointer 1 :default-value "NULL;" :type ("stm_tx_t" type (:type "class") nil nil)) nil [1034 1058]) ("ptst" variable (:pointer 1 :default-value "NULL;" :type ("ptst_t" type (:type "class") nil nil)) nil [1071 1093]) ("ThreadStart" function (:pointer 1 :arguments (("Parameters" variable (:pointer 1 :type "void") (reparse-symbol arg-sub-list) [1207 1224])) :type "void") nil [1189 4483]) ("ExecuteThread" function (:arguments (("ThreadNo" variable (:type "unsigned int") (reparse-symbol arg-sub-list) [4506 4524])) :type "void") nil [4487 6600]) ("ExecuteTransaction" function (:arguments (("TxDesc" variable (:pointer 1 :type ("stm_tx_t" type (:type "class") nil nil)) (reparse-symbol arg-sub-list) [6627 6644]) ("CurrentThreadInfo" variable (:pointer 1 :type ("ThreadInfo_t" type (:type "class") nil nil)) (reparse-symbol arg-sub-list) [6645 6677]) ("CurrentTxID" variable (:type "unsigned int") (reparse-symbol arg-sub-list) [6678 6699])) :type ("bool" type (:type "class") nil nil)) nil [6603 25103]) ("ChooseTransaction" function (:arguments (("CurrentTxContainer" variable (:pointer 1 :type ("TxContainer_t" type (:type "class") nil nil)) (reparse-symbol arg-sub-list) [25133 25167]) ("ThreadNo" variable (:type "unsigned int") (reparse-symbol arg-sub-list) [25168 25186])) :type "unsigned int") nil [25106 26200]) ("InitializeThreadSeeds" function (:arguments (("ThreadNum" variable (:type "unsigned int") (reparse-symbol arg-sub-list) [26231 26250])) :type "void") nil [26204 26986]))
+    :file "thread.c"
+    :pointmax 26989
+    )
    )
   :file "semantic.cache"
   :semantic-tag-version "2.0pre3"

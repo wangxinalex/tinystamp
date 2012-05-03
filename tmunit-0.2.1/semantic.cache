@@ -1,0 +1,16 @@
+;; Object tmunit-0.2.1/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "tmunit-0.2.1/"
+  :tables (list 
+   (semanticdb-table "Makefile"
+    :major-mode 'makefile-gmake-mode
+    :tags '(("environment.include" include nil nil [1 29]) ("LIB" variable (:default-value ("-lfl" "-lpthread")) nil [41 64]) ("LFLAGS" variable (:default-value ("-L$(LIBAO_HOME)/lib")) nil [64 98]) ("LFLAGS" variable (:default-value ("-Lgeneral/rng")) nil [134 159]) ("STAT_TEST" variable (:default-value ("TRUE")) nil [282 299]) ("VERIFY_ABORT_NUM" variable (:default-value ("TRUE")) nil [344 368]) ("DEFAULT_STM" variable (:default-value ("TINY_ETL")) nil [376 399]) ("LFLAGS" variable (:default-value ("-m32" "-latomic_ops" "-L$(STM_HOME)/lib" "-L$(LIBAO_HOME)/../libatomic_32b/lib")) nil [1076 1159]) ("LIB" variable (:default-value ("-lwlpdstm")) nil [1161 1181]) ("CC" variable (:default-value ("g++")) nil [1183 1192]) ("STM" variable (:default-value ("$(DEFAULT_STM)")) nil [1434 1455]) ("PATH_DEFINES" variable (:default-value ("-DENV_SRC_DIR_PATH=\"$(SRC_DIR_PATH)\"")) nil [1543 1596]) ("PATH_DEFINES" variable (:default-value ("-DENV_PREPROCESSOR_SCRIPT_PATH=\"$(PREPROCESSOR_SCRIPT_PATH)\"")) nil [1596 1674]) ("PATH_DEFINES" variable (:default-value ("-DENV_POST_PATMAP_SCRIPT_PATH=\"$(POST_PATMAP_SCRIPT_PATH)\"")) nil [1674 1749]) ("PATH_DEFINES" variable (:default-value ("-DENV_GENERATED_C_OUTPUT_PATH=\"$(GENERATED_C_OUTPUT_PATH)\"")) nil [1749 1824]) ("PATH_DEFINES" variable (:default-value ("-DENV_INTERMEDIATE_GENERATED_C_OUTPUT_PATH=\"$(INTERMEDIATE_GENERATED_C_OUTPUT_PATH)\"")) nil [1824 1925]) ("VPATH" variable (:default-value ("language")) nil [2034 2052]) ("CREATED_OBJS" variable (:default-value ("language/grammar.o" "language/parser.o")) nil [2112 2165]) ("ALL_OBJS" variable (:default-value ("$(CREATED_OBJS)" "$(filter-out $(CREATED_OBJS), $(patsubst %.c,%.o,$(wildcard language/*.c))  )")) nil [2165 2271]) ("ALL_OBJS" variable (:default-value ("$(patsubst %.c,%.o,$(wildcard execution/*.c))")) nil [2271 2329]) ("ALL_OBJS" variable (:default-value ("$(patsubst %.c,%.o,$(wildcard general/*.c))")) nil [2329 2385]) ("ALL_OBJS" variable (:default-value ("$(patsubst %.c,%.o,$(wildcard code_generation/*.c))")) nil [2385 2449]) ("tmunit" function (:arguments ("lang" "exec" "gnrl" "codegen")) nil [2505 2553]) ("lang" function nil nil [2599 2629]) ("exec" function nil nil [2629 2658]) ("codegen" function nil nil [2658 2696]) ("gnrl" function nil nil [2696 2725]) ("cgen" function nil nil [2726 2736]) ("semtests" function nil nil [3514 3557]) ("tests" function nil nil [3557 3844]) ("test_mode" function nil nil [4341 4407]) ("con-tests" function nil nil [4408 4466]) ("clean" function nil nil [4466 4638]))
+    :file "Makefile"
+    :pointmax 4638
+    :unmatched-syntax 'nil
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0pre3"
+  :semanticdb-version "2.0pre3"
+  )

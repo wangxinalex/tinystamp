@@ -1,0 +1,21 @@
+Properties:
+  RandomSeed = 1;           
+  ReadOnlyHint = 1;         
+
+
+
+Definitions:				
+  NW = 3;
+  _nw = 0;
+  _NA = 4;
+  a[1.._NA]=0;						 
+
+Transactions:			                         
+  T_NW:= R(NW,_nw),W(NW,_nw-1);							
+  T_1:= W(a[1],_nw);  
+  
+
+
+Threads:       	  	     	     			 
+  P_1 := T_NW,(T_1)(_nw+1),T_NW,(T_1)_nw;	
+
