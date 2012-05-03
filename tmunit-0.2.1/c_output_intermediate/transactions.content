@@ -1,8 +1,8 @@
 case 0:
 TX_START;
-TM_READ(&NW);
+TM_READ(NW);
 ThLocals->_nw = ValueRead;
-TM_WRITE(&NW,(ThLocals->_nw - 1));
+TM_WRITE(NW,(ThLocals->_nw - 1));
 TX_COMMIT;
 break;
 case 1:

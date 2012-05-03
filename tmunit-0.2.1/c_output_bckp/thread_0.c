@@ -61,7 +61,10 @@ char* TransactionNames[]={"T_NW","T_1"};
 	ThLocals.TransactionNames = TransactionNames;
 	
 	ready=0;
+
+    printf("Thread[%u](1)\n",ID);
     __sync_and_and_fetch(&(ready2[ThLocals.ThreadID/64]),~(((long)1)<<(ThLocals.ThreadID%64))); 
+    printf("Thread[%u](2)\n",ID);
 
 
 // Initializing thread local variables (other than random variables).
@@ -93,7 +96,7 @@ unsigned RepetitionNo[1];
 	}
 
 	TM_INIT_THREAD(ThLocals.TxDesc);
-//	printf("Starting thread %u...\n",(ID+1));
+	printf("Starting thread %u...\n",(ID+1));
 	if(ThreadParameters->useBarrier)
 		barrier_cross(&barrier);
 
@@ -101,9 +104,12 @@ unsigned RepetitionNo[1];
 
 //	printf("Threads started. I am %u.\n",(ID+1));
 
+printf("ThLocals._nw: %u\n",ThLocals._nw);
 ExecuteTransaction(0, ThLocals.TxDesc, &ThLocals);
 if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
 	TERMINATE_THREAD;
+printf("ThLocals._nw: %u\n",ThLocals._nw);
+/*
 for(RepetitionNo[0]=0 ; RepetitionNo[0]< (ThLocals._nw + 1) ; RepetitionNo[0]++ )
 {
 ExecuteTransaction(1, ThLocals.TxDesc, &ThLocals);
@@ -119,7 +125,7 @@ ExecuteTransaction(1, ThLocals.TxDesc, &ThLocals);
 if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
 	TERMINATE_THREAD;
 }
-
+*/
 	TERMINATE_THREAD;
 }
 

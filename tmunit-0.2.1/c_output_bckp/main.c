@@ -226,6 +226,7 @@ a = (Word*)malloc(a_array_size*sizeof(Word));
 
 // Initializing shared variables and arrays.
 *NW = 3;
+printf("NW: %u, Address of NW: %p", *NW, NW);
 unsigned ElementNo;
 for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
 a[ElementNo] = 0;
@@ -262,7 +263,7 @@ int main(int argc, char*  argv[]) {
 
 	printf("maxThreadNum = %u\n",maxThreadNum);
 	assert(maxThreadNum >= ThreadNum);
-	// REDUCE_STARTING_THREADNUM;
+	//REDUCE_STARTING_THREADNUM;
 
 	InitializeThreadSeeds(ThreadNum,maxThreadNum);
 	PrintEffectiveSimulationParameters();
@@ -315,11 +316,14 @@ int main(int argc, char*  argv[]) {
 		printf("Initializing STM...\n");
 		TM_INIT(0);
 
+		printf("111\n");
 		// Start threads (threads will execute the main functionality after all
 		// threads are generated, this is provided by the barrier)
 		barrier_init(&barrier, ThreadNum+1);
+		printf("222 ThreadNum=%u\n", ThreadNum);
 
 		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+		printf("333\n");
 			#ifdef AUTOREPLACE
 				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[ThreadNo],(void *)&(th_input[ThreadNo]));
 //				printf("autoreplace defined\n");
@@ -330,13 +334,17 @@ int main(int argc, char*  argv[]) {
 //				startNewThread();
 			#endif
 		}
+		printf("444\n");
 
 		barrier_cross(&barrier);
 		
+		printf("555\n");
+
 		for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
 			th_input[ThreadNo].useBarrier = 0;
 		}
 
+		printf("666\n");
 		if( WaitForTimeOut ) {
 			struct timespec time_out;
 			struct timespec left_time_out;

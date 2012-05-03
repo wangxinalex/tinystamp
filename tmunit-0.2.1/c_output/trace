@@ -1,0 +1,104 @@
+maxThreadNum = 10
+MainSeed=1
+ListOfThreadSeeds={1804289383,846930886,1681692777,1714636915,1957747793,424238335,719885386,1649760492,596516649,1189641421}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 1  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+MainMax                : 10  (in # of threads; DEFAULT: 10)
+TimeOut                : 0  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+
+–Ÿ∆†t+[P_1:T_NW] S
+–Ÿ∆†t+[P_1:T_NW] R(NW)
+–Ÿ∆†t+[P_1:T_NW] R(NW,3)
+–Ÿ∆†t+[P_1:T_NW] W(NW)
+–Ÿ∆†t+[P_1:T_NW] W(NW,2)
+–Ÿ∆†t+[P_1:T_NW] Try C
+–Ÿ∆†t+[P_1:T_NW] C
+
+
+–Ÿ∆†t+[P_1:T_1] S
+–Ÿ∆†t+[P_1:T_1] W(a[1])
+–Ÿ∆†t+[P_1:T_1] W(a[1],3)
+–Ÿ∆†t+[P_1:T_1] Try C
+–Ÿ∆†t+[P_1:T_1] C
+
+
+–Ÿ∆†t+[P_1:T_1] S
+–Ÿ∆†t+[P_1:T_1] W(a[1])
+–Ÿ∆†t+[P_1:T_1] W(a[1],3)
+–Ÿ∆†t+[P_1:T_1] Try C
+–Ÿ∆†t+[P_1:T_1] C
+
+
+–Ÿ∆†t+[P_1:T_1] S
+–Ÿ∆†t+[P_1:T_1] W(a[1])
+–Ÿ∆†t+[P_1:T_1] W(a[1],3)
+–Ÿ∆†t+[P_1:T_1] Try C
+–Ÿ∆†t+[P_1:T_1] C
+
+
+–Ÿ∆†t+[P_1:T_1] S
+–Ÿ∆†t+[P_1:T_1] W(a[1])
+–Ÿ∆†t+[P_1:T_1] W(a[1],3)
+–Ÿ∆†t+[P_1:T_1] Try C
+–Ÿ∆†t+[P_1:T_1] C
+
+
+–Ÿ∆†t+[P_1:T_NW] S
+–Ÿ∆†t+[P_1:T_NW] R(NW)
+–Ÿ∆†t+[P_1:T_NW] R(NW,2)
+–Ÿ∆†t+[P_1:T_NW] W(NW)
+–Ÿ∆†t+[P_1:T_NW] W(NW,1)
+–Ÿ∆†t+[P_1:T_NW] Try C
+–Ÿ∆†t+[P_1:T_NW] C
+
+
+–Ÿ∆†t+[P_1:T_1] S
+–Ÿ∆†t+[P_1:T_1] W(a[1])
+–Ÿ∆†t+[P_1:T_1] W(a[1],2)
+–Ÿ∆†t+[P_1:T_1] Try C
+–Ÿ∆†t+[P_1:T_1] C
+
+
+–Ÿ∆†t+[P_1:T_1] S
+–Ÿ∆†t+[P_1:T_1] W(a[1])
+–Ÿ∆†t+[P_1:T_1] W(a[1],2)
+–Ÿ∆†t+[P_1:T_1] Try C
+–Ÿ∆†t+[P_1:T_1] C
+
+
+Debug: was here2
+Debug: was here3Shutting STM engine down...
+
+Debug: was here4
+
+ ------------------ Statistics ------------------
+
+Th[0]: Cmmt= 8, Abrt= 0 Duration=0.0.207ns, 0ms, 0.000s
+Th[0]: Cmmt/s= inf, Abrt/s= nan, MaxRetries= 0
+Aggregate Statistics:
+
+	Total Commit Num  = 8
+	Total Abort  Num  = 0
+	Exection Duration = 0.000000
+	Global Commit/s   = inf
+	Global Abort/s    = nan
+	Global MaxRetries = 0
+
+
+
+Debug: Successfully finished.
+Have a nice day.
+Marry christmas, a happy new year, nice easter-, summer-, fall- and spring-holidays

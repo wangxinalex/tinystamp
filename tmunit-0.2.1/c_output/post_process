@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+
+sub PrintAndExecute {
+    my( $CommandString ) = @_;
+    print "$CommandString\n";
+    system($CommandString);
+    return $?;
+}
+
+
+$InputFile = $ARGV[0];
+$OutputFile = "trace";
+
+@VariableList = (
+"NW","0xe0d010","a[0]","0xe0d030","a[1]","0xe0d038","a[2]","0xe0d040","a[3]","0xe0d048",                );
+
+
+$LastElementPos = $#VariableList;
+$VariableNum    = ($LastElementPos+1)/2;
+
+PrintAndExecute("cp $InputFile $OutputFile");
+
+for($VariableNo=0; $VariableNo< $VariableNum; $VariableNo++)
+{
+    $VariableName = $VariableList[2*$VariableNo];
+    $VariableAddr = $VariableList[2*$VariableNo+1];
+    
+   print "Replacing $VariableAddr with  $VariableName ... " ;
+
+   $CommandString = "sed -i s/$VariableAddr/$VariableName/g  $OutputFile";
+   system($CommandString);    
+
+   print "Done\n" ;
+ 
+}
+
+$CommandString = "sed  -i '1,'$VariableNum' d' trace";
+system($CommandString);    

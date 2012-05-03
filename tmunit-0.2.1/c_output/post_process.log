@@ -1,0 +1,6 @@
+cp log trace
+Replacing 0xe0d010 with  NW ... Done
+Replacing 0xe0d030 with  a[0] ... Done
+Replacing 0xe0d038 with  a[1] ... Done
+Replacing 0xe0d040 with  a[2] ... Done
+Replacing 0xe0d048 with  a[3] ... Done

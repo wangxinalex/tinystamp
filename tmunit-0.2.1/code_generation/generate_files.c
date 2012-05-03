@@ -663,6 +663,7 @@ void GenerateManagedAdressAccessString(unsigned AddressVarExprID, const VarExpr*
     }
     else  // The operand should be a simple shared variable
     {
+	printf("Simple Shared Variable address generate: AddressVarExprString: %s \n" , *AddressVarExprString);
         // Chopping the "(*" from the beginning and the ")" from the end
         char* TempString = dupstr(*AddressVarExprString);
         free(*AddressVarExprString);
@@ -671,7 +672,8 @@ void GenerateManagedAdressAccessString(unsigned AddressVarExprID, const VarExpr*
         TempString[TempStringLength-1] = '\0';
 
         //Chopping the first two characters
-        *AddressVarExprString = dupstr( &(TempString[2]) );
+        *AddressVarExprString = dupstr( &(TempString[3]) );
+	printf("Simple Shared Variable address generate chopped: AddressVarExprString: %s\n" , *AddressVarExprString);
     }
 
 }
@@ -913,6 +915,7 @@ void  Generate_Transaction_C_Code()
 
     unsigned TxDefNo;
     unsigned TxDefNum = FirstThreadDef -> TxDefNum;
+
 
 
     // Open the file
