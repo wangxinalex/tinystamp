@@ -1,12 +1,27 @@
 case 0:
 TX_START;
-TM_READ(NW);
-ThLocals->_nw = ValueRead;
-TM_WRITE(NW,(ThLocals->_nw - 1));
+TM_READ(W);
+ThLocals->_temp = ValueRead;
+if(ThLocals->_temp > 2)
+{
+ThLocals->_rep = 2;
+ThLocals->_temp = (ThLocals->_temp - 2);
+ThLocals->_cont = 1;
+TM_WRITE(W,ThLocals->_temp);
+ThLocals->_rep = ThLocals->_temp;
+ThLocals->_temp = 0;
+ThLocals->_cont = 0;
+}
+else
+{
+TM_WRITE(W,ThLocals->_temp);
+}
 TX_COMMIT;
 break;
 case 1:
 TX_START;
-TM_WRITE(&(a[1]),ThLocals->_nw);
+TM_READ(&(a[ThLocals->_rep]));
+ThLocals->_temp = ValueRead;
+TM_WRITE(&(a[ThLocals->_rep]),(ThLocals->_temp + 1));
 TX_COMMIT;
 break;

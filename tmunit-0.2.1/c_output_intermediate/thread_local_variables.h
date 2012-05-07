@@ -22,7 +22,9 @@ char*    PrintOffset;
 unsigned ThreadID;
 char*    ThreadName;
 char**   TransactionNames;
-signed long _nw;
+signed long _temp;
+signed long _rep;
+signed long _cont;
 signed long _NA;
 } ThLocalVarCollection;
 

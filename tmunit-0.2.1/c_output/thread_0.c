@@ -48,7 +48,7 @@ void* RunThread_0(void *Parameters) {
 	Statistics[ID] = malloc(sizeof(stat_t)); 
 
 char* ThreadNames[]={"P_1"};
-char* TransactionNames[]={"T_NW","T_1"};
+char* TransactionNames[]={"T_W","T_1"};
 
 	ThLocalVarCollection ThLocals;
 	Statistics[ID] -> locals = &ThLocals;
@@ -65,7 +65,9 @@ char* TransactionNames[]={"T_NW","T_1"};
 
 
 // Initializing thread local variables (other than random variables).
-ThLocals._nw = 0;
+ThLocals._temp = 0;
+ThLocals._rep = 0;
+ThLocals._cont = 1;
 ThLocals._NA = 4;
 
 // Definition and initialization of thread local variables.
@@ -104,16 +106,7 @@ unsigned RepetitionNo[1];
 ExecuteTransaction(0, ThLocals.TxDesc, &ThLocals);
 if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
 	TERMINATE_THREAD;
-for(RepetitionNo[0]=0 ; RepetitionNo[0]< (ThLocals._nw + 1) ; RepetitionNo[0]++ )
-{
-ExecuteTransaction(1, ThLocals.TxDesc, &ThLocals);
-if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
-	TERMINATE_THREAD;
-}
-ExecuteTransaction(0, ThLocals.TxDesc, &ThLocals);
-if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
-	TERMINATE_THREAD;
-for(RepetitionNo[0]=0 ; RepetitionNo[0]< ThLocals._nw ; RepetitionNo[0]++ )
+for(RepetitionNo[0]=0 ; RepetitionNo[0]< ThLocals._cont ; RepetitionNo[0]++ )
 {
 ExecuteTransaction(1, ThLocals.TxDesc, &ThLocals);
 if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))

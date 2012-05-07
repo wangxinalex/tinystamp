@@ -219,13 +219,13 @@ void PrintEffectiveSimulationParameters() {
 
 void InitializeSharedVariables() {
 // Allocating memory for shared variables and arrays.
-NW = (Word*)malloc(sizeof(Word));
+W = (Word*)malloc(sizeof(Word));
 
 a_array_size = 4;
 a = (Word*)malloc(a_array_size*sizeof(Word));
 
 // Initializing shared variables and arrays.
-*NW = 3;
+*W = 4;
 unsigned ElementNo;
 for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
 a[ElementNo] = 0;
@@ -234,7 +234,7 @@ a[ElementNo] = 0;
 #ifdef ENABLE_TRACE_CODE
 if ( EnableTrace )
 {
-printf("Address of NW : %p\n",NW );
+printf("Address of W : %p\n",W );
 for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
 printf("Address of a[%u] : %p\n",ElementNo, &(a[ElementNo]) );
 
@@ -262,7 +262,7 @@ int main(int argc, char*  argv[]) {
 
 	printf("maxThreadNum = %u\n",maxThreadNum);
 	assert(maxThreadNum >= ThreadNum);
-	// REDUCE_STARTING_THREADNUM;
+	REDUCE_STARTING_THREADNUM;
 
 	InitializeThreadSeeds(ThreadNum,maxThreadNum);
 	PrintEffectiveSimulationParameters();
