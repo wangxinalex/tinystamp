@@ -1,0 +1,575 @@
+//	------------------	include	------------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <signal.h>
+#include "barrier.h"
+#include "initialization.h"
+#include "cli.h"
+
+// STM specific
+#include <atomic_ops.h>
+#include "tm_interface.h"
+
+// Probably only needed by benchrun parameters. Can be moved to initialization.h
+#include "simulation_parameters.h"
+
+#include "shared_var_definitions.h"
+#include "thread_local_variables.h"
+#include "thread_local_variables.h"  // For stat_t structure definition
+
+//	------------------	ifdefs	------------------
+// Variables rquired for tm interfaces, can be moved to another file
+#if defined ( TL2 )
+	__thread stm_tx_t* TxDesc=NULL;
+	AO_t tx_id_counter =0 ;
+	__thread sigjmp_buf* envPtr;
+#else  // for example fpr tinySTM_new
+	__thread stm_tx_t* TxDesc=(stm_tx_t*)0x1;
+#endif
+
+//	------------------	const values	------------------
+#define SLEEP_PERIOD_SIZE			100 // miliseconds
+#define REDUCE_STARTING_THREADNUM	ThreadNum/=2
+
+//	------------------	declaring methods	------------------
+void ajust_amount_of_threads(double sleepInSeconds);
+void mySleep(long miliseconds);
+int startNewThread();
+unsigned long agregCommits();
+int killLastCreatedThread();
+int startSomeThreads(int level);
+int killSomeThreads(int level);
+int killSomeThreads2(int level);
+int startSomeThreads2(int level);
+int startSomeThreads3(int level);
+int startSomeThreads4(int level);
+void sstih();
+
+//	------------------	extern variables	------------------
+extern unsigned *ThreadSeed;
+extern unsigned ThreadNum;  // amount of threads. (min. 1)
+extern unsigned maxThreadNum; // max amount of threads
+extern ThreadRunFunc ThreadRun[];
+extern volatile long* ready2;
+
+//	------------------ other variables	------------------
+stat_t** Statistics;
+//static pthread_t*		Thrd;
+pthread_t*	Thrd;
+//static thread_input_t*	th_input;
+thread_input_t* th_input;
+volatile int ready;
+
+// *INDENT-OFF*
+void PrintStatistics() {
+    printf("\n\n ------------------ Statistics ------------------\n\n");
+
+    long unsigned AggregateCommitNum =00, AggregateAbortNum  = 0;
+    double TxCommitRate , TxAbortRate;
+    double execution_duration_s = 0;
+    unsigned long GlobalMaxRetries = 0;
+
+    unsigned ThreadNo;
+    for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+		struct timeval start_time = Statistics[ThreadNo] -> start_time ;
+		struct timeval   end_time = Statistics[ThreadNo] -> end_time   ;
+
+		long long duration = (end_time.tv_sec * 1000000 + end_time.tv_usec) - (start_time.tv_sec * 1000000 + start_time.tv_usec) ;
+		long time_rest;
+		long duration_s    = (long)(duration/1000000) ;  time_rest = (long)(duration%1000000);
+		long duration_ms   = time_rest/1000 ;            time_rest = time_rest%1000;
+		long duration_us   = time_rest ;
+		long total_duration_ms = duration_s*1000 + duration_ms;
+		double total_duration_s = duration_s + (double)((double)(duration_ms)/(double)(1000));
+
+		printf("Th[%u]: Cmmt= %ld, Abrt= %ld Duration=%ld.%ld.%ldns, %ldms, %.3fs\n", ThreadNo, Statistics[ThreadNo]->CommitNum, Statistics[ThreadNo]->AbortNum,duration_s,duration_ms,duration_us,total_duration_ms,total_duration_s);
+		double CommitRate = (double)(Statistics[ThreadNo]->CommitNum) / total_duration_s;
+		double AbortRate  = (double)(Statistics[ThreadNo]->AbortNum) / total_duration_s;
+		unsigned long ThreadMaxRetries = Statistics[ThreadNo]->MaxRetries;
+		printf("Th[%u]: Cmmt/s= %.3lf, Abrt/s= %.3lf, MaxRetries= %lu\n", ThreadNo, CommitRate, AbortRate, ThreadMaxRetries);
+		if (execution_duration_s < total_duration_s)
+			execution_duration_s = total_duration_s;
+
+		if( GlobalMaxRetries< ThreadMaxRetries )
+			GlobalMaxRetries = ThreadMaxRetries;
+
+		AggregateCommitNum = AggregateCommitNum + Statistics[ThreadNo]->CommitNum;
+		AggregateAbortNum  = AggregateAbortNum  + Statistics[ThreadNo]->AbortNum;
+	}
+
+	printf("Aggregate Statistics:\n\n");
+
+	TxCommitRate = (double)((double)(AggregateCommitNum)/execution_duration_s);
+	TxAbortRate  = (double)((double)(AggregateAbortNum)/execution_duration_s);
+
+	printf(	"\tTotal Commit Num  = %lu\n"
+			"\tTotal Abort  Num  = %lu\n"
+			"\tExection Duration = %lf\n"
+			"\tGlobal Commit/s   = %lf\n"
+			"\tGlobal Abort/s    = %lf\n"
+			"\tGlobal MaxRetries = %lu\n\n\n",AggregateCommitNum,AggregateAbortNum,execution_duration_s,TxCommitRate,TxAbortRate,GlobalMaxRetries);
+}
+
+void PrintDevelopperTestWarning()
+{
+    printf("\n*************************************************************\n"
+	   "*************************************************************\n"
+	   "*                        WARNING:                           *\n"
+	   "*                                                           *\n"
+	   "*                                                           *\n"
+	   "*  THIS PROGRAM IS COMPILED TO RUN IN DEVELOPER TEST MODE.  *\n"
+	   "*                                                           *\n"
+	   "*  This mode has some missing/modified features. If you     *\n"
+	   "*  did not mean to execute developping tests to verify/test *\n"
+	   "*  TMunit, please type                                      *\n"
+	   "*                                                           *\n"
+	   "*      make clean                                           *\n"
+	   "*      make STM=<name of desired STM>                       *\n"
+	   "*                                                           *\n"
+	   "* on the command line in order to compile for simulations   *\n"
+	   "* (and user defined unit tests).                            *\n"
+	   "*                                                           *\n"
+	   "*************************************************************\n"
+	   "*************************************************************\n"
+	);
+}
+// *INDENT-ON*
+
+int InitializeSimulationParameters() {
+TransmitReadOnlyTxHint = 1;
+
+MainSeed = 1;
+MainMax = 10;
+RandomDebug = 0;
+
+WaitForTimeOut = 0;
+TimeOutValueSet = 0;
+DelayUnit = 1000000;
+TimeOut = 0;
+
+PrintStats = 1;
+EnableTrace = 0;
+JustGenerateTrace = 0;
+EnableTraceFromCommandLine = 0;
+
+SerialThreadExecution = 0;
+
+    return 0;
+}
+
+// *INDENT-OFF*
+void PrintEffectiveSimulationParameters() {
+    // Printing the current values of the simulation parameters
+    printf("\n-------------------------------------------------\n"
+	   "     Simulation Parameters:\n"
+	   "-------------------------------------------------\n"
+	   "\n"
+	   "JustGenerateTrace      : %d  (0: FALSE, 1: TRUE; DEFAULT:0)\n"
+	   "SerialThreadExecution  : %d  (0: FALSE, 1: TRUE; DEFAULT:0)\n"
+	   "WaitForTimeOut         : %d  (0: FALSE, 1: TRUE; DEFAULT:0)\n"
+	   "TransmitReadOnlyTxHint : %d  (0: FALSE, 1: TRUE; DEFAULT:0)\n"
+	   "EnableTrace            : %d  (0: FALSE, 1: TRUE; DEFAULT:0)\n"
+	   "PrintStats             : %d  (0: FALSE, 1: TRUE; DEFAULT:1)\n"
+	   "MainSeed               : %u  (0: seed from clock; DEFAULT: 1)\n"
+	   "MainMax                : %u  (in # of threads; DEFAULT: 10)\n"
+	   "TimeOut                : %u  (in microseconds, valid only if WaitForTimeOut is 1)\n"
+	   "\n"
+	   "\n",						\
+	   JustGenerateTrace,			\
+	   SerialThreadExecution,		\
+	   WaitForTimeOut,				\
+	   TransmitReadOnlyTxHint,		\
+	   EnableTrace,					\
+	   PrintStats,					\
+	   MainSeed,					\
+	   MainMax,						\
+	   TimeOut						\
+	);
+
+#ifndef ENABLE_TRACE_CODE
+        if( EnableTrace == 1)
+        {
+          printf("\n*****************************************************\n"
+		 "                    WARNING:\n"
+	   	 "*****************************************************\n"
+           	 "\n"
+           	 " TRACING IS BY DEFAULT DISABLED IN GENERATED C CODE.\n"
+		 " (THAT IS BECAUSE THE PERFORMANCE IS SERIOUSLY DEGRADED\n"
+		 " IF TRACING IS ENABLED EVEN IF TRACE IS NOT PRINTED OUT).\n"
+          	 "\n"
+          	 "\n"
+		 " If you would like to enable tracing capability please\n"
+		 " recompile the generated code by adding the parameter\n"
+		 " TRACE=ENABLE to the line where you execute 'make'\n"
+		 " ('make' should be executed in the 'c_output' directory).\n"
+		 " For example, do the following for recompilation: \n"
+		 "\n"
+	   	 "    make clean    \n"
+	   	 "    make STM=<name of desired STM>  TRACE=ENABLE\n"
+	   	 "\n"
+	   	 "*****************************************************\n"
+	   	 "\n"
+	   	 "\n");
+        }
+#endif
+
+}
+// *INDENT-ON*
+
+void InitializeSharedVariables() {
+// Allocating memory for shared variables and arrays.
+W = (Word*)malloc(sizeof(Word));
+NA = (Word*)malloc(sizeof(Word));
+
+a_array_size = 100;
+a = (Word*)malloc(a_array_size*sizeof(Word));
+RAND = (Word*)malloc(sizeof(Word));
+
+// Initializing shared variables and arrays.
+*W = 4;
+*NA = 100;
+unsigned ElementNo;
+for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
+a[ElementNo] = 0;
+
+*RAND = 0;
+
+#ifdef ENABLE_TRACE_CODE
+if ( EnableTrace )
+{
+printf("Address of W : %p\n",W );
+printf("Address of NA : %p\n",NA );
+for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
+printf("Address of a[%u] : %p\n",ElementNo, &(a[ElementNo]) );
+printf("Address of RAND : %p\n",RAND );
+
+}
+#endif
+
+  return;
+}
+
+void signal_catcher(int sig) {
+  printf(" CAUGHT SIGNAL %d\n", sig);
+  AO_store_full(&TerminateRequestedBySignal, TRUE);
+}
+
+int main(int argc, char*  argv[]) {
+    // Initializations
+	InitializeSimulationParameters();
+	ProcessCommandLineArguments(argc, argv);
+	TerminateRequestedBySignal = FALSE;
+
+	SetThreadNum();
+	maxThreadNum=MainMax;
+	InitializeSharedVariables();
+	initThreadControlVariables();
+
+	printf("maxThreadNum = %u\n",maxThreadNum);
+	assert(maxThreadNum >= ThreadNum);
+	REDUCE_STARTING_THREADNUM;
+
+	InitializeThreadSeeds(ThreadNum,maxThreadNum);
+	PrintEffectiveSimulationParameters();
+
+	// Prepare thread functions and parameters to pass them
+	Thrd=(pthread_t*)malloc(sizeof(pthread_t)*maxThreadNum);
+	th_input=(thread_input_t*)malloc(sizeof(thread_input_t)*maxThreadNum);
+	unsigned ThreadNo;
+	for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
+		th_input[ThreadNo].thread_ID  = ThreadNo;
+		th_input[ThreadNo].ThreadSeed = ThreadSeed[ThreadNo];
+		th_input[ThreadNo].useBarrier = (ThreadNo < ThreadNum);
+    }
+    InitializeThreadRunFunctions();
+
+	// *INDENT-OFF*
+    if (	signal(SIGHUP, signal_catcher) == SIG_ERR ||
+			signal(SIGINT, signal_catcher) == SIG_ERR ||
+			signal(SIGTERM, signal_catcher) == SIG_ERR ) {
+		perror("Signal setup problem occured.\n");
+		exit(1);
+    }
+	// *INDENT-ON*
+
+    if( SerialThreadExecution ) {
+		#ifndef  NO_STM
+			printf("Initializing STM...\n");
+		#endif
+		TM_INIT(0);
+
+		for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
+			ThreadRun[ThreadNo]((void *)&(th_input[ThreadNo]));
+		}
+
+		#ifndef  NO_STM
+			printf("Shutting STM engine down...\n");
+		#endif
+        TM_EXIT(0);
+
+		#ifdef COMPILE_FOR_TEST
+			PrintDevelopperTestWarning();
+		#endif
+    }
+    else {
+		if (PrintStats) {
+			Statistics = (stat_t**) malloc(maxThreadNum*sizeof(stat_t*));
+		}
+		else
+			Statistics = NULL;
+		printf("Initializing STM...\n");
+		TM_INIT(0);
+
+		// Start threads (threads will execute the main functionality after all
+		// threads are generated, this is provided by the barrier)
+		barrier_init(&barrier, ThreadNum+1);
+
+		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+			#ifdef AUTOREPLACE
+				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[ThreadNo],(void *)&(th_input[ThreadNo]));
+//				printf("autoreplace defined\n");
+			#else
+				flagThreadAsRunning(ThreadNo);
+				pthread_create(&(Thrd[ThreadNo]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNo]));
+//				printf("autoreplace not defined");
+//				startNewThread();
+			#endif
+		}
+
+		barrier_cross(&barrier);
+		
+		for(ThreadNo=0; ThreadNo<maxThreadNum; ThreadNo++) {
+			th_input[ThreadNo].useBarrier = 0;
+		}
+
+		if( WaitForTimeOut ) {
+			struct timespec time_out;
+			struct timespec left_time_out;
+			time_out.tv_sec = TimeOut/1000000;
+			time_out.tv_nsec = (long)((TimeOut%1000000)*1000);
+
+			double secondsOfSleep=((double)TimeOut/(double)1000000);
+			printf("TimeOut=%u,=%f sec, time_out= (%ld,%ld)\n",TimeOut, secondsOfSleep, time_out.tv_sec,time_out.tv_nsec);
+
+			#ifdef	AUTOREPLACE
+				while(nanosleep(&time_out,&left_time_out) == -1) {
+					if(TerminateRequestedBySignal)
+						break;
+					printf("left_time_out= (%ld,%ld)\n", left_time_out.tv_sec,left_time_out.tv_nsec);
+
+					time_out.tv_sec  = left_time_out.tv_sec;
+					time_out.tv_nsec = left_time_out.tv_nsec;
+				}
+			#else
+//				nanosleep(&time_out,&left_time_out);
+				ajust_amount_of_threads(secondsOfSleep);
+			#endif
+
+			// *INDENT-OFF*
+			AO_store_full(&TerminateRequestedBySignal, TRUE);
+			printf("\n"
+						"--------------------------\n"
+						"EXECUTION TIMEOUT REACHED.\n"
+						"--------------------------\n");
+			// *INDENT-ON*
+			printf("\nDebug: was here1");
+		}
+		printf("\nDebug: was here2"); fflush(stdout);
+
+		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
+			pthread_join(Thrd[ThreadNo],NULL);
+
+		printf("\nDebug: was here3"); fflush(stdout);
+
+		printf("Shutting STM engine down...\n");
+		TM_EXIT(0);
+
+		printf("\nDebug: was here4"); fflush(stdout);
+
+		if (PrintStats) {
+			PrintStatistics();
+			for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
+				free(Statistics[ThreadNo]);
+			free(Statistics);
+		}
+
+		printf("\nDebug: Successfully finished.\nHave a nice day.\nMarry christmas, a happy new year, nice easter-, summer-, fall- and spring-holidays\n"); fflush(stdout);
+
+		#ifdef COMPILE_FOR_TEST
+			PrintDevelopperTestWarning();
+		#endif
+	}
+	free(Thrd);
+	free(th_input);
+	freeThreadControlVariables();
+	return 0;
+}
+
+void ajust_amount_of_threads(double sleepInSeconds) {
+	long commitsDuringLastPeriod=0;
+	int level=32;
+	int lastDone=0;
+	long milisecondsLeft=sleepInSeconds*1000;
+	while(milisecondsLeft > SLEEP_PERIOD_SIZE) {
+		long commitsDuringThisPeriod=agregCommits();
+		mySleep(SLEEP_PERIOD_SIZE);
+		commitsDuringThisPeriod = agregCommits() - commitsDuringThisPeriod;
+		milisecondsLeft-=SLEEP_PERIOD_SIZE;
+
+		printf("Was running with %ld threads and got %ld commits.\n", ThreadNum, commitsDuringThisPeriod);
+
+		if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone > 0){
+			lastDone=startSomeThreads4(level);
+		}
+		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone > 0) {
+			lastDone=killSomeThreads2(level);
+			if(level>1) {
+				level=level/2;
+			}
+		}
+		else if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone < 0) {
+			lastDone=killSomeThreads2(level);
+		}
+		else if (commitsDuringThisPeriod < commitsDuringLastPeriod && lastDone < 0) {
+			lastDone=startSomeThreads4(level);
+			if(level>1) {
+				level=level/2;
+			}
+		}
+		else if(lastDone == 0) {
+			if(ThreadNum<2) {
+				lastDone=startSomeThreads4(level);
+				if(level>1) {
+					level=level/2;
+				}
+			}
+			else if(ThreadNum==maxThreadNum) {
+				lastDone=killSomeThreads2(level);
+			}
+			else {
+				int randomnumber = rand()%2;
+				if (randomnumber) {
+					lastDone=killSomeThreads2(level);
+				}
+				else {
+					lastDone=startSomeThreads4(level);
+				}
+			}
+		}
+
+
+		commitsDuringLastPeriod = commitsDuringThisPeriod;
+	}
+	mySleep(milisecondsLeft);
+}
+
+int startNewThread() {
+	if (ThreadNum < maxThreadNum) {
+		flagThreadAsRunning(ThreadNum);
+		ready=1;
+		pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
+//		while(Statistics[ThreadNum]==0 && Statistics[ThreadNum]->locals==0) {};
+//		while(ready) {printf("hey, I am looping. And you?\n"); fflush(stdout);};
+		while(ready) {};
+		++ThreadNum;
+//		printf("started thread nr: %u\nThreadNum: %ld\nmaxThreadNum: %ld",ThreadNum,ThreadNum,maxThreadNum);
+		return 1;
+	}
+	else {
+//		printf("maxalreadyreached\nThreadNum: %ld\nmaxThreadNum: %ld\n",ThreadNum,maxThreadNum);
+		return 0;
+	}
+}
+
+int startSomeThreads3(int level) {
+	return startSomeThreads3inTransactions(level);
+}
+
+void sstih() {
+     flagThreadAsRunning(ThreadNum);
+     pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
+}
+
+int startSomeThreads(int level) {
+	int i;
+	int sum=0;
+	for(i=0; i<level; ++i) {
+		sum+=startNewThread();
+	}
+	return sum;
+}
+
+int startSomeThreads4(int level) {
+    int i;
+    int sum=0;
+    for(i=0; i<level; ++i) {
+//		printf("ap=%d\t",ThreadNum);
+	    if (ThreadNum < maxThreadNum) {
+	        flagThreadAsRunning(ThreadNum);
+//	        ready=1;
+			__sync_or_and_fetch(&(ready2[ThreadNum/64]),(((long)1)<<(ThreadNum%64)));
+	        pthread_create(&(Thrd[ThreadNum]),NULL,ThreadRun[0],(void *)&(th_input[ThreadNum]));
+//	        while(ready) {};
+//	        while(ready2[ThreadNum/64]&(((long)1)<<(long)((long)(ThreadNum)%(long)64))) {};
+//			__sync_or_and_fetch(&(ready2[ThreadNum/64]),(((long)1)<<(ThreadNum%64)));
+	        ++ThreadNum;
+	        sum+=1;
+	    }
+    }
+//	printf("\n");
+	for(i=0; i<sum; ++i){
+//		printf("bp=%d\t",ThreadNum-sum+i);
+        while(ready2[(ThreadNum-sum+i)/64]&(((long)1)<<(long)((long)((ThreadNum-sum+i))%(long)64))) {};
+        __sync_or_and_fetch(&(ready2[(ThreadNum-sum+i)/64]),(((long)1)<<((ThreadNum-sum+i)%64)));
+	}
+//	printf("\n");
+    return sum;
+}
+
+
+int startSomeThreads2(int level) {
+	return startSomeThreadsInTransactionsTemplate(level);
+}
+
+int killLastCreatedThread() {
+	if(ThreadNum>1) {
+		killThreadNr((long)(ThreadNum-(long)1));
+//		printf("killed thread nr:  %u\n",ThreadNum);
+		return -1;
+	}
+	return 0;
+}
+
+int killSomeThreads(int level) {
+	int i;
+	int sum=0;
+	for(i=0; i<level; ++i) {
+		sum+=killLastCreatedThread();
+	}
+	return sum;
+}
+
+int killSomeThreads2(int level) {
+	return killSomeThreadsInTransactions(level);
+}
+
+void mySleep(long miliseconds) {
+    struct timespec waitingTime={0};
+    waitingTime.tv_sec=(int)(miliseconds/1000);
+    waitingTime.tv_nsec=(miliseconds%1000)*1000000;
+    nanosleep(&waitingTime, NULL);
+//    while(nanosleep(&waitingTime, &waitingTime)==-1)
+//        continue;
+}
+
+unsigned long agregCommits() {
+	unsigned long sum = 0;
+    unsigned ThreadNo;
+	for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++) {
+		sum+=(((ThLocalVarCollection*)(Statistics[ThreadNo]->locals))->Statistics).CommitNum;
+	}
+	return sum;
+}
+
+

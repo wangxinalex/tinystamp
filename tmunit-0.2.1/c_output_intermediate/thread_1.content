@@ -1,6 +1,7 @@
 for(; ; )
 {
-ExecuteTransaction(0, ThLocals.TxDesc, &ThLocals);
+ChosenTransactionID = ChooseTransaction( &(CandidateListContainer[0]) );
+ExecuteTransaction(ChosenTransactionID, ThLocals.TxDesc, &ThLocals);
 if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
 	TERMINATE_THREAD;
 }

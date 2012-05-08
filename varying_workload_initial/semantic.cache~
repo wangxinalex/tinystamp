@@ -1,0 +1,26 @@
+;; Object varying_workload/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "varying_workload/"
+  :tables (list 
+   (semanticdb-table "transactions.c"
+    :major-mode 'c-mode
+    :tags '(("transactions.h" include nil nil [1 26]) ("maxThreadNum" variable (:typemodifiers ("extern") :type "unsigned int") nil [28 57]) ("ThreadNum" variable (:typemodifiers ("extern") :type "unsigned int") nil [58 84]) ("Thrd" variable (:pointer 1 :typemodifiers ("extern" "volatile") :type ("pthread_t" type (:type "class") nil nil)) nil [85 117]) ("ThreadRun" variable (:dereference 1 :typemodifiers ("extern" "volatile") :type ("ThreadRunFunc" type (:type "class") nil nil)) nil [118 160]) ("th_input" variable (:pointer 1 :typemodifiers ("extern" "volatile") :type ("thread_input_t" type (:type "class") nil nil)) nil [161 202]) ("i_got_killed" function (:arguments (("id" variable (:type "unsigned int") (reparse-symbol arg-sub-list) [221 233])) :type "int") nil [204 352]) ("initThreadControlVariables" function (:type "void") nil [354 1350]) ("freeThreadControlVariables" function (:type "void") nil [1352 1479]) ("flagThreadToBeKilled" function (:arguments (("threadNr" variable (:type "long") (reparse-symbol arg-sub-list) [1507 1521])) :type "void") nil [1481 1604]) ("waitForThreadAndRestore" function (:arguments (("threadNr" variable (:type "long") (reparse-symbol arg-sub-list) [1635 1649])) :type "void") nil [1606 1806]) ("killThreadNr" function (:arguments (("threadNr" variable (:type "long") (reparse-symbol arg-sub-list) [1868 1882])) :type "void") nil [1850 2383]) ("killSomeThreadsInTransactions" function (:arguments (("level" variable (:type "int") (reparse-symbol arg-sub-list) [2419 2429])) :type "int") nil [2385 3125]) ("every_thread_finished" function (:type "int") nil [3175 3466]) ("flagThreadAsRunning" function (:arguments (("threadID" variable (:type "unsigned int") (reparse-symbol arg-sub-list) [3493 3511])) :type "void") nil [3468 3661]) ("startSomeThreadsInTransactionsTemplate" function (:arguments (("level" variable (:type "int") (reparse-symbol arg-sub-list) [3706 3716])) :type "int") nil [3663 4251]) ("startSomeThreads3inTransactions" function (:arguments (("level" variable (:type "int") (reparse-symbol arg-sub-list) [4289 4299])) :type "int") nil [4253 4677]) ("ExecuteTransaction" function (:arguments (("TransactionID" variable (:type "unsigned int") (reparse-symbol arg-sub-list) [4704 4727]) ("TxDescr" variable (:pointer 1 :type ("stm_tx_t" type (:type "class") nil nil)) (reparse-symbol arg-sub-list) [4728 4746]) ("ThLocals" variable (:pointer 1 :type ("ThLocalVarCollection" type (:type "class") nil nil)) (reparse-symbol arg-sub-list) [4747 4778])) :type "void") nil [4680 5940]))
+    :file "transactions.c"
+    :pointmax 5941
+    )
+   (semanticdb-table "initialization.h"
+    :major-mode 'c-mode
+    :tags '(("_____INITIALIZATION_H______" variable (:constant-flag t) nil [37 75]) ("stdio.h" include (:system-flag t) nil [74 92]) ("stdlib.h" include (:system-flag t) nil [93 112]) ("assert.h" include (:system-flag t) nil [113 132]) ("tm_interface.h" include nil nil [133 158]) ("rng_interface.h" include nil nil [159 185]) ("simulation_parameters.h" include nil nil [228 262]) ("thread_input_t" type (:typedef ("thread_input_struct" type (:members (("thread_ID" variable (:type "unsigned short") (reparse-symbol classsubparts) [343 368]) ("MaxTxNumToExecute" variable (:type "unsigned int") (reparse-symbol classsubparts) [371 398]) ("ThreadSeed" variable (:type "unsigned int") (reparse-symbol classsubparts) [401 421]) ("useBarrier" variable (:type "unsigned short") (reparse-symbol classsubparts) [424 450])) :type "struct") nil nil) :superclasses "thread_input_struct" :type "typedef") nil [304 468]) ("ThreadNum" variable (:typemodifiers ("extern") :type "unsigned int") nil [471 497]) ("ThreadSeed" variable (:pointer 1 :typemodifiers ("extern") :type "unsigned int") nil [498 526]) ("ThreadRunFunc" variable (:functionpointer-flag t :type "void") nil [536 578]) ("SetThreadNum" function (:prototype-flag t :type "void") nil [580 601]) ("InitializeThreadSeeds" function (:prototype-flag t :arguments (("ThreadNum" variable (:type "unsigned int") (reparse-symbol arg-sub-list) [630 649]) ("maxThreadNum" variable (:type "unsigned int") (reparse-symbol arg-sub-list) [650 672])) :type "void") nil [602 673]) ("InitializeThreadRunFunctions" function (:prototype-flag t :type "void") nil [674 711]) ("RunThread_0" function (:prototype-flag t :pointer 1 :arguments (("Parameters" variable (:pointer 1 :type "void") (reparse-symbol arg-sub-list) [733 750])) :type "void") nil [714 751]))
+    :file "initialization.h"
+    :pointmax 762
+    )
+   (semanticdb-table "shared_var_definitions.c"
+    :major-mode 'c-mode
+    :tags 'nil
+    :file "shared_var_definitions.c"
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0pre3"
+  :semanticdb-version "2.0pre3"
+  )

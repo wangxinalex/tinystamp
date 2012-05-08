@@ -4,6 +4,7 @@
 typedef unsigned long Word;
 
 extern Word* W;
+extern Word* NA;
 extern Word* a;
 extern unsigned  a_array_size;
 

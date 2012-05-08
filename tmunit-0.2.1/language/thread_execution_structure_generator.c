@@ -37,7 +37,7 @@ dyn_arr_t  Dyn_CurrentThreadDefList;
 unsigned short CurrentTxContainerNo   ;
 unsigned short TxBlockStartContainerNo;
 
-
+dyn_arr_t  TxBlockStartContainerNoList;
 dyn_arr_t  CurrentTxContainerList; 
 dyn_arr_t  CurrentTxList;
 dyn_arr_t  CurrentTxCandidateList;
@@ -84,6 +84,8 @@ int InitializeTempThreadStructuresUsedInParsing()
     Initialize_DynamicArray(&CurrentTxContainerList);
     Initialize_DynamicArray(&CurrentTxList);
     Initialize_DynamicArray(&CurrentTxCandidateList);
+    Initialize_DynamicArray(&TxBlockStartContainerNoList);
+
     CurrentDelayVal = 0;
     DelayOpEncountered = FALSE;
 

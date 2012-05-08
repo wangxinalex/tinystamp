@@ -1,0 +1,25 @@
+Properties:
+  RandomSeed = 1;           
+  ReadOnlyHint = 1;         
+
+
+
+Definitions:				
+  W = 4;            
+  _wp = 2;	     
+  _t = 0;	     
+  _rep = 0;	     
+  _cond = 1;	     
+  _size = 1;          
+  NA = 100;
+  a[1..NA]=0;						 
+  _RAND = <1.._size>;  
+
+Transactions:			                         
+  T_W :=  R(W,_t), {? [_t > _wp] : {_rep=_wp, _t=_t-_wp, _cond=1}, W(W,_t) |  {_rep=_t, _t=0, _cond =0}, W(W,_t)};	
+  T_1  := {_size = 1},{# k=[1.._size]: R(a[k],_t), {? [_t == 0]: W(a[k],1) | {_size = _size+1}  } }, W(a[_RAND]);    
+
+
+Threads:       	  	     	     			 
+  P_1 := (T_W,(T_1)(_rep))(_cond);	
+

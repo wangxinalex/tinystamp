@@ -1,0 +1,22 @@
+Properties:
+  RandomSeed = 1;           
+  ReadOnlyHint = 1;         
+
+
+
+Definitions:				
+  W = 4;
+  _temp = 0;
+  _rep = 0;
+  _cont = 1;
+  _NA = 4;
+  a[1.._NA]=0;						 
+
+Transactions:			                         
+  T_W :=  R(W,_temp), {? [_temp > 2] : {_rep=2, _temp=_temp-2, _cont=1}, W(W,_temp) |  {_rep=_temp, _temp=0, _cont =0}, W(W,_temp)};	
+  T_1  := R(a[_rep],_temp),W(a[_rep],(_temp+1));    
+
+
+Threads:       	  	     	     			 
+  P_1 := (T_W,(T_1)(_rep))(_cont);	
+

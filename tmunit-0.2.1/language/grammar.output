@@ -3,12 +3,7 @@ Terminals which are not used
    EOF_TOKEN
 
 
-Rules never reduced
-
-  165 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES FixedValue
-
-
-State 366 conflicts: 3 reduce/reduce
+State 348 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -256,7 +251,7 @@ Grammar
   163                                    | SMALLER_THAN TxChoiceList GREATER_THAN Variable
   164                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES
   165                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES FixedValue
-  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES VariableExpression
+  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES __txBlockEnd_act VariableExpression
 
   167 UnboundedRepetitionTxBlockListElement: DescriptionName MULTIPLY
   168                                      | SMALLER_THAN TxChoiceList GREATER_THAN MULTIPLY
@@ -264,59 +259,61 @@ Grammar
 
   170 __txBlockStart_act: /* empty */
 
-  171 TxChoiceList: TxChoiceListElement
-  172             | TxChoiceList BAR TxChoiceListElement
+  171 __txBlockEnd_act: /* empty */
 
-  173 Scope: DescriptionName COLON
+  172 TxChoiceList: TxChoiceListElement
+  173             | TxChoiceList BAR TxChoiceListElement
 
-  174 TxChoiceListElement: DescriptionName
-  175                    | Scope FixedValue PERCENTAGE
-  176                    | Scope FLOAT_NUMBER PERCENTAGE
+  174 Scope: DescriptionName COLON
 
-  177 SchedulesSection: SCHEDULES_HEADER __sch_sec_act_1 ScheduleDefList
+  175 TxChoiceListElement: DescriptionName
+  176                    | Scope FixedValue PERCENTAGE
+  177                    | Scope FLOAT_NUMBER PERCENTAGE
 
-  178 __sch_sec_act_1: /* empty */
+  178 SchedulesSection: SCHEDULES_HEADER __sch_sec_act_1 ScheduleDefList
 
-  179 ScheduleDefList: ScheduleDef SEMICOLON
-  180                | ScheduleDefList ScheduleDef SEMICOLON
+  179 __sch_sec_act_1: /* empty */
 
-  181 ScheduleDef: DescriptionName DEFINITION_ASSIGN ScheduleSpec
+  180 ScheduleDefList: ScheduleDef SEMICOLON
+  181                | ScheduleDefList ScheduleDef SEMICOLON
 
-  182 ScheduleSpec: TxPortion
-  183             | ScheduleSpec COMMA TxPortion
+  182 ScheduleDef: DescriptionName DEFINITION_ASSIGN ScheduleSpec
 
-  184 TxPortion: DescriptionName
-  185          | DescriptionName LABEL
-  186          | OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS
-  187          | VarAssigns
+  183 ScheduleSpec: TxPortion
+  184             | ScheduleSpec COMMA TxPortion
 
-  188 InvariantsSection: INVARIANTS_HEADER __inv_sec_act_1 InvariantDefList
+  185 TxPortion: DescriptionName
+  186          | DescriptionName LABEL
+  187          | OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS
+  188          | VarAssigns
 
-  189 __inv_sec_act_1: /* empty */
+  189 InvariantsSection: INVARIANTS_HEADER __inv_sec_act_1 InvariantDefList
 
-  190 InvariantDefList: InvariantDef SEMICOLON
-  191                 | InvariantDefList InvariantDef SEMICOLON
+  190 __inv_sec_act_1: /* empty */
 
-  192 InvariantDef: OPEN_BRACKETS NO_ABORT_INVARIANT_TOKEN CLOSE_BRACKETS
-  193             | OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS
+  191 InvariantDefList: InvariantDef SEMICOLON
+  192                 | InvariantDefList InvariantDef SEMICOLON
+
+  193 InvariantDef: OPEN_BRACKETS NO_ABORT_INVARIANT_TOKEN CLOSE_BRACKETS
+  194             | OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-SEMICOLON (258) 12 13 24 25 29 30 31 32 46 47 120 149 150 179 180 190
-    191
+SEMICOLON (258) 12 13 24 25 29 30 31 32 46 47 120 149 150 180 181 191
+    192
 EOF_TOKEN (259)
 PROPERTIES_HEADER (260) 22
 DEFINITIONS_HEADER (261) 27
 TRANSACTIONS_HEADER (262) 44
 THREADS_HEADER (263) 147
-SCHEDULES_HEADER (264) 177
-INVARIANTS_HEADER (265) 188
+SCHEDULES_HEADER (264) 178
+INVARIANTS_HEADER (265) 189
 VALUE_ASSIGN (266) 14 15 16 17 18 19 26 33 36 37 38 39 40 41 42 43
     75 100
-DEFINITION_ASSIGN (267) 48 151 181
+DEFINITION_ASSIGN (267) 48 151 182
 READ_ACCESS_OP (268) 64 65 129 131
 WRITE_ACCESS_OP (269) 66 67 130 132
 DELAY_OP (270) 59
@@ -325,29 +322,29 @@ MEM_ALLOC_OP (272) 69
 MEM_FREE_OP (273) 70
 MEM_BARRIER_OP (274) 71
 JUMP_OP (275) 101
-OPEN_BRACKETS (276) 76 85 186 192 193
-CLOSE_BRACKETS (277) 17 18 34 35 40 41 76 85 127 128 186 192 193
+OPEN_BRACKETS (276) 76 85 187 193 194
+CLOSE_BRACKETS (277) 17 18 34 35 40 41 76 85 127 128 187 193 194
 OPEN_PARANTHESES (278) 20 21 89 90 92 93 140 164 165 166 169
 CLOSE_PARANTHESES (279) 20 21 59 64 65 66 67 68 69 70 71 89 90 92 93
     101 129 130 131 132 140 164 165 166 169
-COMMA (280) 51 65 67 69 71 99 131 132 154 156 183
-BAR (281) 79 80 172
+COMMA (280) 51 65 67 69 71 99 131 132 154 156 184
+BAR (281) 79 80 173
 OPEN_CURLY_BRACKETS (282) 96
 CLOSE_CURLY_BRACKETS (283) 72 77 96
 LOOP_START (284) 72
 CONDITION_START (285) 77
 RANGE_SEPERATOR (286) 119 120
-LABEL (287) 56 101 185
+LABEL (287) 56 101 186
 NAME (288) 14 26 37 71 116 121
 ARRAY_NAME (289) 17 34 40 127
 NAME_ALL_CAPITALS (290) 115 117
 LOCAL_VARIABLE_NAME (291) 15 36 39 43 122 124
 LOCAL_ARRAY_NAME (292) 18 35 41 128
 NUMBER (293) 114
-FLOAT_NUMBER (294) 176
-COLON (295) 72 81 173
-PERCENTAGE (296) 175 176
-NO_ABORT_INVARIANT_TOKEN (297) 192
+FLOAT_NUMBER (294) 177
+COLON (295) 72 81 174
+PERCENTAGE (296) 176 177
+NO_ABORT_INVARIANT_TOKEN (297) 193
 EQUAL (298) 102
 NOT_EQUAL (299) 103
 GREATER_EQUAL (300) 107
@@ -450,7 +447,7 @@ __defaultCondTxSpecElement_act_1 (97)
 Condition (98)
     on left: 85, on right: 74 81
 ConditionalExpression (99)
-    on left: 86 87, on right: 21 85 186 193
+    on left: 86 87, on right: 21 85 187 194
 SimpleConditionalExpression (100)
     on left: 88, on right: 86 89 90
 ComplexConditionalExpressionElement (101)
@@ -460,7 +457,7 @@ ComplexConditionalUnit (102)
 ComplexConditionalExpression (103)
     on left: 94 95, on right: 87 92 93
 VarAssigns (104)
-    on left: 96, on right: 55 187
+    on left: 96, on right: 55 188
 __varAssigns_act_1 (105)
     on left: 97, on right: 96
 VarAssignList (106)
@@ -478,12 +475,12 @@ UnaryBooleanOp (111)
 Value (112)
     on left: 112 113, on right: 16 17 18 33 37 38 39 40 41 42 133
 FixedValue (113)
-    on left: 114, on right: 14 15 19 26 36 68 112 162 165 175
+    on left: 114, on right: 14 15 19 26 36 68 112 162 165 176
 Constant (114)
     on left: 115, on right: 19 38 123
 DescriptionName (115)
-    on left: 116 117, on right: 48 153 154 159 167 173 174 181 184
-    185
+    on left: 116 117, on right: 48 153 154 159 167 174 175 182 185
+    186
 RandomizedRange (116)
     on left: 118, on right: 113
 Range (117)
@@ -529,32 +526,34 @@ UnboundedRepetitionTxBlockListElement (136)
     on left: 167 168 169, on right: 158
 __txBlockStart_act (137)
     on left: 170, on right: 164 165 166 169
-TxChoiceList (138)
-    on left: 171 172, on right: 161 162 163 168 172
-Scope (139)
-    on left: 173, on right: 39 42 124 126 175 176
-TxChoiceListElement (140)
-    on left: 174 175 176, on right: 171 172
-SchedulesSection (141)
-    on left: 177, on right: 7
-__sch_sec_act_1 (142)
-    on left: 178, on right: 177
-ScheduleDefList (143)
-    on left: 179 180, on right: 177 180
-ScheduleDef (144)
-    on left: 181, on right: 179 180
-ScheduleSpec (145)
-    on left: 182 183, on right: 181 183
-TxPortion (146)
-    on left: 184 185 186 187, on right: 182 183
-InvariantsSection (147)
-    on left: 188, on right: 8
-__inv_sec_act_1 (148)
-    on left: 189, on right: 188
-InvariantDefList (149)
-    on left: 190 191, on right: 188 191
-InvariantDef (150)
-    on left: 192 193, on right: 190 191
+__txBlockEnd_act (138)
+    on left: 171, on right: 166
+TxChoiceList (139)
+    on left: 172 173, on right: 161 162 163 168 173
+Scope (140)
+    on left: 174, on right: 39 42 124 126 176 177
+TxChoiceListElement (141)
+    on left: 175 176 177, on right: 172 173
+SchedulesSection (142)
+    on left: 178, on right: 7
+__sch_sec_act_1 (143)
+    on left: 179, on right: 178
+ScheduleDefList (144)
+    on left: 180 181, on right: 178 181
+ScheduleDef (145)
+    on left: 182, on right: 180 181
+ScheduleSpec (146)
+    on left: 183 184, on right: 182 184
+TxPortion (147)
+    on left: 185 186 187 188, on right: 183 184
+InvariantsSection (148)
+    on left: 189, on right: 8
+__inv_sec_act_1 (149)
+    on left: 190, on right: 189
+InvariantDefList (150)
+    on left: 191 192, on right: 189 192
+InvariantDef (151)
+    on left: 193 194, on right: 191 192
 
 
 state 0
@@ -618,18 +617,18 @@ state 4
 
 state 5
 
-  177 SchedulesSection: SCHEDULES_HEADER . __sch_sec_act_1 ScheduleDefList
+  178 SchedulesSection: SCHEDULES_HEADER . __sch_sec_act_1 ScheduleDefList
 
-    $default  reduce using rule 178 (__sch_sec_act_1)
+    $default  reduce using rule 179 (__sch_sec_act_1)
 
     __sch_sec_act_1  go to state 21
 
 
 state 6
 
-  188 InvariantsSection: INVARIANTS_HEADER . __inv_sec_act_1 InvariantDefList
+  189 InvariantsSection: INVARIANTS_HEADER . __inv_sec_act_1 InvariantDefList
 
-    $default  reduce using rule 189 (__inv_sec_act_1)
+    $default  reduce using rule 190 (__inv_sec_act_1)
 
     __inv_sec_act_1  go to state 22
 
@@ -781,7 +780,7 @@ state 20
 
 state 21
 
-  177 SchedulesSection: SCHEDULES_HEADER __sch_sec_act_1 . ScheduleDefList
+  178 SchedulesSection: SCHEDULES_HEADER __sch_sec_act_1 . ScheduleDefList
 
     NAME               shift, and go to state 41
     NAME_ALL_CAPITALS  shift, and go to state 42
@@ -793,7 +792,7 @@ state 21
 
 state 22
 
-  188 InvariantsSection: INVARIANTS_HEADER __inv_sec_act_1 . InvariantDefList
+  189 InvariantsSection: INVARIANTS_HEADER __inv_sec_act_1 . InvariantDefList
 
     OPEN_BRACKETS  shift, and go to state 53
 
@@ -1003,7 +1002,7 @@ state 38
 
 state 39
 
-  173 Scope: DescriptionName . COLON
+  174 Scope: DescriptionName . COLON
 
     COLON  shift, and go to state 102
 
@@ -1107,20 +1106,20 @@ state 49
 
 state 50
 
-  181 ScheduleDef: DescriptionName . DEFINITION_ASSIGN ScheduleSpec
+  182 ScheduleDef: DescriptionName . DEFINITION_ASSIGN ScheduleSpec
 
     DEFINITION_ASSIGN  shift, and go to state 112
 
 
 state 51
 
-  177 SchedulesSection: SCHEDULES_HEADER __sch_sec_act_1 ScheduleDefList .
-  180 ScheduleDefList: ScheduleDefList . ScheduleDef SEMICOLON
+  178 SchedulesSection: SCHEDULES_HEADER __sch_sec_act_1 ScheduleDefList .
+  181 ScheduleDefList: ScheduleDefList . ScheduleDef SEMICOLON
 
     NAME               shift, and go to state 41
     NAME_ALL_CAPITALS  shift, and go to state 42
 
-    $default  reduce using rule 177 (SchedulesSection)
+    $default  reduce using rule 178 (SchedulesSection)
 
     DescriptionName  go to state 50
     ScheduleDef      go to state 113
@@ -1128,15 +1127,15 @@ state 51
 
 state 52
 
-  179 ScheduleDefList: ScheduleDef . SEMICOLON
+  180 ScheduleDefList: ScheduleDef . SEMICOLON
 
     SEMICOLON  shift, and go to state 114
 
 
 state 53
 
-  192 InvariantDef: OPEN_BRACKETS . NO_ABORT_INVARIANT_TOKEN CLOSE_BRACKETS
-  193             | OPEN_BRACKETS . ConditionalExpression CLOSE_BRACKETS
+  193 InvariantDef: OPEN_BRACKETS . NO_ABORT_INVARIANT_TOKEN CLOSE_BRACKETS
+  194             | OPEN_BRACKETS . ConditionalExpression CLOSE_BRACKETS
 
     READ_ACCESS_OP            shift, and go to state 70
     WRITE_ACCESS_OP           shift, and go to state 71
@@ -1175,19 +1174,19 @@ state 53
 
 state 54
 
-  188 InvariantsSection: INVARIANTS_HEADER __inv_sec_act_1 InvariantDefList .
-  191 InvariantDefList: InvariantDefList . InvariantDef SEMICOLON
+  189 InvariantsSection: INVARIANTS_HEADER __inv_sec_act_1 InvariantDefList .
+  192 InvariantDefList: InvariantDefList . InvariantDef SEMICOLON
 
     OPEN_BRACKETS  shift, and go to state 53
 
-    $default  reduce using rule 188 (InvariantsSection)
+    $default  reduce using rule 189 (InvariantsSection)
 
     InvariantDef  go to state 125
 
 
 state 55
 
-  190 InvariantDefList: InvariantDef . SEMICOLON
+  191 InvariantDefList: InvariantDef . SEMICOLON
 
     SEMICOLON  shift, and go to state 126
 
@@ -1799,9 +1798,9 @@ state 101
 
 state 102
 
-  173 Scope: DescriptionName COLON .
+  174 Scope: DescriptionName COLON .
 
-    $default  reduce using rule 173 (Scope)
+    $default  reduce using rule 174 (Scope)
 
 
 state 103
@@ -1872,7 +1871,7 @@ state 111
 
 state 112
 
-  181 ScheduleDef: DescriptionName DEFINITION_ASSIGN . ScheduleSpec
+  182 ScheduleDef: DescriptionName DEFINITION_ASSIGN . ScheduleSpec
 
     OPEN_BRACKETS        shift, and go to state 173
     OPEN_CURLY_BRACKETS  shift, and go to state 174
@@ -1887,16 +1886,16 @@ state 112
 
 state 113
 
-  180 ScheduleDefList: ScheduleDefList ScheduleDef . SEMICOLON
+  181 ScheduleDefList: ScheduleDefList ScheduleDef . SEMICOLON
 
     SEMICOLON  shift, and go to state 179
 
 
 state 114
 
-  179 ScheduleDefList: ScheduleDef SEMICOLON .
+  180 ScheduleDefList: ScheduleDef SEMICOLON .
 
-    $default  reduce using rule 179 (ScheduleDefList)
+    $default  reduce using rule 180 (ScheduleDefList)
 
 
 state 115
@@ -1940,7 +1939,7 @@ state 115
 
 state 116
 
-  192 InvariantDef: OPEN_BRACKETS NO_ABORT_INVARIANT_TOKEN . CLOSE_BRACKETS
+  193 InvariantDef: OPEN_BRACKETS NO_ABORT_INVARIANT_TOKEN . CLOSE_BRACKETS
 
     CLOSE_BRACKETS  shift, and go to state 183
 
@@ -1954,7 +1953,7 @@ state 117
 
 state 118
 
-  193 InvariantDef: OPEN_BRACKETS ConditionalExpression . CLOSE_BRACKETS
+  194 InvariantDef: OPEN_BRACKETS ConditionalExpression . CLOSE_BRACKETS
 
     CLOSE_BRACKETS  shift, and go to state 184
 
@@ -2022,16 +2021,16 @@ state 124
 
 state 125
 
-  191 InvariantDefList: InvariantDefList InvariantDef . SEMICOLON
+  192 InvariantDefList: InvariantDefList InvariantDef . SEMICOLON
 
     SEMICOLON  shift, and go to state 197
 
 
 state 126
 
-  190 InvariantDefList: InvariantDef SEMICOLON .
+  191 InvariantDefList: InvariantDef SEMICOLON .
 
-    $default  reduce using rule 190 (InvariantDefList)
+    $default  reduce using rule 191 (InvariantDefList)
 
 
 state 127
@@ -2591,7 +2590,7 @@ state 172
 
 state 173
 
-  186 TxPortion: OPEN_BRACKETS . ConditionalExpression CLOSE_BRACKETS
+  187 TxPortion: OPEN_BRACKETS . ConditionalExpression CLOSE_BRACKETS
 
     READ_ACCESS_OP       shift, and go to state 70
     WRITE_ACCESS_OP      shift, and go to state 71
@@ -2638,43 +2637,43 @@ state 174
 
 state 175
 
-  187 TxPortion: VarAssigns .
+  188 TxPortion: VarAssigns .
 
-    $default  reduce using rule 187 (TxPortion)
+    $default  reduce using rule 188 (TxPortion)
 
 
 state 176
 
-  184 TxPortion: DescriptionName .
-  185          | DescriptionName . LABEL
+  185 TxPortion: DescriptionName .
+  186          | DescriptionName . LABEL
 
     LABEL  shift, and go to state 256
 
-    $default  reduce using rule 184 (TxPortion)
+    $default  reduce using rule 185 (TxPortion)
 
 
 state 177
 
-  181 ScheduleDef: DescriptionName DEFINITION_ASSIGN ScheduleSpec .
-  183 ScheduleSpec: ScheduleSpec . COMMA TxPortion
+  182 ScheduleDef: DescriptionName DEFINITION_ASSIGN ScheduleSpec .
+  184 ScheduleSpec: ScheduleSpec . COMMA TxPortion
 
     COMMA  shift, and go to state 257
 
-    $default  reduce using rule 181 (ScheduleDef)
+    $default  reduce using rule 182 (ScheduleDef)
 
 
 state 178
 
-  182 ScheduleSpec: TxPortion .
+  183 ScheduleSpec: TxPortion .
 
-    $default  reduce using rule 182 (ScheduleSpec)
+    $default  reduce using rule 183 (ScheduleSpec)
 
 
 state 179
 
-  180 ScheduleDefList: ScheduleDefList ScheduleDef SEMICOLON .
+  181 ScheduleDefList: ScheduleDefList ScheduleDef SEMICOLON .
 
-    $default  reduce using rule 180 (ScheduleDefList)
+    $default  reduce using rule 181 (ScheduleDefList)
 
 
 state 180
@@ -2714,16 +2713,16 @@ state 182
 
 state 183
 
-  192 InvariantDef: OPEN_BRACKETS NO_ABORT_INVARIANT_TOKEN CLOSE_BRACKETS .
+  193 InvariantDef: OPEN_BRACKETS NO_ABORT_INVARIANT_TOKEN CLOSE_BRACKETS .
 
-    $default  reduce using rule 192 (InvariantDef)
+    $default  reduce using rule 193 (InvariantDef)
 
 
 state 184
 
-  193 InvariantDef: OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS .
+  194 InvariantDef: OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS .
 
-    $default  reduce using rule 193 (InvariantDef)
+    $default  reduce using rule 194 (InvariantDef)
 
 
 state 185
@@ -2872,9 +2871,9 @@ state 196
 
 state 197
 
-  191 InvariantDefList: InvariantDefList InvariantDef SEMICOLON .
+  192 InvariantDefList: InvariantDefList InvariantDef SEMICOLON .
 
-    $default  reduce using rule 191 (InvariantDefList)
+    $default  reduce using rule 192 (InvariantDefList)
 
 
 state 198
@@ -3447,7 +3446,7 @@ state 246
 
   164 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES
   165                                    | OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES FixedValue
-  166                                    | OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES VariableExpression
+  166                                    | OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES __txBlockEnd_act VariableExpression
   169 UnboundedRepetitionTxBlockListElement: OPEN_PARANTHESES . __txBlockStart_act TxBlockList CLOSE_PARANTHESES MULTIPLY
 
     $default  reduce using rule 170 (__txBlockStart_act)
@@ -3521,7 +3520,7 @@ state 253
 
 state 254
 
-  186 TxPortion: OPEN_BRACKETS ConditionalExpression . CLOSE_BRACKETS
+  187 TxPortion: OPEN_BRACKETS ConditionalExpression . CLOSE_BRACKETS
 
     CLOSE_BRACKETS  shift, and go to state 298
 
@@ -3547,14 +3546,14 @@ state 255
 
 state 256
 
-  185 TxPortion: DescriptionName LABEL .
+  186 TxPortion: DescriptionName LABEL .
 
-    $default  reduce using rule 185 (TxPortion)
+    $default  reduce using rule 186 (TxPortion)
 
 
 state 257
 
-  183 ScheduleSpec: ScheduleSpec COMMA . TxPortion
+  184 ScheduleSpec: ScheduleSpec COMMA . TxPortion
 
     OPEN_BRACKETS        shift, and go to state 173
     OPEN_CURLY_BRACKETS  shift, and go to state 174
@@ -3972,7 +3971,7 @@ state 291
 
   164 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES
   165                                    | OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES FixedValue
-  166                                    | OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES VariableExpression
+  166                                    | OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES __txBlockEnd_act VariableExpression
   169 UnboundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act . TxBlockList CLOSE_PARANTHESES MULTIPLY
 
     DELAY_OP           shift, and go to state 225
@@ -3991,12 +3990,12 @@ state 291
 
 state 292
 
-  173 Scope: DescriptionName . COLON
-  174 TxChoiceListElement: DescriptionName .
+  174 Scope: DescriptionName . COLON
+  175 TxChoiceListElement: DescriptionName .
 
     COLON  shift, and go to state 102
 
-    $default  reduce using rule 174 (TxChoiceListElement)
+    $default  reduce using rule 175 (TxChoiceListElement)
 
 
 state 293
@@ -4005,7 +4004,7 @@ state 293
   162                                    | SMALLER_THAN TxChoiceList . GREATER_THAN FixedValue
   163                                    | SMALLER_THAN TxChoiceList . GREATER_THAN Variable
   168 UnboundedRepetitionTxBlockListElement: SMALLER_THAN TxChoiceList . GREATER_THAN MULTIPLY
-  172 TxChoiceList: TxChoiceList . BAR TxChoiceListElement
+  173 TxChoiceList: TxChoiceList . BAR TxChoiceListElement
 
     BAR           shift, and go to state 328
     GREATER_THAN  shift, and go to state 329
@@ -4013,8 +4012,8 @@ state 293
 
 state 294
 
-  175 TxChoiceListElement: Scope . FixedValue PERCENTAGE
-  176                    | Scope . FLOAT_NUMBER PERCENTAGE
+  176 TxChoiceListElement: Scope . FixedValue PERCENTAGE
+  177                    | Scope . FLOAT_NUMBER PERCENTAGE
 
     NUMBER        shift, and go to state 77
     FLOAT_NUMBER  shift, and go to state 330
@@ -4024,9 +4023,9 @@ state 294
 
 state 295
 
-  171 TxChoiceList: TxChoiceListElement .
+  172 TxChoiceList: TxChoiceListElement .
 
-    $default  reduce using rule 171 (TxChoiceList)
+    $default  reduce using rule 172 (TxChoiceList)
 
 
 state 296
@@ -4055,9 +4054,9 @@ state 297
 
 state 298
 
-  186 TxPortion: OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS .
+  187 TxPortion: OPEN_BRACKETS ConditionalExpression CLOSE_BRACKETS .
 
-    $default  reduce using rule 186 (TxPortion)
+    $default  reduce using rule 187 (TxPortion)
 
 
 state 299
@@ -4085,9 +4084,9 @@ state 301
 
 state 302
 
-  183 ScheduleSpec: ScheduleSpec COMMA TxPortion .
+  184 ScheduleSpec: ScheduleSpec COMMA TxPortion .
 
-    $default  reduce using rule 183 (ScheduleSpec)
+    $default  reduce using rule 184 (ScheduleSpec)
 
 
 state 303
@@ -4351,7 +4350,7 @@ state 327
   156 TxBlockList: TxBlockList . COMMA TxBlockListElement
   164 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES
   165                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES FixedValue
-  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES VariableExpression
+  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES __txBlockEnd_act VariableExpression
   169 UnboundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList . CLOSE_PARANTHESES MULTIPLY
 
     CLOSE_PARANTHESES  shift, and go to state 348
@@ -4360,7 +4359,7 @@ state 327
 
 state 328
 
-  172 TxChoiceList: TxChoiceList BAR . TxChoiceListElement
+  173 TxChoiceList: TxChoiceList BAR . TxChoiceListElement
 
     NAME               shift, and go to state 41
     NAME_ALL_CAPITALS  shift, and go to state 42
@@ -4397,14 +4396,14 @@ state 329
 
 state 330
 
-  176 TxChoiceListElement: Scope FLOAT_NUMBER . PERCENTAGE
+  177 TxChoiceListElement: Scope FLOAT_NUMBER . PERCENTAGE
 
     PERCENTAGE  shift, and go to state 353
 
 
 state 331
 
-  175 TxChoiceListElement: Scope FixedValue . PERCENTAGE
+  176 TxChoiceListElement: Scope FixedValue . PERCENTAGE
 
     PERCENTAGE  shift, and go to state 354
 
@@ -4672,44 +4671,27 @@ state 348
 
   164 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES .
   165                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES . FixedValue
-  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES . VariableExpression
+  166                                    | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES . __txBlockEnd_act VariableExpression
   169 UnboundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES . MULTIPLY
 
-    READ_ACCESS_OP       shift, and go to state 70
-    WRITE_ACCESS_OP      shift, and go to state 71
-    OPEN_PARANTHESES     shift, and go to state 72
-    NAME                 shift, and go to state 73
-    ARRAY_NAME           shift, and go to state 74
-    NAME_ALL_CAPITALS    shift, and go to state 31
-    LOCAL_VARIABLE_NAME  shift, and go to state 75
-    LOCAL_ARRAY_NAME     shift, and go to state 76
-    NUMBER               shift, and go to state 77
-    SMALLER_THAN         shift, and go to state 78
-    MINUS                shift, and go to state 79
-    MULTIPLY             shift, and go to state 365
+    NUMBER    shift, and go to state 77
+    MULTIPLY  shift, and go to state 365
 
-    $default  reduce using rule 164 (BoundedRepetitionTxBlockListElement)
+    SEMICOLON          reduce using rule 164 (BoundedRepetitionTxBlockListElement)
+    CLOSE_PARANTHESES  reduce using rule 164 (BoundedRepetitionTxBlockListElement)
+    COMMA              reduce using rule 164 (BoundedRepetitionTxBlockListElement)
+    NUMBER             [reduce using rule 171 (__txBlockEnd_act)]
+    $default           reduce using rule 171 (__txBlockEnd_act)
 
-    Value                                          go to state 80
-    FixedValue                                     go to state 366
-    Constant                                       go to state 82
-    DescriptionName                                go to state 39
-    RandomizedRange                                go to state 83
-    Variable                                       go to state 85
-    ArrayAccess                                    go to state 86
-    ManagedMemAccess                               go to state 87
-    VariableExpressionElement                      go to state 88
-    MultiplicativeVariableExpressionElementAccess  go to state 89
-    MultiplicativeFactor                           go to state 90
-    VariableExpression                             go to state 367
-    Scope                                          go to state 92
+    FixedValue        go to state 366
+    __txBlockEnd_act  go to state 367
 
 
 state 349
 
-  172 TxChoiceList: TxChoiceList BAR TxChoiceListElement .
+  173 TxChoiceList: TxChoiceList BAR TxChoiceListElement .
 
-    $default  reduce using rule 172 (TxChoiceList)
+    $default  reduce using rule 173 (TxChoiceList)
 
 
 state 350
@@ -4735,16 +4717,16 @@ state 352
 
 state 353
 
-  176 TxChoiceListElement: Scope FLOAT_NUMBER PERCENTAGE .
+  177 TxChoiceListElement: Scope FLOAT_NUMBER PERCENTAGE .
 
-    $default  reduce using rule 176 (TxChoiceListElement)
+    $default  reduce using rule 177 (TxChoiceListElement)
 
 
 state 354
 
-  175 TxChoiceListElement: Scope FixedValue PERCENTAGE .
+  176 TxChoiceListElement: Scope FixedValue PERCENTAGE .
 
-    $default  reduce using rule 175 (TxChoiceListElement)
+    $default  reduce using rule 176 (TxChoiceListElement)
 
 
 state 355
@@ -4840,29 +4822,40 @@ state 365
 
 state 366
 
-  112 Value: FixedValue .
   165 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES FixedValue .
 
-    SEMICOLON          reduce using rule 112 (Value)
-    SEMICOLON          [reduce using rule 165 (BoundedRepetitionTxBlockListElement)]
-    CLOSE_PARANTHESES  reduce using rule 112 (Value)
-    CLOSE_PARANTHESES  [reduce using rule 165 (BoundedRepetitionTxBlockListElement)]
-    COMMA              reduce using rule 112 (Value)
-    COMMA              [reduce using rule 165 (BoundedRepetitionTxBlockListElement)]
-    $default           reduce using rule 112 (Value)
+    $default  reduce using rule 165 (BoundedRepetitionTxBlockListElement)
 
 
 state 367
 
-  142 VariableExpression: VariableExpression . AdditiveArithmeticOp MultiplicativeVariableExpressionElementAccess
-  166 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES VariableExpression .
+  166 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES __txBlockEnd_act . VariableExpression
 
-    PLUS   shift, and go to state 153
-    MINUS  shift, and go to state 154
+    READ_ACCESS_OP       shift, and go to state 70
+    WRITE_ACCESS_OP      shift, and go to state 71
+    OPEN_PARANTHESES     shift, and go to state 72
+    NAME                 shift, and go to state 73
+    ARRAY_NAME           shift, and go to state 74
+    NAME_ALL_CAPITALS    shift, and go to state 31
+    LOCAL_VARIABLE_NAME  shift, and go to state 75
+    LOCAL_ARRAY_NAME     shift, and go to state 76
+    NUMBER               shift, and go to state 77
+    SMALLER_THAN         shift, and go to state 78
+    MINUS                shift, and go to state 79
 
-    $default  reduce using rule 166 (BoundedRepetitionTxBlockListElement)
-
-    AdditiveArithmeticOp  go to state 155
+    Value                                          go to state 80
+    FixedValue                                     go to state 81
+    Constant                                       go to state 82
+    DescriptionName                                go to state 39
+    RandomizedRange                                go to state 83
+    Variable                                       go to state 85
+    ArrayAccess                                    go to state 86
+    ManagedMemAccess                               go to state 87
+    VariableExpressionElement                      go to state 88
+    MultiplicativeVariableExpressionElementAccess  go to state 89
+    MultiplicativeFactor                           go to state 90
+    VariableExpression                             go to state 370
+    Scope                                          go to state 92
 
 
 state 368
@@ -4877,3 +4870,16 @@ state 369
    76 LoopRange: OPEN_BRACKETS Range CLOSE_BRACKETS .
 
     $default  reduce using rule 76 (LoopRange)
+
+
+state 370
+
+  142 VariableExpression: VariableExpression . AdditiveArithmeticOp MultiplicativeVariableExpressionElementAccess
+  166 BoundedRepetitionTxBlockListElement: OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES __txBlockEnd_act VariableExpression .
+
+    PLUS   shift, and go to state 153
+    MINUS  shift, and go to state 154
+
+    $default  reduce using rule 166 (BoundedRepetitionTxBlockListElement)
+
+    AdditiveArithmeticOp  go to state 155

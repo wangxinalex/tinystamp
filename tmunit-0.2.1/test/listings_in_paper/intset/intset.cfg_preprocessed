@@ -1,0 +1,30 @@
+
+Properties:                 
+  RandomSeed = 1;           
+  ReadOnlyHint = 1;         
+  WaitForTimeOut = 1;
+  Timeout = 1000000;   
+
+Definitions:                
+  _SIZE = 4096;              
+  m[0 .. 2*_SIZE+1] = 0;     
+  _NB = <1 .. _SIZE>;         
+  _f = 0;          
+  _v = 0;          
+
+Transactions:               
+  T_search := {# _k = [0 .. _NB-1] : R(m[2*_k]), R(m[2*_k+1]) },     
+              R(m[2*_NB]) ;                             
+  T_update := {? [_f == 0] :                           
+                {# _k = [0 .. _NB-1] : R(m[2*_k]), R(m[2*_k+1]) },   
+                R(m[2*_NB]), W(m[2*_NB-1]),                
+                { _f = 1, _v = _NB }                    
+              | 
+                {# _k = [0 .. _v-1] : R(m[2*_k]), R(m[2*_k+1]) },  
+                R(m[2*_v]), R(m[2*_v+1]), 
+                W(m[2*_v-1]), W(m[2*_v]), W(m[2*_v+1]),
+                { _f = 0 }                             
+              } ;                                      
+
+Threads:                  
+P_1,P_2 := < T_search : 80% | T_update : 20% >*;

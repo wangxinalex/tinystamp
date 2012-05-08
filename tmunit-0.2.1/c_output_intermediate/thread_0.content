@@ -1,8 +1,8 @@
+for(RepetitionNo[0]=0 ; RepetitionNo[0]< ThLocals._cond ; RepetitionNo[0]++ )
+{
 ExecuteTransaction(0, ThLocals.TxDesc, &ThLocals);
 if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
 	TERMINATE_THREAD;
-for(RepetitionNo[0]=0 ; RepetitionNo[0]< ThLocals._cont ; RepetitionNo[0]++ )
-{
 ExecuteTransaction(1, ThLocals.TxDesc, &ThLocals);
 if(TerminateRequestedBySignal || i_got_killed(ThLocals.ThreadID))
 	TERMINATE_THREAD;

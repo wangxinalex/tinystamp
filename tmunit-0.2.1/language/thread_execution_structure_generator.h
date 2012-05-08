@@ -161,6 +161,7 @@ extern dyn_arr_t  Dyn_CurrentThreadDefList;
 
 extern unsigned short CurrentTxContainerNo   ;
 extern unsigned short TxBlockStartContainerNo;
+extern dyn_arr_t  TxBlockStartContainerNoList; 
 
 
 extern dyn_arr_t  CurrentTxContainerList; 

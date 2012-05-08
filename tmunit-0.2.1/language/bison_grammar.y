@@ -3128,14 +3128,16 @@ BoundedRepetitionTxBlockListElement:
   	  REPORT_READ_INPUT("End of  %s times repeated TxBlockList\n",$5);
 	  FREE_RULE_STRINGS(5);
       }
-     | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES VariableExpression
+     | OPEN_PARANTHESES __txBlockStart_act TxBlockList CLOSE_PARANTHESES __txBlockEnd_act VariableExpression
       {
           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
 	     if ( !ParseOnly )
 	     {
 		 if( VerboseParserOutput )
+		 {
 		     printf("Container no at the end of TxBlock= %u \n",CurrentTxContainerNo-1);
-
+		     printf("Current TxBlockStartContainerNo is: %u \n", TxBlockStartContainerNo);
+		 }
 		 if( $3 -> BoundedRepetition == FALSE)
 		 {
 		     REPORT_SEMANTIC_ERROR("UNEXPECTED REPEATED TX BLOCK including an infinitely repeating executable element.\n"
@@ -3144,11 +3146,11 @@ BoundedRepetitionTxBlockListElement:
 
 
 		 VarExpr* ElementVarExpr;
-		 unsigned LoopLimitExprID = FindVarExpr($5,&ElementVarExpr);
+		 unsigned LoopLimitExprID = FindVarExpr($6,&ElementVarExpr);
 		 if(ElementVarExpr == NULL)
 		 {
 		     char* ErrorMessage = malloc(sizeof(char)*MAX_RETURN_STRING_SIZE);
-		     sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", $5);
+		     sprintf(ErrorMessage,"Can NOT evaluate INEXISTENT Variable Expression '%s'. Terminating...\n", $6);
 		     yyerror(ErrorMessage);
 		     free(ErrorMessage);
 		     exit(1);
@@ -3238,10 +3240,32 @@ UnboundedRepetitionTxBlockListElement:
          {
            #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
 	    TxBlockStartContainerNo = CurrentTxContainerNo;
+	    unsigned ListSize= GetSize_DynamicArray(&TxBlockStartContainerNoList);
+	    Extend_DynamicArray(&TxBlockStartContainerNoList, sizeof(unsigned short));
+	    unsigned short* nestedTxBlockStartContainerNoPtr = (unsigned short*)GetElement_DynamicArray(&TxBlockStartContainerNoList,ListSize,sizeof(unsigned short));
+	    *nestedTxBlockStartContainerNoPtr =  TxBlockStartContainerNo;
 
 	    if ( !ParseOnly && VerboseParserOutput )
 		printf("TxBlock Start encountered at Container No %u .\n",TxBlockStartContainerNo);
 	   #endif
+
+
+         }
+
+         __txBlockEnd_act:
+         {
+           #ifdef NO_THREAD_INTERMEDIATE_REPRESENTATION
+	     //TxBlockStartContainerNo = CurrentTxContainerNo;
+	    unsigned LastListElementPos = GetSize_DynamicArray(&TxBlockStartContainerNoList)-1;
+	    unsigned short* nestedTxBlockStartContainerNoPtr = (unsigned short*) GetElement_DynamicArray(&TxBlockStartContainerNoList,LastListElementPos,sizeof(unsigned short));
+
+	    TxBlockStartContainerNo = *nestedTxBlockStartContainerNoPtr; 
+	    Chop_DynamicArray(&TxBlockStartContainerNoList);
+
+	    if ( !ParseOnly && VerboseParserOutput )
+		printf("Current TxBlock Start is now Container No %u .\n",TxBlockStartContainerNo);
+	   #endif
+
 
          }
 
