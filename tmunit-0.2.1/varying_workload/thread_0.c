@@ -85,7 +85,7 @@ ThLocals._wp = 200;
 ThLocals._t = 0;
 ThLocals._rep = 4;
 ThLocals._cond = 1;
-ThLocals._size = 1;
+ThLocals._size = 1000000;
 ThLocals.k = 0;
 
 // Definition and initialization of thread local variables.

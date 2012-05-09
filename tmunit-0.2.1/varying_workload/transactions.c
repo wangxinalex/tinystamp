@@ -172,7 +172,7 @@ TX_COMMIT;
 Range = ThLocals->_size;
  ThLocals->_RAND = 1 + ChooseFromUniformDist( Range, &(ThLocals->seed__RAND) );
  TX_START;
-ThLocals->_size = 1;
+//ThLocals->_size = 1;
 for( ThLocals->k = 1; (ThLocals->k <= 1000/(u+2)); ThLocals->k += 1) 
 {
 TM_READ(&(a[ThLocals->_RAND+ThLocals->k]));
