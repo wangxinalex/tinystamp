@@ -141,7 +141,7 @@ int InitializeSimulationParameters() {
 TransmitReadOnlyTxHint = 1;
 
 MainSeed = 1;
-MainMax = 10;
+MainMax = 90;
 RandomDebug = 0;
 
 WaitForTimeOut = 1;
@@ -223,12 +223,12 @@ void InitializeSharedVariables() {
 W = (Word*)malloc(sizeof(Word));
 NA = (Word*)malloc(sizeof(Word));
 
-a_array_size = 10000000; // original: = 100
+a_array_size = 100000000; // original: = 100
 a = (Word*)malloc(a_array_size*sizeof(Word));
 
 // Initializing shared variables and arrays.
-*W = 1000000;    // original: = 10
-*NA = 10000000;  // original: = 100
+*W = 100000000;    // original: = 10
+*NA = 100000000;  // original: = 100
 unsigned ElementNo;
 for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
 a[ElementNo] = 0;
