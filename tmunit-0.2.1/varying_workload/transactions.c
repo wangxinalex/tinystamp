@@ -172,16 +172,20 @@ case 1:
 //int u=ValueRead;
 //TX_COMMIT;
 
-Range = ThLocals->_size;
+//Range = ThLocals->_size;
+ Range = 80;
  ThLocals->_RAND = 1 + ChooseFromUniformDist( Range, &(ThLocals->seed__RAND) );
+ long rand2 = 1+ChooseFromUniformDist( Range, &(ThLocals->seed__RAND) );
+// if(ThLocals->_RAND==ranad2)
+// 	printf("bae");
  TX_START;
 //ThLocals->_size = 1;
-for( ThLocals->k = 1; (ThLocals->k <= 1000/(ww+2)); ThLocals->k += 1) 
+for( ThLocals->k = 1; (ThLocals->k <= (double)10000000.0/(double)((ww+2))+10); ThLocals->k += 1) 
 {
 TM_READ(&(a[ThLocals->_RAND+ThLocals->k]));
 ThLocals->_t = ValueRead;
 }
-TM_WRITE(&(a[ThLocals->_RAND+ThLocals->k]),1);
+TM_WRITE(&(a[rand2]),1);
 //ThLocals->_size = (ThLocals->_size + 1);
 
 
