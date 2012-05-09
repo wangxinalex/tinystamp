@@ -164,26 +164,51 @@ TM_WRITE(W,ThLocals->_t);
 TX_COMMIT;
 break;
 case 1:
-Range = ThLocals->_size - 1 + 1;
+TX_START;
+TM_READ(W);
+int u=ValueRead;
+TX_COMMIT;
+
+Range = ThLocals->_size;
  ThLocals->_RAND = 1 + ChooseFromUniformDist( Range, &(ThLocals->seed__RAND) );
  TX_START;
 ThLocals->_size = 1;
-for( ThLocals->k = 1; (ThLocals->k <= ThLocals->_size); ThLocals->k = (ThLocals->k + 1) )
+for( ThLocals->k = 1; (ThLocals->k <= 1000/(u+2)); ThLocals->k += 1) 
 {
-TM_READ(&(a[ThLocals->k]));
+TM_READ(&(a[ThLocals->_RAND+ThLocals->k]));
 ThLocals->_t = ValueRead;
-if(ThLocals->_t == 0)
-{
-TM_WRITE(&(a[ThLocals->k]),1);
 }
-else{
-ThLocals->_size = (ThLocals->_size + 1);
-}
-}
+TM_WRITE(&(a[ThLocals->_RAND+ThLocals->k]),1);
+//ThLocals->_size = (ThLocals->_size + 1);
 
-TM_WRITE(&(a[ThLocals->_RAND]),ThLocals->WriteValue);
-ThLocals->WriteValue++;
+
+
+//TM_WRITE(&(a[ThLocals->_RAND]),ThLocals->WriteValue);
+//ThLocals->WriteValue++;
 TX_COMMIT;
+
+/* original code
+Range = ThLocals->_size - 1 + 1;
+ ThLocals->_RAND = 1 + ChooseFromUniformDist( Range, &(ThLocals->seed__RAND) );
+  TX_START;
+  ThLocals->_size = 1;
+  for( ThLocals->k = 1; (ThLocals->k <= ThLocals->_size); ThLocals->k = (ThLocals->k + 1) )
+  {
+  TM_READ(&(a[ThLocals->k]));
+  ThLocals->_t = ValueRead;
+  if(ThLocals->_t == 0)
+  {
+  TM_WRITE(&(a[ThLocals->k]),1);
+  }
+  else{
+  ThLocals->_size = (ThLocals->_size + 1);
+  }
+  }
+
+  TM_WRITE(&(a[ThLocals->_RAND]),ThLocals->WriteValue);
+  ThLocals->WriteValue++;
+  TX_COMMIT;
+ */
 break;
 
 		default :

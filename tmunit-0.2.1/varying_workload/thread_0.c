@@ -123,7 +123,7 @@ unsigned RepetitionNo[2];
 
 for(RepetitionNo[0]=0 ; RepetitionNo[0]<= ThLocals._cond ; RepetitionNo[0]++ )
 {
-    RepetitionNo[0]=0;
+    RepetitionNo[0]=0; // => while ThLocals._cond do ...
     ExecuteTransaction(0, ThLocals.TxDesc, &ThLocals);
 
 
