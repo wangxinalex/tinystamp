@@ -227,7 +227,7 @@ a_array_size = 10000000; // original: = 100
 a = (Word*)malloc(a_array_size*sizeof(Word));
 
 // Initializing shared variables and arrays.
-*W = 10000;    // original: = 10
+*W = 1000000;    // original: = 10
 *NA = 10000000;  // original: = 100
 unsigned ElementNo;
 for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)

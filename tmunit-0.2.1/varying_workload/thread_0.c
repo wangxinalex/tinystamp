@@ -81,7 +81,7 @@ ThLocals._size = 1;
 ThLocals.k = 0;
 */
 
-ThLocals._wp = 200000;
+ThLocals._wp = 200;
 ThLocals._t = 0;
 ThLocals._rep = 4;
 ThLocals._cond = 1;
