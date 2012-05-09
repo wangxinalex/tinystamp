@@ -141,7 +141,7 @@ int InitializeSimulationParameters() {
 TransmitReadOnlyTxHint = 1;
 
 MainSeed = 1;
-MainMax = 90;
+MainMax = 5;
 RandomDebug = 0;
 
 WaitForTimeOut = 1;

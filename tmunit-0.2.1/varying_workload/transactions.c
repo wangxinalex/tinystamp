@@ -6,6 +6,8 @@ extern volatile pthread_t* Thrd;
 extern volatile ThreadRunFunc ThreadRun[];
 extern volatile thread_input_t* th_input;
 
+__thread long ww;
+
 int i_got_killed(unsigned id) {
  	long myThreadId=id;
     if(global_kill[myThreadId/64]&(((long)1)<<(myThreadId%64)))
@@ -147,6 +149,7 @@ case 0:
 TX_START;
 TM_READ(W);
 ThLocals->_t = ValueRead;
+ww=ThLocals->_t;
 if(ThLocals->_t > ThLocals->_wp)
 {
 ThLocals->_rep = ThLocals->_wp;
@@ -164,16 +167,16 @@ TM_WRITE(W,ThLocals->_t);
 TX_COMMIT;
 break;
 case 1:
-TX_START;
-TM_READ(W);
-int u=ValueRead;
-TX_COMMIT;
+//TX_START;
+//TM_READ(W);
+//int u=ValueRead;
+//TX_COMMIT;
 
 Range = ThLocals->_size;
  ThLocals->_RAND = 1 + ChooseFromUniformDist( Range, &(ThLocals->seed__RAND) );
  TX_START;
 //ThLocals->_size = 1;
-for( ThLocals->k = 1; (ThLocals->k <= 1000/(u+2)); ThLocals->k += 1) 
+for( ThLocals->k = 1; (ThLocals->k <= 1000/(ww+2)); ThLocals->k += 1) 
 {
 TM_READ(&(a[ThLocals->_RAND+ThLocals->k]));
 ThLocals->_t = ValueRead;
