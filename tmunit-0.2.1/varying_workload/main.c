@@ -147,7 +147,7 @@ RandomDebug = 0;
 WaitForTimeOut = 1;
 TimeOutValueSet = 0;
 DelayUnit = 1000000;
-TimeOut = 10000000;
+TimeOut = 100000000;
 
 PrintStats = 1;
 EnableTrace = 0;
@@ -223,12 +223,12 @@ void InitializeSharedVariables() {
 W = (Word*)malloc(sizeof(Word));
 NA = (Word*)malloc(sizeof(Word));
 
-a_array_size = 100;
+a_array_size = 10000000; // original: = 100
 a = (Word*)malloc(a_array_size*sizeof(Word));
 
 // Initializing shared variables and arrays.
-*W = 10;
-*NA = 100;
+*W = 10000;    // original: = 10
+*NA = 10000000;  // original: = 100
 unsigned ElementNo;
 for(ElementNo=0; ElementNo< a_array_size ; ElementNo++)
 a[ElementNo] = 0;
@@ -351,7 +351,7 @@ int main(int argc, char*  argv[]) {
 			printf("TimeOut=%u,=%f sec, time_out= (%ld,%ld)\n",TimeOut, secondsOfSleep, time_out.tv_sec,time_out.tv_nsec);
 
 			#ifdef	AUTOREPLACE
-				printf("Debug: was here95\n");
+//				printf("Debug: was here95\n");
 				while(nanosleep(&time_out,&left_time_out) == -1) {
 					if(TerminateRequestedBySignal)
 						break;
@@ -361,7 +361,7 @@ int main(int argc, char*  argv[]) {
 					time_out.tv_nsec = left_time_out.tv_nsec;
 				}
 			#else
-				printf("Debug: was here94\n");
+//				printf("Debug: was here94\n");
 //				nanosleep(&time_out,&left_time_out);
 				adjust_amount_of_threads(secondsOfSleep);
 			#endif
@@ -373,19 +373,19 @@ int main(int argc, char*  argv[]) {
 						"EXECUTION TIMEOUT REACHED.\n"
 						"--------------------------\n");
 			// *INDENT-ON*
-			printf("\nDebug: was here1");
+//			printf("\nDebug: was here1");
 		}
-		printf("\nDebug: was here2"); fflush(stdout);
+//		printf("\nDebug: was here2"); fflush(stdout);
 
 		for(ThreadNo=0; ThreadNo<ThreadNum; ThreadNo++)
 			pthread_join(Thrd[ThreadNo],NULL);
 
-		printf("\nDebug: was here3"); fflush(stdout);
+//		printf("\nDebug: was here3"); fflush(stdout);
 
 		printf("Shutting STM engine down...\n");
 		TM_EXIT(0);
 
-		printf("\nDebug: was here4"); fflush(stdout);
+//		printf("\nDebug: was here4"); fflush(stdout);
 
 		if (PrintStats) {
 			PrintStatistics();
@@ -412,13 +412,13 @@ void adjust_amount_of_threads(double sleepInSeconds) {
 	int lastDone=0;
 	bool stop=0;
 	long milisecondsLeft=sleepInSeconds*1000;
-	printf("Debug: Was here 50\n");
+//	printf("Debug: Was here 50\n");
 	while(milisecondsLeft > SLEEP_PERIOD_SIZE && !stop) {
 		long commitsDuringThisPeriod=agregCommits(&stop);
 		mySleep(SLEEP_PERIOD_SIZE);
-		printf("Debug: Was here 56\n");
+//		printf("Debug: Was here 56\n");
 		commitsDuringThisPeriod = agregCommits(&stop) - commitsDuringThisPeriod;
-		printf("Debug: Was here 59\n");
+//		printf("Debug: Was here 59\n");
 		milisecondsLeft-=SLEEP_PERIOD_SIZE;
 
 		printf("Was running with %ld threads and got %ld commits.\n", ThreadNum, commitsDuringThisPeriod);
@@ -467,7 +467,7 @@ void adjust_amount_of_threads(double sleepInSeconds) {
 	}
 	if(!stop)
 		mySleep(milisecondsLeft);
-	printf("Was here40\n");
+//	printf("Was here40\n");
 }
 
 int startNewThread() {

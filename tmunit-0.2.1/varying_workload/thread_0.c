@@ -72,9 +72,18 @@ printf("Seed of _RAND: %u\n", ThLocals.seed__RAND);
 }
 
 // Initializing thread local variables (other than random variables).
+/* original values
 ThLocals._wp = 2;
 ThLocals._t = 0;
 ThLocals._rep = 0;
+ThLocals._cond = 1;
+ThLocals._size = 1;
+ThLocals.k = 0;
+*/
+
+ThLocals._wp = 200000;
+ThLocals._t = 0;
+ThLocals._rep = 4;
 ThLocals._cond = 1;
 ThLocals._size = 1;
 ThLocals.k = 0;
