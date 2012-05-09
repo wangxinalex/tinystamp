@@ -1,0 +1,293 @@
+maxThreadNum = 10
+MainSeed=1
+ListOfThreadSeeds={1804289383,846930886,1681692777,1714636915,1957747793,424238335,719885386,1649760492,596516649,1189641421}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 1  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+MainMax                : 10  (in # of threads; DEFAULT: 10)
+TimeOut                : 10000000  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+
+[P_1:T_W] S
+TimeOut=10000000,=10.000000 sec, time_out= (10,0)
+Debug: was here94
+Debug: Was here 50
+Debug: ThreadNum=1 sum=140062473346528
+Debug: Was here 54
+[P_1:T_W] R(W)
+[P_1:T_W] R(W,10)
+[P_1:T_W] W(W)
+[P_1:T_W] W(W,8)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],0)
+[P_1:T_1] W(a[1])
+[P_1:T_1] W(a[1],1)
+[P_1:T_1] W(a[1])
+[P_1:T_1] W(a[1],1203804847)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],1203804847)
+[P_1:T_1] R(a[2])
+[P_1:T_1] R(a[2],0)
+[P_1:T_1] W(a[2])
+[P_1:T_1] W(a[2],1)
+[P_1:T_1] W(a[1])
+[P_1:T_1] W(a[1],1203804848)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_W] S
+[P_1:T_W] R(W)
+[P_1:T_W] R(W,8)
+[P_1:T_W] W(W)
+[P_1:T_W] W(W,6)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],1203804848)
+[P_1:T_1] R(a[2])
+[P_1:T_1] R(a[2],1)
+[P_1:T_1] R(a[3])
+[P_1:T_1] R(a[3],0)
+[P_1:T_1] W(a[3])
+[P_1:T_1] W(a[3],1)
+[P_1:T_1] W(a[2])
+[P_1:T_1] W(a[2],1203804849)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],1203804848)
+[P_1:T_1] R(a[2])
+[P_1:T_1] R(a[2],1203804849)
+[P_1:T_1] R(a[3])
+[P_1:T_1] R(a[3],1)
+[P_1:T_1] R(a[4])
+[P_1:T_1] R(a[4],0)
+[P_1:T_1] W(a[4])
+[P_1:T_1] W(a[4],1)
+[P_1:T_1] W(a[1])
+[P_1:T_1] W(a[1],1203804850)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_W] S
+[P_1:T_W] R(W)
+[P_1:T_W] R(W,6)
+[P_1:T_W] W(W)
+[P_1:T_W] W(W,4)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],1203804850)
+[P_1:T_1] R(a[2])
+[P_1:T_1] R(a[2],1203804849)
+[P_1:T_1] R(a[3])
+[P_1:T_1] R(a[3],1)
+[P_1:T_1] R(a[4])
+[P_1:T_1] R(a[4],1)
+[P_1:T_1] R(a[5])
+[P_1:T_1] R(a[5],0)
+[P_1:T_1] W(a[5])
+[P_1:T_1] W(a[5],1)
+[P_1:T_1] W(a[1])
+[P_1:T_1] W(a[1],1203804851)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],1203804851)
+[P_1:T_1] R(a[2])
+[P_1:T_1] R(a[2],1203804849)
+[P_1:T_1] R(a[3])
+[P_1:T_1] R(a[3],1)
+[P_1:T_1] R(a[4])
+[P_1:T_1] R(a[4],1)
+[P_1:T_1] R(a[5])
+[P_1:T_1] R(a[5],1)
+[P_1:T_1] R(a[6])
+[P_1:T_1] R(a[6],0)
+[P_1:T_1] W(a[6])
+[P_1:T_1] W(a[6],1)
+[P_1:T_1] W(a[2])
+[P_1:T_1] W(a[2],1203804852)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_W] S
+[P_1:T_W] R(W)
+[P_1:T_W] R(W,4)
+[P_1:T_W] W(W)
+[P_1:T_W] W(W,2)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],1203804851)
+[P_1:T_1] R(a[2])
+[P_1:T_1] R(a[2],1203804852)
+[P_1:T_1] R(a[3])
+[P_1:T_1] R(a[3],1)
+[P_1:T_1] R(a[4])
+[P_1:T_1] R(a[4],1)
+[P_1:T_1] R(a[5])
+[P_1:T_1] R(a[5],1)
+[P_1:T_1] R(a[6])
+[P_1:T_1] R(a[6],1)
+[P_1:T_1] R(a[7])
+[P_1:T_1] R(a[7],0)
+[P_1:T_1] W(a[7])
+[P_1:T_1] W(a[7],1)
+[P_1:T_1] W(a[3])
+[P_1:T_1] W(a[3],1203804853)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],1203804851)
+[P_1:T_1] R(a[2])
+[P_1:T_1] R(a[2],1203804852)
+[P_1:T_1] R(a[3])
+[P_1:T_1] R(a[3],1203804853)
+[P_1:T_1] R(a[4])
+[P_1:T_1] R(a[4],1)
+[P_1:T_1] R(a[5])
+[P_1:T_1] R(a[5],1)
+[P_1:T_1] R(a[6])
+[P_1:T_1] R(a[6],1)
+[P_1:T_1] R(a[7])
+[P_1:T_1] R(a[7],1)
+[P_1:T_1] R(a[8])
+[P_1:T_1] R(a[8],0)
+[P_1:T_1] W(a[8])
+[P_1:T_1] W(a[8],1)
+[P_1:T_1] W(a[2])
+[P_1:T_1] W(a[2],1203804854)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_W] S
+[P_1:T_W] R(W)
+[P_1:T_W] R(W,2)
+[P_1:T_W] W(W)
+[P_1:T_W] W(W,0)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],1203804851)
+[P_1:T_1] R(a[2])
+[P_1:T_1] R(a[2],1203804854)
+[P_1:T_1] R(a[3])
+[P_1:T_1] R(a[3],1203804853)
+[P_1:T_1] R(a[4])
+[P_1:T_1] R(a[4],1)
+[P_1:T_1] R(a[5])
+[P_1:T_1] R(a[5],1)
+[P_1:T_1] R(a[6])
+[P_1:T_1] R(a[6],1)
+[P_1:T_1] R(a[7])
+[P_1:T_1] R(a[7],1)
+[P_1:T_1] R(a[8])
+[P_1:T_1] R(a[8],1)
+[P_1:T_1] R(a[9])
+[P_1:T_1] R(a[9],0)
+[P_1:T_1] W(a[9])
+[P_1:T_1] W(a[9],1)
+[P_1:T_1] W(a[3])
+[P_1:T_1] W(a[3],1203804855)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(a[1])
+[P_1:T_1] R(a[1],1203804851)
+[P_1:T_1] R(a[2])
+[P_1:T_1] R(a[2],1203804854)
+[P_1:T_1] R(a[3])
+[P_1:T_1] R(a[3],1203804855)
+[P_1:T_1] R(a[4])
+[P_1:T_1] R(a[4],1)
+[P_1:T_1] R(a[5])
+[P_1:T_1] R(a[5],1)
+[P_1:T_1] R(a[6])
+[P_1:T_1] R(a[6],1)
+[P_1:T_1] R(a[7])
+[P_1:T_1] R(a[7],1)
+[P_1:T_1] R(a[8])
+[P_1:T_1] R(a[8],1)
+[P_1:T_1] R(a[9])
+[P_1:T_1] R(a[9],1)
+[P_1:T_1] R(a[10])
+[P_1:T_1] R(a[10],0)
+[P_1:T_1] W(a[10])
+[P_1:T_1] W(a[10],1)
+[P_1:T_1] W(a[9])
+[P_1:T_1] W(a[9],1203804856)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+Debug: Was here 56
+Debug: ThreadNum=1 sum=0
+Debug: Was here 54
+Debug: Was here 59
+Was running with 1 threads and got -140062473346528 commits.
+
+Ø¾0Öb[(null):T_W] S
+Ø¾0Öb[(null):T_W] R(W)
+Ø¾0Öb[(null):T_W] R(W,0)
+Ø¾0Öb[(null):T_W] W(W)
+Ø¾0Öb[(null):T_W] W(W,0)
+Ø¾0Öb[(null):T_W] Try C
+Ø¾0Öb[(null):T_W] C
+
+
+¿0Öb[(null):T_W] S
+¿0Öb[(null):T_W] R(W)
+¿0Öb[(null):T_W] R(W,0)
+¿0Öb[(null):T_W] W(W)
+¿0Öb[(null):T_W] W(W,0)
+¿0Öb[(null):T_W] Try C
+¿0Öb[(null):T_W] C
+

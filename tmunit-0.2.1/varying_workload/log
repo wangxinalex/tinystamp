@@ -1,0 +1,395 @@
+Address of W : 0x1cbf010
+Address of NA : 0x1cbf030
+Address of a[0] : 0x1cbf050
+Address of a[1] : 0x1cbf058
+Address of a[2] : 0x1cbf060
+Address of a[3] : 0x1cbf068
+Address of a[4] : 0x1cbf070
+Address of a[5] : 0x1cbf078
+Address of a[6] : 0x1cbf080
+Address of a[7] : 0x1cbf088
+Address of a[8] : 0x1cbf090
+Address of a[9] : 0x1cbf098
+Address of a[10] : 0x1cbf0a0
+Address of a[11] : 0x1cbf0a8
+Address of a[12] : 0x1cbf0b0
+Address of a[13] : 0x1cbf0b8
+Address of a[14] : 0x1cbf0c0
+Address of a[15] : 0x1cbf0c8
+Address of a[16] : 0x1cbf0d0
+Address of a[17] : 0x1cbf0d8
+Address of a[18] : 0x1cbf0e0
+Address of a[19] : 0x1cbf0e8
+Address of a[20] : 0x1cbf0f0
+Address of a[21] : 0x1cbf0f8
+Address of a[22] : 0x1cbf100
+Address of a[23] : 0x1cbf108
+Address of a[24] : 0x1cbf110
+Address of a[25] : 0x1cbf118
+Address of a[26] : 0x1cbf120
+Address of a[27] : 0x1cbf128
+Address of a[28] : 0x1cbf130
+Address of a[29] : 0x1cbf138
+Address of a[30] : 0x1cbf140
+Address of a[31] : 0x1cbf148
+Address of a[32] : 0x1cbf150
+Address of a[33] : 0x1cbf158
+Address of a[34] : 0x1cbf160
+Address of a[35] : 0x1cbf168
+Address of a[36] : 0x1cbf170
+Address of a[37] : 0x1cbf178
+Address of a[38] : 0x1cbf180
+Address of a[39] : 0x1cbf188
+Address of a[40] : 0x1cbf190
+Address of a[41] : 0x1cbf198
+Address of a[42] : 0x1cbf1a0
+Address of a[43] : 0x1cbf1a8
+Address of a[44] : 0x1cbf1b0
+Address of a[45] : 0x1cbf1b8
+Address of a[46] : 0x1cbf1c0
+Address of a[47] : 0x1cbf1c8
+Address of a[48] : 0x1cbf1d0
+Address of a[49] : 0x1cbf1d8
+Address of a[50] : 0x1cbf1e0
+Address of a[51] : 0x1cbf1e8
+Address of a[52] : 0x1cbf1f0
+Address of a[53] : 0x1cbf1f8
+Address of a[54] : 0x1cbf200
+Address of a[55] : 0x1cbf208
+Address of a[56] : 0x1cbf210
+Address of a[57] : 0x1cbf218
+Address of a[58] : 0x1cbf220
+Address of a[59] : 0x1cbf228
+Address of a[60] : 0x1cbf230
+Address of a[61] : 0x1cbf238
+Address of a[62] : 0x1cbf240
+Address of a[63] : 0x1cbf248
+Address of a[64] : 0x1cbf250
+Address of a[65] : 0x1cbf258
+Address of a[66] : 0x1cbf260
+Address of a[67] : 0x1cbf268
+Address of a[68] : 0x1cbf270
+Address of a[69] : 0x1cbf278
+Address of a[70] : 0x1cbf280
+Address of a[71] : 0x1cbf288
+Address of a[72] : 0x1cbf290
+Address of a[73] : 0x1cbf298
+Address of a[74] : 0x1cbf2a0
+Address of a[75] : 0x1cbf2a8
+Address of a[76] : 0x1cbf2b0
+Address of a[77] : 0x1cbf2b8
+Address of a[78] : 0x1cbf2c0
+Address of a[79] : 0x1cbf2c8
+Address of a[80] : 0x1cbf2d0
+Address of a[81] : 0x1cbf2d8
+Address of a[82] : 0x1cbf2e0
+Address of a[83] : 0x1cbf2e8
+Address of a[84] : 0x1cbf2f0
+Address of a[85] : 0x1cbf2f8
+Address of a[86] : 0x1cbf300
+Address of a[87] : 0x1cbf308
+Address of a[88] : 0x1cbf310
+Address of a[89] : 0x1cbf318
+Address of a[90] : 0x1cbf320
+Address of a[91] : 0x1cbf328
+Address of a[92] : 0x1cbf330
+Address of a[93] : 0x1cbf338
+Address of a[94] : 0x1cbf340
+Address of a[95] : 0x1cbf348
+Address of a[96] : 0x1cbf350
+Address of a[97] : 0x1cbf358
+Address of a[98] : 0x1cbf360
+Address of a[99] : 0x1cbf368
+maxThreadNum = 10
+MainSeed=1
+ListOfThreadSeeds={1804289383,846930886,1681692777,1714636915,1957747793,424238335,719885386,1649760492,596516649,1189641421}
+
+-------------------------------------------------
+     Simulation Parameters:
+-------------------------------------------------
+
+JustGenerateTrace      : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+SerialThreadExecution  : 0  (0: FALSE, 1: TRUE; DEFAULT:0)
+WaitForTimeOut         : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+TransmitReadOnlyTxHint : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+EnableTrace            : 1  (0: FALSE, 1: TRUE; DEFAULT:0)
+PrintStats             : 1  (0: FALSE, 1: TRUE; DEFAULT:1)
+MainSeed               : 1  (0: seed from clock; DEFAULT: 1)
+MainMax                : 10  (in # of threads; DEFAULT: 10)
+TimeOut                : 10000000  (in microseconds, valid only if WaitForTimeOut is 1)
+
+
+Initializing STM...
+
+[P_1:T_W] S
+TimeOut=10000000,=10.000000 sec, time_out= (10,0)
+Debug: was here94
+Debug: Was here 50
+Debug: ThreadNum=1 sum=140062473346528
+Debug: Was here 54
+[P_1:T_W] R(0x1cbf010)
+[P_1:T_W] R(0x1cbf010,10)
+[P_1:T_W] W(0x1cbf010)
+[P_1:T_W] W(0x1cbf010,8)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,0)
+[P_1:T_1] W(0x1cbf058)
+[P_1:T_1] W(0x1cbf058,1)
+[P_1:T_1] W(0x1cbf058)
+[P_1:T_1] W(0x1cbf058,1203804847)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,1203804847)
+[P_1:T_1] R(0x1cbf060)
+[P_1:T_1] R(0x1cbf060,0)
+[P_1:T_1] W(0x1cbf060)
+[P_1:T_1] W(0x1cbf060,1)
+[P_1:T_1] W(0x1cbf058)
+[P_1:T_1] W(0x1cbf058,1203804848)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_W] S
+[P_1:T_W] R(0x1cbf010)
+[P_1:T_W] R(0x1cbf010,8)
+[P_1:T_W] W(0x1cbf010)
+[P_1:T_W] W(0x1cbf010,6)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,1203804848)
+[P_1:T_1] R(0x1cbf060)
+[P_1:T_1] R(0x1cbf060,1)
+[P_1:T_1] R(0x1cbf068)
+[P_1:T_1] R(0x1cbf068,0)
+[P_1:T_1] W(0x1cbf068)
+[P_1:T_1] W(0x1cbf068,1)
+[P_1:T_1] W(0x1cbf060)
+[P_1:T_1] W(0x1cbf060,1203804849)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,1203804848)
+[P_1:T_1] R(0x1cbf060)
+[P_1:T_1] R(0x1cbf060,1203804849)
+[P_1:T_1] R(0x1cbf068)
+[P_1:T_1] R(0x1cbf068,1)
+[P_1:T_1] R(0x1cbf070)
+[P_1:T_1] R(0x1cbf070,0)
+[P_1:T_1] W(0x1cbf070)
+[P_1:T_1] W(0x1cbf070,1)
+[P_1:T_1] W(0x1cbf058)
+[P_1:T_1] W(0x1cbf058,1203804850)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_W] S
+[P_1:T_W] R(0x1cbf010)
+[P_1:T_W] R(0x1cbf010,6)
+[P_1:T_W] W(0x1cbf010)
+[P_1:T_W] W(0x1cbf010,4)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,1203804850)
+[P_1:T_1] R(0x1cbf060)
+[P_1:T_1] R(0x1cbf060,1203804849)
+[P_1:T_1] R(0x1cbf068)
+[P_1:T_1] R(0x1cbf068,1)
+[P_1:T_1] R(0x1cbf070)
+[P_1:T_1] R(0x1cbf070,1)
+[P_1:T_1] R(0x1cbf078)
+[P_1:T_1] R(0x1cbf078,0)
+[P_1:T_1] W(0x1cbf078)
+[P_1:T_1] W(0x1cbf078,1)
+[P_1:T_1] W(0x1cbf058)
+[P_1:T_1] W(0x1cbf058,1203804851)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,1203804851)
+[P_1:T_1] R(0x1cbf060)
+[P_1:T_1] R(0x1cbf060,1203804849)
+[P_1:T_1] R(0x1cbf068)
+[P_1:T_1] R(0x1cbf068,1)
+[P_1:T_1] R(0x1cbf070)
+[P_1:T_1] R(0x1cbf070,1)
+[P_1:T_1] R(0x1cbf078)
+[P_1:T_1] R(0x1cbf078,1)
+[P_1:T_1] R(0x1cbf080)
+[P_1:T_1] R(0x1cbf080,0)
+[P_1:T_1] W(0x1cbf080)
+[P_1:T_1] W(0x1cbf080,1)
+[P_1:T_1] W(0x1cbf060)
+[P_1:T_1] W(0x1cbf060,1203804852)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_W] S
+[P_1:T_W] R(0x1cbf010)
+[P_1:T_W] R(0x1cbf010,4)
+[P_1:T_W] W(0x1cbf010)
+[P_1:T_W] W(0x1cbf010,2)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,1203804851)
+[P_1:T_1] R(0x1cbf060)
+[P_1:T_1] R(0x1cbf060,1203804852)
+[P_1:T_1] R(0x1cbf068)
+[P_1:T_1] R(0x1cbf068,1)
+[P_1:T_1] R(0x1cbf070)
+[P_1:T_1] R(0x1cbf070,1)
+[P_1:T_1] R(0x1cbf078)
+[P_1:T_1] R(0x1cbf078,1)
+[P_1:T_1] R(0x1cbf080)
+[P_1:T_1] R(0x1cbf080,1)
+[P_1:T_1] R(0x1cbf088)
+[P_1:T_1] R(0x1cbf088,0)
+[P_1:T_1] W(0x1cbf088)
+[P_1:T_1] W(0x1cbf088,1)
+[P_1:T_1] W(0x1cbf068)
+[P_1:T_1] W(0x1cbf068,1203804853)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,1203804851)
+[P_1:T_1] R(0x1cbf060)
+[P_1:T_1] R(0x1cbf060,1203804852)
+[P_1:T_1] R(0x1cbf068)
+[P_1:T_1] R(0x1cbf068,1203804853)
+[P_1:T_1] R(0x1cbf070)
+[P_1:T_1] R(0x1cbf070,1)
+[P_1:T_1] R(0x1cbf078)
+[P_1:T_1] R(0x1cbf078,1)
+[P_1:T_1] R(0x1cbf080)
+[P_1:T_1] R(0x1cbf080,1)
+[P_1:T_1] R(0x1cbf088)
+[P_1:T_1] R(0x1cbf088,1)
+[P_1:T_1] R(0x1cbf090)
+[P_1:T_1] R(0x1cbf090,0)
+[P_1:T_1] W(0x1cbf090)
+[P_1:T_1] W(0x1cbf090,1)
+[P_1:T_1] W(0x1cbf060)
+[P_1:T_1] W(0x1cbf060,1203804854)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_W] S
+[P_1:T_W] R(0x1cbf010)
+[P_1:T_W] R(0x1cbf010,2)
+[P_1:T_W] W(0x1cbf010)
+[P_1:T_W] W(0x1cbf010,0)
+[P_1:T_W] Try C
+[P_1:T_W] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,1203804851)
+[P_1:T_1] R(0x1cbf060)
+[P_1:T_1] R(0x1cbf060,1203804854)
+[P_1:T_1] R(0x1cbf068)
+[P_1:T_1] R(0x1cbf068,1203804853)
+[P_1:T_1] R(0x1cbf070)
+[P_1:T_1] R(0x1cbf070,1)
+[P_1:T_1] R(0x1cbf078)
+[P_1:T_1] R(0x1cbf078,1)
+[P_1:T_1] R(0x1cbf080)
+[P_1:T_1] R(0x1cbf080,1)
+[P_1:T_1] R(0x1cbf088)
+[P_1:T_1] R(0x1cbf088,1)
+[P_1:T_1] R(0x1cbf090)
+[P_1:T_1] R(0x1cbf090,1)
+[P_1:T_1] R(0x1cbf098)
+[P_1:T_1] R(0x1cbf098,0)
+[P_1:T_1] W(0x1cbf098)
+[P_1:T_1] W(0x1cbf098,1)
+[P_1:T_1] W(0x1cbf068)
+[P_1:T_1] W(0x1cbf068,1203804855)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+
+[P_1:T_1] S
+[P_1:T_1] R(0x1cbf058)
+[P_1:T_1] R(0x1cbf058,1203804851)
+[P_1:T_1] R(0x1cbf060)
+[P_1:T_1] R(0x1cbf060,1203804854)
+[P_1:T_1] R(0x1cbf068)
+[P_1:T_1] R(0x1cbf068,1203804855)
+[P_1:T_1] R(0x1cbf070)
+[P_1:T_1] R(0x1cbf070,1)
+[P_1:T_1] R(0x1cbf078)
+[P_1:T_1] R(0x1cbf078,1)
+[P_1:T_1] R(0x1cbf080)
+[P_1:T_1] R(0x1cbf080,1)
+[P_1:T_1] R(0x1cbf088)
+[P_1:T_1] R(0x1cbf088,1)
+[P_1:T_1] R(0x1cbf090)
+[P_1:T_1] R(0x1cbf090,1)
+[P_1:T_1] R(0x1cbf098)
+[P_1:T_1] R(0x1cbf098,1)
+[P_1:T_1] R(0x1cbf0a0)
+[P_1:T_1] R(0x1cbf0a0,0)
+[P_1:T_1] W(0x1cbf0a0)
+[P_1:T_1] W(0x1cbf0a0,1)
+[P_1:T_1] W(0x1cbf098)
+[P_1:T_1] W(0x1cbf098,1203804856)
+[P_1:T_1] Try C
+[P_1:T_1] C
+
+Debug: Was here 56
+Debug: ThreadNum=1 sum=0
+Debug: Was here 54
+Debug: Was here 59
+Was running with 1 threads and got -140062473346528 commits.
+
+Ø¾0Öb[(null):T_W] S
+Ø¾0Öb[(null):T_W] R(0x1cbf010)
+Ø¾0Öb[(null):T_W] R(0x1cbf010,0)
+Ø¾0Öb[(null):T_W] W(0x1cbf010)
+Ø¾0Öb[(null):T_W] W(0x1cbf010,0)
+Ø¾0Öb[(null):T_W] Try C
+Ø¾0Öb[(null):T_W] C
+
+
+¿0Öb[(null):T_W] S
+¿0Öb[(null):T_W] R(0x1cbf010)
+¿0Öb[(null):T_W] R(0x1cbf010,0)
+¿0Öb[(null):T_W] W(0x1cbf010)
+¿0Öb[(null):T_W] W(0x1cbf010,0)
+¿0Öb[(null):T_W] Try C
+¿0Öb[(null):T_W] C
+

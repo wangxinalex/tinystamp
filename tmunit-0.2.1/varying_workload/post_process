@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+
+sub PrintAndExecute {
+    my( $CommandString ) = @_;
+    print "$CommandString\n";
+    system($CommandString);
+    return $?;
+}
+
+
+$InputFile = $ARGV[0];
+$OutputFile = "trace";
+
+@VariableList = (
+"W","0x1cbf010","NA","0x1cbf030","a[0]","0x1cbf050","a[1]","0x1cbf058","a[2]","0x1cbf060","a[3]","0x1cbf068","a[4]","0x1cbf070","a[5]","0x1cbf078","a[6]","0x1cbf080","a[7]","0x1cbf088","a[8]","0x1cbf090","a[9]","0x1cbf098","a[10]","0x1cbf0a0","a[11]","0x1cbf0a8","a[12]","0x1cbf0b0","a[13]","0x1cbf0b8","a[14]","0x1cbf0c0","a[15]","0x1cbf0c8","a[16]","0x1cbf0d0","a[17]","0x1cbf0d8","a[18]","0x1cbf0e0","a[19]","0x1cbf0e8","a[20]","0x1cbf0f0","a[21]","0x1cbf0f8","a[22]","0x1cbf100","a[23]","0x1cbf108","a[24]","0x1cbf110","a[25]","0x1cbf118","a[26]","0x1cbf120","a[27]","0x1cbf128","a[28]","0x1cbf130","a[29]","0x1cbf138","a[30]","0x1cbf140","a[31]","0x1cbf148","a[32]","0x1cbf150","a[33]","0x1cbf158","a[34]","0x1cbf160","a[35]","0x1cbf168","a[36]","0x1cbf170","a[37]","0x1cbf178","a[38]","0x1cbf180","a[39]","0x1cbf188","a[40]","0x1cbf190","a[41]","0x1cbf198","a[42]","0x1cbf1a0","a[43]","0x1cbf1a8","a[44]","0x1cbf1b0","a[45]","0x1cbf1b8","a[46]","0x1cbf1c0","a[47]","0x1cbf1c8","a[48]","0x1cbf1d0","a[49]","0x1cbf1d8","a[50]","0x1cbf1e0","a[51]","0x1cbf1e8","a[52]","0x1cbf1f0","a[53]","0x1cbf1f8","a[54]","0x1cbf200","a[55]","0x1cbf208","a[56]","0x1cbf210","a[57]","0x1cbf218","a[58]","0x1cbf220","a[59]","0x1cbf228","a[60]","0x1cbf230","a[61]","0x1cbf238","a[62]","0x1cbf240","a[63]","0x1cbf248","a[64]","0x1cbf250","a[65]","0x1cbf258","a[66]","0x1cbf260","a[67]","0x1cbf268","a[68]","0x1cbf270","a[69]","0x1cbf278","a[70]","0x1cbf280","a[71]","0x1cbf288","a[72]","0x1cbf290","a[73]","0x1cbf298","a[74]","0x1cbf2a0","a[75]","0x1cbf2a8","a[76]","0x1cbf2b0","a[77]","0x1cbf2b8","a[78]","0x1cbf2c0","a[79]","0x1cbf2c8","a[80]","0x1cbf2d0","a[81]","0x1cbf2d8","a[82]","0x1cbf2e0","a[83]","0x1cbf2e8","a[84]","0x1cbf2f0","a[85]","0x1cbf2f8","a[86]","0x1cbf300","a[87]","0x1cbf308","a[88]","0x1cbf310","a[89]","0x1cbf318","a[90]","0x1cbf320","a[91]","0x1cbf328","a[92]","0x1cbf330","a[93]","0x1cbf338","a[94]","0x1cbf340","a[95]","0x1cbf348","a[96]","0x1cbf350","a[97]","0x1cbf358","a[98]","0x1cbf360","a[99]","0x1cbf368",                );
+
+
+$LastElementPos = $#VariableList;
+$VariableNum    = ($LastElementPos+1)/2;
+
+PrintAndExecute("cp $InputFile $OutputFile");
+
+for($VariableNo=0; $VariableNo< $VariableNum; $VariableNo++)
+{
+    $VariableName = $VariableList[2*$VariableNo];
+    $VariableAddr = $VariableList[2*$VariableNo+1];
+    
+   print "Replacing $VariableAddr with  $VariableName ... " ;
+
+   $CommandString = "sed -i s/$VariableAddr/$VariableName/g  $OutputFile";
+   system($CommandString);    
+
+   print "Done\n" ;
+ 
+}
+
+$CommandString = "sed  -i '1,'$VariableNum' d' trace";
+system($CommandString);    
