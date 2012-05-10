@@ -407,12 +407,16 @@ int main(int argc, char*  argv[]) {
 }
 
 void adjust_amount_of_threads(double sleepInSeconds) {
+//#define AUTO 1
 	long commitsDuringLastPeriod=0;
 	int level=32;
 	int lastDone=0;
 	bool stop=0;
 	long milisecondsLeft=sleepInSeconds*1000;
 //	printf("Debug: Was here 50\n");
+#ifndef AUTO
+	startSomeThreads4(100);
+#endif
 	while(milisecondsLeft > SLEEP_PERIOD_SIZE && !stop) {
 		long commitsDuringThisPeriod=agregCommits(&stop);
 		mySleep(SLEEP_PERIOD_SIZE);
@@ -422,7 +426,7 @@ void adjust_amount_of_threads(double sleepInSeconds) {
 		milisecondsLeft-=SLEEP_PERIOD_SIZE;
 
 		printf("Was running with %ld threads and got %ld commits.\n", ThreadNum, commitsDuringThisPeriod);
-
+		#ifdef AUTO
 		if (commitsDuringThisPeriod > commitsDuringLastPeriod && lastDone > 0){
 			lastDone=startSomeThreads4(level);
 		}
@@ -461,8 +465,9 @@ void adjust_amount_of_threads(double sleepInSeconds) {
 				}
 			}
 		}
-
-
+		#else
+		
+		#endif
 		commitsDuringLastPeriod = commitsDuringThisPeriod;
 	}
 	if(!stop)
