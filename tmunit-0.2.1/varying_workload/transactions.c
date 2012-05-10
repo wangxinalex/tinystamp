@@ -1,4 +1,5 @@
 #include "transactions.h"
+#include <math.h>
 
 extern unsigned maxThreadNum;
 extern unsigned ThreadNum;
@@ -173,14 +174,18 @@ case 1:
 //TX_COMMIT;
 
 //Range = ThLocals->_size;
- Range = 80;
+// Range = 800;
+// Range = (double) ww * (double) ww / ((double)100000.0 * (double) 100000.0);
+//  Range = (double) 1.0 / (double) ((80000000.0-(double)ww)/10.0+20) * (double) 100000000.0;
+//Range = 8;
+Range = 80000002-ww;
  ThLocals->_RAND = 1 + ChooseFromUniformDist( Range, &(ThLocals->seed__RAND) );
  long rand2 = 1+ChooseFromUniformDist( Range, &(ThLocals->seed__RAND) );
 // if(ThLocals->_RAND==ranad2)
 // 	printf("bae");
  TX_START;
 //ThLocals->_size = 1;
-for( ThLocals->k = 1; (ThLocals->k <= (double)10000000.0/(double)((ww+2))+10); ThLocals->k += 1) 
+for( ThLocals->k = 1; (ThLocals->k <= (double)1000000000.0/(double)((ww+2))); ThLocals->k += 1) 
 {
 TM_READ(&(a[ThLocals->_RAND+ThLocals->k]));
 ThLocals->_t = ValueRead;

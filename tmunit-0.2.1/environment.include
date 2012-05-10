@@ -2,7 +2,7 @@
 # STM RELATED PATHS
 LIBAO_HOME := /usr/local/include/atomic_ops/sysdeps/
 LIBAO_32b_HOME := $(LIBAO_HOME)/../libatomic_32b
-TINY_STM_0_9_5_HOME := /home/jbs/src/tinystamp/wbws/tinySTM-1.0.3
+TINY_STM_0_9_5_HOME := /home/jbs/git/tinystamp/wbws/tinySTM-1.0.3
 TL2_HOME := /local_home/harmanci/Codes/RunDir/tl2-x86-0.9.5
 RSTM_HOME := /local_home/harmanci/Codes/RunDir/stm/rstm/stm
 SWISS_TM_HOME := /local_home/harmanci/Codes/RunDir/stm/SwissTM/wlpdstm

@@ -9,6 +9,7 @@
 #include "shared_var_definitions.h"
 #include "thread_local_variables.h"
 #include "simulation_parameters.h"
+#include <math.h>
 
 int i_got_killed(unsigned id);
 volatile long*    global_kill;           // array of flabbits to kill threads
