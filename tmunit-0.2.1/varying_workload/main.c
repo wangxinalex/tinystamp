@@ -407,7 +407,7 @@ int main(int argc, char*  argv[]) {
 }
 
 void adjust_amount_of_threads(double sleepInSeconds) {
-//#define AUTO 1
+#define AUTO 1
 	long commitsDuringLastPeriod=0;
 	int level=32;
 	int lastDone=0;
